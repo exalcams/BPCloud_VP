@@ -219,48 +219,48 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.MenuItems.indexOf('Project') >= 0) {
-      this.children.push(
-        {
-          id: 'project',
-          title: 'Project',
-          translate: 'NAV.SAMPLE.TITLE',
-          type: 'item',
-          icon: 'projectIcon',
-          isSvgIcon: true,
-          // icon: 'dashboard',
-          url: '/pages/project',
-        }
-      );
-    }
-    if (this.MenuItems.indexOf('Task Group') >= 0) {
-      this.children.push(
-        {
-          id: 'taskGroup',
-          title: 'Task Group',
-          translate: 'NAV.SAMPLE.TITLE',
-          type: 'item',
-          icon: 'taskGroupIcon',
-          isSvgIcon: true,
-          // icon: 'dashboard',
-          url: '/pages/task-group',
-        }
-      );
-    }
-    if (this.MenuItems.indexOf('Task') >= 0) {
-      this.children.push(
-        {
-          id: 'task',
-          title: 'Task',
-          translate: 'NAV.SAMPLE.TITLE',
-          type: 'item',
-          icon: 'taskIcon',
-          isSvgIcon: true,
-          // icon: 'dashboard',
-          url: '/pages/task',
-        }
-      );
-    }
+    // if (this.MenuItems.indexOf('Project') >= 0) {
+    //   this.children.push(
+    //     {
+    //       id: 'project',
+    //       title: 'Project',
+    //       translate: 'NAV.SAMPLE.TITLE',
+    //       type: 'item',
+    //       icon: 'projectIcon',
+    //       isSvgIcon: true,
+    //       // icon: 'dashboard',
+    //       url: '/pages/project',
+    //     }
+    //   );
+    // }
+    // if (this.MenuItems.indexOf('Task Group') >= 0) {
+    //   this.children.push(
+    //     {
+    //       id: 'taskGroup',
+    //       title: 'Task Group',
+    //       translate: 'NAV.SAMPLE.TITLE',
+    //       type: 'item',
+    //       icon: 'taskGroupIcon',
+    //       isSvgIcon: true,
+    //       // icon: 'dashboard',
+    //       url: '/pages/task-group',
+    //     }
+    //   );
+    // }
+    // if (this.MenuItems.indexOf('Task') >= 0) {
+    //   this.children.push(
+    //     {
+    //       id: 'task',
+    //       title: 'Task',
+    //       translate: 'NAV.SAMPLE.TITLE',
+    //       type: 'item',
+    //       icon: 'taskIcon',
+    //       isSvgIcon: true,
+    //       // icon: 'dashboard',
+    //       url: '/pages/task',
+    //     }
+    //   );
+    // }
 
     // if (this.MenuItems.indexOf('InvoiceDetails') >= 0) {
     //   this.children.push(
@@ -290,19 +290,7 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    // if (this.MenuItems.indexOf('InvoiceItem') >= 0) {
-    //   this.children.push(
-    //     {
-    //       id: 'invItem',
-    //       title: 'Invoice Item',
-    //       translate: 'NAV.SAMPLE.TITLE',
-    //       type: 'item',
-    //       icon: 'dashboard',
-    //       url: '/pages/courses',
-    //     }
-    //   );
-    // }
-    if (true || this.MenuItems.indexOf('App') >= 0) {
+    if (this.MenuItems.indexOf('App') >= 0) {
       this.subChildren.push(
         {
           id: 'menuapp',
@@ -312,7 +300,7 @@ export class LoginComponent implements OnInit {
         },
       );
     }
-    if (true || this.MenuItems.indexOf('Role') >= 0) {
+    if (this.MenuItems.indexOf('Role') >= 0) {
       this.subChildren.push(
         {
           id: 'role',
@@ -322,7 +310,7 @@ export class LoginComponent implements OnInit {
         },
       );
     }
-    if (true || this.MenuItems.indexOf('User') >= 0) {
+    if (this.MenuItems.indexOf('User') >= 0) {
       this.subChildren.push(
         {
           id: 'user',
@@ -333,7 +321,7 @@ export class LoginComponent implements OnInit {
       );
     }
 
-    if (true || this.MenuItems.indexOf('App') >= 0 || this.MenuItems.indexOf('Role') >= 0 ||
+    if (this.MenuItems.indexOf('App') >= 0 || this.MenuItems.indexOf('Role') >= 0 ||
       this.MenuItems.indexOf('User') >= 0) {
       this.children.push({
         id: 'master',
