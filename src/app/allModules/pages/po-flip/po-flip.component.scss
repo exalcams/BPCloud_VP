@@ -1,0 +1,144 @@
+@import "src/@fuse/scss/fuse";
+#poflip {
+    .topbarClass {
+      background: url("/assets/images/backgrounds/header 2.png") no-repeat;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    .center {
+        padding: 5px !important;
+        background-color: white;
+      }
+      .cardHeader {
+        background-color: #fffdf9;
+        
+      }
+  
+    .progressBarPostion {
+      position: absolute !important;
+      top: 350px;
+      z-index: 1;
+      left: 55%;
+    }
+
+  
+    @mixin TableBorderRight($color) {
+      border-right: 1px solid $color;
+    }
+  
+    .TablePadFont {
+      padding: 5px;
+      font-size: 12px;
+      min-width: 100px !important;
+    }
+  
+    table {
+      width: 100%;
+  
+      th {
+        @include TableBorderRight(gray);
+        @extend .TablePadFont;
+        color: white;
+        background-color: #121214;
+        text-align: center;
+      }
+  
+      td {
+        @include TableBorderRight(rgba(0, 0, 0, 0.12));
+        @extend .TablePadFont;
+        font-size: 12px;
+        text-align: center;
+        min-width: max-content !important;
+      }
+  
+      tr {
+        height: 40px;
+      }
+  
+      .mat-sort-header-container {
+        display: flex;
+        justify-content: center !important;
+      }
+    }
+    .tableLeftBorder {
+        border-left: 1px solid rgba(0, 0, 0, 0.12);
+      }
+  
+ 
+      .icon {
+        margin: 0;
+        color: rgba(0, 0, 0, 0.54);
+      }
+  
+    //   input {
+    //     padding: 0 12px 0 8px;
+    //     background-color: #ffffff;
+    //     height: 36px;
+    //     border: none;
+    //   } 
+
+    .Rectangle {
+      // width: 152px;
+      min-height: 45px;
+      border-radius: 9px;
+      border: solid 1px #cccccc;
+      background-color: #ffffff;
+      cursor: pointer !important;
+      border-left: 5px solid #abf7b9;
+    }
+    .Rectangle-1 {
+        // width: 152px;
+        min-height: 45px;
+        border-radius: 9px;
+        border: solid 1px #f4cda4;
+        cursor: pointer !important;
+      }
+    .Rectangle-106 {
+      width: 30px;
+      height: 25px;
+      opacity: 0.2;
+      border-radius: 2px;
+      background-color: #f9d2a8;
+    }
+    .tableCellBorder {
+      height: 20px;
+      vertical-align: middle;
+      width: 10px;
+      background-color: #d87e39;
+      opacity: 0.7;
+    }
+
+    .leftCard {
+        @include mat-elevation(2);
+        min-height: 80px;
+        /* padding: 10px !important; */
+        border-radius: 0px 9px 9px 0px;
+        border: solid 1px #cccccc;
+        background-color: #ffffff;
+        cursor: pointer !important;
+        width: 100%;
+        border-left: 5px solid #3380d7;
+      }
+      .addIcon {
+        height: 20px;
+        margin-top: 25px;
+        padding-left: 4px;
+        cursor: pointer !important;
+      }
+      .Btn {
+        border-color: #efb577;
+        background-color: white;
+        color: black;
+      }
+      .Btn1 {
+        border-color: #efb577;
+        background-color: #efb577;
+        color: white;
+        border-radius: 5px;
+      }
+      .title{
+          border-bottom: 2px solid #efb577;
+          font-size: 20px;
+      }
+    }
