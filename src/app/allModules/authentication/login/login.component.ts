@@ -102,7 +102,7 @@ export class LoginComponent implements OnInit {
         }
       );
       // this.UpdateMenu();
-      // this._router.navigate(['pages/dashboard']);
+       this._router.navigate(['pages/asn']);
       // this.notificationSnackBarComponent.openSnackBar('Logged in successfully', SnackBarStatus.success);
     } else {
       Object.keys(this.loginForm.controls).forEach(key => {
@@ -202,6 +202,20 @@ export class LoginComponent implements OnInit {
           isSvgIcon: true,
           // icon: 'dashboard',
           url: '/pages/dashboard',
+        }
+      );
+    }
+    if (this.MenuItems.indexOf('ASN') >= 0) {
+      this.children.push(
+        {
+          id: 'asn',
+          title: 'ASN',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          icon: 'asnIcon',
+          isSvgIcon: true,
+          // icon: 'dashboard',
+          url: '/pages/asn',
         }
       );
     }

@@ -1,0 +1,517 @@
+<div id="asn" class="page-layout carded" fusePerfectScrollbar>
+  <div class="center" fxLayout="column" fxLayoutGap="10px">
+    <div fxFlex style="padding: 24px 24px 0px 24px;">
+      <span class="Advanced-Shipment-Notification">Advanced Shipment Notification</span>
+    </div>
+    <div fxFlex style="padding: 24px 24px 0px 24px;">
+      <div fxLayout="column" class="Rectangle-721">
+        <div fxFlex>
+          <div fxLayout="row" class="PO-No">
+            <div fxFlex='30'>
+              <span>PO NO: 12345678</span>
+            </div>
+            <div fxFlex='70' fxLayout fxLayoutGap="10px" class="No-Invoice-Created-for-this-PO">
+              <div fxFlex fxLayoutAlign="end center">
+                <img src="assets/images/asn/alert.png" srcset="img/alert@2x.png 2x,
+                             img/alert@3x.png 3x" class="alert">
+              </div>
+              <div fxFlex fxLayoutAlign="start center">
+                <span>No Invoice Created for this PO</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div fxFlex class="Date">
+          <span>Date: 20-Apr-2020</span>
+        </div>
+      </div>
+    </div>
+    <div fxFlex style="padding: 24px 24px 0px 24px;">
+      <form autocomplete="off" fxLayout="row" fxLayoutAlign="start" fxLayoutGap="60px" fxFlex="1 0 auto" name="form"
+        novalidate [formGroup]="asnFormGroup">
+        <div fxFlex='25'>
+          <div fxLayout="column" fxLayoutAlign="start">
+            <div fxFlex="50">
+              <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                <mat-select (selectionChange)="modeOfTransportSelected($event)" placeholder="Mode Of Transport"
+                  formControlName="ModeOfTransport">
+                  <mat-option value="Road">Road</mat-option>
+                  <mat-option value="Train">Train</mat-option>
+                  <mat-option value="Air">Air</mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="asnFormGroup.get('ModeOfTransport').touched && asnFormGroup.get('ModeOfTransport').hasError('required')">
+                  Mode Of Transport is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div fxFlex="50">
+              <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                <input matInput placeholder="Truck" formControlName="Truck">
+                <mat-error *ngIf="asnFormGroup.get('Truck').touched && asnFormGroup.get('Truck').hasError('required')">
+                  Truck is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div fxFlex="50">
+              <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                <input matInput placeholder="AWD" formControlName="AWD">
+                <mat-error *ngIf="asnFormGroup.get('AWD').touched && asnFormGroup.get('AWD').hasError('required')">
+                  AWD is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div fxFlex='50'>
+          <div fxLayout="column" fxLayoutAlign="start">
+            <div fxFlex="50">
+              <div fxLayout="row" fxLayoutAlign="start">
+                <div fxFlex>
+                  <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                    <input matInput placeholder="Departure Date" [matDatepicker]="picker1"
+                      formControlName="DepartureDate">
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                    <mat-error
+                      *ngIf="asnFormGroup.get('DepartureDate').touched && asnFormGroup.get('DepartureDate').hasError('required')">
+                      Departure Date is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div fxFlex>
+                  <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                    <input matInput placeholder="Arrival Date" [matDatepicker]="picker2" formControlName="ArrivalDate">
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                    <mat-error
+                      *ngIf="asnFormGroup.get('ArrivalDate').touched && asnFormGroup.get('ArrivalDate').hasError('required')">
+                      Arrival Date is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div fxFlex="50">
+              <div fxLayout="row" fxLayoutAlign="start">
+                <div fxFlex>
+                  <div fxLayout="row" fxLayoutAlign="start">
+                    <div fxFlex='70'>
+                      <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                        <input matInput placeholder="Net Weight" formControlName="NetWeight"
+                          (keydown)="numberOnly($event)">
+                        <mat-error
+                          *ngIf="asnFormGroup.get('NetWeight').touched && asnFormGroup.get('NetWeight').hasError('required')">
+                          Net Weight is required
+                        </mat-error>
+                        <mat-error *ngIf="asnFormGroup.get('NetWeight').touched && !asnFormGroup.get('NetWeight').hasError('required')
+                      &&asnFormGroup.get('NetWeight').hasError('pattern')">
+                          Enter a valid number
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div fxFlex='30'>
+                      <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                        <mat-select (selectionChange)="netWeightUnitSelected($event)" formControlName="NetWeightUnit">
+                          <mat-option value="KG">KG</mat-option>
+                          <mat-option value="ML">ML</mat-option>
+                          <mat-option value="OUNCE">OUNCE</mat-option>
+                        </mat-select>
+                        <mat-error
+                          *ngIf="asnFormGroup.get('NetWeightUnit').touched && asnFormGroup.get('NetWeightUnit').hasError('required')">
+                          Mode Of Transport is required
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <div fxFlex>
+                  <div fxLayout="row" fxLayoutAlign="start">
+                    <div fxFlex='70'>
+                      <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                        <input matInput placeholder="Gross Weight" formControlName="GrossWeight"
+                          (keydown)="numberOnly($event)">
+                        <mat-error
+                          *ngIf="asnFormGroup.get('GrossWeight').touched && asnFormGroup.get('GrossWeight').hasError('required')">
+                          Gross Weight is required
+                        </mat-error>
+                        <mat-error *ngIf="asnFormGroup.get('GrossWeight').touched && !asnFormGroup.get('GrossWeight').hasError('required')
+                      &&asnFormGroup.get('GrossWeight').hasError('pattern')">
+                          Enter a valid number
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div fxFlex='30'>
+                      <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                        <mat-select (selectionChange)="grossWeightUnitSelected($event)"
+                          formControlName="GrossWeightUnit">
+                          <mat-option value="KG">KG</mat-option>
+                          <mat-option value="ML">ML</mat-option>
+                          <mat-option value="OUNCE">OUNCE</mat-option>
+                        </mat-select>
+                        <mat-error
+                          *ngIf="asnFormGroup.get('GrossWeightUnit').touched && asnFormGroup.get('GrossWeightUnit').hasError('required')">
+                          Mode Of Transport is required
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div fxFlex="50">
+              <div fxLayout="row" fxLayoutAlign="start">
+                <div fxFlex='80'>
+                  <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                    <input matInput placeholder="Volumetric Weight" formControlName="VolumetricWeight"
+                      (keydown)="numberOnly($event)">
+                    <mat-error
+                      *ngIf="asnFormGroup.get('VolumetricWeight').touched && asnFormGroup.get('VolumetricWeight').hasError('required')">
+                      Volumetric Weight is required
+                    </mat-error>
+                    <mat-error *ngIf="asnFormGroup.get('VolumetricWeight').touched && !asnFormGroup.get('VolumetricWeight').hasError('required')
+                  &&asnFormGroup.get('VolumetricWeight').hasError('pattern')">
+                      Enter a valid number
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div fxFlex='20'>
+                  <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                    <mat-select (selectionChange)="volumetricWeightUnitSelected($event)"
+                      formControlName="VolumetricWeightUnit">
+                      <mat-option value="KG">KG</mat-option>
+                      <mat-option value="ML">ML</mat-option>
+                      <mat-option value="OUNCE">OUNCE</mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="asnFormGroup.get('VolumetricWeightUnit').touched && asnFormGroup.get('VolumetricWeightUnit').hasError('required')">
+                      Mode Of Transport is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div fxFlex='25'>
+          <div fxLayout="column" fxLayoutAlign="start">
+            <div fxFlex="50">
+              <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                <input matInput placeholder="Shipping Agency" formControlName="ShippingAgency">
+                <mat-error
+                  *ngIf="asnFormGroup.get('ShippingAgency').touched && asnFormGroup.get('ShippingAgency').hasError('required')">
+                  Shipping Agency is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div fxFlex="50">
+              <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                <mat-select (selectionChange)="countryOfOriginSelected($event)" placeholder="Country Of Origin"
+                  formControlName="CountryOfOrigin">
+                  <mat-option value="India">India</mat-option>
+                  <mat-option value="USA">USA</mat-option>
+                  <mat-option value="UK">UK</mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="asnFormGroup.get('CountryOfOrigin').touched && asnFormGroup.get('CountryOfOrigin').hasError('required')">
+                  Country Of Origin is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div fxFlex="50">
+              <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                <input matInput placeholder="No Of Packs" formControlName="NoOfPacks" (keydown)="numberOnly($event)">
+                <mat-error
+                  *ngIf="asnFormGroup.get('NoOfPacks').touched && asnFormGroup.get('NoOfPacks').hasError('required')">
+                  No Of Packs is required
+                </mat-error>
+                <mat-error *ngIf="asnFormGroup.get('NoOfPacks').touched && !asnFormGroup.get('NoOfPacks').hasError('required')
+              &&asnFormGroup.get('NoOfPacks').hasError('pattern')">
+                  Enter a valid number
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <!-- <div fxLayout="row" fxLayoutAlign="start">
+        <div fxFlex="50">
+          <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+            <mat-select multiple placeholder="Assigned To" formControlName="AssignedTo">
+              <mat-option [value]="dev.UserID" *ngFor="let dev of AllDevelopersAndTLs">{{dev.UserName}}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="asnFormGroup.get('AssignedTo').touched && asnFormGroup.get('AssignedTo').hasError('required')">
+              Assigned To is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div fxFlex="50">
+          <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+            <mat-select placeholder="Sprint" formControlName="TaskSubGroupID">
+              <mat-option [value]="tas.TaskSubGroupID" *ngFor="let tas of AllTaskSubGroupView">
+                {{tas.TaskSubGroupTruck + ' - ' + tas.TaskGroupTruck + ' - '+ tas.ProjectTruck}}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="asnFormGroup.get('TaskSubGroupID').touched && asnFormGroup.get('TaskSubGroupID').hasError('required')">
+              Task Sub Group is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div> -->
+      </form>
+    </div>
+    <div class="sidenav-content px-24 mt-4" fxFlex>
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <!-- <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+          <mat-icon class="s-16">search</mat-icon>
+          <input [(ngModel)]="searchText" type="text" placeholder="Search" fxFlex>
+        </div>
+        <div fxFlex class="mr-24" align="end">
+          <mat-form-field appearance="outline" style="width: 120px;">
+            <mat-select [(ngModel)]="FilterVal">
+              <mat-option value="All">All</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div> -->
+        <span class="Shipment-Proposal">Shipment Proposal</span>
+      </div>
+      <div fxLayout>
+        <table *ngIf="AllAsns?.length" class="table" mat-table [dataSource]="asnDataSource" matSort>
+
+          <ng-container matColumnDef="Item">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Item </th>
+            <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
+              <div fxLayout>
+                <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
+                <div fxFlex class="pl-4">{{element.Item}} </div>
+              </div>
+            </td>
+          </ng-container>
+
+
+          <ng-container matColumnDef="MaterialText">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> MaterialText </th>
+            <td mat-cell *matCellDef="let element">
+              {{element.MaterialText}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="DeliveryDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Delivery Date </th>
+            <td mat-cell *matCellDef="let element"> {{element.DeliveryDate | date :'dd/MM/yyyy'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="OrderQty">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Order Qty </th>
+            <td mat-cell *matCellDef="let element">
+              {{element.OrderQty}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="GRQty">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> GR Qty </th>
+            <td mat-cell *matCellDef="let element">
+              {{element.GRQty}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="PipelineQty">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Pipeline Qty</th>
+            <td mat-cell *matCellDef="let element">
+              {{element.PipelineQty}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="OpenQty">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Open Qty</th>
+            <td mat-cell *matCellDef="let element">
+              {{element.OpenQty}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="ASNQty">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> ASN Qty</th>
+            <td mat-cell *matCellDef="let element">
+              {{element.ASNQty}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="Batch">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Batch</th>
+            <td mat-cell *matCellDef="let element">
+              <div class="Rectangle-708">
+                <span class="Batch-2">{{element.Batch}}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="ManufactureDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Manufacture Date</th>
+            <td mat-cell *matCellDef="let element">
+              {{element.ManufactureDate | date :'dd/MM/yyyy'}} </td>
+          </ng-container>
+
+
+
+          <!-- <ng-container matColumnDef="Status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+            <td mat-cell *matCellDef="let element" style="width:400px">
+              <div fxLayout class="mt-4 mr-40 ml-8">
+                <div fxFlex="30" fxLayout>
+                  <div class="round" [style.border-color]="element.Status==='Open'?'#efb577':'#34ad65'"></div>
+                  <div style="width: 10px;" [class]="element.Status==='Open'?'orange-timeline':'green-timeline'"></div>
+                  <div [class]="element.Status==='Open'?'white-timeline':'green-timeline'" fxFlex></div>
+                </div>
+                <div fxFlex="30" fxLayout>
+                  <div style="width: 10px;" [class]="getTimeline(element,'ASN')"></div>
+                  <div class="round" [style.border-color]="getStatusColor(element,'ASN')"></div>
+                  <div style="width: 10px;" [class]="getTimeline(element,'ASN')"></div>
+                  <div [class]="getRestTimeline(element,'ASN')" fxFlex></div>
+                </div>
+                <div fxFlex="30" fxLayout>
+                  <div style="width: 10px;" [class]="getTimeline(element,'Gate')"></div>
+                  <div class="round" [style.border-color]="getStatusColor(element,'Gate')"></div>
+                  <div style="width: 10px;" [class]="getTimeline(element,'Gate')"></div>
+                  <div [class]="getRestTimeline(element,'Gate')" fxFlex></div>
+                </div>
+                <div fxFlex="10" fxLayout>
+                  <div style="width: 10px;" [class]="getTimeline(element,'GRN')"></div>
+                  <div class="round" [style.border-color]="getStatusColor(element,'GRN')"></div>
+                </div>
+              </div>
+              <div fxLayout class="mr-40 ml-8">
+                <div fxFlex="30">PO</div>
+                <div fxFlex="30">ASN</div>
+                <div fxFlex="30">Gate</div>
+                <div fxFlex="10">GRN</div>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="Document">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Document </th>
+            <td mat-cell *matCellDef="let element">
+              <div fxLayout class="Rectangle">
+                <div class="Rectangle-106 m-8">
+                  <img class="m-8" src="assets/images/imageIcon.png">
+                </div>
+                <div fxFlex class="m-8" fxLayout="column">
+                  <div fxFlex>attachment.jpg</div>
+                  <div fxFlex>10KB</div>
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="NextProcess">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> NextProcess </th>
+            <td mat-cell *matCellDef="let element">
+              <span class="next">{{element.NextProcess}}
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="Action">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Action </th>
+            <td mat-cell *matCellDef="let element" style="text-align: center;">
+              <mat-form-field appearance="outline" style="width: 120px;">
+                <mat-select [(ngModel)]="ActionModel">
+                  <mat-option value="Actions">Actions</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+          </ng-container> -->
+
+          <tr mat-header-row *matHeaderRowDef="asnDisplayedColumns;sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: asnDisplayedColumns;let even=even" matRipple
+            style=" cursor: pointer;">
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div fxFlex fxLayout="column" class="px-24 mt-4">
+      <div fxFlex>
+        <span class="Shipment-Proposal">Invoice Details</span>
+      </div>
+      <form autocomplete="off" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="20px" fxFlex="1 0 auto" name="form"
+        novalidate [formGroup]="invoiceDetailsFormGroup">
+        <div fxLayout="row" fxLayoutAlign="start">
+          <div fxFlex="50">
+            <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+              <input matInput placeholder="Invoice Number" formControlName="InvoiceNumber">
+              <mat-error
+                *ngIf="invoiceDetailsFormGroup.get('InvoiceNumber').touched && invoiceDetailsFormGroup.get('InvoiceNumber').hasError('required')">
+                Invoice Number is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div fxFlex="50">
+            <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+              <input matInput placeholder="Invoice Date" [matDatepicker]="picker3" formControlName="InvoiceDate">
+              <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+              <mat-datepicker #picker3></mat-datepicker>
+              <mat-error
+                *ngIf="invoiceDetailsFormGroup.get('InvoiceDate').touched && invoiceDetailsFormGroup.get('InvoiceDate').hasError('required')">
+                Invoice Date is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="start">
+          <div fxFlex="50">
+            <div fxLayout="row" fxLayoutAlign="start">
+              <div fxFlex='70'>
+                <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                  <input matInput placeholder="Invoice Value" formControlName="InvoiceValue"
+                    (keydown)="numberOnly($event)">
+                  <mat-error
+                    *ngIf="invoiceDetailsFormGroup.get('InvoiceValue').touched && invoiceDetailsFormGroup.get('InvoiceValue').hasError('required')">
+                    Invoice Value is required
+                  </mat-error>
+                  <mat-error *ngIf="invoiceDetailsFormGroup.get('InvoiceValue').touched && !invoiceDetailsFormGroup.get('InvoiceValue').hasError('required')
+                &&invoiceDetailsFormGroup.get('InvoiceValue').hasError('pattern')">
+                    Enter a valid number
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div fxFlex='30'>
+                <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                  <mat-select (selectionChange)="invoiceValueUnitSelected($event)" formControlName="InvoiceValueUnit">
+                    <mat-option value="USD">USD</mat-option>
+                    <mat-option value="RS">RS</mat-option>
+                    <mat-option value="EUROS">EUROS</mat-option>
+                  </mat-select>
+                  <mat-error
+                    *ngIf="invoiceDetailsFormGroup.get('InvoiceValueUnit').touched && invoiceDetailsFormGroup.get('InvoiceValueUnit').hasError('required')">
+                    Mode Of Transport is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div fxFlex="50">
+            <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start">
+              <div fxFlex='50'>
+                <div fxLayout class="Rectangle">
+                  <div class="Rectangle-106 m-8">
+                    <img class="m-8" src="assets/images/imageIcon.png">
+                  </div>
+                  <div fxFlex class="m-8" fxLayout="column">
+                    <div fxFlex>attachment.jpg</div>
+                    <div fxFlex>10KB</div>
+                  </div>
+                </div>
+              </div>
+              <div fxFlex="50" class="Rectangle-199">
+                <div style="padding: 10px;">
+                  <span class="addAttachmentClass" (click)="fileInput1.click()"> + Add an Attachment. </span>
+                  <input hidden type="file" accept="image/x-png,image/gif,image/jpeg,image/jpg" #fileInput1 id="file"
+                    (change)="handleFileInput($event)" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
+  </mat-progress-spinner>
+  <div id="overlay" *ngIf="IsProgressBarVisibile"></div>
+</div>

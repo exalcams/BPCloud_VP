@@ -63,13 +63,21 @@ import { NgCircleProgressModule } from 'ng-circle-progress';
 import { ChartsModule } from 'ng2-charts';
 import 'chartjs-plugin-labels';
 import 'chartjs-plugin-annotation';
+<<<<<<< HEAD
 import { PoFlipComponent } from './po-flip/po-flip.component';
+=======
+import { ASNComponent } from './asn/asn.component';
+>>>>>>> ASN Changes
 // import 'chart.piecelabel.js';
 
 const routes = [
     {
         path: 'dashboard',
         component: DashboardComponent
+    },
+    {
+        path: 'asn',
+        component: ASNComponent
     },
     {
         path: 'task-group',
@@ -162,7 +170,11 @@ const routes = [
         })
 
     ],
+<<<<<<< HEAD
     declarations: [DashboardComponent, TaskGroupComponent, ProjectComponent, TaskComponent, AttachmentDialogComponent, PoFlipComponent],
+=======
+    declarations: [DashboardComponent, ASNComponent, TaskGroupComponent, ProjectComponent, TaskComponent, AttachmentDialogComponent],
+>>>>>>> ASN Changes
     providers: [
         DecimalPipe
     ],
