@@ -207,7 +207,7 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy {
                 this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
             }
         );
-        // this._router.navigate(['auth/login']);
+         this._router.navigate(['auth/login']);
         // this.notificationSnackBarComponent.openSnackBar('Signed out successfully', SnackBarStatus.success);
     }
 }
