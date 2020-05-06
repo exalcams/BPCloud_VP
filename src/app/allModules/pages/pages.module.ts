@@ -63,6 +63,7 @@ import { NgCircleProgressModule } from 'ng-circle-progress';
 import { ChartsModule } from 'ng2-charts';
 import 'chartjs-plugin-labels';
 import 'chartjs-plugin-annotation';
+import { PoFlipComponent } from './po-flip/po-flip.component';
 // import 'chart.piecelabel.js';
 
 const routes = [
@@ -81,6 +82,10 @@ const routes = [
     {
         path: 'task',
         component: TaskComponent
+    },
+    {
+        path: 'po-flip',
+        component: PoFlipComponent
     },
     {
         path: '**',
@@ -157,7 +162,7 @@ const routes = [
         })
 
     ],
-    declarations: [DashboardComponent, TaskGroupComponent, ProjectComponent, TaskComponent, AttachmentDialogComponent],
+    declarations: [DashboardComponent, TaskGroupComponent, ProjectComponent, TaskComponent, AttachmentDialogComponent, PoFlipComponent],
     providers: [
         DecimalPipe
     ],
