@@ -54,20 +54,14 @@ import { FuseSharedModule } from '@fuse/shared.module';
 import { FormsModule } from '@angular/forms';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { DecimalPipe } from '@angular/common';
-import { TaskGroupComponent } from './task-group/task-group.component';
-import { ProjectComponent } from './project/project.component';
-import { TaskComponent } from './task/task.component';
 import { AttachmentDialogComponent } from './attachment-dialog/attachment-dialog.component';
 // import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { NgCircleProgressModule } from 'ng-circle-progress';
 import { ChartsModule } from 'ng2-charts';
 import 'chartjs-plugin-labels';
 import 'chartjs-plugin-annotation';
-<<<<<<< HEAD
 import { PoFlipComponent } from './po-flip/po-flip.component';
-=======
 import { ASNComponent } from './asn/asn.component';
->>>>>>> ASN Changes
 // import 'chart.piecelabel.js';
 
 const routes = [
@@ -79,18 +73,18 @@ const routes = [
         path: 'asn',
         component: ASNComponent
     },
-    {
-        path: 'task-group',
-        component: TaskGroupComponent
-    },
-    {
-        path: 'project',
-        component: ProjectComponent
-    },
-    {
-        path: 'task',
-        component: TaskComponent
-    },
+    // {
+    //     path: 'task-group',
+    //     component: TaskGroupComponent
+    // },
+    // {
+    //     path: 'project',
+    //     component: ProjectComponent
+    // },
+    // {
+    //     path: 'task',
+    //     component: TaskComponent
+    // },
     {
         path: 'po-flip',
         component: PoFlipComponent
@@ -170,11 +164,7 @@ const routes = [
         })
 
     ],
-<<<<<<< HEAD
-    declarations: [DashboardComponent, TaskGroupComponent, ProjectComponent, TaskComponent, AttachmentDialogComponent, PoFlipComponent],
-=======
-    declarations: [DashboardComponent, ASNComponent, TaskGroupComponent, ProjectComponent, TaskComponent, AttachmentDialogComponent],
->>>>>>> ASN Changes
+    declarations: [DashboardComponent, AttachmentDialogComponent, ASNComponent, PoFlipComponent],
     providers: [
         DecimalPipe
     ],
