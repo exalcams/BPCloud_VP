@@ -375,6 +375,9 @@ export class ASNComponent implements OnInit {
     invoiceValueUnitSelected(event): void {
 
     }
+    AddDocumentCentreToTable(): void {
+
+    }
 
 }
 export class ASN {
