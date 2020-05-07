@@ -31,6 +31,7 @@ export class LoginComponent implements OnInit {
   MenuItems: string[] = [];
   children: FuseNavigation[] = [];
   subChildren: FuseNavigation[] = [];
+  reportSubChildren: FuseNavigation[] = [];
   private _unsubscribeAll: Subject<any>;
   message = 'Snack Bar opened.';
   actionButtonLabel = 'Retry';
@@ -219,48 +220,34 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    // if (this.MenuItems.indexOf('Project') >= 0) {
-    //   this.children.push(
-    //     {
-    //       id: 'project',
-    //       title: 'Project',
-    //       translate: 'NAV.SAMPLE.TITLE',
-    //       type: 'item',
-    //       icon: 'projectIcon',
-    //       isSvgIcon: true,
-    //       // icon: 'dashboard',
-    //       url: '/pages/project',
-    //     }
-    //   );
-    // }
-    // if (this.MenuItems.indexOf('Task Group') >= 0) {
-    //   this.children.push(
-    //     {
-    //       id: 'taskGroup',
-    //       title: 'Task Group',
-    //       translate: 'NAV.SAMPLE.TITLE',
-    //       type: 'item',
-    //       icon: 'taskGroupIcon',
-    //       isSvgIcon: true,
-    //       // icon: 'dashboard',
-    //       url: '/pages/task-group',
-    //     }
-    //   );
-    // }
-    // if (this.MenuItems.indexOf('Task') >= 0) {
-    //   this.children.push(
-    //     {
-    //       id: 'task',
-    //       title: 'Task',
-    //       translate: 'NAV.SAMPLE.TITLE',
-    //       type: 'item',
-    //       icon: 'taskIcon',
-    //       isSvgIcon: true,
-    //       // icon: 'dashboard',
-    //       url: '/pages/task',
-    //     }
-    //   );
-    // }
+    if (this.MenuItems.indexOf('Invoice') >= 0) {
+      this.children.push(
+        {
+          id: 'invoice',
+          title: 'Invoice',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          icon: 'billIcon',
+          isSvgIcon: true,
+          // icon: 'dashboard',
+          url: '/invoice',
+        }
+      );
+    }
+    if (this.MenuItems.indexOf('Payment') >= 0) {
+      this.children.push(
+        {
+          id: 'payment',
+          title: 'Payment',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          icon: 'paymentIcon',
+          isSvgIcon: true,
+          // icon: 'dashboard',
+          url: '/payment',
+        }
+      );
+    }
 
     // if (this.MenuItems.indexOf('InvoiceDetails') >= 0) {
     //   this.children.push(
@@ -276,20 +263,50 @@ export class LoginComponent implements OnInit {
     //     }
     //   );
     // }
-    if (this.MenuItems.indexOf('Reports') >= 0) {
-      this.children.push(
-        {
-          id: 'reports',
-          title: 'Report',
-          translate: 'NAV.SAMPLE.TITLE',
-          type: 'item',
-          icon: 'reportIcon',
-          isSvgIcon: true,
-          // icon: 'assignment',
-          url: '/reports',
-        }
-      );
-    }
+
+    // if (this.MenuItems.indexOf('Invoice') >= 0) {
+    //   this.reportSubChildren.push(
+    //     {
+    //       id: 'invoice',
+    //       title: 'Invoice',
+    //       translate: 'NAV.SAMPLE.TITLE',
+    //       type: 'item',
+    //       icon: 'billIcon',
+    //       isSvgIcon: true,
+    //       // icon: 'dashboard',
+    //       url: '/invoice',
+    //     }
+    //   );
+    // }
+    // if (this.MenuItems.indexOf('Payment') >= 0) {
+    //   this.reportSubChildren.push(
+    //     {
+    //       id: 'payment',
+    //       title: 'Payment',
+    //       translate: 'NAV.SAMPLE.TITLE',
+    //       type: 'item',
+    //       icon: 'paymentIcon',
+    //       isSvgIcon: true,
+    //       // icon: 'dashboard',
+    //       url: '/payment',
+    //     }
+    //   );
+    // }
+
+    // if (this.MenuItems.indexOf('Reports') >= 0) {
+    //   this.children.push(
+    //     {
+    //       id: 'reports',
+    //       title: 'Report',
+    //       translate: 'NAV.SAMPLE.TITLE',
+    //       type: 'collapsable',
+    //       icon: 'reportIcon',
+    //       isSvgIcon: true,
+    //       // icon: 'assignment',
+    //       children: this.reportSubChildren
+    //     }
+    //   );
+    // }
     if (this.MenuItems.indexOf('App') >= 0) {
       this.subChildren.push(
         {
