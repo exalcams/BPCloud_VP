@@ -103,7 +103,7 @@ export class LoginComponent implements OnInit {
         }
       );
       // this.UpdateMenu();
-       this._router.navigate(['pages/asn']);
+      // this._router.navigate(['pages/asn']);
       // this.notificationSnackBarComponent.openSnackBar('Logged in successfully', SnackBarStatus.success);
     } else {
       Object.keys(this.loginForm.controls).forEach(key => {
