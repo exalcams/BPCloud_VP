@@ -1,6 +1,6 @@
 <div id="asn" class="page-layout carded" fusePerfectScrollbar>
-  <div class="center" fxLayout="column" fxLayoutGap="10px">
-    <div fxFlex style="padding: 24px 24px 0px 24px;">
+  <div class="center" fxLayout="column" fxLayoutGap="20px">
+    <div fxFlex class="px-24 mt-4" style="padding-top: 24px;">
       <span class="Advanced-Shipment-Notification">Advanced Shipment Notification</span>
     </div>
     <div fxFlex class="px-24 mt-4">
@@ -35,7 +35,7 @@
     <div fxFlex class="px-24 mt-4">
       <form autocomplete="off" fxLayout="row" fxLayoutAlign="start" fxLayoutGap="60px" fxFlex="1 0 auto" name="form"
         novalidate [formGroup]="asnFormGroup">
-        <div fxFlex='25'>
+        <div fxFlex='33'>
           <div fxLayout="column" fxLayoutAlign="start">
             <div fxFlex="50">
               <mat-form-field class="pl-8 pr-24" style="width: 100%;">
@@ -69,13 +69,13 @@
             </div>
           </div>
         </div>
-        <div fxFlex='50'>
+        <div fxFlex='33'>
           <div fxLayout="column" fxLayoutAlign="start">
-            <div fxFlex="50">
+            <div fxFlex>
               <div fxLayout="row" fxLayoutAlign="start">
-                <div fxFlex>
+                <div fxFlex="50">
                   <mat-form-field class="pl-8 pr-24" style="width: 100%;">
-                    <input matInput placeholder="Departure Date" [matDatepicker]="picker1"
+                    <input matInput placeholder="Departure Dt" [matDatepicker]="picker1"
                       formControlName="DepartureDate">
                     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                     <mat-datepicker #picker1></mat-datepicker>
@@ -85,9 +85,9 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
-                <div fxFlex>
+                <div fxFlex="50">
                   <mat-form-field class="pl-8 pr-24" style="width: 100%;">
-                    <input matInput placeholder="Arrival Date" [matDatepicker]="picker2" formControlName="ArrivalDate">
+                    <input matInput placeholder="Arrival Dt" [matDatepicker]="picker2" formControlName="ArrivalDate">
                     <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                     <mat-datepicker #picker2></mat-datepicker>
                     <mat-error
@@ -98,14 +98,13 @@
                 </div>
               </div>
             </div>
-            <div fxFlex="50">
+            <div fxFlex>
               <div fxLayout="row" fxLayoutAlign="start">
-                <div fxFlex>
+                <div fxFlex="50">
                   <div fxLayout="row" fxLayoutAlign="start">
-                    <div fxFlex='70'>
+                    <div fxFlex='60'>
                       <mat-form-field class="pl-8 pr-24" style="width: 100%;">
-                        <input matInput placeholder="Net Weight" formControlName="NetWeight"
-                          (keydown)="numberOnly($event)">
+                        <input matInput placeholder="Net Wt" formControlName="NetWeight" (keydown)="numberOnly($event)">
                         <mat-error
                           *ngIf="asnFormGroup.get('NetWeight').touched && asnFormGroup.get('NetWeight').hasError('required')">
                           Net Weight is required
@@ -116,7 +115,7 @@
                         </mat-error>
                       </mat-form-field>
                     </div>
-                    <div fxFlex='30'>
+                    <div fxFlex='40'>
                       <mat-form-field class="pl-8 pr-24" style="width: 100%;">
                         <mat-select (selectionChange)="netWeightUnitSelected($event)" formControlName="NetWeightUnit">
                           <mat-option value="KG">KG</mat-option>
@@ -131,11 +130,11 @@
                     </div>
                   </div>
                 </div>
-                <div fxFlex>
+                <div fxFlex="50">
                   <div fxLayout="row" fxLayoutAlign="start">
-                    <div fxFlex='70'>
+                    <div fxFlex='60'>
                       <mat-form-field class="pl-8 pr-24" style="width: 100%;">
-                        <input matInput placeholder="Gross Weight" formControlName="GrossWeight"
+                        <input matInput placeholder="Gross Wt" formControlName="GrossWeight"
                           (keydown)="numberOnly($event)">
                         <mat-error
                           *ngIf="asnFormGroup.get('GrossWeight').touched && asnFormGroup.get('GrossWeight').hasError('required')">
@@ -147,7 +146,7 @@
                         </mat-error>
                       </mat-form-field>
                     </div>
-                    <div fxFlex='30'>
+                    <div fxFlex='40'>
                       <mat-form-field class="pl-8 pr-24" style="width: 100%;">
                         <mat-select (selectionChange)="grossWeightUnitSelected($event)"
                           formControlName="GrossWeightUnit">
@@ -165,11 +164,11 @@
                 </div>
               </div>
             </div>
-            <div fxFlex="50">
+            <div fxFlex>
               <div fxLayout="row" fxLayoutAlign="start">
                 <div fxFlex='80'>
                   <mat-form-field class="pl-8 pr-24" style="width: 100%;">
-                    <input matInput placeholder="Volumetric Weight" formControlName="VolumetricWeight"
+                    <input matInput placeholder="Volumetric Wt" formControlName="VolumetricWeight"
                       (keydown)="numberOnly($event)">
                     <mat-error
                       *ngIf="asnFormGroup.get('VolumetricWeight').touched && asnFormGroup.get('VolumetricWeight').hasError('required')">
@@ -199,7 +198,7 @@
             </div>
           </div>
         </div>
-        <div fxFlex='25'>
+        <div fxFlex='33'>
           <div fxLayout="column" fxLayoutAlign="start">
             <div fxFlex="50">
               <mat-form-field class="pl-8 pr-24" style="width: 100%;">
@@ -268,8 +267,8 @@
       </div> -->
       </form>
     </div>
-    <div fxFlex fxLayout="column" class="px-24 mt-4">
-      <div fxFlex style="margin-bottom: 20px;">
+    <div fxFlex fxLayout="column" fxLayoutGap="20px" class="px-24 mt-4">
+      <div fxFlex>
         <span class="Shipment-Proposal">Shipment Proposal</span>
       </div>
       <div fxFlex>
@@ -417,14 +416,14 @@
         </table>
       </div>
     </div>
-    <div fxFlex fxLayout="column" class="px-24 mt-4">
+    <div fxFlex fxLayout="column" fxLayoutGap="20px" class="px-24 mt-4">
       <div fxFlex>
         <span class="Shipment-Proposal">Invoice Details</span>
       </div>
       <form autocomplete="off" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="20px" fxFlex="1 0 auto" name="form"
         novalidate [formGroup]="invoiceDetailsFormGroup">
-        <div fxLayout="row" fxLayoutGap="120px" fxLayoutAlign="start">
-          <div fxFlex="50">
+        <div fxLayout="row" fxLayoutGap="60px" fxLayoutAlign="start">
+          <div fxFlex="33">
             <mat-form-field class="pl-8 pr-24" style="width: 100%;">
               <input matInput placeholder="Invoice Number" formControlName="InvoiceNumber">
               <mat-error
@@ -433,7 +432,7 @@
               </mat-error>
             </mat-form-field>
           </div>
-          <div fxFlex="50">
+          <div fxFlex="33">
             <mat-form-field class="pl-8 pr-24" style="width: 100%;">
               <input matInput placeholder="Invoice Date" [matDatepicker]="picker3" formControlName="InvoiceDate">
               <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
@@ -444,9 +443,7 @@
               </mat-error>
             </mat-form-field>
           </div>
-        </div>
-        <div fxLayout="row" fxLayoutGap="120px" fxLayoutAlign="start">
-          <div fxFlex="50">
+          <div fxFlex="33">
             <div fxLayout="row" fxLayoutAlign="start">
               <div fxFlex='70'>
                 <mat-form-field class="pl-8 pr-24" style="width: 100%;">
@@ -477,21 +474,16 @@
               </div>
             </div>
           </div>
-          <div fxFlex="50">
+        </div>
+        <div fxLayout="row" fxLayoutGap="60px" fxLayoutAlign="start">
+          <div fxFlex="33">
             <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start">
               <div fxFlex='50'>
-                <div fxLayout class="Rectangle">
-                  <div class="Rectangle-106 m-8">
-                    <img class="m-8" src="assets/images/imageIcon.png">
-                  </div>
-                  <div fxFlex class="m-8" fxLayout="column">
-                    <div fxFlex>Invoice_details_attchment.pdf</div>
-                    <div fxFlex>96KB</div>
-                  </div>
-                </div>
+                <span style="margin-left: 8px;color: #9d9ea2;
+                font-size: 16px;">Invoice Attachment</span>
               </div>
-              <div fxFlex="50" class="Rectangle-199">
-                <div style="padding: 10px;">
+              <div fxFlex="50">
+                <div>
                   <span class="addAttachmentClass" (click)="fileInput1.click()"> + add Attachment </span>
                   <input hidden type="file" accept="image/x-png,image/gif,image/jpeg,image/jpg" #fileInput1 id="file"
                     (change)="handleFileInput($event)" />
@@ -500,9 +492,22 @@
             </div>
           </div>
         </div>
+        <div fxFlex>
+          <div fxFlex="20">
+            <div fxLayout class="Rectangle">
+              <div class="Rectangle-106 m-8">
+                <img class="m-8" src="assets/images/imageIcon.png">
+              </div>
+              <div fxFlex class="m-8" fxLayout="column">
+                <div fxFlex>Invoice_details_attchment.pdf</div>
+                <div fxFlex>96KB</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </form>
     </div>
-    <div fxFlex fxLayout="column" class="px-24 mt-4">
+    <div fxFlex fxLayout="column" fxLayoutGap="20px" class="px-24 mt-4">
       <div fxFlex>
         <span class="Shipment-Proposal">Document Centre</span>
       </div>

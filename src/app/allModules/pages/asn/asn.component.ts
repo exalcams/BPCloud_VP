@@ -361,7 +361,6 @@ export class ASNComponent implements OnInit {
         }
     }
 }
-
 export class ASN {
     Item: number;
     MaterialText: string;
