@@ -31,6 +31,7 @@ export class ASNComponent implements OnInit {
     IsProgressBarVisibile: boolean;
     asnFormGroup: FormGroup;
     invoiceDetailsFormGroup: FormGroup;
+    documentCentreFormGroup: FormGroup;
     AllOwners: UserWithRole[] = [];
     AllTasks: Task[] = [];
     AllTasksCount: number;
@@ -38,6 +39,7 @@ export class ASNComponent implements OnInit {
     AllOpenTasksCount: number;
     AllEscalatedTasksCount: number;
     AllReworkTasksCount: number;
+    AllAsns: ASN[] = [];
     asnDisplayedColumns: string[] = [
         'Item',
         'MaterialText',
@@ -53,6 +55,13 @@ export class ASNComponent implements OnInit {
     asnDataSource: MatTableDataSource<ASN>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
+    AllDocumentCentres: DocumentCentre[] = [];
+    documentCentreDisplayedColumns: string[] = [
+        'DocumentType',
+        'DocumentTitle',
+        'Filename',
+    ];
+    documentCentreDataSource: MatTableDataSource<DocumentCentre>;
     selection = new SelectionModel<any>(true, []);
     AllTickets: any[] = [];
     AllActivities: any[] = [];
@@ -62,7 +71,6 @@ export class ASNComponent implements OnInit {
     searchText = '';
     FilterVal = 'All';
     ActionModel = 'Actions';
-    AllAsns: ASN[] = [];
 
     // Circular Progress bar
     radius = 60;
@@ -112,6 +120,7 @@ export class ASNComponent implements OnInit {
         // ];
         this.InitializeASNFormGroup();
         this.InitializeInvoiceDetailsFormGroup();
+        this.InitializeDocumentCentreFormGroup();
         this.Fulfilments = [
             {
                 'name': 'Open',
@@ -200,6 +209,19 @@ export class ASNComponent implements OnInit {
             },
         ];
         this.asnDataSource = new MatTableDataSource(this.AllAsns);
+
+        this.AllDocumentCentres = [
+            {
+                DocumentType: 'Business', DocumentTitle: 'Software Credentials', Filename: 'Software_credentials.pdf',
+            },
+            {
+                DocumentType: 'Payment', DocumentTitle: 'Hardware Subordinates', Filename: 'Hardware_subordinates.pdf',
+            },
+            {
+                DocumentType: 'Maintanence', DocumentTitle: 'Payment Maintanence', Filename: 'Payment_maintanence.pdf',
+            }
+        ];
+        this.documentCentreDataSource = new MatTableDataSource(this.AllDocumentCentres);
     }
     InitializeASNFormGroup(): void {
         this.asnFormGroup = this._formBuilder.group({
@@ -227,10 +249,20 @@ export class ASNComponent implements OnInit {
             InvoiceValue: ['', [Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
             InvoiceValueUnit: ['', Validators.required],
             InvoiceDate: ['', Validators.required],
-            InvoiceAttachment: ['', ],
+            InvoiceAttachment: ['',],
         });
         // this.DynamicallyAddAcceptedValidation();
     }
+
+    InitializeDocumentCentreFormGroup(): void {
+        this.documentCentreFormGroup = this._formBuilder.group({
+            DocumentType: ['', Validators.required],
+            DocumentTitle: ['', Validators.required],
+            Filename: ['', Validators.required],
+        });
+        // this.DynamicallyAddAcceptedValidation();
+    }
+
     modeOfTransportSelected(event): void {
         const selectedType = event.value;
         if (event.value) {
@@ -251,10 +283,10 @@ export class ASNComponent implements OnInit {
 
     handleFileInput(evt): void {
         if (evt.target.files && evt.target.files.length > 0) {
-        //   this.fileToUpload = evt.target.files[0];
-        //   this.fileToUploadList.push(this.fileToUpload);
+            //   this.fileToUpload = evt.target.files[0];
+            //   this.fileToUploadList.push(this.fileToUpload);
         }
-      }
+    }
     //   DynamicallyAddAcceptedValidation(): void {
     //     if (this.CurrentUserRole.toLocaleLowerCase() === 'developer') {
     //       this.asnFormGroup.get('AcceptedEffort').setValidators([Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]);
@@ -342,4 +374,9 @@ export class ASN {
     Status: string;
     Batch: string;
     ManufactureDate: Date;
+}
+export class DocumentCentre {
+    DocumentType: string;
+    DocumentTitle: string;
+    Filename: string;
 }
