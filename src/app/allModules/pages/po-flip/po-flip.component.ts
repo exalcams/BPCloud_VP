@@ -29,7 +29,10 @@ export class PoFlipComponent implements OnInit {
   poDetailsDataSource: MatTableDataSource<PODetails>;
   Costs: Cost[] = [];
   PODetails: PODetails[] = [];
-  constructor() { }
+  IsProgressBarVisibile: boolean;
+  constructor() {
+    this.IsProgressBarVisibile = false;
+  }
 
   ngOnInit() {
 
@@ -46,7 +49,7 @@ export class PoFlipComponent implements OnInit {
       { PO: '10', MaterialTxt: 'Query Tools', HSN: '421836', OpenQty: '20', InvoiceQty: '18', Price: '18929', Tax: '14%', Amount: '18400' }
     ]
     this.poCostDataSource = new MatTableDataSource(this.Costs);
-    this.poDetailsDataSource=new MatTableDataSource(this.PODetails);
+    this.poDetailsDataSource = new MatTableDataSource(this.PODetails);
   }
 
 }

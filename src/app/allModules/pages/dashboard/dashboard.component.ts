@@ -13,6 +13,8 @@ import { Guid } from 'guid-typescript';
 import { DashboardService } from 'app/services/dashboard.service';
 import { ShareParameterService } from 'app/services/share-parameters.service';
 import { ChartType } from 'chart.js';
+import { FuseConfigService } from '@fuse/services/config.service';
+import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 // import 'chartjs-plugin-annotation';
 // import 'chart.piecelabel.js';
 // import 'chartjs-plugin-labels';
@@ -57,7 +59,7 @@ export class DashboardComponent implements OnInit {
     DeliveryStatus: any[] = [];
     searchText = '';
     FilterVal = 'All';
-    ActionModel = 'Actions';
+    ActionModel = 'Acknowledge';
     Pos: PO[] = [];
 
     // Circular Progress bar
@@ -160,10 +162,13 @@ export class DashboardComponent implements OnInit {
     public barColors: any[] = [{ backgroundColor: '#40a8e2' }, { backgroundColor: '#fb863a' }];
 
     constructor(
-        public snackBar: MatSnackBar) {
+        private _fuseConfigService: FuseConfigService,
+        private _formBuilder: FormBuilder,
+        private _router: Router,
+        public snackBar: MatSnackBar
+        ) {
         this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
         this.authenticationDetails = new AuthenticationDetails();
-        this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
         this.IsProgressBarVisibile = false;
         this.progress1(85);
         this.progress2(99);
@@ -171,21 +176,21 @@ export class DashboardComponent implements OnInit {
 
     ngOnInit(): void {
         // Retrive authorizationData
-        // const retrievedObject = localStorage.getItem('authorizationData');
-        // if (retrievedObject) {
-        //     this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
-        //     this.currentUserID = this.authenticationDetails.UserID;
-        //     this.currentUserRole = this.authenticationDetails.UserRole;
-        //     this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
-        //     if (this.MenuItems.indexOf('Dashboard') < 0) {
-        //         this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
-        //         );
-        //         this._router.navigate(['/auth/login']);
-        //     }
+        const retrievedObject = localStorage.getItem('authorizationData');
+        if (retrievedObject) {
+            this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+            this.currentUserID = this.authenticationDetails.UserID;
+            this.currentUserRole = this.authenticationDetails.UserRole;
+            this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
+            if (this.MenuItems.indexOf('Dashboard') < 0) {
+                this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
+                );
+                this._router.navigate(['/auth/login']);
+            }
 
-        // } else {
-        //     this._router.navigate(['/auth/login']);
-        // }
+        } else {
+            this._router.navigate(['/auth/login']);
+        }
 
         // const gradient = this.barCanvas.nativeElement.getContext('2d').createLinearGradient(0, 0, 0, 600);
         // gradient.addColorStop(0, 'red');
