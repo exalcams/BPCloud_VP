@@ -5,7 +5,6 @@
     background-repeat: no-repeat;
     background-size: cover;
   }
-
   .progressBarPostion {
     position: absolute !important;
     top: 350px;
@@ -79,7 +78,7 @@
     text-align: left;
     color: #3e3e3e;
   }
-  .Shipment-Proposal{
+  .Shipment-Proposal {
     font-size: 20px;
     font-weight: bold;
     font-stretch: normal;
@@ -89,9 +88,10 @@
     text-align: left;
     color: #3e3e3e;
     margin-bottom: 10px;
-    text-decoration-color: #efb577;
-    text-decoration-line: underline;
-    text-decoration-style: solid;
+    // text-decoration-color: #efb577;
+    // text-decoration-line: underline;
+    // text-decoration-style: solid;
+    border-bottom: 2px solid #efb577;
   }
   .Rectangle-708 {
     padding-top: 12px;
@@ -112,7 +112,6 @@
     text-align: left;
     color: #3e3e3e;
   }
-
   .Rectangle {
     // width: 152px;
     min-height: 50px;
@@ -129,12 +128,23 @@
     border-radius: 2px;
     background-color: #f9d2a8;
   }
-  .Rectangle-199{
+  .Rectangle-199 {
     //width: 230px;
+    font-weight: 600;
     height: 50px;
     border-radius: 5px;
     border: solid 3px #f4cda4;
     background-color: #ffffff;
+    cursor: pointer !important;
+  }
+  .addAttachmentClass {
+    padding-left: 70px;
+  }
+  .addIcon {
+    height: 26px;
+    margin-top: 25px;
+    padding-left: 8px;
+    cursor: pointer !important;
   }
   .cardHeader {
     background-color: #fffdf9;
@@ -147,17 +157,14 @@
     @extend .boldClass;
     font-style: italic;
   }
-
   .semiBoldClass {
     font-weight: 500;
   }
-
   .subTitle {
     @extend .semiBoldClass;
     font-size: 12px;
     color: #d87060;
   }
-
   // .tableData {
   //   overflow: auto;
   //   height: 60vh !important;

@@ -3,12 +3,15 @@
     <div fxFlex style="padding: 24px 24px 0px 24px;">
       <span class="Advanced-Shipment-Notification">Advanced Shipment Notification</span>
     </div>
-    <div fxFlex style="padding: 24px 24px 0px 24px;">
+    <div fxFlex class="px-24 mt-4">
       <div fxLayout="column" class="Rectangle-721">
         <div fxFlex>
           <div fxLayout="row" class="PO-No">
             <div fxFlex='30'>
-              <span>PO NO: 12345678</span>
+              <div fxLayout="row" fxLayoutGap="2px">
+                <div fxFlex='30'> <span>PO NO:</span></div>
+                <div fxFlex='70'> <span> 12345678</span></div>
+              </div>
             </div>
             <div fxFlex='70' fxLayout fxLayoutGap="10px" class="No-Invoice-Created-for-this-PO">
               <div fxFlex fxLayoutAlign="end center">
@@ -22,11 +25,14 @@
           </div>
         </div>
         <div fxFlex class="Date">
-          <span>Date: 20-Apr-2020</span>
+          <div fxFlex='30' fxLayout="row" fxLayoutGap="2px">
+            <div fxFlex='30'> <span>Date:</span></div>
+            <div fxFlex='70'> <span>20-Apr-2020</span></div>
+          </div>
         </div>
       </div>
     </div>
-    <div fxFlex style="padding: 24px 24px 0px 24px;">
+    <div fxFlex class="px-24 mt-4">
       <form autocomplete="off" fxLayout="row" fxLayoutAlign="start" fxLayoutGap="60px" fxFlex="1 0 auto" name="form"
         novalidate [formGroup]="asnFormGroup">
         <div fxFlex='25'>
@@ -262,22 +268,11 @@
       </div> -->
       </form>
     </div>
-    <div class="sidenav-content px-24 mt-4" fxFlex>
-      <div fxLayout="row" fxLayoutAlign="space-between center">
-        <!-- <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
-          <mat-icon class="s-16">search</mat-icon>
-          <input [(ngModel)]="searchText" type="text" placeholder="Search" fxFlex>
-        </div>
-        <div fxFlex class="mr-24" align="end">
-          <mat-form-field appearance="outline" style="width: 120px;">
-            <mat-select [(ngModel)]="FilterVal">
-              <mat-option value="All">All</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div> -->
+    <div fxFlex fxLayout="column" class="px-24 mt-4">
+      <div fxFlex style="margin-bottom: 20px;">
         <span class="Shipment-Proposal">Shipment Proposal</span>
       </div>
-      <div fxLayout>
+      <div fxFlex>
         <table *ngIf="AllAsns?.length" class="table" mat-table [dataSource]="asnDataSource" matSort>
 
           <ng-container matColumnDef="Item">
@@ -290,9 +285,8 @@
             </td>
           </ng-container>
 
-
           <ng-container matColumnDef="MaterialText">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> MaterialText </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Material Text </th>
             <td mat-cell *matCellDef="let element">
               {{element.MaterialText}} </td>
           </ng-container>
@@ -346,8 +340,6 @@
             <td mat-cell *matCellDef="let element">
               {{element.ManufactureDate | date :'dd/MM/yyyy'}} </td>
           </ng-container>
-
-
 
           <!-- <ng-container matColumnDef="Status">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
@@ -431,7 +423,7 @@
       </div>
       <form autocomplete="off" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="20px" fxFlex="1 0 auto" name="form"
         novalidate [formGroup]="invoiceDetailsFormGroup">
-        <div fxLayout="row" fxLayoutAlign="start">
+        <div fxLayout="row" fxLayoutGap="120px" fxLayoutAlign="start">
           <div fxFlex="50">
             <mat-form-field class="pl-8 pr-24" style="width: 100%;">
               <input matInput placeholder="Invoice Number" formControlName="InvoiceNumber">
@@ -453,7 +445,7 @@
             </mat-form-field>
           </div>
         </div>
-        <div fxLayout="row" fxLayoutAlign="start">
+        <div fxLayout="row" fxLayoutGap="120px" fxLayoutAlign="start">
           <div fxFlex="50">
             <div fxLayout="row" fxLayoutAlign="start">
               <div fxFlex='70'>
@@ -493,14 +485,14 @@
                     <img class="m-8" src="assets/images/imageIcon.png">
                   </div>
                   <div fxFlex class="m-8" fxLayout="column">
-                    <div fxFlex>attachment.jpg</div>
-                    <div fxFlex>10KB</div>
+                    <div fxFlex>Invoice_details_attchment.pdf</div>
+                    <div fxFlex>96KB</div>
                   </div>
                 </div>
               </div>
               <div fxFlex="50" class="Rectangle-199">
                 <div style="padding: 10px;">
-                  <span class="addAttachmentClass" (click)="fileInput1.click()"> + Add an Attachment. </span>
+                  <span class="addAttachmentClass" (click)="fileInput1.click()"> + add Attachment </span>
                   <input hidden type="file" accept="image/x-png,image/gif,image/jpeg,image/jpg" #fileInput1 id="file"
                     (change)="handleFileInput($event)" />
                 </div>
@@ -509,6 +501,77 @@
           </div>
         </div>
       </form>
+    </div>
+    <div fxFlex fxLayout="column" class="px-24 mt-4">
+      <div fxFlex>
+        <span class="Shipment-Proposal">Document Centre</span>
+      </div>
+      <div>
+        <form autocomplete="off" fxLayout="row" fxLayoutAlign="start" fxLayoutGap="60px" fxFlex="1 0 auto" name="form"
+          novalidate [formGroup]="documentCentreFormGroup">
+          <div fxFlex="32">
+            <mat-form-field class="pl-8 pr-12" style="width: 100%;">
+              <input matInput placeholder="Document Type" formControlName="DocumentType">
+              <mat-error
+                *ngIf="documentCentreFormGroup.get('DocumentType').touched && documentCentreFormGroup.get('DocumentType').hasError('required')">
+                Document Type is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div fxFlex="32">
+            <mat-form-field class="pl-8 pr-12" style="width: 100%;">
+              <input matInput placeholder="Document Title" formControlName="DocumentTitle">
+              <mat-error
+                *ngIf="documentCentreFormGroup.get('DocumentTitle').touched && documentCentreFormGroup.get('DocumentTitle').hasError('required')">
+                Document Title is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div fxFlex="31">
+            <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+              <input matInput placeholder="Filename" formControlName="Filename">
+              <mat-error
+                *ngIf="documentCentreFormGroup.get('Filename').touched && documentCentreFormGroup.get('Filename').hasError('required')">
+                Filename is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div fxFlex="5" fxLayoutAlign="start">
+            <img class="addIcon" src="assets/images/logos/add-button.png" (click)="AddDocumentCentreToTable()">
+          </div>
+        </form>
+      </div>
+      <div style="margin-top: 10px; margin-bottom: 10px;">
+        <table *ngIf="AllDocumentCentres?.length" class="table" mat-table [dataSource]="documentCentreDataSource"
+          matSort>
+          <ng-container matColumnDef="DocumentType">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Document Type </th>
+            <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
+              <div fxLayout>
+                <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
+                <div fxFlex class="pl-4">{{element.DocumentType}} </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="DocumentTitle">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Document Title </th>
+            <td mat-cell *matCellDef="let element">
+              {{element.DocumentTitle}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="Filename">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Filename </th>
+            <td mat-cell *matCellDef="let element">
+              {{element.Filename}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="documentCentreDisplayedColumns;sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: documentCentreDisplayedColumns;let even=even" matRipple
+            style=" cursor: pointer;">
+          </tr>
+        </table>
+      </div>
     </div>
   </div>
   <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
