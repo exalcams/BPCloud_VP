@@ -249,7 +249,7 @@ export class ASNComponent implements OnInit {
             InvoiceValue: ['', [Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
             InvoiceValueUnit: ['', Validators.required],
             InvoiceDate: ['', Validators.required],
-            InvoiceAttachment: ['',],
+            InvoiceAttachment: [''],
         });
         // this.DynamicallyAddAcceptedValidation();
     }
@@ -360,6 +360,22 @@ export class ASNComponent implements OnInit {
                 return '';
         }
     }
+    netWeightUnitSelected(event): void {
+
+    }
+    grossWeightUnitSelected(event): void {
+
+    }
+    volumetricWeightUnitSelected(event): void {
+
+    }
+    countryOfOriginSelected(event): void {
+
+    }
+    invoiceValueUnitSelected(event): void {
+
+    }
+
 }
 export class ASN {
     Item: number;
