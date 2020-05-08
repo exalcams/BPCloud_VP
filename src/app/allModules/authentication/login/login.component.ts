@@ -249,6 +249,20 @@ export class LoginComponent implements OnInit {
       );
     }
 
+    if (this.MenuItems.indexOf('Fact') >= 0) {
+      this.children.push(
+        {
+          id: 'fact',
+          title: 'Fact',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          icon: 'home',
+          isSvgIcon: false,
+          // icon: 'dashboard',
+          url: '/fact',
+        }
+      );
+    }
     // if (this.MenuItems.indexOf('InvoiceDetails') >= 0) {
     //   this.children.push(
     //     {

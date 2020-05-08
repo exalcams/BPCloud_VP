@@ -46,6 +46,10 @@ const appRoutes: Routes = [
         loadChildren: './allModules/payment/payment.module#PaymentModule'
     },
     {
+        path: 'fact',
+        loadChildren: './allModules/fact/fact.module#FactModule'
+    },
+    {
         path: 'reports',
         loadChildren: './allModules/reports/reports.module#ReportsModule'
     },
