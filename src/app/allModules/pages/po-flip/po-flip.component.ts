@@ -1,10 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
+import { fuseAnimations } from '@fuse/animations';
 
 @Component({
   selector: 'app-po-flip',
   templateUrl: './po-flip.component.html',
-  styleUrls: ['./po-flip.component.scss']
+  styleUrls: ['./po-flip.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  animations: fuseAnimations
 })
 export class PoFlipComponent implements OnInit {
 

@@ -64,6 +64,7 @@ import { PoFlipComponent } from './po-flip/po-flip.component';
 import { ASNComponent } from './asn/asn.component';
 import { HomeComponent } from './home/home.component';
 
+import { OrderFulfilmentComponent } from './order-fulfilment/order-fulfilment.component';
 // import 'chart.piecelabel.js';
 
 const routes = [
@@ -94,6 +95,10 @@ const routes = [
     {
         path: 'home',
         component: HomeComponent
+    },
+    {
+        path: 'order-fulfilment',
+        component: OrderFulfilmentComponent
     },
     {
         path: '**',
@@ -170,7 +175,7 @@ const routes = [
         })
 
     ],
-    declarations: [DashboardComponent, AttachmentDialogComponent, ASNComponent, PoFlipComponent, HomeComponent],
+    declarations: [DashboardComponent, AttachmentDialogComponent, ASNComponent, PoFlipComponent,HomeComponent, OrderFulfilmentComponent],
     providers: [
         DecimalPipe
     ],
