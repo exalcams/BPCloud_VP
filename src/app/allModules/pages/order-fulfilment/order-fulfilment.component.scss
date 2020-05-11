@@ -1,0 +1,123 @@
+@import "src/@fuse/scss/fuse";
+#Order-fuil {
+
+    .center {
+        padding: 20px !important;
+        background-color: white;
+      }
+  @mixin TableBorderRight($color) {
+    border-right: 1px solid $color;
+  }
+
+  .TablePadFont {
+    padding: 5px;
+    font-size: 12px;
+    min-width: 100px !important;
+  }
+
+  table {
+    width: 100%;
+
+    th {
+      @include TableBorderRight(gray);
+      @extend .TablePadFont;
+      color: white;
+      background-color: #121214;
+    }
+
+    td {
+      @include TableBorderRight(rgba(0, 0, 0, 0.12));
+      @extend .TablePadFont;
+      font-size: 12px;
+      text-align: center;
+      min-width: max-content !important;
+    }
+
+    tr {
+      height: 40px;
+    }
+
+    .mat-sort-header-container {
+      display: flex;
+      justify-content: center;
+    }
+  }
+  .roundCommon {
+    height: 20px;
+    width: 20px;
+    border-radius: 20px;
+    border-width: 3px;
+    border-style: solid;
+  }
+
+  .round {
+    @extend .roundCommon;
+    background-color: white;
+    border-color: gray;
+  }
+  .hor-timeline {
+    height: 8px;
+    margin-top: 5px;
+    //border-radius: 4px;
+  }
+  .green-timeline {
+    @extend .hor-timeline;
+    background-color: #34ad65;
+  }
+  .orange-timeline {
+    @extend .hor-timeline;
+    background-color: #efb577;
+  }
+  .white-timeline {
+    @extend .hor-timeline;
+    background-color: white;
+    border-top: 2px solid rgba(0, 0, 0, 0.2);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+  }
+  .divider1{
+    border-left: 1px solid #25262b;
+    opacity: 0.2;
+    margin-right: 10%;
+  }
+  .divider{
+    border-left: 1px solid #25262b;
+    opacity: 0.2;
+    margin-right: 5%;
+    margin-top: -2%;
+    margin-bottom: -20px
+  }
+  .tab-round1{
+    height: 90px;
+    width: 90px;
+    border: 2px solid;
+    border-radius: 90%;
+    // border-color: #8ba0f9
+  }
+  .tab-round2{
+    height: 80px;
+    width: 80px;
+    border: 1px solid;
+    border-radius: 60px;
+    /* padding: 0px; */
+    margin: 3px;
+    // border-color: #8ba0f9;
+  }
+  .item-round1{
+    @extend .tab-round1;
+    border-color: #8ba0f9
+  }
+  .item-round2{
+    @extend .tab-round2;
+    border-color: #8ba0f9
+  }
+  ::ngdeep .mat-tab-label{
+    height: 150px !important;
+  }
+  body.theme-default .mat-tab-group.mat-primary .mat-ink-bar {
+    border: 2px solid !important;
+    border-color: #efb577 !important;
+    visibility: visible !important;
+    left: 30px !important;
+    width: 100px !important;
+  }
+}
