@@ -62,6 +62,8 @@ import 'chartjs-plugin-labels';
 import 'chartjs-plugin-annotation';
 import { PoFlipComponent } from './po-flip/po-flip.component';
 import { ASNComponent } from './asn/asn.component';
+import { HomeComponent } from './home/home.component';
+
 // import 'chart.piecelabel.js';
 
 const routes = [
@@ -88,6 +90,10 @@ const routes = [
     {
         path: 'po-flip',
         component: PoFlipComponent
+    },
+    {
+        path: 'home',
+        component: HomeComponent
     },
     {
         path: '**',
@@ -164,7 +170,7 @@ const routes = [
         })
 
     ],
-    declarations: [DashboardComponent, AttachmentDialogComponent, ASNComponent, PoFlipComponent],
+    declarations: [DashboardComponent, AttachmentDialogComponent, ASNComponent, PoFlipComponent, HomeComponent],
     providers: [
         DecimalPipe
     ],
