@@ -15,6 +15,7 @@ import { ShareParameterService } from 'app/services/share-parameters.service';
 import { ChartType } from 'chart.js';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
+import { PO } from 'app/models/Dashboard';
 // import 'chartjs-plugin-annotation';
 // import 'chart.piecelabel.js';
 // import 'chartjs-plugin-labels';
@@ -165,8 +166,9 @@ export class DashboardComponent implements OnInit {
         private _fuseConfigService: FuseConfigService,
         private _formBuilder: FormBuilder,
         private _router: Router,
-        public snackBar: MatSnackBar
-        ) {
+        public snackBar: MatSnackBar,
+        public _dashboardService: DashboardService
+    ) {
         this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
         this.authenticationDetails = new AuthenticationDetails();
         this.IsProgressBarVisibile = false;
@@ -176,6 +178,7 @@ export class DashboardComponent implements OnInit {
 
     ngOnInit(): void {
         // Retrive authorizationData
+        this.GetPODetails();
         const retrievedObject = localStorage.getItem('authorizationData');
         if (retrievedObject) {
             this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
@@ -273,7 +276,7 @@ export class DashboardComponent implements OnInit {
                 'series': [
                     {
                         'name': 'Planned',
-                        'value': 40
+                        'value': 40 
                     },
                     {
                         'name': 'Actual',
@@ -283,14 +286,33 @@ export class DashboardComponent implements OnInit {
             },
         ];
 
-        this.Pos = [
-            { TransID: 122, Version: '1.1', PODate: new Date(), Status: 'Open', Document: '', NextProcess: 'Acknowledgement' },
-            { TransID: 123, Version: '1.1', PODate: new Date(), Status: 'PO', Document: '', NextProcess: 'Acknowledgement' },
-            { TransID: 124, Version: '1.1', PODate: new Date(), Status: 'ASN', Document: '', NextProcess: 'Acknowledgement' },
-            { TransID: 125, Version: '1.1', PODate: new Date(), Status: 'Gate', Document: '', NextProcess: 'Acknowledgement' },
-            { TransID: 126, Version: '1.1', PODate: new Date(), Status: 'GRN', Document: '', NextProcess: 'Acknowledgement' },
-        ];
-        this.posDataSource = new MatTableDataSource(this.Pos);
+        // this.Pos = [
+        //     { TransID: 122, Version: '1.1', PODate: new Date(), Status: 'Open', Document: '', NextProcess: 'Acknowledgement' },
+        //     { TransID: 123, Version: '1.1', PODate: new Date(), Status: 'PO', Document: '', NextProcess: 'Acknowledgement' },
+        //     { TransID: 124, Version: '1.1', PODate: new Date(), Status: 'ASN', Document: '', NextProcess: 'Acknowledgement' },
+        //     { TransID: 125, Version: '1.1', PODate: new Date(), Status: 'Gate', Document: '', NextProcess: 'Acknowledgement' },
+        //     { TransID: 126, Version: '1.1', PODate: new Date(), Status: 'GRN', Document: '', NextProcess: 'Acknowledgement' },
+        // ];
+        // this.posDataSource = new MatTableDataSource(this.Pos);
+    }
+    GetPODetails() {
+        this.IsProgressBarVisibile = true;
+        this._dashboardService
+            .GetPODetails()
+            .subscribe((data) => {
+                if (data) {
+                    this.Pos = <PO[]>data;
+                    this.posDataSource = new MatTableDataSource(this.Pos);
+                }
+                this.IsProgressBarVisibile = false;
+            },
+                (err) => {
+                    console.error(err);
+                    this.IsProgressBarVisibile = false;
+                });
+    }
+    PurchaseOrder(po: string) {
+        this._router.navigate(['/pages/order-fulfilment'], { queryParams: { id: po } });
     }
     progress1(value: number): void {
         const progress = value / 100;
@@ -352,13 +374,4 @@ export class DashboardComponent implements OnInit {
                 return '';
         }
     }
-}
-
-export class PO {
-    TransID: number;
-    Version: string;
-    PODate: Date;
-    Status: string;
-    Document: string;
-    NextProcess: string;
 }

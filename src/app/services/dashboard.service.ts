@@ -5,6 +5,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
+import { PO } from 'app/models/Dashboard';
 
 @Injectable({
     providedIn: 'root'
@@ -33,6 +34,9 @@ export class DashboardService {
     errorHandler(error: HttpErrorResponse): Observable<string> {
         return throwError(error.error || error.message || 'Server Error');
     }
-
+    GetPODetails(): Observable<any | string> {
+        return this._httpClient.get<any>(`${this.baseAddress}poapi/Dashboard/GetPODetails`)
+          .pipe(catchError(this.errorHandler));
+      }
    
 }
