@@ -5,7 +5,7 @@
     //   background-repeat: no-repeat;
     //   background-size: cover;
     // }
-  
+
     .progressBarPostion {
       position: absolute !important;
       top: 350px;
@@ -18,31 +18,31 @@
     }
     .cardHeader {
         background-color: #fffdf9;
-        
+
     }
 
-  
-    
+
+
     @mixin TableBorderRight($color) {
       border-right: 1px solid $color;
     }
-  
+
     .TablePadFont {
       padding: 5px;
       font-size: 12px;
       min-width: 100px !important;
     }
-  
+
     table {
       width: 100%;
-  
+
       th {
         @include TableBorderRight(gray);
         @extend .TablePadFont;
         color: white;
         background-color: #121214;
       }
-  
+
       td {
         @include TableBorderRight(rgba(0, 0, 0, 0.12));
         @extend .TablePadFont;
@@ -50,7 +50,7 @@
         text-align: center;
         min-width: max-content !important;
       }
-  
+
       tr {
         height: 40px;
       }
@@ -60,22 +60,23 @@
         justify-content: center;
       }
     }
+
     .tableLeftBorder {
         border-left: 1px solid rgba(0, 0, 0, 0.12);
       }
-  
- 
+
+
       .icon {
         margin: 0;
         color: rgba(0, 0, 0, 0.54);
       }
-  
+
     //   input {
     //     padding: 0 12px 0 8px;
     //     background-color: #ffffff;
     //     height: 36px;
     //     border: none;
-    //   } 
+    //   }
     .mat-form-field-flex > .mat-form-field-infix {
       padding: 0.3em 0px !important;
     }
@@ -86,7 +87,7 @@
       margin: 1em 0 0 0;
       padding-bottom: 1em;
     }
-  
+
     .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
       transform: translateY(-1.1em) scale(0.75);
       width: 133.33333%;

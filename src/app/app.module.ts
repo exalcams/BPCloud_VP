@@ -41,10 +41,10 @@ const appRoutes: Routes = [
         path: 'invoice',
         loadChildren: './allModules/invoice/invoice.module#InvoiceModule'
     },
-    {
-        path: 'payment',
-        loadChildren: './allModules/payment/payment.module#PaymentModule'
-    },
+    // {
+    //     path: 'payment',
+    //     loadChildren: './allModules/payment/payment.module#PaymentModule'
+    // },
     {
         path: 'fact',
         loadChildren: './allModules/fact/fact.module#FactModule'

@@ -1,6 +1,6 @@
-import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { FuseSidebarModule } from '@fuse/components';
+import { NgModule } from "@angular/core";
+import { RouterModule } from "@angular/router";
+import { FuseSidebarModule } from "@fuse/components";
 
 import {
     MatFormFieldModule,
@@ -38,43 +38,44 @@ import {
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
-    MatTreeModule
-} from '@angular/material';
+    MatTreeModule,
+} from "@angular/material";
 
-import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { NgxDonutChartModule } from 'ngx-doughnut-chart';
+import { NgxChartsModule } from "@swimlane/ngx-charts";
+import { NgxDonutChartModule } from "ngx-doughnut-chart";
 import {
     FuseCountdownModule,
     FuseHighlightModule,
     FuseMaterialColorPickerModule,
-    FuseWidgetModule
-} from '@fuse/components';
+    FuseWidgetModule,
+} from "@fuse/components";
 
-import { FuseSharedModule } from '@fuse/shared.module';
-import { FormsModule } from '@angular/forms';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { DecimalPipe } from '@angular/common';
-import { AttachmentDialogComponent } from './attachment-dialog/attachment-dialog.component';
+import { FuseSharedModule } from "@fuse/shared.module";
+import { FormsModule } from "@angular/forms";
+import { DashboardComponent } from "./dashboard/dashboard.component";
+import { DecimalPipe } from "@angular/common";
+import { AttachmentDialogComponent } from "./attachment-dialog/attachment-dialog.component";
 // import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
-import { NgCircleProgressModule } from 'ng-circle-progress';
-import { ChartsModule } from 'ng2-charts';
-import 'chartjs-plugin-labels';
-import 'chartjs-plugin-annotation';
-import { PoFlipComponent } from './po-flip/po-flip.component';
-import { ASNComponent } from './asn/asn.component';
-import { HomeComponent } from './home/home.component';
+import { NgCircleProgressModule } from "ng-circle-progress";
+import { ChartsModule } from "ng2-charts";
+import "chartjs-plugin-labels";
+import "chartjs-plugin-annotation";
+import { PoFlipComponent } from "./po-flip/po-flip.component";
+import { ASNComponent } from "./asn/asn.component";
+import { HomeComponent } from "./home/home.component";
 
-import { OrderFulfilmentComponent } from './order-fulfilment/order-fulfilment.component';
+import { OrderFulfilmentComponent } from "./order-fulfilment/order-fulfilment.component";
+import { PaymentComponent } from "./payment/payment.component";
 // import 'chart.piecelabel.js';
 
 const routes = [
     {
-        path: 'dashboard',
-        component: DashboardComponent
+        path: "dashboard",
+        component: DashboardComponent,
     },
     {
-        path: 'asn',
-        component: ASNComponent
+        path: "asn",
+        component: ASNComponent,
     },
     // {
     //     path: 'task-group',
@@ -89,21 +90,25 @@ const routes = [
     //     component: TaskComponent
     // },
     {
-        path: 'po-flip',
-        component: PoFlipComponent
+        path: "po-flip",
+        component: PoFlipComponent,
     },
     {
-        path: 'home',
-        component: HomeComponent
+        path: "home",
+        component: HomeComponent,
     },
     {
-        path: 'order-fulfilment',
-        component: OrderFulfilmentComponent
+        path: "payment",
+        component: PaymentComponent,
     },
     {
-        path: '**',
-        redirectTo: '/auth/login'
-    }
+        path: "order-fulfilment",
+        component: OrderFulfilmentComponent,
+    },
+    {
+        path: "**",
+        redirectTo: "/auth/login",
+    },
 ];
 
 @NgModule({
@@ -168,19 +173,22 @@ const routes = [
             radius: 60,
             outerStrokeWidth: 5,
             innerStrokeWidth: 2,
-            outerStrokeColor: '#f3705a',
-            innerStrokeColor: '#f3705a',
+            outerStrokeColor: "#f3705a",
+            innerStrokeColor: "#f3705a",
             showInnerStroke: true,
             animationDuration: 300,
-        })
-
+        }),
     ],
-    declarations: [DashboardComponent, AttachmentDialogComponent, ASNComponent, PoFlipComponent,HomeComponent, OrderFulfilmentComponent],
-    providers: [
-        DecimalPipe
+    declarations: [
+        DashboardComponent,
+        AttachmentDialogComponent,
+        ASNComponent,
+        PoFlipComponent,
+        HomeComponent,
+        OrderFulfilmentComponent,
+        PaymentComponent,
     ],
-    entryComponents: [
-        AttachmentDialogComponent
-    ]
+    providers: [DecimalPipe],
+    entryComponents: [AttachmentDialogComponent],
 })
-export class PagesModule { }
+export class PagesModule {}
