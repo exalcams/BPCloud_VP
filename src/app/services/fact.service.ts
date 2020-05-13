@@ -32,8 +32,8 @@ export class FactService {
       .pipe(catchError(this.errorHandler));
   }
 
-  GetFactByEmailID(EmailID: string): Observable< BPCFact | string> {
-    return this._httpClient.get< BPCFact>(`${this.baseAddress}factapi/Fact/GetFactByEmailID?EmailID=${EmailID}`)
+  GetFactByEmailID(EmailID: string): Observable<BPCFact | string> {
+    return this._httpClient.get<BPCFact>(`${this.baseAddress}factapi/Fact/GetFactByEmailID?EmailID=${EmailID}`)
       .pipe(catchError(this.errorHandler));
   }
 
@@ -83,8 +83,31 @@ export class FactService {
     return this._httpClient.get<BPCKRA[]>(`${this.baseAddress}factapi/Fact/GetKRAsByPartnerID?PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));
   }
+
   GetAIACTsByPartnerID(PartnerID: string): Observable<BPCAIACT[] | string> {
     return this._httpClient.get<BPCAIACT[]>(`${this.baseAddress}factapi/Fact/GetAIACTsByPartnerID?PartnerID=${PartnerID}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  AcceptAIACT(AIACT: BPCAIACT): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/AcceptAIACT`,
+      AIACT,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  RejectAIACT(AIACT: BPCAIACT): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/RejectAIACT`,
+      AIACT,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
       .pipe(catchError(this.errorHandler));
   }
 }
