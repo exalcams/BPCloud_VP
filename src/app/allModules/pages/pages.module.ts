@@ -90,7 +90,7 @@ const routes = [
     //     component: TaskComponent
     // },
     {
-        path: "po-flip",
+        path: "poflip",
         component: PoFlipComponent,
     },
     {
@@ -102,7 +102,7 @@ const routes = [
         component: PaymentComponent,
     },
     {
-        path: "order-fulfilment",
+        path: "polookup",
         component: OrderFulfilmentComponent,
     },
     {
