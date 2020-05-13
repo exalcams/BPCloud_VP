@@ -312,7 +312,12 @@ export class DashboardComponent implements OnInit {
                 });
     }
     PurchaseOrder(po: string) {
+        // alert(po);
         this._router.navigate(['/pages/order-fulfilment'], { queryParams: { id: po } });
+    }
+    AdvanceShipment(po: string) {
+        // alert(po);
+        this._router.navigate(['/pages/asn'], { queryParams: { id: po } });
     }
     progress1(value: number): void {
         const progress = value / 100;
