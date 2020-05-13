@@ -271,8 +271,8 @@
       <div fxFlex>
         <span class="Shipment-Proposal">Shipment Proposal</span>
       </div>
-      <div fxFlex>
-        <table *ngIf="AllAsns?.length" class="table" mat-table [dataSource]="asnDataSource" matSort>
+      <div fxFlex fxLayout="column">
+        <table *ngIf="AllAsnItems?.length" class="table" mat-table [dataSource]="asnItemDataSource" matSort>
 
           <ng-container matColumnDef="Item">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Item </th>
@@ -409,11 +409,15 @@
             </td>
           </ng-container> -->
 
-          <tr mat-header-row *matHeaderRowDef="asnDisplayedColumns;sticky: true"></tr>
-          <tr mat-row *matRowDef="let row; columns: asnDisplayedColumns;let even=even" matRipple
+          <tr mat-header-row *matHeaderRowDef="asnItemDisplayedColumns;sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: asnItemDisplayedColumns;let even=even" matRipple
             style=" cursor: pointer;">
           </tr>
         </table>
+        <div flex *ngIf="AllAsnItems?.length">
+          <mat-paginator [pageSizeOptions]="[10, 20, 30, 50, 75, 100]" showFirstLastButtons>
+          </mat-paginator>
+        </div>
       </div>
     </div>
     <div fxFlex fxLayout="column" fxLayoutGap="20px" class="px-24 mt-4">
@@ -546,7 +550,7 @@
           </div>
         </form>
       </div>
-      <div style="margin-top: 10px; margin-bottom: 10px;">
+      <div fxFlex fxLayout="column" style="margin-top: 10px; margin-bottom: 10px;">
         <table *ngIf="AllDocumentCentres?.length" class="table" mat-table [dataSource]="documentCentreDataSource"
           matSort>
           <ng-container matColumnDef="DocumentType">
@@ -576,6 +580,10 @@
             style=" cursor: pointer;">
           </tr>
         </table>
+        <div flex *ngIf="AllDocumentCentres?.length">
+          <mat-paginator [pageSizeOptions]="[10, 20, 30, 50, 75, 100]" showFirstLastButtons>
+          </mat-paginator>
+        </div>
       </div>
     </div>
   </div>
