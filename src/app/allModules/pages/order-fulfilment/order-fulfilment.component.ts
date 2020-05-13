@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
+import { ASNDetails, ItemDetails, GRNDetails, QADetails, OrderFulfilmentDetails } from 'app/models/Dashboard';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DashboardService } from 'app/services/dashboard.service';
 
 @Component({
     selector: 'app-order-fulfilment',
@@ -55,7 +58,42 @@ export class OrderFulfilmentComponent implements OnInit {
     asn: ASNDetails[] = [];
     grn: GRNDetails[] = [];
     qa: QADetails[] = [];
-    constructor() {
+    Status: string;
+    OrderFulfilmentDetails: OrderFulfilmentDetails = new OrderFulfilmentDetails();
+    PO: any;
+    constructor(
+        private route: ActivatedRoute,
+        public _dashboardService: DashboardService,
+        private _router: Router
+    ) {
+        this.route.queryParams.subscribe(params => {
+            this.PO = params['id'];
+            this._dashboardService.GetOrderFulfilmentDetails(this.PO).subscribe(
+                data => {
+                    if (data) {
+                        this.OrderFulfilmentDetails = <OrderFulfilmentDetails>data;
+                        console.log(this.OrderFulfilmentDetails);
+                        this.Status = this.OrderFulfilmentDetails.Status
+                        this.asn =this.OrderFulfilmentDetails.aSNDetails;
+                        this.items = this.OrderFulfilmentDetails.itemDetails;
+                        this.grn = this.OrderFulfilmentDetails.gRNDetails;
+                        this.qa = this.OrderFulfilmentDetails.qADetails;
+                        this.asnDataSource = new MatTableDataSource(this.asn);
+                        this.itemDataSource = new MatTableDataSource(this.items);
+                        this.grnDataSource = new MatTableDataSource(this.grn);
+                        this.qaDataSource = new MatTableDataSource(this.qa);
+                        // this.POItemList = new MatTableDataSource(this.POPurchaseOrderDetails.POItemList);
+                        // if (this.POPurchaseOrderDetails.POItemList && this.POPurchaseOrderDetails.POItemList.length) {
+                        //     this.Checked(this.POPurchaseOrderDetails.POItemList[0]);
+                        // }
+                        // console.log(this.POPurchaseOrderDetails);
+                    }
+                },
+                err => {
+                    console.error(err);
+                }
+            );
+        });
         this.tab1 = true;
         this.tab2 = false;
         this.tab3 = false;
@@ -63,30 +101,29 @@ export class OrderFulfilmentComponent implements OnInit {
         this.tab5 = false;
         this.tab6 = false;
     }
-    Status: string;
 
     ngOnInit() {
-        this.Status = "ASN"
-        this.items = [{ Item: 'item1', MaterialText: 'MaterialText1', DalivaryDate: '21/01/2020', OrderQty: 10, GRQty: 12, OpenQty: 26, PipelineQty: 32, UOM: 'EA' },
-        { Item: 'item2', MaterialText: 'MaterialText', DalivaryDate: '21/01/2020', OrderQty: 10, GRQty: 12, OpenQty: 26, PipelineQty: 32, UOM: 'EA' },
-        { Item: 'item2', MaterialText: 'MaterialText', DalivaryDate: '21/01/2020', OrderQty: 10, GRQty: 12, OpenQty: 26, PipelineQty: 32, UOM: 'EA' },
-        { Item: 'item2', MaterialText: 'MaterialText', DalivaryDate: '21/01/2020', OrderQty: 10, GRQty: 12, OpenQty: 26, PipelineQty: 32, UOM: 'EA' }]
-        this.itemDataSource = new MatTableDataSource(this.items);
-        this.asn = [{ ASN: 'asn', Date: '21/01/2020', Truck: 'ka 1234', Status: 'Open' },
-        { ASN: 'asn', Date: '21/01/2020', Truck: 'ka 1234', Status: 'Open' },
-        { ASN: 'asn', Date: '21/01/2020', Truck: 'ka 1234', Status: 'Open' },
-        { ASN: 'asn', Date: '21/01/2020', Truck: 'ka 1234', Status: 'Open' }]
-        this.asnDataSource = new MatTableDataSource(this.asn);
-        this.grn = [{ Item: '10', MaterialText: 'MaterialText', GRNDate: '21/01/2020', Qty: 12, Status: 'open' },
-        { Item: '10', MaterialText: 'MaterialText', GRNDate: '21/01/2020', Qty: 12, Status: 'open' },
-        { Item: '20', MaterialText: 'MaterialText', GRNDate: '21/01/2020', Qty: 12, Status: 'open' },
-        { Item: '30', MaterialText: 'MaterialText', GRNDate: '21/01/2020', Qty: 12, Status: 'open' }]
-        this.grnDataSource = new MatTableDataSource(this.grn);
-        this.qa = [{ Item: '20', MaterialText: 'MaterialText', Date: '21/01/2020', LotQty: 21, RejQty: 4, RejReason: 'RejReason' },
-        { Item: '20', MaterialText: 'MaterialText', Date: '21/01/2020', LotQty: 21, RejQty: 4, RejReason: 'RejReason' },
-        { Item: '20', MaterialText: 'MaterialText', Date: '21/01/2020', LotQty: 21, RejQty: 4, RejReason: 'RejReason' },
-        { Item: '20', MaterialText: 'MaterialText', Date: '21/01/2020', LotQty: 21, RejQty: 4, RejReason: 'RejReason' }]
-        this.qaDataSource = new MatTableDataSource(this.qa);
+        // this.Status = "ASN"
+        // this.items = [{ Item: 'item1', MaterialText: 'MaterialText1', DalivaryDate: '21/01/2020', OrderQty: 10, GRQty: 12, OpenQty: 26, PipelineQty: 32, UOM: 'EA' },
+        // { Item: 'item2', MaterialText: 'MaterialText', DalivaryDate: '21/01/2020', OrderQty: 10, GRQty: 12, OpenQty: 26, PipelineQty: 32, UOM: 'EA' },
+        // { Item: 'item2', MaterialText: 'MaterialText', DalivaryDate: '21/01/2020', OrderQty: 10, GRQty: 12, OpenQty: 26, PipelineQty: 32, UOM: 'EA' },
+        // { Item: 'item2', MaterialText: 'MaterialText', DalivaryDate: '21/01/2020', OrderQty: 10, GRQty: 12, OpenQty: 26, PipelineQty: 32, UOM: 'EA' }]
+        // this.itemDataSource = new MatTableDataSource(this.items);
+        // this.asn = [{ ASN: 'asn', Date: '21/01/2020', Truck: 'ka 1234', Status: 'Open' },
+        // { ASN: 'asn', Date: '21/01/2020', Truck: 'ka 1234', Status: 'Open' },
+        // { ASN: 'asn', Date: '21/01/2020', Truck: 'ka 1234', Status: 'Open' },
+        // { ASN: 'asn', Date: '21/01/2020', Truck: 'ka 1234', Status: 'Open' }]
+        // this.asnDataSource = new MatTableDataSource(this.asn);
+        // this.grn = [{ Item: '10', MaterialText: 'MaterialText', GRNDate: '21/01/2020', Qty: 12, Status: 'open' },
+        // { Item: '10', MaterialText: 'MaterialText', GRNDate: '21/01/2020', Qty: 12, Status: 'open' },
+        // { Item: '20', MaterialText: 'MaterialText', GRNDate: '21/01/2020', Qty: 12, Status: 'open' },
+        // { Item: '30', MaterialText: 'MaterialText', GRNDate: '21/01/2020', Qty: 12, Status: 'open' }]
+        // this.grnDataSource = new MatTableDataSource(this.grn);
+        // this.qa = [{ Item: '20', MaterialText: 'MaterialText', Date: '21/01/2020', LotQty: 21, RejQty: 4, RejReason: 'RejReason' },
+        // { Item: '20', MaterialText: 'MaterialText', Date: '21/01/2020', LotQty: 21, RejQty: 4, RejReason: 'RejReason' },
+        // { Item: '20', MaterialText: 'MaterialText', Date: '21/01/2020', LotQty: 21, RejQty: 4, RejReason: 'RejReason' },
+        // { Item: '20', MaterialText: 'MaterialText', Date: '21/01/2020', LotQty: 21, RejQty: 4, RejReason: 'RejReason' }]
+        // this.qaDataSource = new MatTableDataSource(this.qa);
     }
     tabone(): void {
         this.tab1 = true;
@@ -149,19 +186,19 @@ export class OrderFulfilmentComponent implements OnInit {
         // this.ResetControl();
     }
 
-    getallItem() : void{
+    getallItem(): void {
         this.itemDataSource = new MatTableDataSource(this.items);
     }
-    getallasn() : void{
+    getallasn(): void {
         this.asnDataSource = new MatTableDataSource(this.asn);
     }
-    getallgrn() : void{
+    getallgrn(): void {
         this.grnDataSource = new MatTableDataSource(this.grn);
     }
-    getallqa() : void{
+    getallqa(): void {
         this.qaDataSource = new MatTableDataSource(this.qa);
     }
-    
+
     getStatusColor(StatusFor: string): string {
         switch (StatusFor) {
             case 'ASN':
@@ -202,35 +239,4 @@ export class OrderFulfilmentComponent implements OnInit {
                 return '';
         }
     }
-}
-export class ItemDetails {
-    Item: string;
-    MaterialText: string;
-    DalivaryDate: string;
-    OrderQty: number;
-    GRQty: number;
-    PipelineQty: number;
-    OpenQty: number;
-    UOM: string;
-}
-export class ASNDetails {
-    ASN: string;
-    Date: string;
-    Truck: string;
-    Status: string;
-}
-export class GRNDetails {
-    Item: string;
-    MaterialText: string;
-    GRNDate: string;
-    Qty: number;
-    Status: string;
-}
-export class QADetails {
-    Item: string;
-    MaterialText: string;
-    Date: string;
-    LotQty: number;
-    RejQty: number;
-    RejReason: string;
 }

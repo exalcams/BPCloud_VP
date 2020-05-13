@@ -4,11 +4,11 @@
       <div fxFlex="50">
         <div fxFlex="50" class="mx-8 mb-8 mt-0 p-8">
           <div fxLayout fxLayoutAlign="space-between center">
-            <div fxFlex>PO No : <strong>#123456789</strong></div>
+            <div fxFlex>PO No : <strong>{{OrderFulfilmentDetails.PONumber}}</strong></div>
           </div>
           <div>
             <div style="margin-top: 20px;color: #2e2e2e">
-              <span>PO Date : <strong>20 /24 / 2020</strong></span>
+              <span>PO Date : <strong>{{OrderFulfilmentDetails.PODate  | date :'dd/MM/yyyy'}}</strong></span>
             </div>
           </div>
         </div>
@@ -16,11 +16,11 @@
         <div class="divider1"></div>
         <div fxFlex="50" class="mx-8 mb-8 mt-0 p-8">
           <div fxLayout fxLayoutAlign="space-between center">
-            <div fxFlex>Currency : <strong>INR</strong></div>
+            <div fxFlex>Currency : <strong>{{OrderFulfilmentDetails.Currency}}</strong></div>
           </div>
           <div>
             <div style="margin-top: 20px;color: #2e2e2e">
-              <span>Version :<strong>1.1</strong></span>
+              <span>Version :<strong>{{OrderFulfilmentDetails.Version}}</strong></span>
             </div>
           </div>
         </div>
@@ -72,10 +72,10 @@
       </div>
     </div>
 
-    <div fxFlex class="mb-0">
-      <div class="container m-12" fxLayout fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="center"
+    <div fxFlex style="margin-top: 20px !important;">
+      <div class="container m-12"  fxLayout fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="center"
         fxLayoutGap="10px" fxLayoutGap.xs="10">
-        <div fxFlex (click)="tabone()">
+        <div fxFlex="10" (click)="tabone()">
           <div class="container" fxLayout fxLayoutAlign="center" fxLayoutGap="10px">
             <div class="item-round1">
               <div style="margin-top: 3px; margin-left: 60px;">
@@ -90,7 +90,7 @@
           </div>
         </div>
         <div class="tab-divider"></div>
-        <div fxFlex (click)="tabtwo()">
+        <div  fxFlex="10" (click)="tabtwo()">
           <div class="container" fxLayout fxLayoutAlign="center" fxLayoutGap="10px">
             <div class="asn-round1">
               <div style="margin-top: 3px; margin-left: 60px;">
@@ -104,7 +104,7 @@
           </div>
         </div>
         <div class="tab-divider"></div>
-        <div fxFlex (click)="tabthree()">
+        <div  fxFlex="10" (click)="tabthree()">
           <div class="container" fxLayout fxLayoutAlign="center" fxLayoutGap="10px">
             <div class="grn-round1">
               <div style="margin-top: 3px; margin-left: 60px;">
@@ -118,7 +118,7 @@
           </div>
         </div>
         <div class="tab-divider"></div>
-        <div fxFlex (click)="tabfour()">
+        <div  fxFlex="10" (click)="tabfour()">
           <div class="container" fxLayout fxLayoutAlign="center" fxLayoutGap="10px">
             <div class="qa-round1">
               <div style="margin-top: 3px; margin-left: 60px;">
@@ -132,7 +132,7 @@
           </div>
         </div>
         <div class="tab-divider"></div>
-        <div fxFlex (click)="tabfive()">
+        <div  fxFlex="10" (click)="tabfive()">
           <div class="container" fxLayout fxLayoutAlign="center" fxLayoutGap="10px">
             <div class="document-round1">
               <div style="margin-top: 3px; margin-left: 60px;">
@@ -145,8 +145,9 @@
             </div>
           </div>
         </div>
-        <div fxFlex (click)="tabsix()">
-          <div class="container" fxLayout fxLayoutAlign="center" fxLayoutGap="10px">
+        <div class="tab-divider"></div>
+        <div fxFlex  (click)="tabsix()">
+          <div class="container" style="margin-right: 70%;" fxLayout fxLayoutAlign="center" fxLayoutGap="10px">
             <div class="flip-round1">
               <div style="margin-top: 3px; margin-left: 60px;">
                 <span matBadge="4" matBadgeColor="#8ba0f9"  matBadgeOverlap="false"></span>
@@ -185,7 +186,7 @@
 
           <ng-container matColumnDef="DalivaryDate">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Dalivary Date</th>
-            <td mat-cell *matCellDef="let element"> {{element.DalivaryDate}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.DalivaryDate| date :'dd/MM/yyyy'}} </td>
           </ng-container>
 
           <ng-container matColumnDef="OrderQty">
@@ -246,7 +247,7 @@
 
           <ng-container matColumnDef="Date">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
-            <td mat-cell *matCellDef="let element"> {{element.Date}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.Date | date :'dd/MM/yyyy'}} </td>
           </ng-container>
 
           <ng-container matColumnDef="Truck">
@@ -295,7 +296,7 @@
 
           <ng-container matColumnDef="GRNDate">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>GRNDate</th>
-            <td mat-cell *matCellDef="let element"> {{element.GRNDate}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.GRNDate| date :'dd/MM/yyyy'}} </td>
           </ng-container>
 
           <ng-container matColumnDef="Qty">
@@ -345,7 +346,7 @@
 
           <ng-container matColumnDef="Date">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
-            <td mat-cell *matCellDef="let element"> {{element.Date}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.Date| date :'dd/MM/yyyy'}} </td>
           </ng-container>
 
           <ng-container matColumnDef="LotQty">

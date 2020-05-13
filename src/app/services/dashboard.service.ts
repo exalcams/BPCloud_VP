@@ -5,7 +5,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { PO } from 'app/models/Dashboard';
+import { PO, OrderFulfilmentDetails } from 'app/models/Dashboard';
 
 @Injectable({
     providedIn: 'root'
@@ -38,5 +38,10 @@ export class DashboardService {
         return this._httpClient.get<any>(`${this.baseAddress}poapi/Dashboard/GetPODetails`)
           .pipe(catchError(this.errorHandler));
       }
+      GetOrderFulfilmentDetails(PO: any): Observable<OrderFulfilmentDetails | string> {
+        return this._httpClient
+            .get<OrderFulfilmentDetails>(`${this.baseAddress}poapi/Dashboard/GetOrderFulfilmentDetails?PO=${PO}`)
+            .pipe(catchError(this.errorHandler));
+    }
    
 }
