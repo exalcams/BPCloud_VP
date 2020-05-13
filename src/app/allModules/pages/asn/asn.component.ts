@@ -133,7 +133,8 @@ export class ASNComponent implements OnInit {
         this.asnFormGroup = this._formBuilder.group({
             ModeOfTransport: ['', Validators.required],
             Truck: ['', Validators.required],
-            AWD: ['', Validators.required],
+            AWBNumber: ['', Validators.required],
+            AWBDate: ['', Validators.required],
             NetWeight: ['', [Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
             NetWeightUnit: ['', Validators.required],
             GrossWeight: ['', [Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],

@@ -6,7 +6,7 @@
     <div fxFlex class="px-24 mt-4">
       <div fxLayout="column" class="Rectangle-721">
         <div fxFlex>
-          <div fxLayout="row" class="PO-No">
+          <div fxLayout="row" class="PO-No px-20 py-12">
             <div fxFlex='30'>
               <div fxLayout="row" fxLayoutGap="2px">
                 <div fxFlex='30'> <span>PO NO:</span></div>
@@ -24,7 +24,7 @@
             </div>
           </div>
         </div>
-        <div fxFlex class="Date">
+        <div fxFlex class="Date px-20 pb-12">
           <div fxFlex='30' fxLayout="row" fxLayoutGap="2px">
             <div fxFlex='30'> <span>Date:</span></div>
             <div fxFlex='70'> <span>20-Apr-2020</span></div>
@@ -60,13 +60,44 @@
               </mat-form-field>
             </div>
             <div fxFlex="50">
-              <mat-form-field class="pl-8 pr-24" style="width: 100%;">
-                <input matInput placeholder="AWD" formControlName="AWD">
-                <mat-error *ngIf="asnFormGroup.get('AWD').touched && asnFormGroup.get('AWD').hasError('required')">
-                  AWD is required
-                </mat-error>
-              </mat-form-field>
+              <div fxLayout="row" fxLayoutAlign="start">
+                <div fxFlex="50">
+                  <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                    <input matInput placeholder="AWB No." formControlName="AWBNumber">
+                    <mat-error
+                      *ngIf="asnFormGroup.get('AWBNumber').touched && asnFormGroup.get('AWBNumber').hasError('required')">
+                      AWB Number is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="50">
+                  <!-- <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                    <input matInput placeholder="Arrival Dt" [matDatepicker]="picker12" formControlName="ArrivalDate">
+                    <mat-datepicker-toggle matSuffix [for]="picker12">
+                      <img matDatepickerToggleIcon class="calendarImg" src="assets/images/calendar.png">
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #picker12></mat-datepicker>
+                    <mat-error
+                      *ngIf="asnFormGroup.get('ArrivalDate').touched && asnFormGroup.get('ArrivalDate').hasError('required')">
+                      Arrival Date is required
+                    </mat-error>
+                  </mat-form-field> -->
+                  <!-- <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                    <input matInput placeholder="Departure Dt" [matDatepicker]="picker11"
+                      formControlName="AWBDate">
+                    <mat-datepicker-toggle matSuffix [for]="picker11">
+                      <img matDatepickerToggleIcon class="calendarImg" src="assets/images/calendar.png">
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #picker11></mat-datepicker>
+                    <mat-error
+                      *ngIf="asnFormGroup.get('AWBDate').touched && asnFormGroup.get('AWBDate').hasError('required')">
+                      AWB Date is required
+                    </mat-error>
+                  </mat-form-field> -->
+                </div>
+              </div>
             </div>
+            <div fxFlex="25"></div>
           </div>
         </div>
         <div fxFlex='33'>
@@ -77,7 +108,9 @@
                   <mat-form-field class="pl-8 pr-24" style="width: 100%;">
                     <input matInput placeholder="Departure Dt" [matDatepicker]="picker1"
                       formControlName="DepartureDate">
-                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker-toggle matSuffix [for]="picker1">
+                      <img matDatepickerToggleIcon class="calendarImg" src="assets/images/calendar.png">
+                    </mat-datepicker-toggle>
                     <mat-datepicker #picker1></mat-datepicker>
                     <mat-error
                       *ngIf="asnFormGroup.get('DepartureDate').touched && asnFormGroup.get('DepartureDate').hasError('required')">
@@ -88,7 +121,9 @@
                 <div fxFlex="50">
                   <mat-form-field class="pl-8 pr-24" style="width: 100%;">
                     <input matInput placeholder="Arrival Dt" [matDatepicker]="picker2" formControlName="ArrivalDate">
-                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker-toggle matSuffix [for]="picker2">
+                      <img matDatepickerToggleIcon class="calendarImg" src="assets/images/calendar.png">
+                    </mat-datepicker-toggle>
                     <mat-datepicker #picker2></mat-datepicker>
                     <mat-error
                       *ngIf="asnFormGroup.get('ArrivalDate').touched && asnFormGroup.get('ArrivalDate').hasError('required')">
@@ -439,7 +474,9 @@
           <div fxFlex="33">
             <mat-form-field class="pl-8 pr-24" style="width: 100%;">
               <input matInput placeholder="Invoice Date" [matDatepicker]="picker3" formControlName="InvoiceDate">
-              <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+              <mat-datepicker-toggle matSuffix [for]="picker3">
+                <img matDatepickerToggleIcon class="calendarImg" src="assets/images/calendar.png">
+              </mat-datepicker-toggle>
               <mat-datepicker #picker3></mat-datepicker>
               <mat-error
                 *ngIf="invoiceDetailsFormGroup.get('InvoiceDate').touched && invoiceDetailsFormGroup.get('InvoiceDate').hasError('required')">
