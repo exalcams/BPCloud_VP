@@ -72,8 +72,8 @@
       </div>
     </div>
 
-    <div fxFlex style="margin-top: 20px !important;">
-      <div class="container m-12"  fxLayout fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="center"
+    <div fxFlex class="mt-24">
+      <div class="container m-12" fxLayout fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="center"
         fxLayoutGap="10px" fxLayoutGap.xs="10">
         <div fxFlex="10" (click)="tabone()">
           <div class="container" fxLayout fxLayoutAlign="center" fxLayoutGap="10px">
@@ -85,12 +85,13 @@
                 <img style="margin-top: 20px !important;margin-left: 10px !important;"
                   src="assets/images/shopping-cart.png">
                 <div style="margin-top: 20px;margin-left: 20px;">Item</div>
+                <div *ngIf="tabCount === 1" class="tab-highlight"></div>
               </div>
             </div>
           </div>
         </div>
         <div class="tab-divider"></div>
-        <div  fxFlex="10" (click)="tabtwo()">
+        <div fxFlex="10" (click)="tabtwo()">
           <div class="container" fxLayout fxLayoutAlign="center" fxLayoutGap="10px">
             <div class="asn-round1">
               <div style="margin-top: 3px; margin-left: 60px;">
@@ -99,40 +100,43 @@
               <div class="asn-round2">
                 <img style="margin-top: 15px !important;margin-left: 10px;" src="assets/images/phone.png">
                 <div style="margin-top: 28px;margin-left: 20px;">ASN</div>
+                <div *ngIf="tabCount === 2" class="tab-highlight"></div>
               </div>
             </div>
           </div>
         </div>
         <div class="tab-divider"></div>
-        <div  fxFlex="10" (click)="tabthree()">
+        <div fxFlex="10" (click)="tabthree()">
           <div class="container" fxLayout fxLayoutAlign="center" fxLayoutGap="10px">
             <div class="grn-round1">
               <div style="margin-top: 3px; margin-left: 60px;">
-                <span matBadge="4" matBadgeColor="#8ba0f9"  matBadgeOverlap="false"></span>
+                <span matBadge="4" matBadgeColor="#8ba0f9" matBadgeOverlap="false"></span>
               </div>
               <div class="grn-round2">
                 <img style="margin-top: 15px !important;margin-left: 20px;" src="assets/images/notes.png">
                 <div style="margin-top: 28px;margin-left: 20px;">GRN</div>
+                <div *ngIf="tabCount === 3" class="tab-highlight"></div>
               </div>
             </div>
           </div>
         </div>
         <div class="tab-divider"></div>
-        <div  fxFlex="10" (click)="tabfour()">
+        <div fxFlex="10" (click)="tabfour()">
           <div class="container" fxLayout fxLayoutAlign="center" fxLayoutGap="10px">
             <div class="qa-round1">
               <div style="margin-top: 3px; margin-left: 60px;">
-                <span matBadge="4" matBadgeColor="#8ba0f9"  matBadgeOverlap="false"></span>
+                <span matBadge="4" matBadgeColor="#8ba0f9" matBadgeOverlap="false"></span>
               </div>
               <div class="qa-round2">
                 <img style="margin-top: 15px !important; margin-left: 15px;" src="assets/images/surface1.png">
                 <div style="margin-top: 24px;margin-left: 28px;">QA</div>
+                <div *ngIf="tabCount === 4" class="tab-highlight"></div>
               </div>
             </div>
           </div>
         </div>
         <div class="tab-divider"></div>
-        <div  fxFlex="10" (click)="tabfive()">
+        <div fxFlex="10" (click)="tabfive()">
           <div class="container" fxLayout fxLayoutAlign="center" fxLayoutGap="10px">
             <div class="document-round1">
               <div style="margin-top: 3px; margin-left: 60px;">
@@ -141,20 +145,22 @@
               <div class="document-round2">
                 <img style="margin-top: 20px !important;margin-left: 20px;" src="assets/images/file.png">
                 <div style="margin-top: 24px; margin-left: 15px;">Document</div>
+                <div *ngIf="tabCount === 5" class="tab-highlight"></div>
               </div>
             </div>
           </div>
         </div>
         <div class="tab-divider"></div>
-        <div fxFlex  (click)="tabsix()">
+        <div fxFlex (click)="tabsix()">
           <div class="container" style="margin-right: 70%;" fxLayout fxLayoutAlign="center" fxLayoutGap="10px">
             <div class="flip-round1">
               <div style="margin-top: 3px; margin-left: 60px;">
-                <span matBadge="4" matBadgeColor="#8ba0f9"  matBadgeOverlap="false"></span>
+                <span matBadge="4" matBadgeColor="#8ba0f9" matBadgeOverlap="false"></span>
               </div>
               <div class="flip-round2">
                 <img style="margin-top: 10px !important;margin-left: 15px;" src="assets/images/reflect.png">
                 <div style="margin-top: 24px;margin-left: 28px;">Flip</div>
+                <div *ngIf="tabCount === 6" class="tab-highlight"></div>
               </div>
             </div>
           </div>
@@ -162,7 +168,8 @@
       </div>
     </div>
     <div class="content" fxLayout="column" *ngIf="tab1">
-      <div class="p-12">
+
+      <div class="p-12 mt-24">
         <table *ngIf="items?.length" class="table" mat-table [dataSource]="itemDataSource" matSort>
 
           <!-- <ng-container matColumnDef="Item">
@@ -221,14 +228,16 @@
             style=" cursor: pointer;">
           </tr>
         </table>
+
         <!-- <div *ngIf="!PO_OrderLookUpDetails.PO_ScheduleDetails.length">
           <mat-icon style="color: #1b56ca;margin-top: 10px;margin-left: 70px">info</mat-icon>
           <span style="margin-left: 10px;">The table does not contain any data</span>
         </div> -->
       </div>
+      <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
     </div>
     <div class="content" fxLayout="column" *ngIf="tab2">
-      <div class="p-12">
+      <div class="p-12  mt-24">
         <table *ngIf="asn?.length" class="table" mat-table [dataSource]="asnDataSource" matSort>
 
           <!-- <ng-container matColumnDef="Item">
@@ -265,14 +274,16 @@
             style=" cursor: pointer;">
           </tr>
         </table>
+
         <!-- <div *ngIf="!PO_OrderLookUpDetails.PO_ScheduleDetails.length">
           <mat-icon style="color: #1b56ca;margin-top: 10px;margin-left: 70px">info</mat-icon>
           <span style="margin-left: 10px;">The table does not contain any data</span>
         </div> -->
       </div>
+      <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
     </div>
     <div class="content" fxLayout="column" *ngIf="tab3">
-      <div class="p-12">
+      <div class="p-12  mt-24">
         <table *ngIf="grn?.length" class="table" mat-table [dataSource]="grnDataSource" matSort>
 
           <!-- <ng-container matColumnDef="Item">
@@ -315,14 +326,16 @@
             style=" cursor: pointer;">
           </tr>
         </table>
+
         <!-- <div *ngIf="!PO_OrderLookUpDetails.PO_ScheduleDetails.length">
           <mat-icon style="color: #1b56ca;margin-top: 10px;margin-left: 70px">info</mat-icon>
           <span style="margin-left: 10px;">The table does not contain any data</span>
         </div> -->
       </div>
+      <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
     </div>
     <div class="content" fxLayout="column" *ngIf="tab4">
-      <div class="p-12">
+      <div class="p-12  mt-24">
         <table *ngIf="qa?.length" class="table" mat-table [dataSource]="qaDataSource" matSort>
 
           <!-- <ng-container matColumnDef="Item">
@@ -370,11 +383,13 @@
             style=" cursor: pointer;">
           </tr>
         </table>
+
         <!-- <div *ngIf="!PO_OrderLookUpDetails.PO_ScheduleDetails.length">
           <mat-icon style="color: #1b56ca;margin-top: 10px;margin-left: 70px">info</mat-icon>
           <span style="margin-left: 10px;">The table does not contain any data</span>
         </div> -->
       </div>
+      <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
     </div>
     <div class="content" fxLayout="column" *ngIf="tab5">
 
@@ -382,5 +397,29 @@
     <div class="content" fxLayout="column" *ngIf="tab6">
 
     </div>
+
+    <div>
+      <form name="ACKFormGroup" [formGroup]="ACKFormGroup" fxLayout="column" fxFlex>
+        <div fxFlex fxLayout="column" class="mt-24">
+          <div fxLayoutAlign="center">
+            <div fxLayout="row">
+              <mat-form-field>
+                <input matInput placeholder="PraposedDalivary Date" [matDatepicker]="picker1" formControlName="DalivaryDate" required>
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+                <mat-error
+                *ngIf="ACKFormGroup.get('DalivaryDate').touched && ACKFormGroup.get('DalivaryDate').hasError('required')">
+                Praposed Dalivary Date is required
+              </mat-error>
+              </mat-form-field>
+              <button mat-button class="Btn1" (click)="YesClicked()">Acknowledgement</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
+    </mat-progress-spinner>
+    <div id="overlay" *ngIf="IsProgressBarVisibile"></div>
   </div>
 </div>

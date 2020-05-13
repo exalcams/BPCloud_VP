@@ -62,6 +62,7 @@ export class DashboardComponent implements OnInit {
     FilterVal = 'All';
     ActionModel = 'Acknowledge';
     Pos: PO[] = [];
+    selectedPORow: PO = new PO();
 
     // Circular Progress bar
     radius = 60;
@@ -70,6 +71,8 @@ export class DashboardComponent implements OnInit {
     dashoffset2: number;
     progressPercentage1 = 0;
     progressPercentage2 = 0;
+    nextProcess: string;
+    @ViewChild(MatPaginator) poPaginator: MatPaginator;
 
     // Doughnut Chart
     public doughnutChartOptions = {
@@ -276,7 +279,7 @@ export class DashboardComponent implements OnInit {
                 'series': [
                     {
                         'name': 'Planned',
-                        'value': 40 
+                        'value': 40
                     },
                     {
                         'name': 'Actual',
@@ -303,6 +306,7 @@ export class DashboardComponent implements OnInit {
                 if (data) {
                     this.Pos = <PO[]>data;
                     this.posDataSource = new MatTableDataSource(this.Pos);
+                    this.posDataSource.paginator = this.poPaginator;
                 }
                 this.IsProgressBarVisibile = false;
             },
@@ -313,7 +317,13 @@ export class DashboardComponent implements OnInit {
     }
     PurchaseOrder(po: string) {
         // alert(po);
-        this._router.navigate(['/pages/order-fulfilment'], { queryParams: { id: po } });
+        this._router.navigate(['/pages/polookup'], { queryParams: { id: po } });
+    }
+    Checked(data): void {
+        this.selectedPORow = data;
+        var po:any;
+        po = this.selectedPORow.PO;
+        this._router.navigate(['/pages/polookup'], { queryParams: { id: po } });
     }
     AdvanceShipment(po: string) {
         // alert(po);
@@ -343,24 +353,39 @@ export class DashboardComponent implements OnInit {
     getStatusColor(element: PO, StatusFor: string): string {
         switch (StatusFor) {
             case 'ASN':
-                return element.Status === 'Open' ? 'gray' : element.Status === 'PO' ? '#efb577' : '#34ad65';
+                return element.Status === 'Open' ? 'gray' : element.Status === 'ACK' ? '#efb577' : '#34ad65';
             case 'Gate':
-                return element.Status === 'Open' ? 'gray' : element.Status === 'PO' ? 'gray' : element.Status === 'ASN' ? '#efb577' : '#34ad65';
+                return element.Status === 'Open' ? 'gray' : element.Status === 'ACK' ? 'gray' : element.Status === 'ASN' ? '#efb577' : '#34ad65';
             case 'GRN':
-                return element.Status === 'Open' ? 'gray' : element.Status === 'PO' ? 'gray' : element.Status === 'ASN' ? 'gray' :
+                return element.Status === 'Open' ? 'gray' : element.Status === 'ACK' ? 'gray' : element.Status === 'ASN' ? 'gray' :
                     element.Status === 'Gate' ? '#efb577' : '#34ad65';
             default:
                 return '';
         }
     }
+    getNextProcess(element: any) {
+        console.log(element);
+        if (element.Status === 'Open') {
+            this.nextProcess = 'ACK';
+        }
+        else if (element.Status === 'ACK') {
+            this.nextProcess = 'ASN';
+        }
+        else if(element.Status === 'ASN'){
+            this.nextProcess = 'Gate';
+        }
+        else{
+            this.nextProcess = 'GRN';
+        }
+    }
     getTimeline(element: PO, StatusFor: string): string {
         switch (StatusFor) {
             case 'ASN':
-                return element.Status === 'Open' ? 'white-timeline' : element.Status === 'PO' ? 'orange-timeline' : 'green-timeline';
+                return element.Status === 'Open' ? 'white-timeline' : element.Status === 'ACK' ? 'orange-timeline' : 'green-timeline';
             case 'Gate':
-                return element.Status === 'Open' ? 'white-timeline' : element.Status === 'PO' ? 'white-timeline' : element.Status === 'ASN' ? 'orange-timeline' : 'green-timeline';
+                return element.Status === 'Open' ? 'white-timeline' : element.Status === 'ACK' ? 'white-timeline' : element.Status === 'ASN' ? 'orange-timeline' : 'green-timeline';
             case 'GRN':
-                return element.Status === 'Open' ? 'white-timeline' : element.Status === 'PO' ? 'white-timeline' : element.Status === 'ASN' ? 'white-timeline' :
+                return element.Status === 'Open' ? 'white-timeline' : element.Status === 'ACK' ? 'white-timeline' : element.Status === 'ASN' ? 'white-timeline' :
                     element.Status === 'Gate' ? 'orange-timeline' : 'green-timeline';
             default:
                 return '';
@@ -369,11 +394,11 @@ export class DashboardComponent implements OnInit {
     getRestTimeline(element: PO, StatusFor: string): string {
         switch (StatusFor) {
             case 'ASN':
-                return element.Status === 'Open' ? 'white-timeline' : element.Status === 'PO' ? 'white-timeline' : 'green-timeline';
+                return element.Status === 'Open' ? 'white-timeline' : element.Status === 'ACK' ? 'white-timeline' : 'green-timeline';
             case 'Gate':
-                return element.Status === 'Open' ? 'white-timeline' : element.Status === 'PO' ? 'white-timeline' : element.Status === 'ASN' ? 'white-timeline' : 'green-timeline';
+                return element.Status === 'Open' ? 'white-timeline' : element.Status === 'ACK' ? 'white-timeline' : element.Status === 'ASN' ? 'white-timeline' : 'green-timeline';
             case 'GRN':
-                return element.Status === 'Open' ? 'white-timeline' : element.Status === 'PO' ? 'white-timeline' : element.Status === 'ASN' ? 'white-timeline' :
+                return element.Status === 'Open' ? 'white-timeline' : element.Status === 'ACK' ? 'white-timeline' : element.Status === 'ASN' ? 'white-timeline' :
                     element.Status === 'Gate' ? 'white-timeline' : 'green-timeline';
             default:
                 return '';

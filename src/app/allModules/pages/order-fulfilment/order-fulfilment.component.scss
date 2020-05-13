@@ -1,6 +1,12 @@
 @import "src/@fuse/scss/fuse";
 #Order-fuil {
 
+  .progressBarPostion {
+    position: absolute !important;
+    top: 350px;
+    z-index: 1;
+    left: 55%;
+  }
     .center {
         padding: 20px !important;
         background-color: white;
@@ -172,6 +178,13 @@
   ::ngdeep .mat-tab-label{
     height: 150px !important;
   }
+ .tab-highlight{
+    border-bottom: 2px solid !important;
+    border-color: #efb577 !important;
+    width: 100px !important;
+    margin-top: 15px;
+    margin-left: -10px;
+ } 
   body.theme-default .mat-tab-group.mat-primary .mat-ink-bar, body.theme-default .mat-tab-nav-bar.mat-primary .mat-ink-bar {
     border: 2px solid !important;
     border-color: #efb577 !important;
@@ -186,5 +199,14 @@
     left: 30px !important;
     width: 100px !important;
   }
-  
+  .Btn1 {
+    border-color: #efb577;
+    background-color: #efb577;
+    color: white;
+    border-radius: 5px;
+    height: 40px;
+    width: 45%;
+    margin-left: 30px;
+    margin-top: 5px;
+  }
 }
