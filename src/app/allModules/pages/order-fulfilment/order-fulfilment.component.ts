@@ -159,7 +159,7 @@ export class OrderFulfilmentComponent implements OnInit {
                 (data) => {
                     this._router.navigate(['/pages/dashboard']);
                     this.IsProgressBarVisibile = false;
-                },
+                }, 
                 (err) => {
                     this.IsProgressBarVisibile = false;
                     console.error(err);

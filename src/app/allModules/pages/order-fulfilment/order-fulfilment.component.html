@@ -29,7 +29,7 @@
       <!-- <mat-divider></mat-divider> -->
       <div fxFlex="50">
         <div fxLayout style="margin-left: -12px !important;">
-          <div fxFlex="25" style="margin-right: 11px;" fxLayout>Accepted</div>
+          <div fxFlex="25" style="margin-right: 11px;" fxLayout>ACK</div>
           <div fxFlex="25" fxLayout>ASN</div>
           <div fxFlex="25" style="margin-left: -15px;" fxLayout>Gate</div>
           <div fxFlex="25" style="margin-left: 20px !important;" fxLayout>GRN</div>
@@ -57,18 +57,18 @@
             <div class="round" [style.border-color]="getStatusColor('GRN')"></div>
           </div>
         </div>
-        <div fxLayout class="mt-8" style="margin-left: -12px">
-          <div fxFlex="25" fxLayout>24 April '20</div>
-          <div fxFlex="25" fxLayout>24 April '20</div>
+        <div fxLayout class="mt-8" style="margin-left: -12px"> 
+          <div fxFlex="25" fxLayout>{{OrderFulfilmentDetails.ACKDate | date :'dd/MM/yyyy' }}</div>
+          <div fxFlex="25" fxLayout></div>
           <div fxFlex="25" fxLayout></div>
           <div fxFlex="25" fxLayout></div>
         </div>
-        <div fxLayout class="mt-4">
+        <!-- <div fxLayout class="mt-4">
           <div fxFlex="25" style="height: 10px;" fxLayout>User1</div>
           <div fxFlex="25" style="height: 10px;" fxLayout>Pending</div>
           <div fxFlex="25" fxLayout></div>
           <div fxFlex="25" fxLayout></div>
-        </div>
+        </div> -->
       </div>
     </div>
 

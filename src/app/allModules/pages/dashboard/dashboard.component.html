@@ -79,7 +79,7 @@
 
           <ng-container matColumnDef="TransID">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> PO </th>
-            <td mat-cell *matCellDef="let element;let odd=odd" (click)="Checked(row)" class="tableLeftBorder pl-0">
+            <td mat-cell *matCellDef="let element;let odd=odd" (click)="Checked(element.PO)" class="tableLeftBorder pl-0">
               <div fxLayout>
                 <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
                 <div fxFlex class="pl-4">{{element.PO}} </div>
@@ -168,10 +168,11 @@
                 <mat-label>Action</mat-label>
                 <mat-select >
                   <!-- [(ngModel)]="ActionModel" -->
-                  <mat-option value="Acknowledge" (click)="PurchaseOrder(element.PO)">PO-Lookup</mat-option>
+                  <mat-option value="Acknowledge" (click)="Acknowledgement(element.PO)">ACK</mat-option>
+                  <mat-option value="POLookup" (click)="PurchaseOrder(element.PO)">POLookup</mat-option>
                   <mat-option value="ASN" (click)="AdvanceShipment(element.PO)">ASN</mat-option>
-                  <!-- <mat-option value="Gate">Gate</mat-option>
-                  <mat-option value="GRN">GRN</mat-option> -->
+                  <mat-option value="POFlip" (click)="POFlip(element.PO)">POFlip</mat-option>
+                  <!-- <mat-option value="GRN">GRN</mat-option> -->
                 </mat-select>
               </mat-form-field>
             </td>

@@ -44,6 +44,7 @@ export class OrderFulfilmentDetails {
     Currency: string;
     Version: string;
     Status: string;
+    ACKDate:Date;
     aSNDetails: ASNDetails[];
     itemDetails: ItemDetails[];
     gRNDetails: GRNDetails[];

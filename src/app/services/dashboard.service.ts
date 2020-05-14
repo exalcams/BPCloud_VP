@@ -47,7 +47,7 @@ export class DashboardService {
         return this._httpClient.post<any>(`${this.baseAddress}poapi/Dashboard/CreateAcknowledgement`,
           ACK,
           {
-            headers: new HttpHeaders({
+            headers: new HttpHeaders({ 
               'Content-Type': 'application/json'
             })
           })

@@ -319,10 +319,14 @@ export class DashboardComponent implements OnInit {
         // alert(po);
         this._router.navigate(['/pages/polookup'], { queryParams: { id: po } });
     }
-    Checked(data): void {
-        this.selectedPORow = data;
-        var po:any;
-        po = this.selectedPORow.PO;
+    Acknowledgement(po: string) {
+        // alert(po);
+        this._router.navigate(['/pages/polookup'], { queryParams: { id: po } });
+    }
+    POFlip(po: string){
+        this._router.navigate(['/pages/poflip'], { queryParams: { id: po } });
+    }
+    Checked(po: string): void {
         this._router.navigate(['/pages/polookup'], { queryParams: { id: po } });
     }
     AdvanceShipment(po: string) {
