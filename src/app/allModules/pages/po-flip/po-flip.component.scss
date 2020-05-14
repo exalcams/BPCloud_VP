@@ -1,175 +1,215 @@
 @import "src/@fuse/scss/fuse";
 #poflip {
-    // .topbarClass {
-    //   background: url("/assets/images/backgrounds/header 2.png") no-repeat;
-    //   background-repeat: no-repeat;
-    //   background-size: cover;
+  // .topbarClass {
+  //   background: url("/assets/images/backgrounds/header 2.png") no-repeat;
+  //   background-repeat: no-repeat;
+  //   background-size: cover;
+  // }
+
+  .progressBarPostion {
+    position: absolute !important;
+    top: 350px;
+    z-index: 1;
+    left: 55%;
+  }
+  .center {
+    padding: 20px !important;
+    background-color: white;
+  }
+  .main-content {
+    display: flex;
+    flex: 1;
+    position: relative;
+    border-radius: 10px;
+  }
+  .main-content-content-card {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    // .sidenav-content {
+    //   overflow: auto;
+    //   overflow-x: hidden;
+    //   -webkit-overflow-scrolling: touch;
     // }
+  }
+  .cardHeader {
+    background-color: #fffdf9;
+  }
+  .sectionHeader {
+    font-weight: bold;
+    font-size: 18px;
+  }
+  .DeleteBtn {
+    color: #ef8377;
+    background-color: white;
+  }
+  .SaveBtn {
+    background-color: #efb577;
+    color: white;
+  }
+  .SaveAsDraftBtn {
+    background-color: white;
+    color: #efb577;
+  }
 
-    .progressBarPostion {
-      position: absolute !important;
-      top: 350px;
-      z-index: 1;
-      left: 55%;
+  #main-content-header-card {
+    position: fixed;
+    height: 50px;
+    box-shadow: 0 -5px 10px 0 rgba(0, 0, 0, 0.16);
+    background-color: #ffffff;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    margin-bottom: 40px;
+    z-index: 146;
+  }
+
+  @mixin TableBorderRight($color) {
+    border-right: 1px solid $color;
+  }
+
+  .TablePadFont {
+    padding: 5px;
+    font-size: 12px;
+    min-width: 100px !important;
+  }
+
+  table {
+    width: 100%;
+
+    th {
+      @include TableBorderRight(gray);
+      @extend .TablePadFont;
+      color: white;
+      background-color: #121214;
     }
-    .center {
-        padding: 20px !important;
-        background-color: white;
-    }
-    .cardHeader {
-        background-color: #fffdf9;
 
-    }
-
-
-
-    @mixin TableBorderRight($color) {
-      border-right: 1px solid $color;
-    }
-
-    .TablePadFont {
-      padding: 5px;
+    td {
+      @include TableBorderRight(rgba(0, 0, 0, 0.12));
+      @extend .TablePadFont;
       font-size: 12px;
-      min-width: 100px !important;
+      text-align: center;
+      min-width: max-content !important;
     }
 
-    table {
-      width: 100%;
-
-      th {
-        @include TableBorderRight(gray);
-        @extend .TablePadFont;
-        color: white;
-        background-color: #121214;
-      }
-
-      td {
-        @include TableBorderRight(rgba(0, 0, 0, 0.12));
-        @extend .TablePadFont;
-        font-size: 12px;
-        text-align: center;
-        min-width: max-content !important;
-      }
-
-      tr {
-        height: 40px;
-      }
-
-      .mat-sort-header-container {
-        display: flex;
-        justify-content: center;
-      }
+    tr {
+      height: 40px;
     }
 
-    .tableLeftBorder {
-        border-left: 1px solid rgba(0, 0, 0, 0.12);
-      }
+    .mat-sort-header-container {
+      display: flex;
+      justify-content: center;
+    }
+  }
 
+  .tableLeftBorder {
+    border-left: 1px solid rgba(0, 0, 0, 0.12);
+  }
 
-      .icon {
-        margin: 0;
-        color: rgba(0, 0, 0, 0.54);
-      }
+  .icon {
+    margin: 0;
+    color: rgba(0, 0, 0, 0.54);
+  }
 
-    //   input {
-    //     padding: 0 12px 0 8px;
-    //     background-color: #ffffff;
-    //     height: 36px;
-    //     border: none;
-    //   }
-    .mat-form-field-flex > .mat-form-field-infix {
-      padding: 0.3em 0px !important;
-    }
-    .mat-form-field-label-wrapper {
-      top: -1.5em;
-    }
-    .mat-form-field-wrapper {
-      margin: 1em 0 0 0;
-      padding-bottom: 1em;
-    }
+  //   input {
+  //     padding: 0 12px 0 8px;
+  //     background-color: #ffffff;
+  //     height: 36px;
+  //     border: none;
+  //   }
+  .mat-form-field-flex > .mat-form-field-infix {
+    padding: 0.3em 0px !important;
+  }
+  .mat-form-field-label-wrapper {
+    top: -1.5em;
+  }
+  .mat-form-field-wrapper {
+    margin: 1em 0 0 0;
+    padding-bottom: 1em;
+  }
 
-    .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
-      transform: translateY(-1.1em) scale(0.75);
-      width: 133.33333%;
-    }
-    .Rectangle {
-      // width: 152px;
-      min-height: 45px;
-      border-radius: 9px;
-      border: solid 1px #cccccc;
-      background-color: #ffffff;
-      cursor: pointer !important;
-      border-left: 5px solid #abf7b9;
-    }
-    .Rectangle-1 {
-        // width: 152px;
-        min-height: 45px;
-        border-radius: 5px;
-        border: solid 2px #f4cda4;
-        cursor: pointer !important;
-      }
-    .Rectangle-106 {
-      width: 30px;
-      height: 25px;
-      opacity: 0.2;
-      border-radius: 2px;
-      background-color: #f9d2a8;
-    }
-    .tableCellBorder {
-      height: 20px;
-      vertical-align: middle;
-      width: 10px;
-      background-color: #d87e39;
-      opacity: 0.7;
-    }
+  .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
+    transform: translateY(-1.1em) scale(0.75);
+    width: 133.33333%;
+  }
+  .Rectangle {
+    // width: 152px;
+    min-height: 45px;
+    border-radius: 9px;
+    border: solid 1px #cccccc;
+    background-color: #ffffff;
+    cursor: pointer !important;
+    border-left: 5px solid #abf7b9;
+  }
+  .Rectangle-1 {
+    // width: 152px;
+    min-height: 45px;
+    border-radius: 5px;
+    border: solid 2px #f4cda4;
+    cursor: pointer !important;
+  }
+  .Rectangle-106 {
+    width: 30px;
+    height: 25px;
+    opacity: 0.2;
+    border-radius: 2px;
+    background-color: #f9d2a8;
+  }
+  .tableCellBorder {
+    height: 20px;
+    vertical-align: middle;
+    width: 10px;
+    background-color: #d87e39;
+    opacity: 0.7;
+  }
 
-    .leftCard {
-        // @include mat-elevation(2);
-        min-height: 80px;
-        /* padding: 10px !important; */
-        border-radius: 0px 9px 9px 0px;
-        border: solid 1px #cccccc;
-        background-color: #ffffff;
-        cursor: pointer !important;
-        width: 100%;
-        border-left: 5px solid #3380d7;
-      }
-      .addIcon {
-        height: 20px;
-        margin-top: 25px;
-        padding-left: 4px;
-        cursor: pointer !important;
-      }
-      .Btn {
-        border: solid 2px #efb577;
-        // border-color: #efb577;
-        background-color: white;
-        color: #efb577;
-        height: 35px;
-        width: 25%;
-      }
-      .Btn1 {
-        border-color: #efb577;
-        background-color: #efb577;
-        color: white;
-        border-radius: 5px;
-        height: 40px;
-        width: 30%;
-      }
-      .title{
-          border-bottom: 2px solid #efb577;
-          font-size: 20px;
-      }
-      .mat-formClass{
-        width: 80% !important;
-        margin-left: 25px !important;
-      }
+  .leftCard {
+    // @include mat-elevation(2);
+    min-height: 80px;
+    /* padding: 10px !important; */
+    border-radius: 0px 9px 9px 0px;
+    border: solid 1px #cccccc;
+    background-color: #ffffff;
+    cursor: pointer !important;
+    width: 100%;
+    border-left: 5px solid #3380d7;
+  }
+  .addIcon {
+    height: 20px;
+    margin-top: 25px;
+    padding-left: 4px;
+    cursor: pointer !important;
+  }
+  .Btn {
+    border: solid 2px #efb577;
+    // border-color: #efb577;
+    background-color: white;
+    color: #efb577;
+    height: 35px;
+    width: 25%;
+  }
+  .Btn1 {
+    border-color: #efb577;
+    background-color: #efb577;
+    color: white;
+    border-radius: 5px;
+    height: 40px;
+    width: 30%;
+  }
+  .title {
+    border-bottom: 2px solid #efb577;
+    font-size: 20px;
+  }
+  .mat-formClass {
+    width: 80% !important;
+    margin-left: 25px !important;
+  }
 
-      body.theme-default .mat-form-field-appearance-legacy .mat-form-field-underline{
-        background-color: rgba(0, 0, 0, 0.2) !important;
-      }
-      .mat-header {
-        display: flex;
-        justify-content: center !important;
-      }
+  body.theme-default .mat-form-field-appearance-legacy .mat-form-field-underline {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+  }
+  .mat-header {
+    display: flex;
+    justify-content: center !important;
+  }
 }
