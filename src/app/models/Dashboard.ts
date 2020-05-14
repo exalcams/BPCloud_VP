@@ -2,7 +2,7 @@ export class PO {
     PO: number;
     Version: string;
     PODate: Date;
-    Currency:string;
+    Currency: string;
     Status: string;
     Document: string;
     NextProcess: string;
@@ -38,14 +38,20 @@ export class QADetails {
     RejQty: number;
     RejReason: string;
 }
-export class OrderFulfilmentDetails{
-    PONumber:string;
-    PODate:Date;
-    Currency:string;
-    Version:string;
-    Status:string;
-    aSNDetails:ASNDetails[];
-    itemDetails:ItemDetails[];
-    gRNDetails:GRNDetails[];
-    qADetails:QADetails[];
+export class OrderFulfilmentDetails {
+    PONumber: string;
+    PODate: Date;
+    Currency: string;
+    Version: string;
+    Status: string;
+    ACKDate:Date;
+    aSNDetails: ASNDetails[];
+    itemDetails: ItemDetails[];
+    gRNDetails: GRNDetails[];
+    qADetails: QADetails[];
+}
+export class Acknowledgement {
+    DalivaryDate: string;
+    PONumber: string;
+    Status: string;
 }
