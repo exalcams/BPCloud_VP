@@ -36,7 +36,8 @@ export class BPCOFItem extends CommonClass {
     Item: string;
     Material: string;
     MaterialText: string;
-    DelDate?: Date;
+    ManufactureDate?: Date;
+    DeliveryDate?: Date;
     OrderedQty: number;
     CompletedQty: number;
     TransitQty: number;

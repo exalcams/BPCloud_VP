@@ -1,5 +1,25 @@
 @import "src/@fuse/scss/fuse";
-#asn {
+#chat {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    padding: 0px;
+    margin: 0px;
+  }
+  .outer > * {
+    background-image: url("../../../../assets/images/header_2.png");
+    background-repeat: no-repeat;
+    width: 100%;
+    object-fit: contain;
+    line-height: 50px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
   .topbarClass {
     background: url("/assets/images/backgrounds/header 2.png") no-repeat;
     background-repeat: no-repeat;
@@ -12,8 +32,111 @@
     left: 55%;
   }
   .center {
-    padding: 5px !important;
-    background-color: white;
+    padding: 32px !important;
+    max-width: 2000px;
+    margin: 0 auto;
+
+    @include media-breakpoint-down(md) {
+      padding: 0 !important;
+    }
+    #headerCard {
+      position: fixed;
+      height: 50px;
+      box-shadow: 0 -5px 10px 0 rgba(0, 0, 0, 0.16);
+      background-color: #ffffff;
+      top: 0px;
+      left: 0px;
+      right: 0px;
+      margin-bottom: 0px;
+      z-index: 100;
+    }
+    .content-pos {
+      margin-top: -27px !important;
+    }
+    .content-card1 {
+      display: flex;
+      flex: 1;
+      position: relative;
+      border-radius: 10px;
+
+      //   .mat-sidenav-container {
+      //     display: flex;
+      //     flex: 1;
+      //     width: 100%;
+
+      //     > .mat-sidenav-content,
+      //     > .mat-drawer-content {
+      //       display: flex;
+      //       flex: 1 1 auto;
+      //       min-height: 100%;
+      //       height: auto;
+      //     }
+
+      //     > .mat-drawer-content {
+      //       max-width: 100%;
+      //     }
+
+      //     mat-sidenav {
+      //       display: flex;
+      //       flex-direction: column;
+      //       width: 400px;
+      //       max-width: 90%;
+      //       box-shadow: 0 0 1px rgba(0, 0, 0, 0.37);
+      //       overflow: hidden;
+      //     }
+      //   }
+    }
+  }
+  .search {
+    height: 36px;
+    line-height: 36px;
+    padding: 8px;
+    font-size: 13px;
+    // border-radius: 18px;
+    border: 1px solid;
+    overflow: hidden;
+    background-color: #ffffff;
+    border-color: #ffffff;
+    // border-color: rgba(0, 0, 0, 0.12);
+    @include mat-elevation(1);
+
+    mat-icon.s-16 {
+      color: rgba(0, 0, 0, 0.54) !important;
+    }
+
+    .icon {
+      margin: 0;
+      color: rgba(0, 0, 0, 0.54);
+    }
+
+    input {
+      padding: 0 12px 0 8px;
+      background-color: #ffffff;
+      height: 36px;
+      border: none;
+    }
+  }
+  .side-bar {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    .sidenav-content {
+      overflow: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+  .side-bar-items {
+    text-decoration: none !important;
+    display: flex;
+    align-items: center;
+    height: 50px;
+    padding: 0 24px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    border-radius: 0 25px 25px 0;
+    margin-right: 7px;
   }
   .Advanced-Shipment-Notification {
     font-size: 20px;
@@ -24,6 +147,10 @@
     letter-spacing: 0.64px;
     text-align: left;
     color: #3e3e3e;
+  }
+  .SaveBtn {
+    background-color: #efb577;
+    color: white;
   }
   .Rectangle-721 {
     // height: 115px;
@@ -167,10 +294,48 @@
   .semiBoldClass {
     font-weight: 500;
   }
+  .leftCard {
+    @include mat-elevation(2);
+    background: white;
+    border-left: 5px solid #efb577;
+    margin-left: 20px;
+    cursor: pointer !important;
+  }
   .subTitle {
     @extend .semiBoldClass;
     font-size: 12px;
     color: #d87060;
+  }
+  .addIcon {
+    height: 20px;
+    margin-top: 26px;
+    padding-left: 4px;
+    cursor: pointer !important;
+  }
+  .addAttachmentClass {
+    margin-top: 25px;
+    color: #4784f7;
+    cursor: pointer !important;
+  }
+  .addBlueIcon {
+    @extend .addIcon;
+    margin-top: 0px;
+    height: 15px;
+  }
+  .attachClass {
+    // margin-top: 25px;
+    padding-left: 8px;
+    cursor: pointer !important;
+    color: #4784f7;
+  }
+  .removeIcon {
+    height: 20px;
+    cursor: pointer !important;
+  }
+  .mat-input-element:disabled {
+    color: rgba(0, 0, 0, 0.87) !important;
+    // background: whitesmoke !important;
+    // cursor: not-allowed !important;
   }
   // .tableData {
   //   overflow: auto;
