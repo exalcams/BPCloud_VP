@@ -19,10 +19,10 @@ export class BPCASNHeader extends CommonClass {
     CountryOfOrigin: string;
     AWBNumber: string;
     AWBDate?: Date;
-    DepatDate?: Date;
-    ArriveDate?: Date;
+    DepartureDate?: Date;
+    ArrivalDate?: Date;
     ShippingAgency: string;
-    CrossWeight: number;
+    GrossWeight: number;
     NetWeight: number;
     UOM: string;
     VolumetricWeight: number;
@@ -44,14 +44,15 @@ export class BPCASNItem extends CommonClass {
     Item: string;
     Material: string;
     MaterialText: string;
-    DelDate?: Date;
+    DeliveryDate?: Date;
     OrderedQty: number;
     CompletedQty: number;
     TransitQty: number;
+    OpenQty: number;
     ASNQty: number;
     UOM: string;
     Batch: string;
-    ManfDate?: Date;
+    ManufactureDate?: Date;
     ManfCountry: string;
 }
 
@@ -77,7 +78,7 @@ export class BPCFLIPItem extends CommonClass {
     Item: string;
     Material: string;
     MaterialText: string;
-    DelDate?: Date;
+    DeliveryDate?: Date;
     OrderedQty: number;
     OpenQty: number;
     InvoiceQty: number;
@@ -110,10 +111,10 @@ export class BPCASNView extends CommonClass {
     CountryOfOrigin: string;
     AWBNumber: string;
     AWBDate?: Date;
-    DepatDate?: Date;
-    ArriveDate?: Date;
+    DepartureDate?: Date;
+    ArrivalDate?: Date;
     ShippingAgency: string;
-    CrossWeight: number;
+    GrossWeight: number;
     NetWeight: number;
     UOM: string;
     VolumetricWeight: number;
@@ -124,4 +125,19 @@ export class BPCASNView extends CommonClass {
     InvoiceAmount: number;
     InvDocReferenceNo: string;
     ASNItems: BPCASNItem[];
+    DocumentCenters: DocumentCenter[];
+    constructor() {
+        super();
+        this.ASNItems = [];
+        this.DocumentCenters = [];
+    }
 }
+export class DocumentCenter extends CommonClass {
+    ASNNumber: string;
+    DocumentType: string;
+    DocumentTitle: string;
+    Filename: string;
+    AttachmentReferenceNo: string;
+}
+
+

@@ -5,7 +5,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { BPCASNHeader, BPCASNView, BPCASNItem } from 'app/models/ASN';
+import { BPCASNHeader, BPCASNView, BPCASNItem, DocumentCenter } from 'app/models/ASN';
 
 @Injectable({
     providedIn: 'root'
@@ -42,6 +42,11 @@ export class ASNService {
 
     GetASNByPartnerID(PartnerID: string): Observable<BPCASNHeader | string> {
         return this._httpClient.get<BPCASNHeader>(`${this.baseAddress}poapi/ASN/GetASNByPartnerID?PartnerID=${PartnerID}`)
+            .pipe(catchError(this.errorHandler));
+    }
+
+    GetASNsByDoc(DocNumber: string): Observable<BPCASNHeader[] | string> {
+        return this._httpClient.get<BPCASNHeader[]>(`${this.baseAddress}poapi/ASN/GetASNsByDoc?DocNumber=${DocNumber}`)
             .pipe(catchError(this.errorHandler));
     }
 
@@ -86,6 +91,31 @@ export class ASNService {
     GetASNItemsByASN(ASNNumber: string): Observable<BPCASNItem[] | string> {
         return this._httpClient.get<BPCASNItem[]>(`${this.baseAddress}poapi/ASN/GetASNItemsByASN?ASNNumber=${ASNNumber}`)
             .pipe(catchError(this.errorHandler));
+    }
+    GetDocumentCentersByASN(ASNNumber: string): Observable<DocumentCenter[] | string> {
+        return this._httpClient.get<DocumentCenter[]>(`${this.baseAddress}poapi/ASN/GetDocumentCentersByASN?ASNNumber=${ASNNumber}`)
+            .pipe(catchError(this.errorHandler));
+    }
+
+    AddUserAttachment(ASNNumber: string, CreatedBy: string, selectedFiles: File[]): Observable<any> {
+        const formData: FormData = new FormData();
+        if (selectedFiles && selectedFiles.length) {
+            selectedFiles.forEach(x => {
+                formData.append(x.name, x, x.name);
+            });
+        }
+        formData.append('ASNNumber', ASNNumber);
+        formData.append('CreatedBy', CreatedBy.toString());
+
+        return this._httpClient.post<any>(`${this.baseAddress}poapi/Attachment/AddUserAttachment`,
+            formData,
+            // {
+            //   headers: new HttpHeaders({
+            //     'Content-Type': 'application/json'
+            //   })
+            // }
+        ).pipe(catchError(this.errorHandler));
+
     }
 
 }
