@@ -8,7 +8,7 @@ import { BPCOFHeader, BPCOFItem } from 'app/models/OrderFulFilment';
 @Injectable({
   providedIn: 'root'
 })
-export class FactService {
+export class POService {
 
   baseAddress: string;
 

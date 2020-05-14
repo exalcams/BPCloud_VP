@@ -19,8 +19,8 @@ export class BPCASNHeader extends CommonClass {
     CountryOfOrigin: string;
     AWBNumber: string;
     AWBDate?: Date;
-    DepatDate?: Date;
-    ArriveDate?: Date;
+    DepartureDate?: Date;
+    ArrivalDate?: Date;
     ShippingAgency: string;
     CrossWeight: number;
     NetWeight: number;
@@ -110,8 +110,8 @@ export class BPCASNView extends CommonClass {
     CountryOfOrigin: string;
     AWBNumber: string;
     AWBDate?: Date;
-    DepatDate?: Date;
-    ArriveDate?: Date;
+    DepartureDate?: Date;
+    ArrivalDate?: Date;
     ShippingAgency: string;
     CrossWeight: number;
     NetWeight: number;
@@ -125,3 +125,10 @@ export class BPCASNView extends CommonClass {
     InvDocReferenceNo: string;
     ASNItems: BPCASNItem[];
 }
+export class DocumentCentre {
+    DocumentType: string;
+    DocumentTitle: string;
+    Filename: string;
+}
+
+
