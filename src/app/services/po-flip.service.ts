@@ -28,10 +28,10 @@ export class POFlipService {
       .pipe(catchError(this.errorHandler));
   }
 
-  GetRegisteredPOFLIPs(): Observable<any | string> {
-    return this._httpClient.get<any>(`${this.baseAddress}poapi/PO/GetRegisteredPOFLIPs`)
+  GetPOFLIPsByDoc(DocNumber: string): Observable<any | string> {
+    return this._httpClient.get<any>(`${this.baseAddress}poapi/PO/GetPOFLIPsByDoc?DocNumber=${DocNumber}`)
       .pipe(catchError(this.errorHandler));
-  } 
+  }
 
   CreatePOFLIP(POFLIP: BPCFLIPHeaderView): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}poapi/PO/CreatePOFLIP`,
@@ -65,32 +65,6 @@ export class POFlipService {
       })
       .pipe(catchError(this.errorHandler));
   }
-  ApproveVendor(POFLIP: BPCFLIPHeader): Observable<any> {
-    return this._httpClient.post<any>(`${this.baseAddress}poapi/PO/ApproveVendor`,
-      POFLIP,
-      {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json'
-        })
-      })
-      .pipe(catchError(this.errorHandler));
-  }
-
-  RejectVendor(POFLIP: BPCFLIPHeader): Observable<any> {
-    return this._httpClient.post<any>(`${this.baseAddress}poapi/PO/RejectVendor`,
-      POFLIP,
-      {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json'
-        })
-      })
-      .pipe(catchError(this.errorHandler));
-  }
-  
-  GetFLIPCostByVOB(FLIPID: string): Observable<BPCFLIPCost[] | string> {
-    return this._httpClient.get<BPCFLIPCost[]>(`${this.baseAddress}poapi/PO/GetFLIPCostByVOB?FLIPID=${FLIPID}`)
-      .pipe(catchError(this.errorHandler));
-  }
 
   AddPOFLIPAttachment(FLIPID: string, CreatedBy: string, selectedFiles: File[]): Observable<any> {
     const formData: FormData = new FormData();
@@ -99,9 +73,8 @@ export class POFlipService {
         formData.append(x.name, x, x.name);
       });
     }
-    formData.append('FLIPID', FLIPID.toString());
-    formData.append('CreatedBy', CreatedBy.toString());
-
+    formData.append('FLIPID', FLIPID);
+    formData.append('CreatedBy', CreatedBy);
     return this._httpClient.post<any>(`${this.baseAddress}poapi/PO/AddPOFLIPAttachment`,
       formData,
       // {
@@ -111,6 +84,11 @@ export class POFlipService {
       // }
     ).pipe(catchError(this.errorHandler));
 
+  }
+
+  GetFLIPCostsByVOB(FLIPID: string): Observable<BPCFLIPCost[] | string> {
+    return this._httpClient.get<BPCFLIPCost[]>(`${this.baseAddress}poapi/PO/GetFLIPCostsByVOB?FLIPID=${FLIPID}`)
+      .pipe(catchError(this.errorHandler));
   }
 
 
