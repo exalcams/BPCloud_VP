@@ -5,7 +5,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { BPCASNHeader, BPCASNView, BPCASNItem, DocumentCenter } from 'app/models/ASN';
+import { BPCASNHeader, BPCASNView, BPCASNItem, DocumentCenter, BPCInvoiceAttachment } from 'app/models/ASN';
 
 @Injectable({
     providedIn: 'root'
@@ -97,17 +97,15 @@ export class ASNService {
             .pipe(catchError(this.errorHandler));
     }
 
-    AddUserAttachment(ASNNumber: string, CreatedBy: string, selectedFiles: File[]): Observable<any> {
+    AddInvoiceAttachment(ASNNumber: string, CreatedBy: string, selectedFile: File): Observable<any> {
         const formData: FormData = new FormData();
-        if (selectedFiles && selectedFiles.length) {
-            selectedFiles.forEach(x => {
-                formData.append(x.name, x, x.name);
-            });
+        if (selectedFile) {
+            formData.append(selectedFile.name, selectedFile, selectedFile.name);
         }
         formData.append('ASNNumber', ASNNumber);
         formData.append('CreatedBy', CreatedBy.toString());
 
-        return this._httpClient.post<any>(`${this.baseAddress}poapi/Attachment/AddUserAttachment`,
+        return this._httpClient.post<any>(`${this.baseAddress}poapi/ASN/AddInvoiceAttachment`,
             formData,
             // {
             //   headers: new HttpHeaders({
@@ -118,4 +116,43 @@ export class ASNService {
 
     }
 
+    AddDocumentCenterAttachment(ASNNumber: string, CreatedBy: string, selectedFiles: File[]): Observable<any> {
+        const formData: FormData = new FormData();
+        if (selectedFiles && selectedFiles.length) {
+            selectedFiles.forEach(x => {
+                formData.append(x.name, x, x.name);
+            });
+        }
+        formData.append('ASNNumber', ASNNumber);
+        formData.append('CreatedBy', CreatedBy.toString());
+
+        return this._httpClient.post<any>(`${this.baseAddress}poapi/ASN/AddDocumentCenterAttachment`,
+            formData,
+            // {
+            //   headers: new HttpHeaders({
+            //     'Content-Type': 'application/json'
+            //   })
+            // }
+        ).pipe(catchError(this.errorHandler));
+    }
+
+    DowloandInvoiceAttachment(AttachmentName: string, ASNNumber: string): Observable<Blob | string> {
+        return this._httpClient.get(`${this.baseAddress}poapi/ASN/DowloandASNAttachment?AttachmentName=${AttachmentName}&ASNNumber=${ASNNumber}`, {
+            responseType: 'blob',
+            headers: new HttpHeaders().append('Content-Type', 'application/json')
+        })
+            .pipe(catchError(this.errorHandler));
+    }
+    DowloandDocumentCenterAttachment(AttachmentName: string, ASNNumber: string): Observable<Blob | string> {
+        return this._httpClient.get(`${this.baseAddress}poapi/ASN/DowloandDocumentCenterAttachment?AttachmentName=${AttachmentName}&ASNNumber=${ASNNumber}`, {
+            responseType: 'blob',
+            headers: new HttpHeaders().append('Content-Type', 'application/json')
+        })
+            .pipe(catchError(this.errorHandler));
+    }
+
+    GetInvoiceAttachmentByASN(ASNNumber: string, InvDocReferenceNo: string): Observable<BPCInvoiceAttachment | string> {
+        return this._httpClient.get<BPCInvoiceAttachment>(`${this.baseAddress}poapi/ASN/GetInvoiceAttachmentByASN?ASNNumber=${ASNNumber}&InvDocReferenceNo=${InvDocReferenceNo}`)
+            .pipe(catchError(this.errorHandler));
+    }
 }

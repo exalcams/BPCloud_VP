@@ -244,7 +244,7 @@
     color: #3e3e3e;
   }
   .Rectangle {
-    // width: 152px;
+    width: 300px;
     min-height: 50px;
     border-radius: 9px;
     border: solid 1px #cccccc;
@@ -308,7 +308,7 @@
   }
   .addIcon {
     height: 20px;
-    margin-top: 26px;
+    margin-top: 16px;
     padding-left: 4px;
     cursor: pointer !important;
   }
@@ -420,7 +420,7 @@
       @include TableBorderRight(rgba(0, 0, 0, 0.12));
       @extend .TablePadFont;
       font-size: 12px;
-      text-align: center;
+      // text-align: center;
       min-width: max-content !important;
     }
 
@@ -743,5 +743,9 @@
   }
   .progressSubtitle {
     fill: #f3705a !important;
+  }
+  .pdfLinkClass{
+    color: #1e8bed;
+    cursor: pointer;
   }
 }
