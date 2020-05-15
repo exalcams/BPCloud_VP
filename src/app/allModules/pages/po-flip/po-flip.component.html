@@ -3,10 +3,15 @@
     <div fxLayout class="main-content">
       <div fxLayout id="main-content-header-card">
         <div fxLayout fxFlex class="my-8 px-24" fxLayoutAlign="end">
-          <button (click)="RejectClicked()" class="DeleteBtn mr-8" mat-stroked-button>
+          <button (click)="ResetControl()" *ngIf="!SelectedBPCFLIPHeader?.FLIPID" class="mr-8" mat-stroked-button>
+            Cancel</button>
+          <button (click)="DeleteClicked()" *ngIf="SelectedBPCFLIPHeader?.FLIPID" class="DeleteBtn mr-8"
+            mat-stroked-button>
             Delete</button>
-          <button (click)="SaveClicked()" class="SaveBtn mr-40" mat-raised-button>
+          <button (click)="SaveClicked()" *ngIf="!SelectedBPCFLIPHeader?.FLIPID" class="SaveBtn mr-40" mat-raised-button>
             Save</button>
+          <button (click)="SaveClicked()" *ngIf="SelectedBPCFLIPHeader?.FLIPID" class="SaveBtn mr-40" mat-raised-button>
+            Update</button>
         </div>
       </div>
       <div fxFlex class="main-content-content-card" style="margin-top: 50px !important;">
@@ -14,15 +19,19 @@
           <div fxLayout="row">
             <div class="mx-8 mb-8 mt-0 p-8 leftCard">
               <div fxLayout fxLayoutAlign="space-between center">
-                <div fxFlex><strong>PO No : 1234567</strong></div>
-                <div fxFlex fxLayoutAlign="end" class="mr-8"><img class="m-8" style="height: 20px !important;"
-                    src="assets/images/alert.png">
-                  <span style="margin-top: 10px;">No ASN Created for this PO</span>
+                <div fxFlex><strong>PO No : {{BPCOFHeader?.DocNumber}}</strong></div>
+                <div *ngIf="!SelectedBPCFLIPHeader?.FLIPID" fxFlex fxLayoutAlign="end" class="mr-8">
+                  <img class="m-8" style="height: 20px !important;" src="assets/images/alert.png">
+                  <span style="margin-top: 10px;">No Flip Created for this PO</span>
+                </div>
+                <div *ngIf="SelectedBPCFLIPHeader?.FLIPID" fxFlex fxLayoutAlign="end" class="mr-8">
+                  <span style="margin-top: 10px;"><strong>FLIP : {{SelectedBPCFLIPHeader?.FLIPID}}</strong></span>
                 </div>
               </div>
               <div style="font-size: 11px">
                 <div style="margin-top: 10px;color: #2e2e2e">
-                  <span style="margin-right: 10px;font-size: 13px;">InvoiceDate : 20-Apr-2020</span>
+                  <span style="margin-right: 10px;font-size: 13px;">InvoiceDate :
+                    {{ BPCOFHeader?.DocDate| date : 'dd/MM/yyyy'}}</span>
                 </div>
               </div>
             </div>

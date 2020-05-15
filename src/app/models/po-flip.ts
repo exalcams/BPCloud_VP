@@ -6,9 +6,8 @@ export class CommonClass {
     ModifiedBy: string;
 }
 export class BPCFLIPHeader extends CommonClass {
+    ID: number;
     FLIPID: string;
-    Client: string;
-    Company: string;
     InvoiceNumber: number;
     InvoiceDate: Date;
     InvoiceCurrency: string;
@@ -16,10 +15,15 @@ export class BPCFLIPHeader extends CommonClass {
     InvoiceDocID: string;
     InvoiceAmount: number;
     IsInvoiceOrCertified: string;
-    Status: string;
-    DocID: string;
+    IsInvoiceFlag: string;
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
+    DocNumber: string;
     InvoiceAttachmentName: string;
-    BPAttachment: any;
+    BPCAttachment: any;
+    bPCFLIPCosts: BPCFLIPCost[];
 }
 export class BPCFLIPCost extends CommonClass {
     FLIPID: string;
@@ -29,9 +33,8 @@ export class BPCFLIPCost extends CommonClass {
 }
 
 export class BPCFLIPHeaderView extends CommonClass {
+    ID: number;
     FLIPID: string;
-    Client: string;
-    Company: string;
     InvoiceNumber: number;
     InvoiceDate: Date;
     InvoiceCurrency: string;
@@ -39,9 +42,13 @@ export class BPCFLIPHeaderView extends CommonClass {
     InvoiceDocID: string;
     InvoiceAmount: number;
     IsInvoiceOrCertified: string;
-    Status: string;
-    DocID: string;
+    IsInvoiceFlag: string;
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
+    DocNumber: string;
     InvoiceAttachmentName: string;
-    BPAttachment: any;
+    BPCAttachment: any;
     bPCFLIPCosts: BPCFLIPCost[];
 }

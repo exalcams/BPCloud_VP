@@ -22,7 +22,7 @@ import { FormGroup, FormBuilder, Validators, AbstractControl, FormArray } from '
 import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatDialog, MatDialogConfig } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MasterService } from 'app/services/master.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { AttachmentDialogComponent } from 'app/allModules/pages/attachment-dialog/attachment-dialog.component';
@@ -31,6 +31,8 @@ import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
 import { BPCFLIPHeader, BPCFLIPHeaderView, BPCFLIPCost } from 'app/models/po-flip';
 import { POFlipService } from 'app/services/po-flip.service';
+import { BPCOFHeader } from 'app/models/OrderFulFilment';
+import { POService } from 'app/services/po.service';
 
 @Component({
   selector: 'app-po-flip',
@@ -51,6 +53,7 @@ export class PoFlipComponent implements OnInit {
   poFlipDetailsFormGroup: FormGroup;
   poFlipCostDetailsFormGroup: FormGroup;
   searchText = '';
+  SelectedDocNumber: string;
   AllBPCFLIPs: BPCFLIPHeader[] = [];
   selectID: string;
   SelectedBPCFLIPHeader: BPCFLIPHeader;
@@ -86,6 +89,7 @@ export class PoFlipComponent implements OnInit {
   AllCountries: string[] = [];
   AllInvoiceTypes: string[] = [];
   math = Math;
+  BPCOFHeader: BPCOFHeader;
   poDetailsDisplayedColumns: string[] = [
     'PO',
     'MaterialTxt',
@@ -105,7 +109,9 @@ export class PoFlipComponent implements OnInit {
     private _fuseConfigService: FuseConfigService,
     private _masterService: MasterService,
     private _pOFlipService: POFlipService,
+    private _POService: POService,
     private _router: Router,
+    private _route: ActivatedRoute,
     public snackBar: MatSnackBar,
     private dialog: MatDialog,
     private _formBuilder: FormBuilder
@@ -179,7 +185,12 @@ export class PoFlipComponent implements OnInit {
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+      console.log(this.authenticationDetails);
     }
+    this._route.queryParams.subscribe(params => {
+      this.SelectedDocNumber = params['id'];
+    });
+    this.GetPoFlipBasedOnCondition();
     this.InitializePOFlipFormGroup();
     this.InitializePOFlipCostDetailsFormGroup();
     this.PODetails = [
@@ -189,6 +200,79 @@ export class PoFlipComponent implements OnInit {
     ];
     this.poDetailsDataSource = new MatTableDataSource(this.PODetails);
   }
+
+  GetPoFlipBasedOnCondition(): void {
+    if (this.SelectedDocNumber) {
+      this.GetPOByDoc();
+      this.GetPOFLIPsByDoc();
+      this.GetFLIPCostsByVOB();
+      // this.GetPOItemsByDoc();
+    } else {
+      this.GetAllPOFLIPs();
+    }
+  }
+
+  GetPOByDoc(): void {
+    this._POService.GetPOByDoc(this.SelectedDocNumber).subscribe(
+      (data) => {
+        this.BPCOFHeader = data as BPCOFHeader;
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+
+  GetAllPOFLIPs(): void {
+    this._pOFlipService.GetAllPOFLIPs().subscribe(
+      (data) => {
+        this.AllBPCFLIPs = data as BPCFLIPHeader[];
+        console.log(this.AllBPCFLIPs);
+        if (this.AllBPCFLIPs && this.AllBPCFLIPs.length) {
+          this.loadSelectedPOFlip(this.AllBPCFLIPs[0]);
+        }
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+
+  GetPOFLIPsByDoc(): void {
+    this._pOFlipService.GetPOFLIPsByDoc(this.SelectedDocNumber).subscribe(
+      (data) => {
+        this.AllBPCFLIPs = data as BPCFLIPHeader[];
+        if (this.AllBPCFLIPs && this.AllBPCFLIPs.length) {
+          this.loadSelectedPOFlip(this.AllBPCFLIPs[0]);
+        }
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+
+  // GetPOItemsByDoc(): void {
+  //   this._POService.GetPOItemsByDoc(this.SelectedDocNumber).subscribe(
+  //       (data) => {
+  //           this.POItems = data as BPCOFItem[];
+  //           this.ClearFormArray(this.ASNItemFormArray);
+  //           if (this.POItems && this.POItems.length) {
+  //               this.SelectedASNHeader.Client = this.SelectedASNView.Client = this.POItems[0].Client;
+  //               this.SelectedASNHeader.Company = this.SelectedASNView.Company = this.POItems[0].Company;
+  //               this.SelectedASNHeader.Type = this.SelectedASNView.Type = this.POItems[0].Type;
+  //               this.SelectedASNHeader.PatnerID = this.SelectedASNView.PatnerID = this.POItems[0].PatnerID;
+  //               this.SelectedASNHeader.DocNumber = this.SelectedASNView.DocNumber = this.POItems[0].DocNumber;
+  //               this.POItems.forEach(x => {
+  //                   this.InsertPOItemsFormGroup(x);
+  //               });
+  //           }
+  //       },
+  //       (err) => {
+  //           console.error(err);
+  //       }
+  //   );
+  // }
 
   InitializePOFlipFormGroup(): void {
     this.poFlipDetailsFormGroup = this._formBuilder.group({
@@ -280,12 +364,12 @@ export class PoFlipComponent implements OnInit {
   }
 
   GetPOFlipSubItems(): void {
-    this.GetFLIPCostByVOB();
+    this.GetFLIPCostsByVOB();
   }
 
-  GetFLIPCostByVOB(): void {
+  GetFLIPCostsByVOB(): void {
     this.IsProgressBarVisibile = true;
-    this._pOFlipService.GetFLIPCostByVOB(this.SelectedBPCFLIPHeader.FLIPID).subscribe(
+    this._pOFlipService.GetFLIPCostsByVOB(this.SelectedBPCFLIPHeader.FLIPID).subscribe(
       (data) => {
         this.IsProgressBarVisibile = false;
         this.POFLIPCostByVOB = data as BPCFLIPCost[];
@@ -410,7 +494,7 @@ export class PoFlipComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       result => {
         if (result) {
-          if (Actiontype === 'Register') {
+          if (Actiontype === 'Save') {
             this.CreatePOFLIP();
           } else if (Actiontype === 'Update') {
             this.CreatePOFLIP();
@@ -430,7 +514,7 @@ export class PoFlipComponent implements OnInit {
     this.SelectedBPCFLIPHeader.IsInvoiceOrCertified = this.SelectedBPCFLIPHeaderView.IsInvoiceOrCertified = this.poFlipDetailsFormGroup.get('IsInvoiceOrCertified').value;
     this.SelectedBPCFLIPHeader.InvoiceAmount = this.SelectedBPCFLIPHeaderView.InvoiceAmount = this.poFlipDetailsFormGroup.get('InvoiceAmount').value;
     if (this.fileToUpload) {
-      this.SelectedBPCFLIPHeader.InvoiceAttachmentName = this.fileToUpload.name;
+      this.SelectedBPCFLIPHeader.InvoiceAttachmentName = this.SelectedBPCFLIPHeaderView.InvoiceAttachmentName = this.fileToUpload.name;
       this.fileToUploadList.push(this.fileToUpload);
       this.fileToUpload = null;
     }
@@ -451,13 +535,14 @@ export class PoFlipComponent implements OnInit {
   CreatePOFLIP(): void {
     // this.GetPOFlipValues();
     // this.GetPOFlipSubItemValues();
+    this.GetPOFLIPDetailsFromBPCOFHEader();
     this.SelectedBPCFLIPHeaderView.CreatedBy = this.authenticationDetails.UserID.toString();
     this.IsProgressBarVisibile = true;
     this._pOFlipService.CreatePOFLIP(this.SelectedBPCFLIPHeaderView).subscribe(
       (data) => {
         this.SelectedBPCFLIPHeader.FLIPID = (data as BPCFLIPHeader).FLIPID;
         if (this.fileToUploadList && this.fileToUploadList.length) {
-          this._pOFlipService.AddPOFLIPAttachment(this.SelectedBPCFLIPHeader.FLIPID, this.SelectedBPCFLIPHeader.CreatedBy, this.fileToUploadList).subscribe(
+          this._pOFlipService.AddPOFLIPAttachment(this.SelectedBPCFLIPHeader.FLIPID, this.authenticationDetails.UserID.toString(), this.fileToUploadList).subscribe(
             (dat) => {
               this.ResetControl();
               this.notificationSnackBarComponent.openSnackBar('PO Flip Saved successfully', SnackBarStatus.success);
@@ -468,11 +553,24 @@ export class PoFlipComponent implements OnInit {
             }
           );
         }
+        else {
+          this.ResetControl();
+          this.notificationSnackBarComponent.openSnackBar('PO Flip Saved successfully', SnackBarStatus.success);
+          this.IsProgressBarVisibile = false;
+        }
       },
       (err) => {
         this.showErrorNotificationSnackBar(err);
       }
     );
+  }
+
+  GetPOFLIPDetailsFromBPCOFHEader(): void {
+    this.SelectedBPCFLIPHeader.Client = this.SelectedBPCFLIPHeaderView.Client = this.BPCOFHeader.Client;
+    this.SelectedBPCFLIPHeader.Company = this.SelectedBPCFLIPHeaderView.Company = this.BPCOFHeader.Company;
+    this.SelectedBPCFLIPHeader.Type = this.SelectedBPCFLIPHeaderView.Type = this.BPCOFHeader.Type;
+    this.SelectedBPCFLIPHeader.PatnerID = this.SelectedBPCFLIPHeaderView.PatnerID = this.BPCOFHeader.PatnerID;
+    this.SelectedBPCFLIPHeader.DocNumber = this.SelectedBPCFLIPHeaderView.DocNumber = this.BPCOFHeader.DocNumber;
   }
 
   showErrorNotificationSnackBar(err: any): void {
@@ -578,7 +676,7 @@ export class PoFlipComponent implements OnInit {
       const Catagory = 'PO Flip';
       this.OpenConfirmationDialog(Actiontype, Catagory);
     } else {
-      const Actiontype = 'Register';
+      const Actiontype = 'Save';
       const Catagory = 'PO Flip';
       this.OpenConfirmationDialog(Actiontype, Catagory);
     }
