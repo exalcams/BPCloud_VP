@@ -23,14 +23,16 @@ export class BPCASNHeader extends CommonClass {
     ArrivalDate?: Date;
     ShippingAgency: string;
     GrossWeight: number;
+    GrossWeightUOM: string;
     NetWeight: number;
-    UOM: string;
+    NetWeightUOM: string;
     VolumetricWeight: number;
     VolumetricWeightUOM: string;
     NumberOfPacks: number;
     InvoiceNumber: string;
     InvoiceDate?: Date;
     InvoiceAmount: number;
+    InvoiceAmountUOM: string;
     InvDocReferenceNo: string;
 }
 
@@ -115,14 +117,16 @@ export class BPCASNView extends CommonClass {
     ArrivalDate?: Date;
     ShippingAgency: string;
     GrossWeight: number;
+    GrossWeightUOM: string;
     NetWeight: number;
-    UOM: string;
+    NetWeightUOM: string;
     VolumetricWeight: number;
     VolumetricWeightUOM: string;
     NumberOfPacks: number;
     InvoiceNumber: string;
     InvoiceDate?: Date;
     InvoiceAmount: number;
+    InvoiceAmountUOM: string;
     InvDocReferenceNo: string;
     ASNItems: BPCASNItem[];
     DocumentCenters: DocumentCenter[];
@@ -138,6 +142,13 @@ export class DocumentCenter extends CommonClass {
     DocumentTitle: string;
     Filename: string;
     AttachmentReferenceNo: string;
+}
+
+export class BPCInvoiceAttachment {
+    AttachmentID: number;
+    AttachmentName: string;
+    ContentType: string;
+    ContentLength: number;
 }
 
 

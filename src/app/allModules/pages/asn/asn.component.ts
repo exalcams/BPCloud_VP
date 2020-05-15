@@ -10,7 +10,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Guid } from 'guid-typescript';
 import { ASNService } from 'app/services/asn.service';
 import { ShareParameterService } from 'app/services/share-parameters.service';
-import { BPCASNHeader, BPCASNItem, DocumentCenter, BPCASNView } from 'app/models/ASN';
+import { BPCASNHeader, BPCASNItem, DocumentCenter, BPCASNView, BPCInvoiceAttachment } from 'app/models/ASN';
 import { BehaviorSubject } from 'rxjs';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { FuseConfigService } from '@fuse/services/config.service';
@@ -19,6 +19,8 @@ import { VendorMasterService } from 'app/services/vendor-master.service';
 import { POService } from 'app/services/po.service';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { BPCOFItem } from 'app/models/OrderFulFilment';
+import { AttachmentDetails } from 'app/models/task';
+import { AttachmentDialogComponent } from '../attachment-dialog/attachment-dialog.component';
 
 @Component({
     selector: 'app-asn',
@@ -62,8 +64,11 @@ export class ASNComponent implements OnInit {
     ASNItemDataSource = new BehaviorSubject<AbstractControl[]>([]);
     @ViewChild(MatPaginator) asnItemPaginator: MatPaginator;
     @ViewChild(MatSort) asnItemSort: MatSort;
+    invoiceAttachment: File;
+    invAttach: BPCInvoiceAttachment;
     fileToUpload: File;
     fileToUploadList: File[] = [];
+    math = Math;
 
     AllDocumentCenters: DocumentCenter[] = [];
     DocumentCenterDisplayedColumns: string[] = [
@@ -97,6 +102,7 @@ export class ASNComponent implements OnInit {
         this.SelectedASNHeader = new BPCASNHeader();
         this.SelectedASNView = new BPCASNView();
         this.SelectedASNNumber = '';
+        this.invAttach = new BPCInvoiceAttachment();
     }
 
     ngOnInit(): void {
@@ -133,9 +139,9 @@ export class ASNComponent implements OnInit {
             AWBNumber: ['', Validators.required],
             AWBDate: ['', Validators.required],
             NetWeight: ['', [Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
-            UOM: ['', Validators.required],
+            NetWeightUOM: ['', Validators.required],
             GrossWeight: ['', [Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
-            // UOM: ['', Validators.required],
+            GrossWeightUOM: ['', Validators.required],
             VolumetricWeight: ['', [Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
             VolumetricWeightUOM: ['', Validators.required],
             DepartureDate: ['', Validators.required],
@@ -155,7 +161,7 @@ export class ASNComponent implements OnInit {
         this.InvoiceDetailsFormGroup = this._formBuilder.group({
             InvoiceNumber: ['', Validators.required],
             InvoiceAmount: ['', [Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
-            InvoiceValueUnit: ['', Validators.required],
+            InvoiceAmountUOM: ['', Validators.required],
             InvoiceDate: ['', Validators.required],
             InvoiceAttachment: [''],
         });
@@ -178,6 +184,7 @@ export class ASNComponent implements OnInit {
         this.ResetASNFormGroup();
         this.ResetInvoiceDetailsFormGroup();
         this.ResetDocumentCenterFormGroup();
+        this.ResetAttachments();
     }
 
     ResetASNFormGroup(): void {
@@ -201,6 +208,12 @@ export class ASNComponent implements OnInit {
         while (formArray.length !== 0) {
             formArray.removeAt(0);
         }
+    }
+
+    ResetAttachments(): void {
+        this.fileToUpload = null;
+        this.fileToUploadList = [];
+        this.invoiceAttachment = null;
     }
 
     GetASNBasedOnCondition(): void {
@@ -231,6 +244,12 @@ export class ASNComponent implements OnInit {
         return true;
     }
 
+    handleFileInput1(evt): void {
+        if (evt.target.files && evt.target.files.length > 0) {
+            this.invoiceAttachment = evt.target.files[0];
+            this.invAttach = new BPCInvoiceAttachment();
+        }
+    }
     handleFileInput(evt): void {
         if (evt.target.files && evt.target.files.length > 0) {
             this.fileToUpload = evt.target.files[0];
@@ -372,6 +391,17 @@ export class ASNComponent implements OnInit {
             }
         );
     }
+    GetInvoiceAttachmentByASN(): void {
+        this._ASNService.GetInvoiceAttachmentByASN(this.SelectedASNHeader.ASNNumber, this.SelectedASNHeader.InvDocReferenceNo).subscribe(
+            (data) => {
+                this.invAttach = data as BPCInvoiceAttachment;
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
+
 
 
     SetASNHeaderValues(): void {
@@ -384,8 +414,9 @@ export class ASNComponent implements OnInit {
         this.ASNFormGroup.get('DepartureDate').patchValue(this.SelectedASNHeader.DepartureDate);
         this.ASNFormGroup.get('ArrivalDate').patchValue(this.SelectedASNHeader.ArrivalDate);
         this.ASNFormGroup.get('GrossWeight').patchValue(this.SelectedASNHeader.GrossWeight);
+        this.ASNFormGroup.get('GrossWeightUOM').patchValue(this.SelectedASNHeader.GrossWeightUOM);
         this.ASNFormGroup.get('NetWeight').patchValue(this.SelectedASNHeader.NetWeight);
-        this.ASNFormGroup.get('UOM').patchValue(this.SelectedASNHeader.UOM);
+        this.ASNFormGroup.get('NetWeightUOM').patchValue(this.SelectedASNHeader.NetWeightUOM);
         this.ASNFormGroup.get('VolumetricWeight').patchValue(this.SelectedASNHeader.VolumetricWeight);
         this.ASNFormGroup.get('VolumetricWeightUOM').patchValue(this.SelectedASNHeader.VolumetricWeightUOM);
         this.ASNFormGroup.get('NumberOfPacks').patchValue(this.SelectedASNHeader.NumberOfPacks);
@@ -439,6 +470,7 @@ export class ASNComponent implements OnInit {
         this.InvoiceDetailsFormGroup.get('InvoiceNumber').patchValue(this.SelectedASNHeader.InvoiceNumber);
         this.InvoiceDetailsFormGroup.get('InvoiceDate').patchValue(this.SelectedASNHeader.InvoiceDate);
         this.InvoiceDetailsFormGroup.get('InvoiceAmount').patchValue(this.SelectedASNHeader.InvoiceAmount);
+        this.InvoiceDetailsFormGroup.get('InvoiceAmountUOM').patchValue(this.SelectedASNHeader.InvoiceAmountUOM);
     }
 
     GetASNValues(): void {
@@ -451,8 +483,9 @@ export class ASNComponent implements OnInit {
         this.SelectedASNHeader.DepartureDate = this.SelectedASNView.DepartureDate = this.ASNFormGroup.get('DepartureDate').value;
         this.SelectedASNHeader.ArrivalDate = this.SelectedASNView.ArrivalDate = this.ASNFormGroup.get('ArrivalDate').value;
         this.SelectedASNHeader.GrossWeight = this.SelectedASNView.GrossWeight = this.ASNFormGroup.get('GrossWeight').value;
+        this.SelectedASNHeader.GrossWeightUOM = this.SelectedASNView.GrossWeightUOM = this.ASNFormGroup.get('GrossWeightUOM').value;
         this.SelectedASNHeader.NetWeight = this.SelectedASNView.NetWeight = this.ASNFormGroup.get('NetWeight').value;
-        this.SelectedASNHeader.UOM = this.SelectedASNView.UOM = this.ASNFormGroup.get('UOM').value;
+        this.SelectedASNHeader.NetWeightUOM = this.SelectedASNView.NetWeightUOM = this.ASNFormGroup.get('NetWeightUOM').value;
         this.SelectedASNHeader.VolumetricWeight = this.SelectedASNView.VolumetricWeight = this.ASNFormGroup.get('VolumetricWeight').value;
         this.SelectedASNHeader.VolumetricWeightUOM = this.SelectedASNView.VolumetricWeightUOM = this.ASNFormGroup.get('VolumetricWeightUOM').value;
         this.SelectedASNHeader.NumberOfPacks = this.SelectedASNView.NumberOfPacks = this.ASNFormGroup.get('NumberOfPacks').value;
@@ -484,6 +517,7 @@ export class ASNComponent implements OnInit {
     GetInvoiceDetailValues(): void {
         this.SelectedASNHeader.InvoiceNumber = this.SelectedASNView.InvoiceNumber = this.InvoiceDetailsFormGroup.get('InvoiceNumber').value;
         this.SelectedASNHeader.InvoiceDate = this.SelectedASNView.InvoiceDate = this.InvoiceDetailsFormGroup.get('InvoiceDate').value;
+        this.SelectedASNHeader.InvoiceAmountUOM = this.SelectedASNView.InvoiceAmountUOM = this.InvoiceDetailsFormGroup.get('InvoiceAmountUOM').value;
         this.SelectedASNHeader.InvoiceAmount = this.SelectedASNView.InvoiceAmount = this.InvoiceDetailsFormGroup.get('InvoiceAmount').value;
     }
 
@@ -562,34 +596,48 @@ export class ASNComponent implements OnInit {
         this._ASNService.CreateASN(this.SelectedASNView).subscribe(
             (data) => {
                 this.SelectedASNHeader.ASNNumber = (data as BPCASNHeader).ASNNumber;
-                if (this.fileToUploadList && this.fileToUploadList.length) {
-                    //   this._vendorRegistrationService.AddUserAttachment(this.SelectedBPASN.TransID, this.SelectedBPASN.Email1, this.fileToUploadList).subscribe(
-                    //     (dat) => {
-                    //       this._masterService.CreateVendorUser(vendorUser).subscribe(
-                    //         (da) => {
-                    //           this.ResetControl();
-                    //           this.notificationSnackBarComponent.openSnackBar('Vendor registered successfully', SnackBarStatus.success);
-                    //           this.IsProgressBarVisibile = false;
-                    //         },
-                    //         (err) => {
-                    //           this.showErrorNotificationSnackBar(err);
-                    //         });
-                    //     },
-                    //     (err) => {
-                    //       this.showErrorNotificationSnackBar(err);
-                    //     }
-                    //   );
-                    this.ResetControl();
-                    this.notificationSnackBarComponent.openSnackBar('ASN created successfully', SnackBarStatus.success);
-                    this.IsProgressBarVisibile = false;
-                    this.GetASNBasedOnCondition();
+                if (this.invoiceAttachment) {
+                    this.AddInvoiceAttachment();
+                } else {
+                    if (this.fileToUploadList && this.fileToUploadList.length) {
+                        this.AddDocumentCenterAttachment();
+                    } else {
+                        this.ResetControl();
+                        this.notificationSnackBarComponent.openSnackBar('ASN saved successfully', SnackBarStatus.success);
+                        this.IsProgressBarVisibile = false;
+                        this.GetASNBasedOnCondition();
+                    }
+                }
+            },
+            (err) => {
+                this.showErrorNotificationSnackBar(err);
+            }
+        );
+    }
 
+    AddInvoiceAttachment(): void {
+        this._ASNService.AddInvoiceAttachment(this.SelectedASNHeader.ASNNumber, this.currentUserID.toString(), this.invoiceAttachment).subscribe(
+            (dat) => {
+                if (this.fileToUploadList && this.fileToUploadList.length) {
+                    this.AddDocumentCenterAttachment();
                 } else {
                     this.ResetControl();
-                    this.notificationSnackBarComponent.openSnackBar('ASN created successfully', SnackBarStatus.success);
+                    this.notificationSnackBarComponent.openSnackBar('ASN saved successfully', SnackBarStatus.success);
                     this.IsProgressBarVisibile = false;
                     this.GetASNBasedOnCondition();
                 }
+            },
+            (err) => {
+                this.showErrorNotificationSnackBar(err);
+            });
+    }
+    AddDocumentCenterAttachment(): void {
+        this._ASNService.AddDocumentCenterAttachment(this.SelectedASNHeader.ASNNumber, this.currentUserID.toString(), this.fileToUploadList).subscribe(
+            (dat) => {
+                this.ResetControl();
+                this.notificationSnackBarComponent.openSnackBar('ASN saved successfully', SnackBarStatus.success);
+                this.IsProgressBarVisibile = false;
+                this.GetASNBasedOnCondition();
             },
             (err) => {
                 this.showErrorNotificationSnackBar(err);
@@ -611,10 +659,19 @@ export class ASNComponent implements OnInit {
         this.IsProgressBarVisibile = true;
         this._ASNService.UpdateASN(this.SelectedASNView).subscribe(
             (data) => {
-                this.ResetControl();
-                this.notificationSnackBarComponent.openSnackBar('ASN updated successfully', SnackBarStatus.success);
-                this.IsProgressBarVisibile = false;
-                this.GetASNBasedOnCondition();
+                this.SelectedASNHeader.ASNNumber = (data as BPCASNHeader).ASNNumber;
+                if (this.invoiceAttachment) {
+                    this.AddInvoiceAttachment();
+                } else {
+                    if (this.fileToUploadList && this.fileToUploadList.length) {
+                        this.AddDocumentCenterAttachment();
+                    } else {
+                        this.ResetControl();
+                        this.notificationSnackBarComponent.openSnackBar('ASN saved successfully', SnackBarStatus.success);
+                        this.IsProgressBarVisibile = false;
+                        this.GetASNBasedOnCondition();
+                    }
+                }
             },
             (err) => {
                 console.error(err);
@@ -673,7 +730,78 @@ export class ASNComponent implements OnInit {
 
     }
 
+    GetInvoiceAttachment(fileName: string, file?: File): void {
+        if (file && file.size) {
+            const blob = new Blob([file], { type: file.type });
+            this.OpenAttachmentDialog(fileName, blob);
+        } else {
+            this.IsProgressBarVisibile = true;
+            this._ASNService.DowloandInvoiceAttachment(fileName, this.SelectedASNHeader.ASNNumber).subscribe(
+                data => {
+                    if (data) {
+                        let fileType = 'image/jpg';
+                        fileType = fileName.toLowerCase().includes('.jpg') ? 'image/jpg' :
+                            fileName.toLowerCase().includes('.jpeg') ? 'image/jpeg' :
+                                fileName.toLowerCase().includes('.png') ? 'image/png' :
+                                    fileName.toLowerCase().includes('.gif') ? 'image/gif' :
+                                        fileName.toLowerCase().includes('.pdf') ? 'application/pdf' : '';
+                        const blob = new Blob([data], { type: fileType });
+                        this.OpenAttachmentDialog(fileName, blob);
+                    }
+                    this.IsProgressBarVisibile = false;
+                },
+                error => {
+                    console.error(error);
+                    this.IsProgressBarVisibile = false;
+                }
+            );
+        }
+    }
 
+    GetDocumentCenterAttachment(fileName: string): void {
+        const file = this.fileToUploadList.filter(x => x.name === fileName)[0];
+        if (file && file.size) {
+            const blob = new Blob([file], { type: file.type });
+            this.OpenAttachmentDialog(fileName, blob);
+        } else {
+            this.IsProgressBarVisibile = true;
+            this._ASNService.DowloandDocumentCenterAttachment(fileName, this.SelectedASNHeader.ASNNumber).subscribe(
+                data => {
+                    if (data) {
+                        let fileType = 'image/jpg';
+                        fileType = fileName.toLowerCase().includes('.jpg') ? 'image/jpg' :
+                            fileName.toLowerCase().includes('.jpeg') ? 'image/jpeg' :
+                                fileName.toLowerCase().includes('.png') ? 'image/png' :
+                                    fileName.toLowerCase().includes('.gif') ? 'image/gif' :
+                                        fileName.toLowerCase().includes('.pdf') ? 'application/pdf' : '';
+                        const blob = new Blob([data], { type: fileType });
+                        this.OpenAttachmentDialog(fileName, blob);
+                    }
+                    this.IsProgressBarVisibile = false;
+                },
+                error => {
+                    console.error(error);
+                    this.IsProgressBarVisibile = false;
+                }
+            );
+        }
+    }
+
+    OpenAttachmentDialog(FileName: string, blob: Blob): void {
+        const attachmentDetails: AttachmentDetails = {
+            FileName: FileName,
+            blob: blob
+        };
+        const dialogConfig: MatDialogConfig = {
+            data: attachmentDetails,
+            panelClass: 'attachment-dialog'
+        };
+        const dialogRef = this.dialog.open(AttachmentDialogComponent, dialogConfig);
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+            }
+        });
+    }
 
 
 }
