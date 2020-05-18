@@ -10,7 +10,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Guid } from 'guid-typescript';
 import { ASNService } from 'app/services/asn.service';
 import { ShareParameterService } from 'app/services/share-parameters.service';
-import { BPCASNHeader, BPCASNItem, DocumentCenter, BPCASNView, BPCInvoiceAttachment } from 'app/models/ASN';
+import { BPCASNHeader, BPCASNItem, DocumentCenter, BPCASNView, BPCInvoiceAttachment, BPCCountryMaster, BPCCurrencyMaster } from 'app/models/ASN';
 import { BehaviorSubject } from 'rxjs';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { FuseConfigService } from '@fuse/services/config.service';
@@ -58,7 +58,8 @@ export class ASNComponent implements OnInit {
         'OpenQty',
         'ASNQty',
         'Batch',
-        'ManufactureDate'
+        'ManufactureDate',
+        'ExpiryDate'
     ];
     ASNItemFormArray: FormArray = this._formBuilder.array([]);
     ASNItemDataSource = new BehaviorSubject<AbstractControl[]>([]);
@@ -69,12 +70,14 @@ export class ASNComponent implements OnInit {
     fileToUpload: File;
     fileToUploadList: File[] = [];
     math = Math;
-
+    minDate: Date;
+    maxDate: Date;
     AllDocumentCenters: DocumentCenter[] = [];
     DocumentCenterDisplayedColumns: string[] = [
         'DocumentType',
         'DocumentTitle',
         'Filename',
+        'Action'
     ];
     DocumentCenterDataSource: MatTableDataSource<DocumentCenter>;
     @ViewChild(MatPaginator) DocumentCenterPaginator: MatPaginator;
@@ -82,6 +85,9 @@ export class ASNComponent implements OnInit {
 
     selection = new SelectionModel<any>(true, []);
     searchText = '';
+
+    AllCountries: BPCCountryMaster[] = [];
+    AllCurrencies: BPCCurrencyMaster[] = [];
 
     constructor(
         private _fuseConfigService: FuseConfigService,
@@ -103,6 +109,9 @@ export class ASNComponent implements OnInit {
         this.SelectedASNView = new BPCASNView();
         this.SelectedASNNumber = '';
         this.invAttach = new BPCInvoiceAttachment();
+        this.minDate = new Date();
+        this.minDate.setDate(this.minDate.getDate() + 1);
+        this.maxDate = new Date();
     }
 
     ngOnInit(): void {
@@ -129,6 +138,8 @@ export class ASNComponent implements OnInit {
         this.InitializeASNItemFormGroup();
         this.InitializeInvoiceDetailsFormGroup();
         this.InitializeDocumentCenterFormGroup();
+        this.GetAllBPCCountryMasters();
+        this.GetAllBPCCurrencyMasters();
         this.GetASNBasedOnCondition();
     }
 
@@ -159,10 +170,10 @@ export class ASNComponent implements OnInit {
     }
     InitializeInvoiceDetailsFormGroup(): void {
         this.InvoiceDetailsFormGroup = this._formBuilder.group({
-            InvoiceNumber: ['', Validators.required],
-            InvoiceAmount: ['', [Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
-            InvoiceAmountUOM: ['', Validators.required],
-            InvoiceDate: ['', Validators.required],
+            InvoiceNumber: [''],
+            InvoiceAmount: ['', [Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
+            InvoiceAmountUOM: [''],
+            InvoiceDate: [''],
             InvoiceAttachment: [''],
         });
         // this.DynamicallyAddAcceptedValidation();
@@ -302,8 +313,34 @@ export class ASNComponent implements OnInit {
         const index: number = this.AllDocumentCenters.indexOf(doc);
         if (index > -1) {
             this.AllDocumentCenters.splice(index, 1);
+            const indexx = this.fileToUploadList.findIndex(x => x.name === doc.Filename);
+            if (indexx > -1) {
+                this.fileToUploadList.splice(indexx, 1);
+            }
         }
         this.DocumentCenterDataSource = new MatTableDataSource(this.AllDocumentCenters);
+    }
+
+    GetAllBPCCountryMasters(): void {
+        this._ASNService.GetAllBPCCountryMasters().subscribe(
+            (data) => {
+                this.AllCountries = data as BPCCountryMaster[];
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
+
+    GetAllBPCCurrencyMasters(): void {
+        this._ASNService.GetAllBPCCurrencyMasters().subscribe(
+            (data) => {
+                this.AllCurrencies = data as BPCCurrencyMaster[];
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
     }
 
     GetAllASNs(): void {
@@ -360,6 +397,7 @@ export class ASNComponent implements OnInit {
         this.SelectedASNNumber = this.SelectedASNHeader.ASNNumber;
         this.GetASNItemsByASN();
         this.GetDocumentCentersByASN();
+        this.GetInvoiceAttachmentByASN();
         this.SetASNHeaderValues();
         this.SetInvoiceDetailValues();
     }
@@ -432,13 +470,17 @@ export class ASNComponent implements OnInit {
             GRQty: [poItem.CompletedQty],
             PipelineQty: [poItem.TransitQty],
             OpenQty: [poItem.OpenQty],
-            ASNQty: [],
+            ASNQty: ['', Validators.required],
             UOM: [poItem.UOM],
-            Batch: ['Batch 1'],
-            ManufactureDate: [new Date()],
+            Batch: ['', Validators.required],
+            ManufactureDate: ['', Validators.required],
+            ExpiryDate: ['', Validators.required],
         });
         row.disable();
         row.get('ASNQty').enable();
+        row.get('Batch').enable();
+        row.get('ManufactureDate').enable();
+        row.get('ExpiryDate').enable();
         this.ASNItemFormArray.push(row);
         this.ASNItemDataSource.next(this.ASNItemFormArray.controls);
         // return row;
@@ -454,13 +496,17 @@ export class ASNComponent implements OnInit {
             GRQty: [asnItem.CompletedQty],
             PipelineQty: [asnItem.TransitQty],
             OpenQty: [asnItem.OpenQty],
-            ASNQty: [asnItem.ASNQty],
+            ASNQty: [asnItem.ASNQty, Validators.required],
             UOM: [asnItem.UOM],
-            Batch: [asnItem.Batch],
-            ManufactureDate: [asnItem.ManufactureDate],
+            Batch: [asnItem.Batch, Validators.required],
+            ManufactureDate: [asnItem.ManufactureDate, Validators.required],
+            ExpiryDate: ['', Validators.required],
         });
         row.disable();
         row.get('ASNQty').enable();
+        row.get('Batch').enable();
+        row.get('ManufactureDate').enable();
+        row.get('ExpiryDate').enable();
         this.ASNItemFormArray.push(row);
         this.ASNItemDataSource.next(this.ASNItemFormArray.controls);
         // return row;
