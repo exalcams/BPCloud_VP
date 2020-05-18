@@ -38,7 +38,7 @@
                   </div>
                 </div>
               </div>
-              <div *ngIf="(AllTasks | filter: searchText)?.length === 0" class="no-results-message">
+              <div *ngIf="(AllASNHeaders | filter: searchText)?.length === 0" class="no-results-message">
                 <span class="pl-12"> No results..</span>
               </div>
             </div>
@@ -78,7 +78,6 @@
               <div fxFlex="20" align="end">
                 <button mat-stroked-button class="SaveBtn" (click)="SaveClicked()">Save</button>
               </div>
-
             </div>
             <div fxFlex class="px-24 mt-4">
               <form autocomplete="off" fxLayout="column" fxLayoutAlign="start" name="form" novalidate
@@ -210,7 +209,7 @@
                   </div>
                   <div fxFlex="33">
                     <mat-form-field class="pl-8 pr-12" style="width: 100%;">
-                      <mat-select (selectionChange)="countryOfOriginSelected($event)" placeholder="Country Of Origin"
+                      <mat-select (selectionChange)="CountryOfOriginSelected($event)" placeholder="Country Of Origin"
                         formControlName="CountryOfOrigin">
                         <mat-option value="India">India</mat-option>
                         <mat-option value="USA">USA</mat-option>
@@ -707,9 +706,9 @@
                     accept="image/x-png,image/gif,image/jpeg,image/jpg,application/pdf" />
 
                 </div>
-                <div fxFlex="40" *ngIf="invoiceAttachment | invAttach?.AttachmentName">
+                <div fxFlex="40">
                   <div fxLayout class="Rectangle"
-                    (click)="GetInvoiceAttachment(invoiceAttachment.name,invoiceAttachment)">
+                    (click)="GetInvoiceAttachment(invoiceAttachment?.name,invoiceAttachment)">
                     <div class="Rectangle-106 m-8">
                       <img class="m-8" src="assets/images/imageIcon.png">
                     </div>
@@ -723,6 +722,7 @@
                       </div>
                     </div>
                   </div>
+                </div>
               </form>
             </div>
             <div fxFlex fxLayout="column" fxLayoutGap="20px" class="px-24 mt-20">
@@ -771,43 +771,43 @@
                   </div>
                 </form>
               </div>
-              <div fxFlex fxLayout="column" style="margin-top: 10px; margin-bottom: 10px;">
-                <table *ngIf="AllDocumentCenters?.length" class="table" mat-table
-                  [dataSource]="DocumentCenterDataSource" matSort>
-                  <ng-container matColumnDef="DocumentType">
-                    <th mat-header-cell *matHeaderCellDef> Document Type </th>
-                    <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
-                      <div fxLayout>
-                        <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
-                        <div fxFlex class="pl-4">{{element.DocumentType}} </div>
-                      </div>
-                    </td>
-                  </ng-container>
+            </div>
+            <div fxFlex fxLayout="column" style="margin-top: 10px; margin-bottom: 10px;">
+              <table *ngIf="AllDocumentCenters?.length" class="table" mat-table
+                [dataSource]="DocumentCenterDataSource" matSort>
+                <ng-container matColumnDef="DocumentType">
+                  <th mat-header-cell *matHeaderCellDef> Document Type </th>
+                  <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
+                    <div fxLayout>
+                      <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
+                      <div fxFlex class="pl-4">{{element.DocumentType}} </div>
+                    </div>
+                  </td>
+                </ng-container>
 
-                  <ng-container matColumnDef="DocumentTitle">
-                    <th mat-header-cell *matHeaderCellDef> Document Title </th>
-                    <td mat-cell *matCellDef="let element">
-                      {{element.DocumentTitle}} </td>
-                  </ng-container>
+                <ng-container matColumnDef="DocumentTitle">
+                  <th mat-header-cell *matHeaderCellDef> Document Title </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{element.DocumentTitle}} </td>
+                </ng-container>
 
-                  <ng-container matColumnDef="Filename">
-                    <th mat-header-cell *matHeaderCellDef> Filename </th>
-                    <td mat-cell *matCellDef="let element">
-                      <span class="pdfLinkClass" (click)="GetDocumentCenterAttachment(element.Filename)">
-                        {{element.Filename}}
-                      </span>
-                    </td>
-                  </ng-container>
+                <ng-container matColumnDef="Filename">
+                  <th mat-header-cell *matHeaderCellDef> Filename </th>
+                  <td mat-cell *matCellDef="let element">
+                    <span class="pdfLinkClass" (click)="GetDocumentCenterAttachment(element.Filename)">
+                      {{element.Filename}}
+                    </span>
+                  </td>
+                </ng-container>
 
-                  <tr mat-header-row *matHeaderRowDef="DocumentCenterDisplayedColumns;sticky: true"></tr>
-                  <tr mat-row *matRowDef="let row; columns: DocumentCenterDisplayedColumns;let even=even" matRipple
-                    style=" cursor: pointer;">
-                  </tr>
-                </table>
-                <div flex *ngIf="AllDocumentCenters?.length">
-                  <mat-paginator [pageSizeOptions]="[10, 20, 30, 50, 75, 100]" showFirstLastButtons>
-                  </mat-paginator>
-                </div>
+                <tr mat-header-row *matHeaderRowDef="DocumentCenterDisplayedColumns;sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: DocumentCenterDisplayedColumns;let even=even" matRipple
+                  style=" cursor: pointer;">
+                </tr>
+              </table>
+              <div flex *ngIf="AllDocumentCenters?.length">
+                <mat-paginator [pageSizeOptions]="[10, 20, 30, 50, 75, 100]" showFirstLastButtons>
+                </mat-paginator>
               </div>
             </div>
           </mat-card>
@@ -816,6 +816,8 @@
     </div>
     <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
     </mat-progress-spinner>
-    <div id="overlay" *ngIf="IsProgressBarVisibile"></div>
+    <div id="overlay" *ngIf="IsProgressBarVisibile">
+
+    </div>
   </div>
 </div>

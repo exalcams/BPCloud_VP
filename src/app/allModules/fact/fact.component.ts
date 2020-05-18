@@ -709,6 +709,9 @@ export class FactComponent implements OnInit {
     });
   }
 
+  SaveClicked(): void {
+
+  }
 
   CreateFact(): void {
     // this.GetBPCFactValues();
