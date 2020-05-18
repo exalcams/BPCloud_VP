@@ -55,6 +55,7 @@ export class BPCASNItem extends CommonClass {
     UOM: string;
     Batch: string;
     ManufactureDate?: Date;
+    ExpiryDate?: Date;
     ManfCountry: string;
 }
 
@@ -151,4 +152,14 @@ export class BPCInvoiceAttachment {
     ContentLength: number;
 }
 
+export class BPCCountryMaster extends CommonClass {
+    ID: number;
+    CountryCode: string;
+    CountryName: string;
+}
+export class BPCCurrencyMaster extends CommonClass {
+    ID: number;
+    CurrencyCode: string;
+    CurrencyName: string;
+}
 

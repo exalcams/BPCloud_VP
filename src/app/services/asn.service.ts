@@ -5,7 +5,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { BPCASNHeader, BPCASNView, BPCASNItem, DocumentCenter, BPCInvoiceAttachment } from 'app/models/ASN';
+import { BPCASNHeader, BPCASNView, BPCASNItem, DocumentCenter, BPCInvoiceAttachment, BPCCountryMaster, BPCCurrencyMaster } from 'app/models/ASN';
 
 @Injectable({
     providedIn: 'root'
@@ -137,7 +137,7 @@ export class ASNService {
     }
 
     DowloandInvoiceAttachment(AttachmentName: string, ASNNumber: string): Observable<Blob | string> {
-        return this._httpClient.get(`${this.baseAddress}poapi/ASN/DowloandASNAttachment?AttachmentName=${AttachmentName}&ASNNumber=${ASNNumber}`, {
+        return this._httpClient.get(`${this.baseAddress}poapi/ASN/DowloandInvoiceAttachment?AttachmentName=${AttachmentName}&ASNNumber=${ASNNumber}`, {
             responseType: 'blob',
             headers: new HttpHeaders().append('Content-Type', 'application/json')
         })
@@ -153,6 +153,15 @@ export class ASNService {
 
     GetInvoiceAttachmentByASN(ASNNumber: string, InvDocReferenceNo: string): Observable<BPCInvoiceAttachment | string> {
         return this._httpClient.get<BPCInvoiceAttachment>(`${this.baseAddress}poapi/ASN/GetInvoiceAttachmentByASN?ASNNumber=${ASNNumber}&InvDocReferenceNo=${InvDocReferenceNo}`)
+            .pipe(catchError(this.errorHandler));
+    }
+
+    GetAllBPCCountryMasters(): Observable<BPCCountryMaster[] | string> {
+        return this._httpClient.get<BPCCountryMaster[]>(`${this.baseAddress}poapi/Master/GetAllBPCCountryMasters`)
+            .pipe(catchError(this.errorHandler));
+    }
+    GetAllBPCCurrencyMasters(): Observable<BPCCurrencyMaster[] | string> {
+        return this._httpClient.get<BPCCurrencyMaster[]>(`${this.baseAddress}poapi/Master/GetAllBPCCurrencyMasters`)
             .pipe(catchError(this.errorHandler));
     }
 }
