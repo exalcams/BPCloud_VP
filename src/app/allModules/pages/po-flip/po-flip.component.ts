@@ -336,11 +336,11 @@ export class PoFlipComponent implements OnInit {
   //   }
   // }
 
-  invoiceTypeSelected(): void {
+  invoiceTypeSelected(event): void {
 
   }
 
-  invoiceCurrencySelected(): void {
+  invoiceCurrencySelected(event): void {
 
   }
 
