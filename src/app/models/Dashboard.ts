@@ -45,6 +45,12 @@ export class OrderFulfilmentDetails {
     Version: string;
     Status: string;
     ACKDate:Date;
+    ItemCount:number;
+    ASNCount:number;
+    GRNCount:number;
+    QACount:number;
+    DocumentCount:number;
+    FlipCount:number;
     aSNDetails: ASNDetails[];
     itemDetails: ItemDetails[];
     gRNDetails: GRNDetails[];
