@@ -1,5 +1,6 @@
 @import "src/@fuse/scss/fuse";
 #chat {
+  background-color: white;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   h1,
   h2,
@@ -11,6 +12,7 @@
     margin: 0px;
   }
   .outer {
+    border-bottom: 1px solid rgba(255,85,0,0.1);
     position: relative;
     z-index: 1;
     .bg {
@@ -165,7 +167,7 @@
   }
   .Rectangle-721 {
     // height: 115px;
-    border-radius: 7px;
+    // border-radius: 7px;
     border: solid 2px #e0e0e0;
     background-color: #ffffff;
     border-left: solid 8px #3380d7;
@@ -785,4 +787,16 @@
     color: #1e8bed;
     cursor: pointer;
   }
+  #footerCard {
+    position: fixed;
+    height: 50px;
+    box-shadow: 0 -5px 10px 0 rgba(0, 0, 0, 0.16);
+    background-color: #ffffff;
+    bottom: 40px;
+    left: 0px;
+    right: 0px;
+    margin-bottom: 0px;
+    z-index: 100;
+  }
 }
+

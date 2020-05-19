@@ -199,10 +199,24 @@ export class LoginComponent implements OnInit {
           title: 'Dashboard',
           translate: 'NAV.SAMPLE.TITLE',
           type: 'item',
-          icon: 'detailsIcon',
+          icon: 'dashboardIcon',
           isSvgIcon: true,
           // icon: 'dashboard',
           url: '/pages/dashboard',
+        }
+      );
+    }
+    if (true) {
+      this.children.push(
+        {
+          id: 'orderfulfilmentCenter',
+          title: 'Order Fulfilment Center',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          icon: 'detailsIcon',
+          isSvgIcon: true,
+          // icon: 'dashboard',
+          url: '/pages/orderfulfilmentCenter',
         }
       );
     }
@@ -244,7 +258,7 @@ export class LoginComponent implements OnInit {
           icon: 'paymentIcon',
           isSvgIcon: true,
           // icon: 'dashboard',
-          url: '/payment',
+          url: '/pages/payment',
         }
       );
     }
