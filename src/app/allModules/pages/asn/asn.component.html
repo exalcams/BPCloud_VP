@@ -759,7 +759,6 @@
                   </span>
                   <input hidden type="file" #fileInput2 id="file" (change)="handleFileInput1($event)"
                     accept="image/x-png,image/gif,image/jpeg,image/jpg,application/pdf" />
-
                 </div>
                 <div fxFlex="40">
                   <div fxFlex *ngIf="!invAttach?.AttachmentName"
@@ -891,7 +890,6 @@
     <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
     </mat-progress-spinner>
     <div id="overlay" *ngIf="IsProgressBarVisibile">
-
     </div>
   </div>
 </div>
