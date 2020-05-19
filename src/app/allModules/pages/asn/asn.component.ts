@@ -500,7 +500,7 @@ export class ASNComponent implements OnInit {
             UOM: [asnItem.UOM],
             Batch: [asnItem.Batch, Validators.required],
             ManufactureDate: [asnItem.ManufactureDate, Validators.required],
-            ExpiryDate: ['', Validators.required],
+            ExpiryDate: [asnItem.ExpiryDate, Validators.required],
         });
         row.disable();
         row.get('ASNQty').enable();
@@ -556,6 +556,7 @@ export class ASNComponent implements OnInit {
             item.ASNQty = x.get('ASNQty').value;
             item.Batch = x.get('Batch').value;
             item.ManufactureDate = x.get('ManufactureDate').value;
+            item.ExpiryDate = x.get('ExpiryDate').value;
             this.SelectedASNView.ASNItems.push(item);
         });
     }

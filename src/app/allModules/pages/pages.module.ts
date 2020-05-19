@@ -70,7 +70,7 @@ import { PaymentComponent } from "./payment/payment.component";
 
 const routes = [
     {
-        path: "dashboard",
+        path: "orderfulfilmentCenter",
         component: DashboardComponent,
     },
     {
@@ -94,7 +94,7 @@ const routes = [
         component: PoFlipComponent,
     },
     {
-        path: "home",
+        path: "dashboard",
         component: HomeComponent,
     },
     {

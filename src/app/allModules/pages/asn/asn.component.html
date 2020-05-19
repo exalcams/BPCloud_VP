@@ -11,7 +11,7 @@
     </div>
     <div fxLayout class="content-card1">
       <div fxFlex="23" class="side-bar">
-        <div class="sidenav-header" style="background-color: #f5f5f5;">
+        <div class="sidenav-header" style="background-color: #f5f5f5;min-height: 80vh;">
           <mat-toolbar>
             <mat-toolbar-row fxLayout="row" class="px-8" fxLayoutAlign="space-between center">
               <div class="search-wrapper" fxFlex fxLayout="row" fxLayoutAlign="start center">
@@ -28,17 +28,17 @@
                 <div>
                   <div class="mx-8 mb-8 mt-0 p-8 leftCard" (click)="LoadSelectedASN(usr)"
                     [style.border-left-color]="SelectedASNNumber==usr.ASNNumber?'#efb577':'#cccccc'">
-                    <div fxLayout class="py-4" fxLayoutAlign="space-between center">
+                    <div fxLayout class="pb-4" fxLayoutAlign="space-between center">
                       <div fxFlex><strong>{{usr.ASNNumber}}</strong></div>
                       <div fxFlex align="end">{{usr.CreatedOn | date :'dd/MM/yyyy'}}</div>
                     </div>
-                    <div fxLayout class="py-4" fxLayoutAlign="space-between center">
+                    <div fxLayout class="pb-4" fxLayoutAlign="space-between center">
                       <div fxFlex><strong>PO : </strong>{{usr.DocNumber}}</div>
                     </div>
-                    <div fxLayout class="py-4" fxLayoutAlign="space-between center">
+                    <div fxLayout class="pb-4" fxLayoutAlign="space-between center">
                       <div fxFlex><strong>AWB : </strong>{{usr.AWBNumber}}</div>
                     </div>
-                    <div fxLayout class="py-4" fxLayoutAlign="space-between center">
+                    <div fxLayout class="pb-4" fxLayoutAlign="space-between center">
                       <div fxFlex>{{usr.VessleNumber}}</div>
                     </div>
                   </div>
@@ -55,9 +55,9 @@
       </div>
       <div fxFlex="77" class="side-bar">
         <div class="sidenav-content" fxFlex fxLayout="column">
-          <mat-card fxFlex fxLayout="column" class="p-0 pt-8">
+          <mat-card fxFlex fxLayout="column" class="p-0 pt-8 mb-24">
             <div fxFlex fxLayout class="px-24 mt-4">
-              <div fxFlex="80" fxLayout="column" class="Rectangle-721">
+              <div fxFlex="100" fxLayout="column" class="Rectangle-721">
                 <div fxFlex>
                   <div fxLayout="row" class="PO-No px-20 py-12">
                     <div fxFlex='40'>
@@ -80,9 +80,6 @@
                     <div fxFlex='70'> <span>20-Apr-2020</span></div>
                   </div>
                 </div>
-              </div>
-              <div fxFlex="20" align="end">
-                <button mat-stroked-button class="SaveBtn" (click)="SaveClicked()">Save</button>
               </div>
             </div>
             <div fxFlex class="px-24 mt-4">
@@ -689,7 +686,7 @@
                 </div> -->
               </div>
             </div>
-            <div fxFlex fxLayout="column" fxLayoutGap="20px" class="px-24 mt-4">
+            <div fxFlex fxLayout="column" fxLayoutGap="20px" class="px-24 mt-16">
               <div fxFlex>
                 <span class="Shipment-Proposal">Invoice Details</span>
               </div>
@@ -884,6 +881,11 @@
             </div>
           </mat-card>
         </div>
+      </div>
+    </div>
+    <div fxLayout id="footerCard">
+      <div fxLayout fxFlex class="my-8 px-24" fxLayoutAlign="end">
+        <button mat-stroked-button class="SaveBtn" (click)="SaveClicked()">Save</button>
       </div>
     </div>
     <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
