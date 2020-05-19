@@ -166,33 +166,27 @@ export class PoFlipComponent implements OnInit {
 
   ngOnInit(): void {
     // Retrive authorizationData
-    // const retrievedObject = localStorage.getItem('authorizationData');
-    // if (retrievedObject) {
-    //     this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
-    //     this.currentUserID = this.authenticationDetails.UserID;
-    //     this.currentUserRole = this.authenticationDetails.UserRole;
-    //     this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
-    //     if (this.MenuItems.indexOf('POFLIP') < 0) {
-    //         this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
-    //         );
-    //         this._router.navigate(['/auth/login']);
-    //     }
-
-    // } else {
-    //     this._router.navigate(['/auth/login']);
-    // }
-
-    const retrievedObject = localStorage.getItem('authorizationData');
-    if (retrievedObject) {
-      this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
-      console.log(this.authenticationDetails);
-    }
     this._route.queryParams.subscribe(params => {
       this.SelectedDocNumber = params['id'];
     });
-    this.GetPoFlipBasedOnCondition();
-    this.InitializePOFlipFormGroup();
-    this.InitializePOFlipCostDetailsFormGroup();
+    const retrievedObject = localStorage.getItem('authorizationData');
+    if (retrievedObject) {
+      this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+      this.CurrentUserID = this.authenticationDetails.UserID;
+      this.CurrentUserRole = this.authenticationDetails.UserRole;
+      this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
+      if (this.MenuItems.indexOf('Flip') < 0) {
+        this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
+        );
+        this._router.navigate(['/auth/login']);
+      }
+      this.GetPoFlipBasedOnCondition();
+      this.InitializePOFlipFormGroup();
+      this.InitializePOFlipCostDetailsFormGroup();
+    } else {
+      this._router.navigate(['/auth/login']);
+    }
+
     this.PODetails = [
       { PO: '10', MaterialTxt: 'Query Tools', HSN: '421836', OpenQty: '20', InvoiceQty: '18', Price: '18929', Tax: '3%', Amount: '18400' },
       { PO: '10', MaterialTxt: 'Query Tools', HSN: '421836', OpenQty: '20', InvoiceQty: '18', Price: '18929', Tax: '18%', Amount: '18400' },
@@ -230,6 +224,8 @@ export class PoFlipComponent implements OnInit {
         console.log(this.AllBPCFLIPs);
         if (this.AllBPCFLIPs && this.AllBPCFLIPs.length) {
           this.loadSelectedPOFlip(this.AllBPCFLIPs[0]);
+          this.SelectedDocNumber = this.AllBPCFLIPs[0].DocNumber;
+          this.GetPOByDoc();
         }
       },
       (err) => {
@@ -497,7 +493,7 @@ export class PoFlipComponent implements OnInit {
           if (Actiontype === 'Save') {
             this.CreatePOFLIP();
           } else if (Actiontype === 'Update') {
-            this.CreatePOFLIP();
+            this.UpdatePOFLIP();
           } else if (Actiontype === 'Delete') {
             this.DeletePOFLIP();
           }
@@ -547,6 +543,8 @@ export class PoFlipComponent implements OnInit {
               this.ResetControl();
               this.notificationSnackBarComponent.openSnackBar('PO Flip Saved successfully', SnackBarStatus.success);
               this.IsProgressBarVisibile = false;
+              this.GetPOFLIPsByDoc();
+              this.GetFLIPCostsByVOB();
             },
             (err) => {
               this.showErrorNotificationSnackBar(err);
@@ -557,6 +555,8 @@ export class PoFlipComponent implements OnInit {
           this.ResetControl();
           this.notificationSnackBarComponent.openSnackBar('PO Flip Saved successfully', SnackBarStatus.success);
           this.IsProgressBarVisibile = false;
+          this.GetPOFLIPsByDoc();
+          this.GetFLIPCostsByVOB();
         }
       },
       (err) => {
@@ -583,14 +583,15 @@ export class PoFlipComponent implements OnInit {
     // this.GetPOFlipValues();
     // this.GetPOFlipSubItemValues();
     this.SelectedBPCFLIPHeaderView.FLIPID = this.SelectedBPCFLIPHeader.FLIPID;
-    // this.SelectedBPCFLIPHeaderView.ModifiedBy = this.authenticationDetails.userID.toString();
+    this.SelectedBPCFLIPHeaderView.ModifiedBy = this.authenticationDetails.UserID.toString();
     this.IsProgressBarVisibile = true;
     this._pOFlipService.UpdatePOFLIP(this.SelectedBPCFLIPHeaderView).subscribe(
       (data) => {
         this.ResetControl();
         this.notificationSnackBarComponent.openSnackBar('PO Flip Updated successfully', SnackBarStatus.success);
         this.IsProgressBarVisibile = false;
-        // this.GetAllPOFLIPs();
+        this.GetPOFLIPsByDoc();
+        this.GetFLIPCostsByVOB();
       },
       (err) => {
         console.error(err);

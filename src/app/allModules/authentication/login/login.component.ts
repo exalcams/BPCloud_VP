@@ -234,6 +234,20 @@ export class LoginComponent implements OnInit {
         }
       );
     }
+    if (this.MenuItems.indexOf('Flip') >= 0) {
+      this.children.push(
+        {
+          id: 'flip',
+          title: 'Flip',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          icon: 'asnIcon',
+          isSvgIcon: true,
+          // icon: 'dashboard',
+          url: '/pages/poflip',
+        }
+      );
+    }
     if (this.MenuItems.indexOf('Invoice') >= 0) {
       this.children.push(
         {
