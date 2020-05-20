@@ -288,7 +288,7 @@ export class OrderFulfilmentComponent implements OnInit {
                         this.IsProgressBarVisibile = true;
                         this._dashboardService.CreateAcknowledgement(this.Acknowledgement).subscribe(
                             (data) => {
-                                this._router.navigate(['/pages/dashboard']);
+                                this._router.navigate(['/pages/orderfulfilmentCenter']);
                                 this.IsProgressBarVisibile = false;
                             },
                             (err) => {
