@@ -61,7 +61,69 @@
       </div>
     </div>
     <div class="sidenav-content px-24 mt-4" fxFlex>
-      <div fxLayout="row" fxLayoutAlign="space-between center">
+      <form class="mat-card formGroupStyle" autocomplete="off" fxFlex name="form" [formGroup]="poFormGroup"
+        novalidate>
+        <div FxLayout="row" class="formRowStyle" fxLayout.xs="column">
+          <div fxFlex="23%">
+            <mat-form-field>
+              <input matInput placeholder="From date" [matDatepicker]="picker1" formControlName="FromDate"
+                (keydown)="onKeydown($event)" (dateChange)="DateSelected()">
+              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+              <mat-error
+                *ngIf="poFormGroup.get('FromDate').touched && poFormGroup.get('FromDate').hasError('required')">
+                From date is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div fxFlex="23%">
+            <mat-form-field>
+              <input matInput placeholder="To Date" [matDatepicker]="picker2" formControlName="ToDate"
+                (keydown)="onKeydown($event)" (dateChange)="DateSelected()">
+              <mat-datepicker-toggle matSuffix [for]="picker2"> </mat-datepicker-toggle>
+              <mat-datepicker #picker2 color="primary"></mat-datepicker>
+              <mat-error
+                *ngIf="poFormGroup.get('ToDate').touched && poFormGroup.get('ToDate').hasError('required')">
+                To date is required
+              </mat-error>
+            </mat-form-field>
+            <div *ngIf="isDateError" style="color:#f44336;font-size: 12px;margin-top: -16px">
+              To date should not be less than from date
+            </div>
+          </div>
+          <div fxFlex="23%">
+            <mat-form-field>
+              <mat-select style="width:180px" placeholder="Action" formControlName="Status">
+                <mat-option>None</mat-option>
+                <mat-option *ngFor="let doc1 of Status" [value]="doc1.Value">
+                  <span>{{doc1.Name}}</span>
+                </mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="poFormGroup.get('Status').touched && poFormGroup.get('Status').hasError('required')">
+                Status is required
+              </mat-error>
+            </mat-form-field>
+            <!-- <mat-form-field appearance="outline" style="width: 120px;">
+              <mat-select formControlName="Status" required>
+              <mat-label>Action</mat-label>
+                <mat-option value="All">All</mat-option>
+                <mat-option value="Open" >Open</mat-option>
+                <mat-option value="ACK">ACK</mat-option>
+                <mat-option value="ASN">ASN</mat-option>
+              </mat-select>
+              <mat-error
+              *ngIf="poFormGroup.get('Status').touched && poFormGroup.get('Status').hasError('required')">
+              Status is required
+          </mat-error>
+            </mat-form-field> -->
+          </div>
+          <div fxFlex="64%">
+            <button class="mt-24 hbg" mat-raised-button (click)="GetAllPOBasedOnDate()">Search</button>
+          </div>
+        </div>
+      </form>
+      <!-- <div fxLayout="row" fxLayoutAlign="space-between center">
         <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
           <mat-icon class="s-16">search</mat-icon>
           <input [(ngModel)]="searchText" type="text" placeholder="Search" fxFlex>
@@ -73,12 +135,15 @@
             </mat-select>
           </mat-form-field>
         </div>
-      </div>
-      <div fxLayout>
+      </div> -->
+      
+      <!-- <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator> -->
+    </div>
+    <div style="padding: 20px;">
         <table *ngIf="Pos?.length" class="table" mat-table [dataSource]="posDataSource" matSort>
 
           <ng-container matColumnDef="TransID">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> PO </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> PO </th>
             <td mat-cell *matCellDef="let element;let odd=odd" (click)="Checked(element.PO)"
               class="tableLeftBorder pl-0">
               <div fxLayout>
@@ -90,18 +155,18 @@
 
 
           <ng-container matColumnDef="Version">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Version </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 8%;"> Version </th>
             <td mat-cell *matCellDef="let element">
               {{element.Version}} </td>
           </ng-container>
 
           <ng-container matColumnDef="PODate">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 8%;"> Date </th>
             <td mat-cell *matCellDef="let element"> {{element.PODate | date :'dd/MM/yyyy'}} </td>
           </ng-container>
 
           <ng-container matColumnDef="Status">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 44%;"> Status </th>
             <td mat-cell *matCellDef="let element" style="width:400px">
               <div fxLayout class="mt-4 mr-40 ml-8">
                 <div fxFlex="30" fxLayout>
@@ -136,9 +201,9 @@
           </ng-container>
 
           <ng-container matColumnDef="Document">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Document </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> Document </th>
             <td mat-cell *matCellDef="let element">
-              <div fxLayout class="Rectangle">
+              <!-- <div fxLayout class="Rectangle">
                 <div class="Rectangle-106 m-8">
                   <img class="m-8" src="assets/images/imageIcon.png">
                 </div>
@@ -146,12 +211,15 @@
                   <div fxFlex>attachment.jpg</div>
                   <div fxFlex>10KB</div>
                 </div>
-              </div>
+              </div> -->
+              <!-- <div fxFlex> -->
+              attachment.jpg
+              <!-- </div> -->
             </td>
           </ng-container>
 
           <ng-container matColumnDef="NextProcess">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> NextProcess </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> NextProcess </th>
             <td mat-cell *matCellDef="let element">
 
               <span class="next">
@@ -162,7 +230,7 @@
           </ng-container>
 
           <ng-container matColumnDef="Action">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Action </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;">Action </th>
             <td mat-cell *matCellDef="let element" style="text-align: center;">
               <!-- <button mat-stroked-button>Actions</button> -->
               <mat-form-field appearance="outline" style="width: 120px;">
@@ -187,8 +255,6 @@
           <tr mat-row *matRowDef="let row; columns: posDisplayedColumns;" (click)="Checked(row)" style=" cursor: pointer;" [class.highlight]="row === selectedPORow"></tr> -->
         </table>
       </div>
-      <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
-    </div>
     <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
     </mat-progress-spinner>
     <div id="overlay" *ngIf="IsProgressBarVisibile"></div>

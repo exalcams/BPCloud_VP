@@ -5,7 +5,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { PO, OrderFulfilmentDetails, Acknowledgement } from 'app/models/Dashboard';
+import { PO, OrderFulfilmentDetails, Acknowledgement, POSearch } from 'app/models/Dashboard';
 
 @Injectable({
     providedIn: 'root'
@@ -53,5 +53,14 @@ export class DashboardService {
           })
           .pipe(catchError(this.errorHandler));
       }
-   
+      GetAllPOBasedOnDate(poSearch: POSearch): Observable<PO[] | string> {
+        return this._httpClient.post<PO[]>(`${this.baseAddress}poapi/Dashboard/GetAllPOBasedOnDate`,
+        poSearch,
+          {
+            headers: new HttpHeaders({
+              'Content-Type': 'application/json'
+            })
+          })
+          .pipe(catchError(this.errorHandler));
+      }
 }
