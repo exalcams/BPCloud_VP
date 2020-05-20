@@ -11,6 +11,7 @@ export class ItemDetails {
     Item: string;
     MaterialText: string;
     DalivaryDate: Date;
+    Proposeddeliverydate: string;
     OrderQty: number;
     GRQty: number;
     PipelineQty: number;
@@ -44,20 +45,34 @@ export class OrderFulfilmentDetails {
     Currency: string;
     Version: string;
     Status: string;
-    ACKDate:Date;
-    ItemCount:number;
-    ASNCount:number;
-    GRNCount:number;
-    QACount:number;
-    DocumentCount:number;
-    FlipCount:number;
+    ACKDate: Date;
+    ItemCount: number;
+    ASNCount: number;
+    GRNCount: number;
+    QACount: number;
+    DocumentCount: number;
+    FlipCount: number;
     aSNDetails: ASNDetails[];
     itemDetails: ItemDetails[];
     gRNDetails: GRNDetails[];
     qADetails: QADetails[];
+    constructor() {
+        // super();
+        this.itemDetails = [];
+    }
 }
 export class Acknowledgement {
-    DalivaryDate: string;
+    // DalivaryDate: string;
+    ItemDetails: ItemDetails[];
     PONumber: string;
+    // Status: string;
+}
+export class POSearch {
     Status: string;
+    FromDate: string;
+    ToDate: string;
+}
+export class Status{
+    Value:string;
+    Name:string;
 }

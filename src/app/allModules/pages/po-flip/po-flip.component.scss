@@ -240,7 +240,13 @@
   .tableLeftBorder {
     border-left: 1px solid rgba(0, 0, 0, 0.12);
   }
-
+  .tableCellBorder {
+    height: 20px;
+    vertical-align: middle;
+    width: 10px;
+    background-color: #d87e39;
+    opacity: 0.7;
+  }
   .icon {
     margin: 0;
     color: rgba(0, 0, 0, 0.54);

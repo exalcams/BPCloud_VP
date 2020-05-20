@@ -4,7 +4,7 @@ import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatDialog } fro
 import { SelectionModel } from '@angular/cdk/collections';
 import { AuthenticationDetails, UserWithRole } from 'app/models/master';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MasterService } from 'app/services/master.service';
 import { Router } from '@angular/router';
 import { Task } from 'app/models/task';
@@ -15,7 +15,8 @@ import { ShareParameterService } from 'app/services/share-parameters.service';
 import { ChartType } from 'chart.js';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { PO } from 'app/models/Dashboard';
+import { PO, POSearch, Status } from 'app/models/Dashboard';
+import { DatePipe } from '@angular/common';
 // import 'chartjs-plugin-annotation';
 // import 'chart.piecelabel.js';
 // import 'chartjs-plugin-labels';
@@ -49,6 +50,9 @@ export class DashboardComponent implements OnInit {
         'NextProcess',
         'Action'
     ];
+    poFormGroup: FormGroup;
+    isDateError: boolean;
+    poSearch: POSearch;
     posDataSource: MatTableDataSource<PO>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -58,6 +62,16 @@ export class DashboardComponent implements OnInit {
     Fulfilments: any[] = [];
     donutChartData: any[] = [];
     DeliveryStatus: any[] = [];
+    Status: Status[] = [{ Value: 'All', Name: 'All' },
+    { Value: 'ACK', Name: 'ACK' },
+    { Value: 'ASN', Name: 'ASN' },
+    // { Value: 'All', Name: 'All' },
+    ]
+    // foods: string[] = [
+    //     {value: 'steak-0', viewValue: 'Steak'},
+    //     {value: 'pizza-1', viewValue: 'Pizza'},
+    //     {value: 'tacos-2', viewValue: 'Tacos'}
+    //   ];
     searchText = '';
     FilterVal = 'All';
     ActionModel = 'Acknowledge';
@@ -170,13 +184,19 @@ export class DashboardComponent implements OnInit {
         private _formBuilder: FormBuilder,
         private _router: Router,
         public snackBar: MatSnackBar,
-        public _dashboardService: DashboardService
+        public _dashboardService: DashboardService,
+        private datePipe: DatePipe,
     ) {
         this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
         this.authenticationDetails = new AuthenticationDetails();
         this.IsProgressBarVisibile = false;
         this.progress1(85);
         this.progress2(99);
+        this.poFormGroup = this._formBuilder.group({
+            FromDate: ['', Validators.required],
+            ToDate: ['', Validators.required],
+            Status: ['', Validators.required]
+        });
     }
 
     ngOnInit(): void {
@@ -315,6 +335,46 @@ export class DashboardComponent implements OnInit {
                     this.IsProgressBarVisibile = false;
                 });
     }
+    DateSelected(): void {
+        // console.log('Called');
+        const FROMDATEVAL = this.poFormGroup.get('FromDate').value as Date;
+        const TODATEVAL = this.poFormGroup.get('ToDate').value as Date;
+        if (FROMDATEVAL && TODATEVAL && FROMDATEVAL > TODATEVAL) {
+            this.isDateError = true;
+        } else {
+            this.isDateError = false;
+        }
+    }
+    GetAllPOBasedOnDate(): void {
+        if (this.poFormGroup.valid) {
+            if (!this.isDateError) {
+                this.IsProgressBarVisibile = true;
+                this.poSearch = new POSearch();
+                this.poSearch.FromDate = this.datePipe.transform(this.poFormGroup.get('FromDate').value as Date, 'yyyy-MM-dd');
+                this.poSearch.ToDate = this.datePipe.transform(this.poFormGroup.get('ToDate').value as Date, 'yyyy-MM-dd');
+                this.poSearch.Status = this.poFormGroup.get('Status').value;
+                // this.getDocument.FromDate = this.poFormGroup.get('FromDate').value;
+                // this.getDocument.ToDate = this.poFormGroup.get('ToDate').value;
+                this._dashboardService.GetAllPOBasedOnDate(this.poSearch)
+                    .subscribe((data) => {
+                        this.Pos = <PO[]>data;
+                        this.posDataSource = new MatTableDataSource(this.Pos);
+                        this.posDataSource.paginator = this.poPaginator;
+                        this.IsProgressBarVisibile = false;
+                    },
+                        (err) => {
+                            console.error(err);
+                            this.IsProgressBarVisibile = false;
+                            this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+                        });
+            }
+
+        }
+        Object.keys(this.poFormGroup.controls).forEach(key => {
+            this.poFormGroup.get(key).markAsTouched();
+            this.poFormGroup.get(key).markAsDirty();
+        });
+    }
     PurchaseOrder(po: string) {
         // alert(po);
         this._router.navigate(['/pages/polookup'], { queryParams: { id: po } });
@@ -323,7 +383,7 @@ export class DashboardComponent implements OnInit {
         // alert(po);
         this._router.navigate(['/pages/polookup'], { queryParams: { id: po } });
     }
-    POFlip(po: string){
+    POFlip(po: string) {
         this._router.navigate(['/pages/poflip'], { queryParams: { id: po } });
     }
     Checked(po: string): void {
@@ -368,17 +428,17 @@ export class DashboardComponent implements OnInit {
         }
     }
     getNextProcess(element: any) {
-        console.log(element);
+        // console.log(element);
         if (element.Status === 'Open') {
             this.nextProcess = 'ACK';
         }
         else if (element.Status === 'ACK') {
             this.nextProcess = 'ASN';
         }
-        else if(element.Status === 'ASN'){
+        else if (element.Status === 'ASN') {
             this.nextProcess = 'Gate';
         }
-        else{
+        else {
             this.nextProcess = 'GRN';
         }
     }

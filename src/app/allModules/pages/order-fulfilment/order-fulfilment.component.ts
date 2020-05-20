@@ -1,10 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource, MatPaginator } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatDialogConfig, MatDialog } from '@angular/material';
 import { ASNDetails, ItemDetails, GRNDetails, QADetails, OrderFulfilmentDetails, Acknowledgement } from 'app/models/Dashboard';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DashboardService } from 'app/services/dashboard.service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray, AbstractControl } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { BPCOFItem } from 'app/models/OrderFulFilment';
+import { BehaviorSubject } from 'rxjs';
+import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 
 @Component({
     selector: 'app-order-fulfilment',
@@ -21,16 +24,25 @@ export class OrderFulfilmentComponent implements OnInit {
     public tab5: boolean;
     public tab6: boolean;
     public tabCount: number;
+    public ItemCount: number;
+    public ASNCount: number;
+    public GRNCount: number;
+    public QACount: number;
+    public DocumentCount: number;
+    public FlipCount: number;
+
     IsProgressBarVisibile: boolean;
     itemDisplayedColumns: string[] = [
         'Item',
         'MaterialText',
         'DalivaryDate',
+        'Proposeddeliverydate',
         'OrderQty',
         'GRQty',
         'PipelineQty',
         'OpenQty',
         'UOM'
+
     ];
     asnDisplayedColumns: string[] = [
         'ASN',
@@ -53,7 +65,8 @@ export class OrderFulfilmentComponent implements OnInit {
         'RejQty',
         'RejReason'
     ];
-    itemDataSource: MatTableDataSource<ItemDetails>;
+    itemDataSource = new BehaviorSubject<AbstractControl[]>([]);
+    // itemDataSource: MatTableDataSource<ItemDetails>;
     asnDataSource: MatTableDataSource<ASNDetails>;
     grnDataSource: MatTableDataSource<GRNDetails>;
     qaDataSource: MatTableDataSource<QADetails>;
@@ -66,6 +79,8 @@ export class OrderFulfilmentComponent implements OnInit {
     PO: any;
     ACKFormGroup: FormGroup;
     Acknowledgement: Acknowledgement = new Acknowledgement();
+    // POItems: ItemDetails[] = [];
+    POItemFormArray: FormArray = this.formBuilder.array([]);
 
     @ViewChild(MatPaginator) itemPaginator: MatPaginator;
     @ViewChild(MatPaginator) asnPaginator: MatPaginator;
@@ -77,7 +92,8 @@ export class OrderFulfilmentComponent implements OnInit {
         public _dashboardService: DashboardService,
         private _router: Router,
         private formBuilder: FormBuilder,
-        private datepipe: DatePipe
+        private datepipe: DatePipe,
+        private dialog: MatDialog,
     ) {
 
         this.route.queryParams.subscribe(params => {
@@ -86,21 +102,31 @@ export class OrderFulfilmentComponent implements OnInit {
                 data => {
                     if (data) {
                         this.OrderFulfilmentDetails = <OrderFulfilmentDetails>data;
-                        console.log(this.OrderFulfilmentDetails);
+                        // console.log(this.OrderFulfilmentDetails);
                         this.Status = this.OrderFulfilmentDetails.Status
                         this.asn = this.OrderFulfilmentDetails.aSNDetails;
                         this.items = this.OrderFulfilmentDetails.itemDetails;
                         this.grn = this.OrderFulfilmentDetails.gRNDetails;
                         this.qa = this.OrderFulfilmentDetails.qADetails;
+                        this.ItemCount = this.OrderFulfilmentDetails.ItemCount;
+                        this.ASNCount = this.OrderFulfilmentDetails.ASNCount;
+                        this.GRNCount = this.OrderFulfilmentDetails.GRNCount;
+                        this.QACount = this.OrderFulfilmentDetails.QACount;
+                        this.DocumentCount = this.OrderFulfilmentDetails.DocumentCount;
+                        this.FlipCount = this.OrderFulfilmentDetails.FlipCount;
                         this.asnDataSource = new MatTableDataSource(this.asn);
-                        this.itemDataSource = new MatTableDataSource(this.items);
+                        // this.itemDataSource = new MatTableDataSource(this.items);
                         this.grnDataSource = new MatTableDataSource(this.grn);
                         this.qaDataSource = new MatTableDataSource(this.qa);
 
                         this.asnDataSource.paginator = this.asnPaginator;
-                        this.itemDataSource.paginator = this.itemPaginator;
+                        // this.itemDataSource.paginator = this.itemPaginator;
                         this.grnDataSource.paginator = this.grnPaginator;
                         this.qaDataSource.paginator = this.qaPaginator;
+
+                        this.items.forEach(x => {
+                            this.InsertPOItemsFormGroup(x);
+                        });
                         // this.POItemList = new MatTableDataSource(this.POPurchaseOrderDetails.POItemList);
                         // if (this.POPurchaseOrderDetails.POItemList && this.POPurchaseOrderDetails.POItemList.length) {
                         //     this.Checked(this.POPurchaseOrderDetails.POItemList[0]);
@@ -127,45 +153,7 @@ export class OrderFulfilmentComponent implements OnInit {
 
     ngOnInit() {
         this.tabCount = 1;
-        // this.Status = "ASN"
-        // this.items = [{ Item: 'item1', MaterialText: 'MaterialText1', DalivaryDate: '21/01/2020', OrderQty: 10, GRQty: 12, OpenQty: 26, PipelineQty: 32, UOM: 'EA' },
-        // { Item: 'item2', MaterialText: 'MaterialText', DalivaryDate: '21/01/2020', OrderQty: 10, GRQty: 12, OpenQty: 26, PipelineQty: 32, UOM: 'EA' },
-        // { Item: 'item2', MaterialText: 'MaterialText', DalivaryDate: '21/01/2020', OrderQty: 10, GRQty: 12, OpenQty: 26, PipelineQty: 32, UOM: 'EA' },
-        // { Item: 'item2', MaterialText: 'MaterialText', DalivaryDate: '21/01/2020', OrderQty: 10, GRQty: 12, OpenQty: 26, PipelineQty: 32, UOM: 'EA' }]
-        // this.itemDataSource = new MatTableDataSource(this.items);
-        // this.asn = [{ ASN: 'asn', Date: '21/01/2020', Truck: 'ka 1234', Status: 'Open' },
-        // { ASN: 'asn', Date: '21/01/2020', Truck: 'ka 1234', Status: 'Open' },
-        // { ASN: 'asn', Date: '21/01/2020', Truck: 'ka 1234', Status: 'Open' },
-        // { ASN: 'asn', Date: '21/01/2020', Truck: 'ka 1234', Status: 'Open' }]
-        // this.asnDataSource = new MatTableDataSource(this.asn);
-        // this.grn = [{ Item: '10', MaterialText: 'MaterialText', GRNDate: '21/01/2020', Qty: 12, Status: 'open' },
-        // { Item: '10', MaterialText: 'MaterialText', GRNDate: '21/01/2020', Qty: 12, Status: 'open' },
-        // { Item: '20', MaterialText: 'MaterialText', GRNDate: '21/01/2020', Qty: 12, Status: 'open' },
-        // { Item: '30', MaterialText: 'MaterialText', GRNDate: '21/01/2020', Qty: 12, Status: 'open' }]
-        // this.grnDataSource = new MatTableDataSource(this.grn);
-        // this.qa = [{ Item: '20', MaterialText: 'MaterialText', Date: '21/01/2020', LotQty: 21, RejQty: 4, RejReason: 'RejReason' },
-        // { Item: '20', MaterialText: 'MaterialText', Date: '21/01/2020', LotQty: 21, RejQty: 4, RejReason: 'RejReason' },
-        // { Item: '20', MaterialText: 'MaterialText', Date: '21/01/2020', LotQty: 21, RejQty: 4, RejReason: 'RejReason' },
-        // { Item: '20', MaterialText: 'MaterialText', Date: '21/01/2020', LotQty: 21, RejQty: 4, RejReason: 'RejReason' }]
-        // this.qaDataSource = new MatTableDataSource(this.qa);
-    }
-    YesClicked() {
-        if (this.ACKFormGroup.valid) {
-
-            this.Acknowledgement.DalivaryDate = this.datepipe.transform(this.ACKFormGroup.get('DalivaryDate').value, 'yyyy-MM-dd HH:mm:ss');
-            this.Acknowledgement.PONumber = this.PO;
-            this.IsProgressBarVisibile = true;
-            this._dashboardService.CreateAcknowledgement(this.Acknowledgement).subscribe(
-                (data) => {
-                    this._router.navigate(['/pages/dashboard']);
-                    this.IsProgressBarVisibile = false;
-                }, 
-                (err) => {
-                    this.IsProgressBarVisibile = false;
-                    console.error(err);
-                }
-            );
-        }
+        this.InitializePOItemFormGroup();
     }
     tabone(): void {
         this.tab1 = true;
@@ -234,8 +222,101 @@ export class OrderFulfilmentComponent implements OnInit {
         // this.ResetControl();
     }
 
+    AdvanceShipment(po: string) {
+        // alert(po);
+        this._router.navigate(['/pages/asn'], { queryParams: { id: po } });
+    }
+
+    InitializePOItemFormGroup(): void {
+        this.ACKFormGroup = this.formBuilder.group({
+            POItems: this.POItemFormArray
+        });
+    }
+    GetPOItemValues(): void {
+        this.OrderFulfilmentDetails.itemDetails = [];
+        const poItemFormArray = this.ACKFormGroup.get('POItems') as FormArray;
+        poItemFormArray.controls.forEach((x, i) => {
+            const item: ItemDetails = new ItemDetails();
+            item.Item = x.get('Item').value;
+            item.MaterialText = x.get('MaterialText').value;
+            // item.DalivaryDate = x.get('DaliveryDate').value;
+            const proposeddeliverydate = this.datepipe.transform(x.get('Proposeddeliverydate').value, 'yyyy-MM-dd HH:mm:ss');
+            item.Proposeddeliverydate = proposeddeliverydate;
+            item.OrderQty = x.get('OrderQty').value;
+            item.UOM = x.get('UOM').value;
+            item.GRQty = x.get('GRQty').value;
+            item.PipelineQty = x.get('PipelineQty').value;
+            item.OpenQty = x.get('OpenQty').value;
+            this.OrderFulfilmentDetails.itemDetails.push(item);
+            console.log(this.OrderFulfilmentDetails.itemDetails);
+        });
+    }
+    InsertPOItemsFormGroup(poItem: ItemDetails): void {
+        const row = this.formBuilder.group({
+            Item: [poItem.Item],
+            MaterialText: [poItem.MaterialText],
+            DalivaryDate: [poItem.DalivaryDate],
+            Proposeddeliverydate: [poItem.Proposeddeliverydate, Validators.required],
+            OrderQty: [poItem.OrderQty],
+            GRQty: [poItem.GRQty],
+            PipelineQty: [poItem.PipelineQty],
+            OpenQty: [poItem.OpenQty],
+            UOM: [poItem.UOM]
+        });
+        row.disable();
+        row.get('Proposeddeliverydate').enable();
+        this.POItemFormArray.push(row);
+        this.itemDataSource.next(this.POItemFormArray.controls);
+        // return row;
+    }
+    YesClicked() {
+        if (this.ACKFormGroup.valid) {
+            this.GetPOItemValues();
+            const dialogConfig: MatDialogConfig = {
+                data: {
+                    Actiontype: 'Acknowledgement',
+                    Catagory: 'PO'
+                },
+            };
+            const dialogRef = this.dialog.open(NotificationDialogComponent, dialogConfig);
+            dialogRef.afterClosed().subscribe(
+                result => {
+                    if (result) {
+                        // this.user.Profile = this.slectedProfile;
+                        this.Acknowledgement.PONumber = this.PO;
+                        this.Acknowledgement.ItemDetails = this.OrderFulfilmentDetails.itemDetails;
+                        this.IsProgressBarVisibile = true;
+                        this._dashboardService.CreateAcknowledgement(this.Acknowledgement).subscribe(
+                            (data) => {
+                                this._router.navigate(['/pages/dashboard']);
+                                this.IsProgressBarVisibile = false;
+                            },
+                            (err) => {
+                                this.IsProgressBarVisibile = false;
+                                console.error(err);
+                            }
+                        );
+                    }
+                });
+
+            // this.Acknowledgement.DalivaryDate = this.datepipe.transform(this.ACKFormGroup.get('DalivaryDate').value, 'yyyy-MM-dd HH:mm:ss');
+            // this.Acknowledgement.PONumber = this.PO;
+            // this.Acknowledgement.ItemDetails = this.OrderFulfilmentDetails.itemDetails;
+            // this.IsProgressBarVisibile = true;
+            // this._dashboardService.CreateAcknowledgement(this.Acknowledgement).subscribe(
+            //     (data) => {
+            //         this._router.navigate(['/pages/dashboard']);
+            //         this.IsProgressBarVisibile = false;
+            //     },
+            //     (err) => {
+            //         this.IsProgressBarVisibile = false;
+            //         console.error(err);
+            //     }
+            // );
+        }
+    }
     getallItem(): void {
-        this.itemDataSource = new MatTableDataSource(this.items);
+        // this.itemDataSource = new MatTableDataSource(this.items);
     }
     getallasn(): void {
         this.asnDataSource = new MatTableDataSource(this.asn);

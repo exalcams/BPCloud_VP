@@ -114,15 +114,15 @@
     margin-bottom: -20px
   }
   .tab-round1{
-    height: 90px;
-    width: 90px;
+    height: 50px;
+    width: 50px;
     border: 2px solid;
     border-radius: 90%;
     // border-color: #8ba0f9
   }
   .tab-round2{
-    height: 80px;
-    width: 80px;
+    height: 40px;
+    width: 40px;
     border: 1px solid;
     border-radius: 60px;
     /* padding: 0px; */
@@ -179,22 +179,22 @@
   }
   .tab-divider{
     border-left: 1px solid;
-    margin-left: 15px;
+    // margin-left: 15px;
     border-color: #000000;
     opacity: 0.2;
     margin-right: 10px;
-    margin-top: 20px;
-    margin-bottom: 20px
+    margin-top: 10px;
+    margin-bottom: 10px
   }
   ::ngdeep .mat-tab-label{
     height: 150px !important;
   }
  .tab-highlight{
-    border-bottom: 2px solid !important;
-    border-color: #efb577 !important;
-    width: 100px !important;
-    margin-top: 15px;
-    margin-left: -10px;
+  border-bottom: 2px solid !important;
+  border-color: #efb577 !important;
+  width: 80px !important;
+  margin-top: 10px;
+  margin-left: -20px;
  } 
   body.theme-default .mat-tab-group.mat-primary .mat-ink-bar, body.theme-default .mat-tab-nav-bar.mat-primary .mat-ink-bar {
     border: 2px solid !important;
@@ -216,8 +216,18 @@
     color: white;
     border-radius: 5px;
     height: 40px;
-    width: 45%;
-    margin-left: 30px;
+    width: 11%;
+    margin-right: 10px;
     margin-top: 5px;
+  }
+  .errorClass {
+    color: red !important;
+  }
+  body.theme-default .mat-form-field-appearance-legacy .mat-form-field-underline {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+  }
+    .mat-header {
+    display: flex;
+    justify-content: center !important;
   }
 }
