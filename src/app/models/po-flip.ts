@@ -50,5 +50,35 @@ export class BPCFLIPHeaderView extends CommonClass {
     DocNumber: string;
     InvoiceAttachmentName: string;
     BPCAttachment: any;
-    bPCFLIPCosts: BPCFLIPCost[];
+    FLIPCosts: BPCFLIPCost[];
+    FLIPItems: BPCFLIPItem[];
+    constructor() {
+        super();
+        this.FLIPItems = [];
+    }
+}
+
+export class BPCFLIPItem extends CommonClass {
+    ID: number;
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
+    FLIPID: string;
+    Item: string;
+    Material: string;
+    MaterialText: string;
+    DeliveryDate?: Date;
+    OrderedQty: number;
+    UOM: string;
+    HSN: string;
+    OpenQty: number;
+    InvoiceQty: number; // OpenQty 30 means [20 InvoiceQty(EnterFromHTML)*Price(EnterFromHTML)*Tax(from PO Item)]
+    Price: number;
+    Tax: number;
+    Amount: number;
+    // Batch: string;
+    // ManufactureDate?: Date;
+    // ExpiryDate?: Date;
+    // ManfCountry: string;
 }

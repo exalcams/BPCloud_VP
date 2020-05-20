@@ -47,6 +47,9 @@ export class BPCOFItem extends CommonClass {
     IsClosed: boolean;
     AckStatus: string;
     AckDelDate?: Date;
+    Price: number;
+    Tax: number;
+    Amount: number;
 }
 
 export class BPCOFScheduleLine extends CommonClass {
