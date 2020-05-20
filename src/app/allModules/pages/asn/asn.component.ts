@@ -390,7 +390,6 @@ export class ASNComponent implements OnInit {
         );
     }
 
-
     LoadSelectedASN(seletedASN: BPCASNHeader): void {
         this.SelectedASNHeader = seletedASN;
         this.SelectedASNView.ASNNumber = this.SelectedASNHeader.ASNNumber;
@@ -401,6 +400,7 @@ export class ASNComponent implements OnInit {
         this.SetASNHeaderValues();
         this.SetInvoiceDetailValues();
     }
+    
     GetASNItemsByASN(): void {
         this._ASNService.GetASNItemsByASN(this.SelectedASNHeader.ASNNumber).subscribe(
             (data) => {

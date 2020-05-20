@@ -4,7 +4,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import { Guid } from 'guid-typescript';
-import { BPCFLIPHeaderView, BPCFLIPHeader, BPCFLIPCost } from 'app/models/po-flip';
+import { BPCFLIPHeaderView, BPCFLIPHeader, BPCFLIPCost, BPCFLIPItem } from 'app/models/po-flip';
 
 @Injectable({
   providedIn: 'root'
@@ -86,10 +86,14 @@ export class POFlipService {
 
   }
 
-  GetFLIPCostsByVOB(FLIPID: string): Observable<BPCFLIPCost[] | string> {
-    return this._httpClient.get<BPCFLIPCost[]>(`${this.baseAddress}poapi/PO/GetFLIPCostsByVOB?FLIPID=${FLIPID}`)
+  GetFLIPItemsByFLIPID(FLIPID: string): Observable<BPCFLIPItem[] | string> {
+    return this._httpClient.get<BPCFLIPItem[]>(`${this.baseAddress}poapi/PO/GetFLIPItemsByFLIPID?FLIPID=${FLIPID}`)
       .pipe(catchError(this.errorHandler));
   }
 
+  GetFLIPCostsByFLIPID(FLIPID: string): Observable<BPCFLIPCost[] | string> {
+    return this._httpClient.get<BPCFLIPCost[]>(`${this.baseAddress}poapi/PO/GetFLIPCostsByFLIPID?FLIPID=${FLIPID}`)
+      .pipe(catchError(this.errorHandler));
+  }
 
 }
