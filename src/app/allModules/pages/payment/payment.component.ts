@@ -1,7 +1,6 @@
 import { PaymentReportService } from "./../../../services/paymentReport.service";
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { MatTableDataSource } from "@angular/material";
-import { PODetails } from "../po-flip/po-flip.component";
 import { fuseAnimations } from "@fuse/animations";
 
 @Component({
