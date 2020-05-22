@@ -1,17 +1,16 @@
-<div id="paymentPage" class="topbarClass" fusePerfectScrollbar>
-  <div fxFlex="100%" fxLayout="column" fxLayoutAlign="stretch">
-    <div fxFlex="8%" fxLayoutAlign="stretch">
-      <div fxLayout="row" fxFlex="100%" fxLayoutAlign="stretch">
-        <div fxFlex="90%">
-          <h2 style="margin: 0px;padding: 10px 0px 0px 10px;"><strong>Payments</strong></h2>
-        </div>
-        <div fxFlex="10%" fxLayoutAlign="end">
-          <span><img src="../../../../assets/images/logo.svg" style="height: 40px;padding: 5px 10px 0px 0px;"></span>
-        </div>
+<div id="paymentPage" class="page-layout carded" fusePerfectScrollbar>
+  <div class="center" fxLayout="column" fxLayoutGap="10px">
+    <div class="outer" fxLayout>
+      <div class="bg"></div>
+      <div>
+        <h3 style="margin: 0px;padding-left: 10px;"><b>Payment</b></h3>
+      </div>
+      <div fxFlex align="end">
+        <span><img src="../../../../assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
       </div>
     </div>
 
-    <div fxFlex="10%" class="content">
+    <div class="content">
       <div fxLayout="row" fxFlex="100%" fxLayoutAlign="space-around center">
         <div fxFlex="100%">
           <h2><strong>Payment</strong></h2>
@@ -20,33 +19,48 @@
       </div>
     </div>
 
-    <div fxFlex="15%" class="content">
-      <div fxLayout="row" fxFlex="100%" fxLayoutAlign="stretch">
-        <div fxFlex="50%">
-          <mat-form-field style="width: 50%;">
-            <input matInput placeholder="Date" [matDatepicker]="picker1">
-            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-            <mat-datepicker #picker1></mat-datepicker>
-          </mat-form-field>
+    <div class="content">
+      <form autocomplete="off" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" name="form" novalidate
+        [formGroup]="SearchFormGroup">
+        <div fxLayout="row" fxFlex="100%" fxLayoutAlign="stretch">
+          <div fxFlex="40%">
+            <mat-form-field style="width: 80%;">
+              <input matInput placeholder="Date" [matDatepicker]="picker1" formControlName="FromDate"
+                (dateChange)="DateSelected()">
+              <mat-datepicker-toggle matSuffix [for]="picker1">
+                <img matDatepickerToggleIcon class="calendarImg" src="assets/images/calendar.png">
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div fxFlex="40%">
+            <mat-form-field style="width: 80%;">
+              <input matInput placeholder="Date" [matDatepicker]="picker2" formControlName="ToDate"
+                (dateChange)="DateSelected()">
+              <mat-datepicker-toggle matSuffix [for]="picker2">
+                <img matDatepickerToggleIcon class="calendarImg" src="assets/images/calendar.png">
+              </mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+            <div *ngIf="isDateError" class="DateError">
+              To date should not be less than from date
+            </div>
+          </div>
+          <div fxFlex="20" class="ml-44 mt-8" fxlayoutAlign="start center">
+            <button mat-raised-button class="SaveBtn" (click)="SearchClicked()">Search</button>
+          </div>
         </div>
-        <div fxFlex="50%" fxLayoutAlign="end">
-          <mat-form-field style="width: 50%;">
-            <input matInput placeholder="Date" [matDatepicker]="picker2">
-            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-            <mat-datepicker #picker2></mat-datepicker>
-          </mat-form-field>
-        </div>
-      </div>
+      </form>
     </div>
-    <div fxFlex class="content">
+    <div fxFlex class="content mt-8">
       <div fxLayout="row" fxFlex="100%" fxLayoutAlign="stretch">
-        <table class="table" mat-table [dataSource]="poCostDataSource" matSort>
+        <table class="table" mat-table [dataSource]="PaymentDataSource" matSort>
           <ng-container matColumnDef="PaymentDoc">
             <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Payment Doc </th>
             <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
               <div fxLayout>
                 <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
-                <div fxFlex class="pl-4"><u style="color: #6fa3e2;">{{element.PaymentDoc}}</u> </div>
+                <div fxFlex class="pl-8"><u style="color: #6fa3e2;">{{element.PaymentDoc}}</u> </div>
               </div>
             </td>
           </ng-container>
@@ -54,7 +68,7 @@
           <ng-container matColumnDef="Date">
             <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Date </th>
             <td mat-cell *matCellDef="let element">
-              {{element.Date}} </td>
+              {{element.Date | date : 'dd/MM/yyyy'}} </td>
           </ng-container>
 
           <ng-container matColumnDef="Amount">
@@ -69,7 +83,8 @@
               <div class="rectangle">
                 <div fxLayout="row" fxFlex="100%" fxLayoutAlign="stretch">
                   <div fxFlex="25%" fxLayoutAlign="space-around center">
-                    <span class="rectangle-106"> <img style="vertical-align: -webkit-baseline-middle;" src="assets/images/imageIcon.png"></span>
+                    <span class="rectangle-106"> <img style="vertical-align: -webkit-baseline-middle;"
+                        src="assets/images/imageIcon.png"></span>
                   </div>
                   <div fxFlex fxLayoutAlign="start center">
                     {{element.Attachment}}
@@ -85,8 +100,9 @@
               {{element.Remark}} </td>
           </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="poCostDisplayedColumns;sticky: true"></tr>
-          <tr mat-row *matRowDef="let row; columns: poCostDisplayedColumns;let even=even" matRipple style=" cursor: pointer;">
+          <tr mat-header-row *matHeaderRowDef="PaymentDisplayedColumns;sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: PaymentDisplayedColumns;let even=even" matRipple
+            style=" cursor: pointer;">
           </tr>
         </table>
       </div>

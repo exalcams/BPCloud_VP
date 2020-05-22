@@ -79,8 +79,8 @@
                     <mat-radio-button value="Open">Open</mat-radio-button>
                     <mat-radio-button value="Closed" class="ml-40">Closed</mat-radio-button>
                   </mat-radio-group>
-                  <div fxFlex align="end">
-                    <button mat-stroked-button class="SaveBtn" (click)="SearchClicked()">Search</button>
+                  <div fxFlex class="ml-44">
+                    <button mat-raised-button class="SaveBtn" (click)="SearchClicked()">Search</button>
                   </div>
                 </div>
                 <!-- </mat-form-field> -->
@@ -94,8 +94,10 @@
           <strong>Invoice</strong>
         </div>
         <div fxFlex align="end" style="margin-bottom: -18px;">
-          <button (click)="exportAsXLSX()" class="SaveAsDraftBtn mr-8" mat-stroked-button>
-            Download to excel</button>
+          <button (click)="exportAsXLSX()" class="excelBtn mr-8" mat-stroked-button>
+            <img class="excelImg" src="assets/images/excel.png">
+            <span class="excelText">Export to excel</span>
+          </button>
         </div>
       </div>
       <div fxLayout class="mt-24">

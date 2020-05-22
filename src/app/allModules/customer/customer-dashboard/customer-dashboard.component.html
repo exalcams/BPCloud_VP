@@ -1,0 +1,193 @@
+<div id="customerDashboard" class="topbarClass" fusePerfectScrollbar>
+  <div class="outer">
+    <div>
+      <h3 style="margin: 0px;padding-left: 10px;"><b>Welcome <span
+            style="color: #d87060;">{{SelectedBPCFact.Client}}</span></b></h3>
+    </div>
+    <div style="float: right;">
+      <span><img src="../../../../assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
+    </div>
+  </div>
+  <div fxLayout fxLayoutAlign="stretch" fxLayoutGap="15px" style="margin-top: 0px;background-color: #F1F1F6;">
+    <!-- First Div -->
+    <div fxFlex="30%">
+      <div style="height: 100%;background-color: white;padding: 20px 20px 10px 20px;">
+        <div fxLayout="column" fxLayoutAlign="stretch" fxLayoutGap="15px">
+          <mat-card fxFlex="100%" style="padding: 10px;">
+            <mat-card-content>
+              <div style="background-color: #f2f7fe;height: 80px;">
+                <table style="width: 100%;">
+                  <tr>
+                    <td>
+                      <h6 style="padding:10px 0px 0px 10px">OUTSTANDING INVOICE</h6>
+                    </td>
+                    <td style="text-align: right;">
+                      <h6 style="padding:10px 10px 0px 10px">AVAILABLE CREDITS</h6>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <h2 style="padding:5px 0px 0px 10px;font-weight: 500;color:#fea320 ;">
+                        ₹{{SelectedBPCFact.OutstandingAmount}}</h2>
+                    </td>
+                    <td style="text-align: right;">
+                      <h2 style="padding:5px 10px 0px 10px;font-weight: 500;color:#29a747">
+                        ₹{{SelectedBPCFact.CreditBalance}}</h2>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <div>
+                <table style="width: 100%;">
+                  <tr>
+                    <td>
+                      <h4 style="padding:10px 0px 0px 0px">Last Payment Received</h4>
+                    </td>
+                    <!-- <td>
+                  </td> -->
+                  </tr>
+                  <tr>
+                    <td>
+                      <h2 style="padding:5px 0px 0px 0px;font-weight:500;">₹{{SelectedBPCFact.LastPayment}}</h2>
+                    </td>
+                    <td style="text-align: right;">
+                      <span>Payment on</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td> <span>Received for <span
+                          style="color:deepskyblue;">{{SelectedBPCFact.CreditAmount}}</span></span>
+                    </td>
+                    <td style="text-align: right;">
+                      <span><b>{{SelectedBPCFact.LastPaymentDate | date :'dd/MM/yy'}}</b></span>
+                  </tr>
+                </table>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card fxFlex="100%" style="padding: 10px;">
+            <mat-card-content>
+              <h2 style="padding:0px 0px 5px 5px;"><strong>{{SelectedBPCFact.Company}}</strong></h2>
+              <h6 style="padding:5px 0px 5px 5px;">{{SelectedBPCFact.Email1}}</h6>
+              <h5 style="padding:5px 0px 5px 5px;"> <span><img src="../../../../assets/images/phone-call.svg"> </span>
+                {{SelectedBPCFact.Phone1}}
+              </h5>
+              <h5 style="padding:5px 0px 5px 5px;"> <span><img
+                    src="../../../../assets/images/noun_mobile phone_117228.svg"> </span>
+                {{SelectedBPCFact.Phone2}}
+              </h5>
+              <h5 style="padding:5px 0px 5px 5px;">Vendor Type : <strong>{{SelectedBPCFact.Type}}</strong></h5>
+              <hr>
+              <h6 style="padding:5px 0px 5px 5px;"><strong> GST Information</strong></h6>
+              <h5 style="padding:5px 0px 5px 5px;">GST Treatment : <strong>Registered Business - Regular</strong></h5>
+              <h5 style="padding:5px 0px 5px 5px;">Business GSTIN : <strong>{{SelectedBPCFact.TaxID1}}</strong></h5>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+    <!-- First Div -->
+
+    <!-- Second Div -->
+    <div fxFlex>
+      <div fxLayout="column" fxLayoutAlign="stretch" fxLayoutGap="15px" style="height: 100%;padding-top: 15px;">
+        <mat-card fxFlex="50%" style="padding: 10px;">
+          <mat-card-content class="staySafe">
+            <div class="translucentDiv">
+              <div>
+                <ul>
+                  <li><b>1. STAY </b>home</li>
+                  <li><b>2. KEEP </b>a safe distance</li>
+                  <li><b>3. WASH </b>hands often</li>
+                  <li><b>4. COVER </b>your cough</li>
+                  <li><b>5. SICK? </b>Call the helpline</li>
+                </ul>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        <mat-card fxFlex="50%" style="padding: 10px;">
+          <mat-card-content class="safetyFirst">
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+    <!-- Second Div -->
+
+    <!-- Third Div -->
+    <div fxFlex="30%">
+      <div style="height: 100%;background-color: white;padding: 15px 15px 10px 15px;">
+        <h2 style="font-weight: 500;margin: 0px;"><span style="margin:0px 5px 0px 0px;"><img
+              src="../../../../assets/images/droid.png"></span>
+          Suggested Actions
+          <span><img src="../../../../assets/images/ellipsis.png" style="height: 25px;width: 40px;float: right;"></span>
+        </h2>
+        <hr class="rightFlexHr">
+        <mat-tab-group>
+          <mat-tab label="Action ({{AIACTsByPartnerID?.length}})">
+            <mat-card *ngFor="let aIACTByPartnerID of AIACTsByPartnerID" fxFlex="100%" class="rightBorder"
+              style="height: 80px;margin: 20px 5px 5px 2px;padding: 10px;border-color:#67c18b;">
+              <mat-card-content>
+                <h5 style="padding:5px 0px 5px 5px;">PO <strong>{{aIACTByPartnerID.DocNumber}} </strong>
+                </h5>
+                <i style="padding:5px 0px 5px 5px;font-size: smaller;">Today,{{aIACTByPartnerID.Time}}</i>
+                <button (click)="ActionTextClicked(aIACTByPartnerID)" mat-raised-button
+                  style="float:right;height:32px;background-color:#efb577;color: white; cursor: pointer;">{{aIACTByPartnerID.ActionText}}</button>
+              </mat-card-content>
+            </mat-card>
+            <!-- <mat-card fxFlex="100%" class="rightBorder"
+              style="height: 80px;margin: 20px 5px 5px 2px;padding: 10px;border-color:#67c18b;">
+              <mat-card-content>
+                <h5 style="padding:5px 0px 5px 5px;">PO <strong>12345 </strong>to be accepted</h5>
+                <i style="padding:5px 0px 5px 5px;font-size: smaller;">Today,04:32 PM</i>
+                <button mat-raised-button
+                  style="float:right;height:32px;background-color:#efb577;color: white;">Accept</button>
+              </mat-card-content>
+            </mat-card>
+            <mat-card fxFlex="100%" class="rightBorder"
+              style="height: 80px;margin: 20px 5px 5px 2px;padding: 10px;border-color:#67c18b;">
+              <mat-card-content>
+                <h5 style="padding:5px 0px 5px 5px;">PO <strong>12345 </strong>to be accepted</h5>
+                <i style="padding:5px 0px 5px 5px;font-size: smaller;">Today,04:32 PM</i>
+                <button mat-raised-button
+                  style="float:right;height:32px;background-color:#efb577;color: white;">View</button>
+              </mat-card-content>
+            </mat-card>
+            <mat-card fxFlex="100%" class="rightBorder"
+              style="height: 80px;margin: 20px 5px 5px 2px;padding: 10px;border-color:#eb6767;">
+              <mat-card-content>
+                <h5 style="padding:5px 0px 5px 5px;">PO <strong>12345 </strong>to be accepted</h5>
+                <i style="padding:5px 0px 5px 5px;font-size: smaller;">Today,04:32 PM</i>
+                <button mat-raised-button
+                  style="float:right;height:32px;background-color:#efb577;color: white;">View</button>
+              </mat-card-content>
+            </mat-card>
+            <mat-card fxFlex="100%" class="rightBorder"
+              style="height: 80px;margin: 20px 5px 5px 2px;padding: 10px;border-color:#eb6767;">
+              <mat-card-content>
+                <h5 style="padding:5px 0px 5px 5px;">PO <strong>12345 </strong>to be accepted</h5>
+                <i style="padding:5px 0px 5px 5px;font-size: smaller;">Today,04:32 PM</i>
+                <button mat-raised-button
+                  style="float:right;height:32px;background-color:#efb577;color: white;">Accept</button>
+              </mat-card-content>
+            </mat-card>
+            <mat-card fxFlex="100%" class="rightBorder"
+              style="height: 80px;margin: 20px 5px 5px 2px;padding: 10px;border-color:#67c18b;">
+              <mat-card-content>
+                <h5 style="padding:5px 0px 5px 5px;">PO <strong>12345 </strong>to be accepted</h5>
+                <i style="padding:5px 0px 5px 5px;font-size: smaller;">Today,04:32 PM</i>
+                <button mat-raised-button
+                  style="float:right;height:32px;background-color:#efb577;color: white;">Accept</button>
+              </mat-card-content>
+            </mat-card> -->
+          </mat-tab>
+          <mat-tab label="Notifications (10)"> </mat-tab>
+        </mat-tab-group>
+      </div>
+
+    </div>
+    <!-- Third Div -->
+
+  </div>
+</div>

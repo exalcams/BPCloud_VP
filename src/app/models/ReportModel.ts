@@ -1,4 +1,4 @@
-export interface CommonClass {
+export class CommonClass {
     IsActive: boolean;
     CreatedOn: Date;
     CreatedBy: string;
@@ -6,7 +6,7 @@ export interface CommonClass {
     ModifiedBy: string;
 }
 
-export interface BPCInvoice extends CommonClass {
+export class BPCInvoice extends CommonClass {
     ID: number;
     Client: string;
     Company: string;
@@ -24,4 +24,18 @@ export interface BPCInvoice extends CommonClass {
     AttID: string;
     PODDate?: Date;
     PODConfirmedBy: string;
+}
+export class BPCPayment extends CommonClass {
+    ID: number;
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
+    FiscalYear: string;
+    PaymentDoc: string;
+    Date?: Date;
+    Amount: number;
+    Currency: string;
+    Remark: string;
+    Attachment: string;
 }

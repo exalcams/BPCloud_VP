@@ -21,6 +21,7 @@ import { DatePipe } from '@angular/common';
 import { NotificationDialogComponent } from './notifications/notification-dialog/notification-dialog.component';
 import { WINDOW_PROVIDERS } from './window.providers';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
+// import { CustomerModule } from './allModules/customer/customer.module';
 // import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 
@@ -52,6 +53,10 @@ const appRoutes: Routes = [
     {
         path: 'reports',
         loadChildren: './allModules/reports/reports.module#ReportsModule'
+    },
+    {
+        path: 'customer',
+        loadChildren: './allModules/customer/customer.module#CustomerModule'
     },
     {
         path: '**',

@@ -210,11 +210,27 @@
     }
     .SaveBtn {
         background-color: #efb577;
+        padding: 0px 40px;
         color: white;
+        margin-top: -12px;
     }
     .SaveAsDraftBtn {
         background-color: white;
         color: #efb577;
+    }
+    .excelBtn {
+        background-color: white;
+        color: rgb(46, 125, 50);
+        &.mat-stroked-button {
+            border-radius: 5px;
+        }
+    }
+    .excelImg {
+        margin: 4px 6px 4px 4px;
+        height: 24px;
+    }
+    .excelText {
+        color: black;
     }
     .SectionTitle {
         display: inline-block;
