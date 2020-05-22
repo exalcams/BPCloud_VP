@@ -436,7 +436,6 @@ export class PoFlipComponent implements OnInit {
       // item.DeliveryDate = x.get('DeliveryDate').value;
       item.HSN = x.get('HSN').value;
       item.OrderedQty = x.get('OrderedQty').value;
-      item.UOM = x.get('UOM').value;
       item.OpenQty = x.get('OpenQty').value;
       item.InvoiceQty = x.get('InvoiceQty').value;
       item.Price = x.get('Price').value;
@@ -498,7 +497,6 @@ export class PoFlipComponent implements OnInit {
       // item.DeliveryDate = x.get('DeliveryDate').value;
             // item.HSN = x.get('HSN').value;
       // item.OrderedQty = x.get('OrderedQty').value;
-      // item.UOM = x.get('UOM').value;
       // item.OpenQty = x.get('OpenQty').value;
       // item.InvoiceQty = x.get('InvoiceQty').value;
       // item.Price = x.get('Price').value;
@@ -520,6 +518,7 @@ export class PoFlipComponent implements OnInit {
   SaveClicked(): void {
     if (this.FLIPFormGroup.valid) {
       this.GetFLIPValues();
+      this.GetFLIPFromPOHeader();
       this.GetFLIPCostValues();
       this.GetFLIPItemValues();
       this.SetActionToOpenConfirmation();
@@ -576,7 +575,6 @@ export class PoFlipComponent implements OnInit {
   }
 
   CreatePOFLIP(): void {
-    this.GetFLIPFromPOHeader();
     this.SelectedBPCFLIPHeaderView.CreatedBy = this.authenticationDetails.UserID.toString();
     this.IsProgressBarVisibile = true;
     this._pOFlipService.CreatePOFLIP(this.SelectedBPCFLIPHeaderView).subscribe(
