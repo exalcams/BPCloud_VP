@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { MenuApp, AuthenticationDetails } from 'app/models/master';
+import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { BPCFact, BPCFactView, BPCKRA, BPCFactBank, BPCFactContactPerson, BPCAIACT } from 'app/models/fact';
 import { MatTableDataSource, MatSnackBar, MatDialog, MatDialogConfig } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FuseConfigService } from '@fuse/services/config.service';
@@ -9,18 +11,17 @@ import { MasterService } from 'app/services/master.service';
 import { FactService } from 'app/services/fact.service';
 import { VendorMasterService } from 'app/services/vendor-master.service';
 import { Router } from '@angular/router';
+import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { CBPLocation } from 'app/models/vendor-master';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
-import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { Guid } from 'guid-typescript';
-import { BPCFact, BPCFactView, BPCFactContactPerson, BPCKRA, BPCFactBank, BPCAIACT } from 'app/models/fact';
 
 @Component({
-  selector: 'app-fact',
-  templateUrl: './fact.component.html',
-  styleUrls: ['./fact.component.scss']
+  selector: 'app-customer-fact',
+  templateUrl: './customer-fact.component.html',
+  styleUrls: ['./customer-fact.component.scss']
 })
-export class FactComponent implements OnInit {
+export class CustomerFactComponent implements OnInit {
+
   MenuItems: string[];
   AllMenuApps: MenuApp[] = [];
   SelectedMenuApp: MenuApp;
@@ -904,4 +905,3 @@ export class FactComponent implements OnInit {
   //   });
   // }
 }
-

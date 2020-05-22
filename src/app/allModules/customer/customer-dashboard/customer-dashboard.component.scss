@@ -1,0 +1,86 @@
+@import "src/@fuse/scss/fuse";
+#customerDashboard {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        padding: 0px;
+        margin: 0px;
+    }
+    &.topbarClass {
+        background-image: url("../../../../assets/images/header_2.png");
+        background-repeat: no-repeat;
+        width: 100%;
+        object-fit: contain;
+    }
+
+    .outer > * {
+        line-height: 50px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .staySafe {
+        background-image: url("../../../../assets/images/StaySafe.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        height: 400px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        ul {
+            list-style: none;
+            margin: 8px;
+            padding-left: 13px;
+            li {
+                line-height: 25px;
+            }
+        }
+    }
+
+    .safetyFirst {
+        background-image: url("../../../../assets/images/SafetyFirst.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        height: 400px;
+    }
+
+    .translucentDiv {
+        -webkit-backdrop-filter: blur(37.4px);
+        backdrop-filter: blur(37.4px);
+        background-color: #ffffff;
+        height: 140px;
+        width: 200px;
+        opacity: 0.7;
+        border-radius: 15px;
+        margin-bottom: 10px;
+    }
+
+    table,
+    th,
+    td {
+        border: none;
+    }
+
+    .rightFlexHr {
+        margin: 0px 0px 10px 0px;
+        width: 48%;
+        margin-left: 40px;
+        height: 3px;
+        background-color: #efb577;
+        border: none;
+    }
+
+    .rightBorder {
+        margin: 10px;
+        padding: 10px;
+        flex: 1 1 100%;
+        box-sizing: border-box;
+        max-width: 100%;
+        border-style: none none none solid;
+        border-left-width: 5px;
+    }
+}

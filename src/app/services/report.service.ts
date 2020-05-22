@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { Observable, throwError } from 'rxjs';
 import { Guid } from 'guid-typescript';
 import { catchError } from 'rxjs/operators';
-import { BPCInvoice } from 'app/models/ReportModel';
+import { BPCInvoice, BPCPayment } from 'app/models/ReportModel';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +29,17 @@ export class ReportService {
   GetFilteredInvoices(InvoiceNo: string, PoReference: string, FromDate: string, ToDate: string, Status: string): Observable<BPCInvoice[] | string> {
     return this._httpClient.get<BPCInvoice[]>
       (`${this.baseAddress}reportapi/InvoiceReport/GetFilteredInvoices?InvoiceNo=${InvoiceNo}&PoReference=${PoReference}&FromDate=${FromDate}&ToDate=${ToDate}&Status=${Status}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+
+  GetAllPayments(): Observable<BPCPayment[] | string> {
+    return this._httpClient.get<BPCPayment[]>(`${this.baseAddress}reportapi/PaymentReport/GetAllPayments`)
+      .pipe(catchError(this.errorHandler));
+  }
+  GetFilteredPayments(FromDate: string, ToDate: string): Observable<BPCPayment[] | string> {
+    return this._httpClient.get<BPCPayment[]>
+      (`${this.baseAddress}reportapi/PaymentReport/GetFilteredPayments?FromDate=${FromDate}&ToDate=${ToDate}`)
       .pipe(catchError(this.errorHandler));
   }
 }

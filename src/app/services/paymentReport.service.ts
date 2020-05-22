@@ -26,10 +26,10 @@ export class PaymentReportService {
         return throwError(error.error || error.message || 'Server Error');
     }
 
-    // Facts
-    GetBPCPayments(): Observable<any | string> {
+    // Payment
+    GetAllPayments(): Observable<any | string> {
         return this._httpClient
-            .get<any>(`${this.baseAddress}api/PaymentReport/GetBPCPayments`)
+            .get<any>(`${this.baseAddress}api/PaymentReport/GetAllPayments`)
             .pipe(catchError(this.errorHandler));
     }
 }

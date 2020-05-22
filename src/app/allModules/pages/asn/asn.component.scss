@@ -45,7 +45,7 @@
     left: 55%;
   }
   .center {
-    padding: 32px !important;
+    padding: 0px !important;
     max-width: 2000px;
     margin: 0 auto;
 
@@ -797,6 +797,9 @@
     right: 0px;
     margin-bottom: 0px;
     z-index: 100;
+  }
+  .cardActions{
+    box-shadow: 0 -5px 10px 0 rgba(0, 0, 0, 0.16);
   }
 }
 
