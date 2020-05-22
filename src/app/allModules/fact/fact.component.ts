@@ -134,26 +134,26 @@ export class FactComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const retrievedObject = localStorage.getItem('authorizationData');
-    if (retrievedObject) {
-      this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
-      this.CurrentUserID = this.authenticationDetails.UserID;
-      this.CurrentUserRole = this.authenticationDetails.UserRole;
-      this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
-      if (false && this.MenuItems.indexOf('Fact') < 0) {
-        this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
-        );
-        this._router.navigate(['/auth/login']);
-      }
-      this.InitializeFactFormGroup();
-      this.InitializeKRAFormGroup();
-      this.InitializeBankDetailsFormGroup();
-      this.InitializeContactPersonFormGroup();
-      this.InitializeAIACTFormGroup();
-      this.GetFactByEmailID();
-    } else {
-      this._router.navigate(['/auth/login']);
-    }
+    // const retrievedObject = localStorage.getItem('authorizationData');
+    // if (retrievedObject) {
+    //   this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+    //   this.CurrentUserID = this.authenticationDetails.UserID;
+    //   this.CurrentUserRole = this.authenticationDetails.UserRole;
+    //   this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
+    //   if (false && this.MenuItems.indexOf('Fact') < 0) {
+    //     this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
+    //     );
+    //     this._router.navigate(['/auth/login']);
+    //   }
+    //   this.InitializeFactFormGroup();
+    //   this.InitializeKRAFormGroup();
+    //   this.InitializeBankDetailsFormGroup();
+    //   this.InitializeContactPersonFormGroup();
+    //   this.InitializeAIACTFormGroup();
+    //   this.GetFactByEmailID();
+    // } else {
+    //   this._router.navigate(['/auth/login']);
+    // }
   }
 
   InitializeFactFormGroup(): void {
