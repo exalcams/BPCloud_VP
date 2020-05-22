@@ -1,5 +1,5 @@
 <div id="chat" class="page-layout carded fullwidth">
-  <div class="center" style="margin-top: -27px !important;padding:32px 0px 1px !important;">
+  <div class="center">
     <div class="outer" fxLayout>
       <div class="bg"></div>
       <div>
@@ -10,7 +10,7 @@
       </div>
     </div>
     <div fxLayout class="content-card1">
-      <div fxFlex="23" class="side-bar">
+      <div fxFlex="23" class="side-bar" style="background-color: #f5f5f5">
         <div class="sidenav-header">
           <mat-toolbar>
             <mat-toolbar-row fxLayout="row" class="px-8" fxLayoutAlign="space-between center">
@@ -22,39 +22,37 @@
               </div>
             </mat-toolbar-row>
           </mat-toolbar>
-          <div>
-            <div class="sidenav-content" fusePerfectScrollbar fxFlex>
-              <div *ngFor="let bpcFlip of AllFLIPs | filter: searchText">
-                <div>
-                  <div class="mx-8 mb-16 mt-0 p-8 leftCard" (click)="LoadSelectedFLIP(bpcFlip)"
-                    [style.border-left-color]="SelectFLIPID==bpcFlip.FLIPID?'#efb577':'#cccccc'">
-                    <div fxLayout class="py-4" fxLayoutAlign="space-between center">
-                      <div fxFlex><strong>{{bpcFlip.FLIPID}}</strong></div>
-                      <div fxFlex align="end">{{bpcFlip.CreatedOn | date :'dd/MM/yyyy'}}</div>
-                    </div>
-                    <div fxLayout class="py-4" fxLayoutAlign="space-between center">
-                      <div fxFlex><strong>PO : </strong>{{bpcFlip.DocNumber}}</div>
-                    </div>
-                    <div fxLayout class="py-4" fxLayoutAlign="space-between center">
-                      <div fxFlex><strong>Invoice No : </strong>{{bpcFlip.InvoiceNumber}}</div>
-                    </div>
-                    <!-- <div fxLayout class="py-4" fxLayoutAlign="space-between center">
-                      <div fxFlex>{{bpcFlip.InvoiceAmount}}</div>
-                    </div> -->
-                  </div>
+        </div>
+        <div class="sidenav-content" fusePerfectScrollbar fxFlex>
+          <div *ngFor="let bpcFlip of AllFLIPs | filter: searchText">
+            <div>
+              <div class="mx-8 mb-16 mt-0 p-8 leftCard" (click)="LoadSelectedFLIP(bpcFlip)"
+                [style.border-left-color]="SelectFLIPID==bpcFlip.FLIPID?'#efb577':'#cccccc'">
+                <div fxLayout class="py-4" fxLayoutAlign="space-between center">
+                  <div fxFlex><strong>{{bpcFlip.FLIPID}}</strong></div>
+                  <div fxFlex align="end">{{bpcFlip.CreatedOn | date :'dd/MM/yyyy'}}</div>
                 </div>
-              </div>
-              <div *ngIf="(AllFLIPs | filter: searchText)?.length === 0" class="no-results-message">
-                <span class="pl-12"> No results..</span>
+                <div fxLayout class="py-4" fxLayoutAlign="space-between center">
+                  <div fxFlex><strong>PO : </strong>{{bpcFlip.DocNumber}}</div>
+                </div>
+                <div fxLayout class="py-4" fxLayoutAlign="space-between center">
+                  <div fxFlex><strong>Invoice No : </strong>{{bpcFlip.InvoiceNumber}}</div>
+                </div>
+                <!-- <div fxLayout class="py-4" fxLayoutAlign="space-between center">
+                  <div fxFlex>{{bpcFlip.InvoiceAmount}}</div>
+                </div> -->
               </div>
             </div>
+          </div>
+          <div *ngIf="(AllFLIPs | filter: searchText)?.length === 0" class="no-results-message">
+            <span class="pl-12"> No results..</span>
           </div>
         </div>
         <div class="borderRight1"></div>
       </div>
-      <div fxFlex="77" class="side-bar">
+      <mat-card fxFlex="77" class="side-bar p-0">
         <div class="sidenav-content" fxFlex fxLayout="column">
-          <mat-card fxFlex fxLayout="column" class="p-0 pt-8 mb-24">
+          <div fxFlex fxLayout="column" class="p-0 pt-8">
             <div fxFlex class="px-24 mt-4">
               <div class="p-8 flipInfoCard">
                 <div fxLayout fxLayoutAlign="space-between center">
@@ -528,22 +526,30 @@
                 </div> -->
               </div>
             </div>
-            <div fxFlex fxLayout="column" style="margin-bottom: 40px; margin-top: 20px;">
+            <div fxFlex fxLayout="column" class="mx-20 my-12">
               <div fxLayoutAlign="center">
                 <button class="Btn1" mat-button>Preview and Download</button>
               </div>
             </div>
-          </mat-card>
+          </div>
         </div>
-        <div fxLayout id="footerCard">
+        <!-- <div fxLayout id="footerCard">
           <div fxLayout fxFlex class="my-8 px-24" fxLayoutAlign="end">
             <button (click)="SaveClicked()" *ngIf="!SelectedBPCFLIPHeader?.FLIPID" class="SaveBtn" mat-stroked-button>
               Save</button>
             <button (click)="SaveClicked()" *ngIf="SelectedBPCFLIPHeader?.FLIPID" class="SaveBtn" mat-raised-button>
               Update</button>
           </div>
-        </div>
-      </div>
+        </div> -->
+        <mat-card-actions class="m-0 pl-12 pr-16 cardActions">
+          <div fxLayout fxFlex fxLayoutAlign="end">
+            <button (click)="SaveClicked()" *ngIf="!SelectedBPCFLIPHeader?.FLIPID" class="SaveBtn" mat-stroked-button>
+              Save</button>
+            <button (click)="SaveClicked()" *ngIf="SelectedBPCFLIPHeader?.FLIPID" class="SaveBtn" mat-raised-button>
+              Update</button>
+          </div>
+        </mat-card-actions>
+      </mat-card>
     </div>
     <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
     </mat-progress-spinner>
