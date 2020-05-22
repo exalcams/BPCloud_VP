@@ -1,17 +1,6 @@
 @import "src/@fuse/scss/fuse";
-#poflip {
-  // .topbarClass {
-  //   background: url("/assets/images/backgrounds/header 2.png") no-repeat;
-  //   background-repeat: no-repeat;
-  //   background-size: cover;
-  // }
+#chat {
   background-color: white;
-  .progressBarPostion {
-    position: absolute !important;
-    top: 350px;
-    z-index: 1;
-    left: 55%;
-  }
   .center {
     padding: 32px !important;
     max-width: 2000px;
@@ -88,15 +77,30 @@
     display: inline-block;
     vertical-align: middle;
   }
+  .topbarClass {
+    background: url("/assets/images/backgrounds/header 2.png") no-repeat;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  .progressBarPostion {
+    position: absolute !important;
+    top: 350px;
+    z-index: 1;
+    left: 55%;
+  }
   .side-bar {
     display: flex;
     flex: 1;
     flex-direction: column;
-    // .sidenav-content {
-    //   overflow: auto;
-    //   overflow-x: hidden;
-    //   -webkit-overflow-scrolling: touch;
-    // }
+    .sidenav-content {
+      overflow: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+  .sidenav-header {
+    background-color: #f5f5f5 !important;
+    min-height: 83vh !important;
   }
   .side-bar-items {
     text-decoration: none !important;
@@ -122,7 +126,7 @@
     border-color: #ffffff;
     // border-color: rgba(0, 0, 0, 0.12);
     @include mat-elevation(1);
-    border: 1px solid #c3c3c3;
+
     mat-icon.s-16 {
       color: rgba(0, 0, 0, 0.54) !important;
     }
@@ -139,26 +143,15 @@
       border: none;
     }
   }
-
   .calendarImg {
     height: 20px;
     margin-bottom: 12px;
   }
-  .main-content {
-    display: flex;
-    flex: 1;
-    position: relative;
-    border-radius: 10px;
+  .mat-radio-outer-circle {
+    border-color: #44a200;
   }
-  .main-content-content-card {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    // .sidenav-content {
-    //   overflow: auto;
-    //   overflow-x: hidden;
-    //   -webkit-overflow-scrolling: touch;
-    // }
+  .mat-radio-inner-circle {
+    background-color: #44a200;
   }
   .cardHeader {
     background-color: #fffdf9;
@@ -178,18 +171,6 @@
   .SaveAsDraftBtn {
     background-color: white;
     color: #efb577;
-  }
-
-  #main-content-header-card {
-    position: fixed;
-    height: 50px;
-    box-shadow: 0 -5px 10px 0 rgba(0, 0, 0, 0.16);
-    background-color: #ffffff;
-    top: 0px;
-    left: 0px;
-    right: 0px;
-    margin-bottom: 40px;
-    z-index: 146;
   }
 
   @mixin TableBorderRight($color) {
@@ -233,7 +214,7 @@
 
     .mat-sort-header-container {
       display: flex;
-      justify-content: center;
+      // justify-content: center;
     }
   }
 
@@ -316,11 +297,11 @@
     min-height: 80px;
     /* padding: 10px !important; */
     border-radius: 0px 9px 9px 0px;
-    border: solid 1px #cccccc;
-    background-color: #ffffff;
     cursor: pointer !important;
     width: 100%;
-    border-left: 5px solid #3380d7;
+    border: solid 2px #e0e0e0;
+    background-color: #ffffff;
+    border-left: solid 8px #3380d7;
   }
   .addIcon {
     height: 20px;
@@ -348,7 +329,7 @@
     border-bottom: 2px solid #efb577;
     font-size: 20px;
   }
-  
+
   // .mat-formClass {
   //   width: 80% !important;
   //   margin-left: 25px !important;
@@ -386,10 +367,10 @@
     height: 50px;
     box-shadow: 0 -5px 10px 0 rgba(0, 0, 0, 0.16);
     background-color: #ffffff;
-    bottom: 0px;
-    left: 0px;
+    bottom: 40px;
+    left: 363px;
     right: 0px;
-    margin-bottom: 40px;
+    margin-bottom: 0px;
     z-index: 100;
   }
 }

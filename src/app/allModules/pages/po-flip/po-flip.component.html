@@ -1,4 +1,4 @@
-<div id="poflip" class="page-layout carded fullwidth">
+<div id="chat" class="page-layout carded fullwidth">
   <div class="center" style="margin-top: -27px !important;padding:32px 0px 1px !important;">
     <div class="outer" fxLayout>
       <div class="bg"></div>
@@ -11,7 +11,7 @@
     </div>
     <div fxLayout class="content-card1">
       <div fxFlex="23" class="side-bar">
-        <div class="sidenav-header" style="background-color: #f5f5f5;">
+        <div class="sidenav-header">
           <mat-toolbar>
             <mat-toolbar-row fxLayout="row" class="px-8" fxLayoutAlign="space-between center">
               <div class="search-wrapper" fxFlex fxLayout="row" fxLayoutAlign="start center">
@@ -23,10 +23,10 @@
             </mat-toolbar-row>
           </mat-toolbar>
           <div>
-            <div class="sidenav-content" fxFlex>
+            <div class="sidenav-content" fusePerfectScrollbar fxFlex>
               <div *ngFor="let bpcFlip of AllFLIPs | filter: searchText">
                 <div>
-                  <div class="mx-8 mb-8 mt-0 p-8 leftCard" (click)="LoadSelectedFLIP(bpcFlip)"
+                  <div class="mx-8 mb-16 mt-0 p-8 leftCard" (click)="LoadSelectedFLIP(bpcFlip)"
                     [style.border-left-color]="SelectFLIPID==bpcFlip.FLIPID?'#efb577':'#cccccc'">
                     <div fxLayout class="py-4" fxLayoutAlign="space-between center">
                       <div fxFlex><strong>{{bpcFlip.FLIPID}}</strong></div>
@@ -54,9 +54,9 @@
       </div>
       <div fxFlex="77" class="side-bar">
         <div class="sidenav-content" fxFlex fxLayout="column">
-          <mat-card fxFlex fxLayout="column" class="p-0 pt-8">
+          <mat-card fxFlex fxLayout="column" class="p-0 pt-8 mb-24">
             <div fxFlex class="px-24 mt-4">
-              <div class="mx-8 mb-8 mt-0 p-8 flipInfoCard">
+              <div class="p-8 flipInfoCard">
                 <div fxLayout fxLayoutAlign="space-between center">
                   <div fxFlex><strong>PO No : {{POHeader?.DocNumber}}</strong></div>
                   <div *ngIf="!SelectedBPCFLIPHeader?.FLIPID" fxFlex fxLayoutAlign="end" class="mr-8">
@@ -74,12 +74,6 @@
                   </div>
                 </div>
               </div>
-              <!-- <div fxFlex="20" align="end">
-                <button *ngIf="!SelectedBPCFLIPHeader?.FLIPID" mat-stroked-button class="SaveBtn"
-                  (click)="SaveClicked()">Save</button>
-                <button *ngIf="SelectedBPCFLIPHeader?.FLIPID" mat-stroked-button class="SaveBtn"
-                  (click)="SaveClicked()">Update</button>
-              </div> -->
             </div>
             <div fxFlex class="px-24 mt-4">
               <form autocomplete="off" fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="start" fxFlex="1 0 auto"
@@ -126,8 +120,9 @@
                       <mat-form-field class="pl-8 pr-24" style="width: 100%;">
                         <mat-select (selectionChange)="invoiceCurrencySelected($event)" placeholder="Currency"
                           formControlName="InvoiceCurrency">
-                          <mat-option value="USD">USD</mat-option>
-                          <mat-option value="INR">INR</mat-option>
+                          <mat-option *ngFor="let currency of AllCurrencies" [value]="currency">
+                            {{currency}}
+                          </mat-option>
                         </mat-select>
                         <mat-error
                           *ngIf="FLIPFormGroup.get('InvoiceCurrency').touched && FLIPFormGroup.get('InvoiceCurrency').hasError('required')">
@@ -142,8 +137,8 @@
                     <mat-form-field class="pl-8 pr-24" style="width: 100%;">
                       <mat-select placeholder="Invoice Type" (selectionChange)="invoiceTypeSelected($event)"
                         formControlName="InvoiceType">
-                        <mat-option value="Registered">Registered</mat-option>
-                        <mat-option value="Service">Service</mat-option>
+                        <mat-option *ngFor="let invoiceType of AllInvoiceTypes" [value]="invoiceType">{{invoiceType}}
+                        </mat-option>
                       </mat-select>
                       <mat-error
                         *ngIf="FLIPFormGroup.get('InvoiceType').touched && FLIPFormGroup.get('InvoiceType').hasError('required')">
@@ -156,7 +151,7 @@
                       <span>Invoice Attachment</span>
                     </div>
                     <div fxLayout>
-                      <div fxFlex="60" fxLayout class="Rectangle">
+                      <div fxFlex="100" fxLayout class="Rectangle">
                         <div class="Rectangle-106 m-8">
                           <img class="m-8" style="height: 10px;" src="assets/images/imageIcon.png">
                         </div>
@@ -265,7 +260,7 @@
                     </ng-container>
 
                     <tr mat-header-row *matHeaderRowDef="FLIPCostDisplayedColumns;sticky: true"></tr>
-                    <tr mat-row *matRowDef="let row; columns: FLIPCostDisplayedColumns;let even=even" matRipple
+                    <tr mat-row *matRowDef="let row; columns: FLIPCostDisplayedColumns;let even=even"
                       style=" cursor: pointer;">
                     </tr>
                   </table>
@@ -281,7 +276,8 @@
                 <div fxFlex fxLayout="row" fxLayoutAlign="start center">
                 </div>
                 <div fxFlex align="end">
-                  <button class="Btn" (click)="AddFLIPItemAfterCalculationToTable()"  mat-stroked-button>Full Filp</button>
+                  <button class="Btn" (click)="AddFLIPItemAfterCalculationToTable()" mat-stroked-button>Full
+                    Filp</button>
                 </div>
               </div>
               <!-- <div fxFlex>
@@ -381,13 +377,13 @@
                           <input matInput formControlName="MaterialText"> </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="DeliveryDate">
+                      <!-- {{FLIPItemFormGroup.get('FLIPItems')?.controls[index]?.get('DeliveryDate')?.value | date : 'dd/MM/yyyy'}} -->
+                      <!-- <ng-container matColumnDef="DeliveryDate">
                         <th mat-header-cell *matHeaderCellDef> Delivery Date </th>
                         <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
                           <input matInput formControlName="DeliveryDate">
-                          <!-- {{FLIPItemFormGroup.get('FLIPItems')?.controls[index]?.get('DeliveryDate')?.value | date : 'dd/MM/yyyy'}} -->
                         </td>
-                      </ng-container>
+                      </ng-container> -->
 
                       <ng-container matColumnDef="OrderedQty">
                         <th mat-header-cell *matHeaderCellDef> Order Qty </th>
@@ -396,17 +392,17 @@
                           <input matInput formControlName="OrderedQty"> </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="HSN">
-                        <th mat-header-cell *matHeaderCellDef> HSN </th>
-                        <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
-                          <input matInput formControlName="HSN"> </td>
-                      </ng-container>
-
                       <ng-container matColumnDef="OpenQty">
                         <th mat-header-cell *matHeaderCellDef> Open Qty</th>
                         <td mat-cell class="QtyClass" *matCellDef="let element; let index = index"
                           [formGroupName]="index">
                           <input matInput formControlName="OpenQty"> </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="HSN">
+                        <th mat-header-cell *matHeaderCellDef> HSN </th>
+                        <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+                          <input matInput formControlName="HSN"> </td>
                       </ng-container>
 
                       <ng-container matColumnDef="InvoiceQty">
@@ -532,26 +528,26 @@
                 </div> -->
               </div>
             </div>
-            <div fxFlex fxLayout="column" style="margin-bottom: 60px; margin-top: 20px;">
+            <div fxFlex fxLayout="column" style="margin-bottom: 40px; margin-top: 20px;">
               <div fxLayoutAlign="center">
                 <button class="Btn1" mat-button>Preview and Download</button>
               </div>
             </div>
           </mat-card>
         </div>
+        <div fxLayout id="footerCard">
+          <div fxLayout fxFlex class="my-8 px-24" fxLayoutAlign="end">
+            <button (click)="SaveClicked()" *ngIf="!SelectedBPCFLIPHeader?.FLIPID" class="SaveBtn" mat-stroked-button>
+              Save</button>
+            <button (click)="SaveClicked()" *ngIf="SelectedBPCFLIPHeader?.FLIPID" class="SaveBtn" mat-raised-button>
+              Update</button>
+          </div>
+        </div>
       </div>
     </div>
-    <div fxLayout id="footerCard">
-      <div fxLayout fxFlex class="my-8 px-24" fxLayoutAlign="end">
-        <button (click)="SaveClicked()" *ngIf="!SelectedBPCFLIPHeader?.FLIPID" class="SaveBtn" mat-stroked-button>
-          Save</button>
-        <button (click)="SaveClicked()" *ngIf="SelectedBPCFLIPHeader?.FLIPID" class="SaveBtn" mat-raised-button>
-          Update</button>
-      </div>
+    <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
+    </mat-progress-spinner>
+    <div id="overlay" *ngIf="IsProgressBarVisibile">
     </div>
-  </div>
-  <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
-  </mat-progress-spinner>
-  <div id="overlay" *ngIf="IsProgressBarVisibile">
   </div>
 </div>
