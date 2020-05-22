@@ -53,9 +53,9 @@ export class PoFlipComponent implements OnInit {
   FLIPItemDisplayedColumns: string[] = [
     'Item',
     'MaterialText',
-    'DeliveryDate',
-    'OrderedQty',
+    // 'DeliveryDate',
     'HSN',
+    'OrderedQty',
     'OpenQty',
     'InvoiceQty',
     'Price',
@@ -91,8 +91,8 @@ export class PoFlipComponent implements OnInit {
   fileToUpload: File;
   fileToUploadList: File[] = [];
   AllRoles: string[] = [];
-  AllTypes: string[] = [];
-  AllCountries: string[] = [];
+  AllCurrencies: string[] = [];
+  AllStates: string[] = [];
   AllInvoiceTypes: string[] = [];
   math = Math;
   constructor(
@@ -112,9 +112,9 @@ export class PoFlipComponent implements OnInit {
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.IsProgressBarVisibile = false;
     this.AllRoles = ['IND'];
-    this.AllTypes = ['Service'];
-    this.AllCountries = ['India'];
-    this.AllInvoiceTypes = [
+    this.AllCurrencies = ['USD', 'INR'];
+    this.AllInvoiceTypes = ['Service', 'Registered'];
+    this.AllStates = [
       'ANDAMAN AND NICOBAR ISLANDS',
       'ANDHRA PRADESH',
       'ARUNACHAL PRADESH',
@@ -317,9 +317,9 @@ export class PoFlipComponent implements OnInit {
       Item: [poItem.Item],
       Material: [poItem.Material],
       MaterialText: [poItem.MaterialText],
-      DeliveryDate: [poItem.DeliveryDate],
-      OrderedQty: [poItem.OrderedQty],
+      // DeliveryDate: [poItem.DeliveryDate],
       HSN: [poItem.HSN],
+      OrderedQty: [poItem.OrderedQty],
       OpenQty: [poItem.OpenQty],
       InvoiceQty: ['', Validators.required],
       Price: ['', Validators.required],
@@ -340,9 +340,9 @@ export class PoFlipComponent implements OnInit {
       Item: [flipItem.Item],
       Material: [flipItem.Material],
       MaterialText: [flipItem.MaterialText],
-      DeliveryDate: [flipItem.DeliveryDate],
-      OrderedQty: [flipItem.OrderedQty],
+      // DeliveryDate: [flipItem.DeliveryDate],
       HSN: [flipItem.HSN],
+      OrderedQty: [flipItem.OrderedQty],
       OpenQty: [flipItem.OpenQty],
       Price: [flipItem.Price, Validators.required],
       InvoiceQty: [flipItem.InvoiceQty, Validators.required],
@@ -404,7 +404,7 @@ export class PoFlipComponent implements OnInit {
   SetFLIPValues(): void {
     this.FLIPFormGroup.get('InvoiceNumber').patchValue(this.SelectedBPCFLIPHeader.InvoiceNumber);
     this.FLIPFormGroup.get('InvoiceDate').patchValue(this.SelectedBPCFLIPHeader.InvoiceDate);
-    this.FLIPFormGroup.get('InvoiceCurrency').patchValue(this.SelectedBPCFLIPHeader.InvoiceDate);
+    this.FLIPFormGroup.get('InvoiceCurrency').patchValue(this.SelectedBPCFLIPHeader.InvoiceCurrency);
     this.FLIPFormGroup.get('InvoiceType').patchValue(this.SelectedBPCFLIPHeader.InvoiceType);
     this.FLIPFormGroup.get('IsInvoiceOrCertified').patchValue(this.SelectedBPCFLIPHeader.IsInvoiceOrCertified);
     this.FLIPFormGroup.get('InvoiceAmount').patchValue(this.SelectedBPCFLIPHeader.InvoiceAmount);
@@ -433,10 +433,10 @@ export class PoFlipComponent implements OnInit {
       item.Item = x.get('Item').value;
       item.Material = x.get('Material').value;
       item.MaterialText = x.get('MaterialText').value;
-      item.DeliveryDate = x.get('DeliveryDate').value;
+      // item.DeliveryDate = x.get('DeliveryDate').value;
+      item.HSN = x.get('HSN').value;
       item.OrderedQty = x.get('OrderedQty').value;
       item.UOM = x.get('UOM').value;
-      item.HSN = x.get('HSN').value;
       item.OpenQty = x.get('OpenQty').value;
       item.InvoiceQty = x.get('InvoiceQty').value;
       item.Price = x.get('Price').value;
@@ -496,9 +496,9 @@ export class PoFlipComponent implements OnInit {
       // item.Material = x.get('Material').value;
       // item.MaterialText = x.get('MaterialText').value;
       // item.DeliveryDate = x.get('DeliveryDate').value;
+            // item.HSN = x.get('HSN').value;
       // item.OrderedQty = x.get('OrderedQty').value;
       // item.UOM = x.get('UOM').value;
-      // item.HSN = x.get('HSN').value;
       // item.OpenQty = x.get('OpenQty').value;
       // item.InvoiceQty = x.get('InvoiceQty').value;
       // item.Price = x.get('Price').value;
