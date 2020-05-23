@@ -37,6 +37,8 @@ export class HomeComponent implements OnInit {
   BanksByPartnerID: BPCFactBank[] = [];
   ContactPersonsByPartnerID: BPCFactContactPerson[] = [];
   AIACTsByPartnerID: BPCAIACT[] = [];
+  AllActions: BPCAIACT[] = [];
+  AllNotifications: BPCAIACT[] = [];
   selection = new SelectionModel<any>(true, []);
   todayDate: any;
   SelectedBPCAIACTByPartnerID: BPCAIACT;
@@ -163,6 +165,14 @@ export class HomeComponent implements OnInit {
       (data) => {
         this.IsProgressBarVisibile = false;
         this.AIACTsByPartnerID = data as BPCAIACT[];
+        this.AIACTsByPartnerID.forEach(x => {
+          if (x.Type === 'Action') {
+            this.AllActions.push(x);
+          }
+          else{
+            this.AllNotifications.push(x);
+          }
+        });
       },
       (err) => {
         console.error(err);
@@ -278,7 +288,7 @@ export class HomeComponent implements OnInit {
         this.OpenConfirmationDialog(Actiontype, Catagory);
       } else if (aIACTByPartnerID.ActionText.toLowerCase() === "view") {
         console.log("view called");
-        this._router.navigate(['/pages/order-fulfilment'], { queryParams: { id: aIACTByPartnerID.DocNumber } });
+        this._router.navigate(['/pages/orderfulfilmentCenter'], { queryParams: { id: aIACTByPartnerID.DocNumber } });
       }
     }
     else {
