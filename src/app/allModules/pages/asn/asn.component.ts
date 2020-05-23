@@ -145,21 +145,21 @@ export class ASNComponent implements OnInit {
 
     InitializeASNFormGroup(): void {
         this.ASNFormGroup = this._formBuilder.group({
-            TransportMode: ['', Validators.required],
+            TransportMode: ['Road', Validators.required],
             VessleNumber: ['', Validators.required],
             AWBNumber: ['', Validators.required],
-            AWBDate: ['', Validators.required],
+            AWBDate: [new Date(), Validators.required],
             NetWeight: ['', [Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
-            NetWeightUOM: ['', Validators.required],
+            NetWeightUOM: ['KG', Validators.required],
             GrossWeight: ['', [Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
-            GrossWeightUOM: ['', Validators.required],
-            VolumetricWeight: ['', [Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
-            VolumetricWeightUOM: ['', Validators.required],
-            DepartureDate: ['', Validators.required],
+            GrossWeightUOM: ['KG', Validators.required],
+            VolumetricWeight: ['', [Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
+            VolumetricWeightUOM: [''],
+            DepartureDate: [new Date(), Validators.required],
             ArrivalDate: ['', Validators.required],
-            NumberOfPacks: ['', [Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
-            CountryOfOrigin: ['', Validators.required],
-            ShippingAgency: ['', Validators.required],
+            NumberOfPacks: ['', [Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
+            CountryOfOrigin: ['IND', Validators.required],
+            ShippingAgency: [''],
         });
         // this.DynamicallyAddAcceptedValidation();
     }
@@ -287,6 +287,10 @@ export class ASNComponent implements OnInit {
     invoiceValueUnitSelected(event): void {
 
     }
+    DepartureDateSelected(): void {
+        const DepartureDateDVAL = this.ASNFormGroup.get('DepartureDate').value as Date;
+        this.ASNFormGroup.get('AWBDate').patchValue(DepartureDateDVAL);
+    }
 
     AddDocumentCenterToTable(): void {
         if (this.DocumentCenterFormGroup.valid) {
@@ -400,7 +404,7 @@ export class ASNComponent implements OnInit {
         this.SetASNHeaderValues();
         this.SetInvoiceDetailValues();
     }
-    
+
     GetASNItemsByASN(): void {
         this._ASNService.GetASNItemsByASN(this.SelectedASNHeader.ASNNumber).subscribe(
             (data) => {
@@ -470,11 +474,11 @@ export class ASNComponent implements OnInit {
             GRQty: [poItem.CompletedQty],
             PipelineQty: [poItem.TransitQty],
             OpenQty: [poItem.OpenQty],
-            ASNQty: ['', Validators.required],
+            ASNQty: [poItem.OpenQty, Validators.required],
             UOM: [poItem.UOM],
-            Batch: ['', Validators.required],
-            ManufactureDate: ['', Validators.required],
-            ExpiryDate: ['', Validators.required],
+            Batch: [''],
+            ManufactureDate: [''],
+            ExpiryDate: [''],
         });
         row.disable();
         row.get('ASNQty').enable();

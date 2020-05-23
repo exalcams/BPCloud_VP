@@ -62,19 +62,18 @@
                         <div fxFlex> <span> PO NO: {{SelectedASNHeader?.DocNumber}}</span></div>
                       </div>
                     </div>
-                    <div fxFlex='60' fxLayout fxLayoutGap="10px" class="No-Invoice-Created-for-this-PO">
+                    <div fxFlex='60' *ngIf="SelectedDocNumber && !AllASNHeaders.length" fxLayout fxLayoutGap="10px"
+                      class="No-Invoice-Created-for-this-PO">
                       <div fxFlex fxLayoutAlign="end center" align="end">
-                        <img src="assets/images/asn/alert.png" srcset="img/alert@2x.png 2x,
-                             img/alert@3x.png 3x" class="alert">
-                        <span>No Invoice Created for this PO</span>
+                        <img src="assets/images/asn/alert.png" class="alert">
+                        <span>No ASN Created for this PO</span>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div fxFlex class="Date px-20 pb-12">
                   <div fxFlex='30' fxLayout="row" fxLayoutGap="2px">
-                    <div fxFlex='30'> <span>Date:</span></div>
-                    <div fxFlex='70'> <span>20-Apr-2020</span></div>
+                    <div fxFlex> <span>Date : </span><span>20/05/2020</span></div>
                   </div>
                 </div>
               </div>
@@ -101,7 +100,7 @@
                     <div fxFlex="50">
                       <mat-form-field class="pl-8 pr-12" style="width: 100%;">
                         <input matInput placeholder="Departure Dt" [matDatepicker]="picker1"
-                          formControlName="DepartureDate">
+                          formControlName="DepartureDate" [max]="maxDate" (dateChange)="DepartureDateSelected()">
                         <mat-datepicker-toggle matSuffix [for]="picker1">
                           <img matDatepickerToggleIcon class="calendarImg" src="assets/images/calendar.png">
                         </mat-datepicker-toggle>
@@ -237,7 +236,8 @@
                   </div>
                   <div fxFlex="33">
                     <mat-form-field class="pl-8 pr-12" style="width: 100%;">
-                      <input matInput placeholder="AWB Date" [matDatepicker]="picker0" formControlName="AWBDate">
+                      <input matInput placeholder="AWB Date" [matDatepicker]="picker0" formControlName="AWBDate"
+                        [max]="maxDate">
                       <mat-datepicker-toggle matSuffix [for]="picker0">
                         <img matDatepickerToggleIcon class="calendarImg" src="assets/images/calendar.png">
                       </mat-datepicker-toggle>
@@ -701,8 +701,8 @@
                   </div>
                   <div fxFlex="33">
                     <mat-form-field class="pl-8 pr-12" style="width: 100%;">
-                      <input matInput placeholder="Invoice Date" [matDatepicker]="picker3"
-                        formControlName="InvoiceDate">
+                      <input matInput placeholder="Invoice Date" [matDatepicker]="picker3" formControlName="InvoiceDate"
+                        [max]="maxDate">
                       <mat-datepicker-toggle matSuffix [for]="picker3">
                         <img matDatepickerToggleIcon class="calendarImg" src="assets/images/calendar.png">
                       </mat-datepicker-toggle>
