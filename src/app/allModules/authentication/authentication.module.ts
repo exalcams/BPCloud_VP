@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
-import { MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, MatDialogModule, MatProgressSpinnerModule, MatIconModule, MatToolbarModule } from '@angular/material';
+import {
+    MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatInputModule,
+    MatDialogModule, MatProgressSpinnerModule, MatIconModule, MatToolbarModule
+} from '@angular/material';
 import { RouterModule, Routes } from '@angular/router';
 
 import { FuseSharedModule } from '@fuse/shared.module';
