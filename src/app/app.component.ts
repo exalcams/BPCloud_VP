@@ -102,6 +102,8 @@ export class AppComponent implements OnInit, OnDestroy {
         mdIconRegistry.addSvgIcon('billIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/bill.svg'));
         mdIconRegistry.addSvgIcon('paymentIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/payment.svg'));
 
+        mdIconRegistry.addSvgIcon('calendarIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/calendar.svg'));
+
         /**
          * ------------------------------------------------------------------
          * ngxTranslate Fix Start

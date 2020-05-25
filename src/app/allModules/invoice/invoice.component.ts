@@ -84,7 +84,7 @@ export class InvoiceComponent implements OnInit {
       ToDate: [''],
       PONumber: [''],
       InvoiceNumber: [''],
-      Status: ['Open'],
+      Status: ['All'],
     });
   }
   ResetControl(): void {
