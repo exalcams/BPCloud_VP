@@ -42,7 +42,7 @@ export class DashboardComponent implements OnInit {
     AllEscalatedTasksCount: number;
     AllReworkTasksCount: number;
     posDisplayedColumns: string[] = [
-        'TransID',
+        'PO',
         'Version',
         'PODate',
         'Status',
@@ -54,8 +54,9 @@ export class DashboardComponent implements OnInit {
     isDateError: boolean;
     poSearch: POSearch;
     posDataSource: MatTableDataSource<PO>;
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatPaginator) poPaginator: MatPaginator;
+    // @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) poSort: MatSort;
     selection = new SelectionModel<any>(true, []);
     AllTickets: any[] = [];
     AllActivities: any[] = [];
@@ -63,9 +64,9 @@ export class DashboardComponent implements OnInit {
     donutChartData: any[] = [];
     DeliveryStatus: any[] = [];
     Status: Status[] = [{ Value: 'All', Name: 'All' },
-    { Value: 'ACK', Name: 'ACK' },
-    { Value: 'ASN', Name: 'ASN' },
-    // { Value: 'All', Name: 'All' },
+    { Value: 'Open', Name: 'Open' },
+    { Value: 'Completed', Name: 'Completed' },
+        // { Value: 'All', Name: 'All' },
     ]
     // foods: string[] = [
     //     {value: 'steak-0', viewValue: 'Steak'},
@@ -86,7 +87,6 @@ export class DashboardComponent implements OnInit {
     progressPercentage1 = 0;
     progressPercentage2 = 0;
     nextProcess: string;
-    @ViewChild(MatPaginator) poPaginator: MatPaginator;
 
     // Doughnut Chart
     public doughnutChartOptions = {
@@ -193,15 +193,16 @@ export class DashboardComponent implements OnInit {
         this.progress1(85);
         this.progress2(99);
         this.poFormGroup = this._formBuilder.group({
-            FromDate: ['', Validators.required],
-            ToDate: ['', Validators.required],
-            Status: ['', Validators.required]
+            FromDate: [''],
+            ToDate: [''],
+            Status: ['']
         });
     }
 
     ngOnInit(): void {
         // Retrive authorizationData
         this.GetPODetails();
+        
         const retrievedObject = localStorage.getItem('authorizationData');
         if (retrievedObject) {
             this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
@@ -217,7 +218,7 @@ export class DashboardComponent implements OnInit {
         } else {
             this._router.navigate(['/auth/login']);
         }
-
+        
         // const gradient = this.barCanvas.nativeElement.getContext('2d').createLinearGradient(0, 0, 0, 600);
         // gradient.addColorStop(0, 'red');
         // gradient.addColorStop(1, 'green');
@@ -327,6 +328,7 @@ export class DashboardComponent implements OnInit {
                     this.Pos = <PO[]>data;
                     this.posDataSource = new MatTableDataSource(this.Pos);
                     this.posDataSource.paginator = this.poPaginator;
+                    this.posDataSource.sort = this.poSort;
                 }
                 this.IsProgressBarVisibile = false;
             },
@@ -357,9 +359,13 @@ export class DashboardComponent implements OnInit {
                 // this.getDocument.ToDate = this.poFormGroup.get('ToDate').value;
                 this._dashboardService.GetAllPOBasedOnDate(this.poSearch)
                     .subscribe((data) => {
-                        this.Pos = <PO[]>data;
-                        this.posDataSource = new MatTableDataSource(this.Pos);
-                        this.posDataSource.paginator = this.poPaginator;
+                        if (data) {
+                            this.Pos = <PO[]>data;
+                            this.posDataSource = new MatTableDataSource(this.Pos);
+                            this.posDataSource.paginator = this.poPaginator;
+                            this.posDataSource.sort = this.poSort;
+                        }
+
                         this.IsProgressBarVisibile = false;
                     },
                         (err) => {
@@ -392,6 +398,20 @@ export class DashboardComponent implements OnInit {
     AdvanceShipment(po: string) {
         // alert(po);
         this._router.navigate(['/pages/asn'], { queryParams: { id: po } });
+    }
+    NextProcess(nextProcess: string, po: string) {
+        if (nextProcess === 'ACK') {
+            // this.nextProcess = 'ACK';
+            this._router.navigate(['/pages/polookup'], { queryParams: { id: po } });
+        }
+        else if (nextProcess === 'ASN') {
+            // this.nextProcess = 'ASN';
+            this._router.navigate(['/pages/asn'], { queryParams: { id: po } });
+        }
+    }
+    onMouseMove(event) {
+        console.log(event)  // true false
+        // if true then the mouse is on control and false when you leave the mouse
     }
     progress1(value: number): void {
         const progress = value / 100;
@@ -429,18 +449,31 @@ export class DashboardComponent implements OnInit {
     }
     getNextProcess(element: any) {
         // console.log(element);
+        // if (element.Status === 'Open') {
+        //     this.nextProcess = 'ACK';
+        // }
+        // else if (element.Status === 'ACK') {
+        //     this.nextProcess = 'ASN';
+        // }
+        // else if (element.Status === 'ASN') {
+        //     this.nextProcess = 'Gate';
+        // }
+        // else {
+        //     this.nextProcess = 'GRN';
+        // }
         if (element.Status === 'Open') {
-            this.nextProcess = 'ACK';
+            element.NextProcess = 'ACK';
         }
         else if (element.Status === 'ACK') {
-            this.nextProcess = 'ASN';
+            element.NextProcess = 'ASN';
         }
         else if (element.Status === 'ASN') {
-            this.nextProcess = 'Gate';
+            element.NextProcess = 'Gate';
         }
         else {
-            this.nextProcess = 'GRN';
+            element.NextProcess = 'GRN';
         }
+
     }
     getTimeline(element: PO, StatusFor: string): string {
         switch (StatusFor) {

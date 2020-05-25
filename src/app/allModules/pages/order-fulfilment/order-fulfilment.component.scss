@@ -1,18 +1,81 @@
 @import "src/@fuse/scss/fuse";
+
 #Order-fuil {
+
+  .test {
+    background-color: red;
+  }
+
+// #mat-badge-content-0{
+// background-color: red;
+// }
+
+// >>> #mat-badge-content-0 {
+//   fill: rgba(250, 250, 250, 0.8);
+//   border-radius: 3px;
+//   background-color: red;
+// }
 
   .progressBarPostion {
     position: absolute !important;
-    top: 350px; 
+    top: 350px;
     z-index: 1;
     left: 55%;
   }
-    .center {
-        padding: 20px !important;
-        background-color: white;
-      }
+  .center {
+    // padding: 20px !important;
+    background-color: white;
+  }
   @mixin TableBorderRight($color) {
     border-right: 1px solid $color;
+  }
+  
+  #mat-badge-content-0 {
+    background-color: #8ba0f9;
+  }
+  #mat-badge-content-1 {
+    background-color: #edb084;
+  }
+  #mat-badge-content-2 {
+    background-color: #89e075;
+  }
+  #mat-badge-content-3 {
+    background-color: #f8d68f;
+  }
+  #mat-badge-content-4 {
+    background-color: #f98bb5;
+  }
+  #mat-badge-content-5 {
+    background-color: #96979b;
+  }
+  .mat-badge-content {
+    color: #fff;
+    background: green;
+  }
+  .tabbackgroudcolor {
+    background-color: #fef8f1;
+    height: 50px;
+  }
+  .outer {
+    border-bottom: 1px solid rgba(255, 85, 0, 0.1);
+    position: relative;
+    z-index: 1;
+    .bg {
+      position: absolute;
+      z-index: -1;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-image: url("../../../../assets/images/header_2.png");
+      opacity: 0.1;
+      background-repeat: no-repeat;
+    }
+    width: 100%;
+    object-fit: contain;
+    line-height: 50px;
+    display: inline-block;
+    vertical-align: middle;
   }
 
   .PO-Lookup {
@@ -46,7 +109,9 @@
       @include TableBorderRight(rgba(0, 0, 0, 0.12));
       @extend .TablePadFont;
       font-size: 12px;
+      max-width: 25px !important;
       text-align: center;
+      color: black;
       min-width: max-content !important;
     }
 
@@ -62,13 +127,13 @@
   .tableLeftBorder {
     border-left: 1px solid rgba(0, 0, 0, 0.12);
   }
-   .tableCellBorder {
-      height: 20px;
-      vertical-align: middle;
-      width: 10px;
-      background-color: #d87e39;
-      opacity: 0.7;
-    }
+  .tableCellBorder {
+    height: 20px;
+    vertical-align: middle;
+    width: 10px;
+    background-color: #d87e39;
+    opacity: 0.7;
+  }
   .roundCommon {
     height: 20px;
     width: 20px;
@@ -101,26 +166,31 @@
     border-top: 2px solid rgba(0, 0, 0, 0.2);
     border-bottom: 2px solid rgba(0, 0, 0, 0.2);
   }
-  .divider1{
+  .divider1 {
     border-left: 1px solid #25262b;
-    opacity: 0.2;
+    opacity: 0.1;
     margin-right: 10%;
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
-  .divider{
+  .divider {
     border-left: 1px solid #25262b;
     opacity: 0.2;
     margin-right: 5%;
-    margin-top: -2%;
-    margin-bottom: -20px
+    margin-top: -10px;
+    margin-bottom: -34px;
   }
-  .tab-round1{
+
+  .tab-round1 {
     height: 50px;
     width: 50px;
     border: 2px solid;
     border-radius: 90%;
+    margin-bottom: 30px !important;
+    background-color: white;
     // border-color: #8ba0f9
   }
-  .tab-round2{
+  .tab-round2 {
     height: 40px;
     width: 40px;
     border: 1px solid;
@@ -129,81 +199,83 @@
     margin: 3px;
     // border-color: #8ba0f9;
   }
-  .item-round1{
+  .item-round1 {
     @extend .tab-round1;
-    border-color: #8ba0f9
+    border-color: #8ba0f9;
   }
-  .item-round2{
+  .item-round2 {
     @extend .tab-round2;
-    border-color: #8ba0f9
+    border-color: #dce2fd;
   }
-  .asn-round1{
+  .asn-round1 {
     @extend .tab-round1;
-    border-color: #edb084
+    border-color: #edb084;
   }
-  .asn-round2{
+  .asn-round2 {
     @extend .tab-round2;
-    border-color: #edb084
+    border-color: #fef7e9;
   }
-  .grn-round1{
+  .grn-round1 {
     @extend .tab-round1;
-    border-color: #89e075
+    border-color: #89e075;
   }
-  .grn-round2{
+  .grn-round2 {
     @extend .tab-round2;
-    border-color: #89e075
+    border-color: #e7f9e3;
   }
-  .qa-round1{
+  .qa-round1 {
     @extend .tab-round1;
-    border-color: #f8d68f
+    border-color: #f8d68f;
   }
-  .qa-round2{
+  .qa-round2 {
     @extend .tab-round2;
-    border-color: #f8d68f
+    border-color: #fef7e9;
   }
-  .document-round1{
+  .document-round1 {
     @extend .tab-round1;
-    border-color: #f98bb5
+    border-color: #f98bb5;
   }
-  .document-round2{
+  .document-round2 {
     @extend .tab-round2;
-    border-color: #f98bb5
+    border-color: #fee8f0;
   }
-  .flip-round1{
+  .flip-round1 {
     @extend .tab-round1;
-    border-color: #eaeaeb
+    border-color: #eaeaeb;
   }
-  .flip-round2{
+  .flip-round2 {
     @extend .tab-round2;
-    border-color: #eaeaeb
+    border-color: #eaeaeb;
   }
-  .tab-divider{
+  .tab-divider {
     border-left: 1px solid;
     // margin-left: 15px;
     border-color: #000000;
-    opacity: 0.2;
+    opacity: 0.1;
     margin-right: 10px;
     margin-top: 10px;
-    margin-bottom: 10px
+    margin-bottom: 30px;
   }
-  ::ngdeep .mat-tab-label{
+  ::ngdeep .mat-tab-label {
     height: 150px !important;
   }
- .tab-highlight{
-  border-bottom: 2px solid !important;
-  border-color: #efb577 !important;
-  width: 80px !important;
-  margin-top: 10px;
-  margin-left: -20px;
- } 
-  body.theme-default .mat-tab-group.mat-primary .mat-ink-bar, body.theme-default .mat-tab-nav-bar.mat-primary .mat-ink-bar {
+  .tab-highlight {
+    border-bottom: 2px solid !important;
+    border-color: #f59170 !important;
+    width: 80px !important;
+    margin-top: 10px;
+    margin-left: -20px;
+  }
+  body.theme-default .mat-tab-group.mat-primary .mat-ink-bar,
+  body.theme-default .mat-tab-nav-bar.mat-primary .mat-ink-bar {
     border: 2px solid !important;
     border-color: #efb577 !important;
     visibility: visible !important;
     left: 30px !important;
     width: 100px !important;
   }
-  .mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar{
+  .mat-tab-group.mat-primary .mat-ink-bar,
+  .mat-tab-nav-bar.mat-primary .mat-ink-bar {
     border: 2px solid !important;
     border-color: #efb577 !important;
     visibility: visible !important;
@@ -226,8 +298,15 @@
   body.theme-default .mat-form-field-appearance-legacy .mat-form-field-underline {
     background-color: rgba(0, 0, 0, 0.2) !important;
   }
-    .mat-header {
+  .mat-header {
     display: flex;
     justify-content: center !important;
   }
+  .calendarImg {
+    height: 15px;
+    /* margin-bottom: 12px; */
+    margin-left: 10px;
+  }
+  
+
 }
