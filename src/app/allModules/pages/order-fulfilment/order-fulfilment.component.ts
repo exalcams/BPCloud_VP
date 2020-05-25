@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource, MatPaginator, MatDialogConfig, MatDialog } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatDialogConfig, MatDialog, MatSort } from '@angular/material';
 import { ASNDetails, ItemDetails, GRNDetails, QADetails, OrderFulfilmentDetails, Acknowledgement } from 'app/models/Dashboard';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DashboardService } from 'app/services/dashboard.service';
@@ -33,7 +33,7 @@ export class OrderFulfilmentComponent implements OnInit {
 
     IsProgressBarVisibile: boolean;
     itemDisplayedColumns: string[] = [
-        'Item',
+        // 'Item',
         'MaterialText',
         'DalivaryDate',
         'Proposeddeliverydate',
@@ -87,6 +87,12 @@ export class OrderFulfilmentComponent implements OnInit {
     @ViewChild(MatPaginator) grnPaginator: MatPaginator;
     @ViewChild(MatPaginator) qaPaginator: MatPaginator;
 
+    @ViewChild(MatSort) itemSort: MatSort;
+    @ViewChild(MatSort) asnSort: MatSort;
+    @ViewChild(MatSort) grnSort: MatSort;
+    @ViewChild(MatSort) qaSort: MatSort;
+
+
     constructor(
         private route: ActivatedRoute,
         public _dashboardService: DashboardService,
@@ -124,6 +130,9 @@ export class OrderFulfilmentComponent implements OnInit {
                         this.grnDataSource.paginator = this.grnPaginator;
                         this.qaDataSource.paginator = this.qaPaginator;
 
+                        this.asnDataSource.sort = this.asnSort;
+                        this.grnDataSource.sort = this.grnSort;
+                        this.qaDataSource.sort = this.qaSort;
                         this.items.forEach(x => {
                             this.InsertPOItemsFormGroup(x);
                         });
@@ -239,7 +248,7 @@ export class OrderFulfilmentComponent implements OnInit {
             const item: ItemDetails = new ItemDetails();
             item.Item = x.get('Item').value;
             item.MaterialText = x.get('MaterialText').value;
-            // item.DalivaryDate = x.get('DaliveryDate').value;
+            item.DalivaryDate = x.get('DaliveryDate').value;
             const proposeddeliverydate = this.datepipe.transform(x.get('Proposeddeliverydate').value, 'yyyy-MM-dd HH:mm:ss');
             item.Proposeddeliverydate = proposeddeliverydate;
             item.OrderQty = x.get('OrderQty').value;

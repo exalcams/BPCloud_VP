@@ -1,5 +1,14 @@
 <div id="dashboard" class="page-layout carded" fusePerfectScrollbar>
   <div class="center" fxLayout="column" fxLayoutGap="10px">
+    <div class="outer" fxLayout>
+      <div class="bg"></div>
+      <div>
+        <h3 style="margin: 0px;padding-left: 10px;"><b>Order Fulfilment</b></h3>
+      </div>
+      <div fxFlex align="end">
+        <span><img src="../../../../assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
+      </div>
+    </div>
     <div fxFlex fxLayout class="p-24">
       <div class="tile mr-20" fxFlex="17" fxLayout="column" fxLayoutAlign="start">
         <div fxLayoutAlign="start center" class="pt-8">
@@ -13,8 +22,8 @@
               [style.strokeDashoffset]="1-dashoffset1" cx="70" cy="70" [attr.r]="radius" stroke-width="10" />
             <circle r="49" cx="70" cy="70" stroke="#f3705a" stroke-width="2" fill="none" class="inner-circle" />
             <text text-anchor="middle" alignment-baseline="middle" transform="rotate(90,70,70)">
-              <tspan x="70" y="70" dy="-0.18em" font-size="20">{{progressPercentage1}}%</tspan>
-              <tspan x="70" y="70" dy="0.82em" font-size="10" class="progressSubtitle">Effiency</tspan>
+              <tspan x="70" y="70" dy="0.18em" font-size="20">{{progressPercentage1}}%</tspan>
+              <tspan x="70" y="70" dy="1.82em" font-size="10" class="progressSubtitle">Effiency</tspan>
             </text>
           </svg>
         </div>
@@ -63,43 +72,51 @@
     <div class="sidenav-content px-24 mt-4" fxFlex>
       <form class="formGroupStyle" autocomplete="off" fxFlex name="form" [formGroup]="poFormGroup" novalidate>
         <div FxLayout="row" class="formRowStyle" fxLayout.xs="column">
-          <div fxFlex="23%">
+          <div fxFlex="20%">
             <mat-form-field>
               <input matInput placeholder="From date" [matDatepicker]="picker1" formControlName="FromDate"
                 (dateChange)="DateSelected()">
-              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+              <!-- <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle> -->
+              <mat-datepicker-toggle matSuffix [for]="picker1">
+                <img matDatepickerToggleIcon class="calendarImg" src="assets/images/calendar.png">
+              </mat-datepicker-toggle>
               <mat-datepicker #picker1></mat-datepicker>
-              <mat-error
+              <!-- <mat-error
                 *ngIf="poFormGroup.get('FromDate').touched && poFormGroup.get('FromDate').hasError('required')">
                 From date is required
-              </mat-error>
+              </mat-error> -->
             </mat-form-field>
           </div>
-          <div fxFlex="23%">
+          <div fxFlex="20%">
             <mat-form-field>
               <input matInput placeholder="To Date" [matDatepicker]="picker2" formControlName="ToDate"
                 (dateChange)="DateSelected()">
-              <mat-datepicker-toggle matSuffix [for]="picker2"> </mat-datepicker-toggle>
+              <!-- <mat-datepicker-toggle matSuffix [for]="picker2"> </mat-datepicker-toggle> -->
+              <mat-datepicker-toggle matSuffix [for]="picker2">
+                <img matDatepickerToggleIcon class="calendarImg" src="assets/images/calendar.png">
+              </mat-datepicker-toggle>
               <mat-datepicker #picker2 color="primary"></mat-datepicker>
-              <mat-error *ngIf="poFormGroup.get('ToDate').touched && poFormGroup.get('ToDate').hasError('required')">
+              <!-- <mat-error
+                *ngIf="poFormGroup.get('ToDate').touched && poFormGroup.get('ToDate').hasError('required')">
                 To date is required
-              </mat-error>
+              </mat-error> -->
             </mat-form-field>
             <div *ngIf="isDateError" style="color:#f44336;font-size: 12px;margin-top: -16px">
               To date should not be less than from date
             </div>
           </div>
-          <div fxFlex="23%">
+          <div fxFlex="18%">
             <mat-form-field>
-              <mat-select style="width:180px" placeholder="Action" formControlName="Status">
+              <mat-select style="width:180px" placeholder="Status" formControlName="Status">
                 <mat-option>None</mat-option>
                 <mat-option *ngFor="let doc1 of Status" [value]="doc1.Value">
                   <span>{{doc1.Name}}</span>
                 </mat-option>
               </mat-select>
-              <mat-error *ngIf="poFormGroup.get('Status').touched && poFormGroup.get('Status').hasError('required')">
+              <!-- <mat-error
+                *ngIf="poFormGroup.get('Status').touched && poFormGroup.get('Status').hasError('required')">
                 Status is required
-              </mat-error>
+              </mat-error> -->
             </mat-form-field>
             <!-- <mat-form-field appearance="outline" style="width: 120px;">
               <mat-select formControlName="Status" required>
@@ -116,7 +133,8 @@
             </mat-form-field> -->
           </div>
           <div fxFlex="64%">
-            <button class="mt-24 hbg" mat-raised-button (click)="GetAllPOBasedOnDate()">Search</button>
+            <button class="mt-24" style="background-color: #efb577;color: white;margin-top: 18px !important;"
+              mat-raised-button (click)="GetAllPOBasedOnDate()">Search</button>
           </div>
         </div>
       </form>
@@ -137,11 +155,11 @@
       <!-- <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator> -->
     </div>
     <div style="padding: 20px;">
-      <table *ngIf="Pos?.length" class="table" mat-table [dataSource]="posDataSource" matSort>
+      <table  class="table" mat-table [dataSource]="posDataSource" matSort>
 
-        <ng-container matColumnDef="TransID">
+        <ng-container matColumnDef="PO">
           <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> PO </th>
-          <td mat-cell *matCellDef="let element;let odd=odd" (click)="Checked(element.PO)" class="tableLeftBorder pl-0">
+          <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0" style="text-align: right;">
             <div fxLayout>
               <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
               <div fxFlex class="pl-4">{{element.PO}} </div>
@@ -152,39 +170,44 @@
 
         <ng-container matColumnDef="Version">
           <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 8%;"> Version </th>
-          <td mat-cell *matCellDef="let element">
+          <td mat-cell *matCellDef="let element" (click)="Acknowledgement(element.PO)" style="text-align: right;">
             {{element.Version}} </td>
         </ng-container>
 
         <ng-container matColumnDef="PODate">
           <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 8%;"> Date </th>
-          <td mat-cell *matCellDef="let element"> {{element.PODate | date :'dd/MM/yyyy'}} </td>
+          <td mat-cell *matCellDef="let element" style="text-align: right;"> {{element.PODate | date :'dd/MM/yyyy'}} </td>
         </ng-container>
 
         <ng-container matColumnDef="Status">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 44%;"> Status </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 44%;"> Order Fulfilment Status </th>
           <td mat-cell *matCellDef="let element" style="width:400px">
             <div fxLayout class="mt-4 mr-40 ml-8">
               <div fxFlex="30" fxLayout>
-                <div class="round" [style.border-color]="element.Status==='Open'?'#efb577':'#34ad65'"></div>
-                <div style="width: 10px;" [class]="element.Status==='Open'?'orange-timeline':'green-timeline'"></div>
+                <div class="round" (click)="Acknowledgement(element.PO)"
+                  [style.border-color]="element.Status==='Open'?'#efb577':'#34ad65'"></div>
+                <div style="width: 10px;margin-left: -1px !important"
+                  [class]="element.Status==='Open'?'orange-timeline':'green-timeline'"></div>
                 <div [class]="element.Status==='Open'?'white-timeline':'green-timeline'" fxFlex></div>
               </div>
               <div fxFlex="30" fxLayout>
-                <div style="width: 10px;" [class]="getTimeline(element,'ASN')"></div>
-                <div class="round" [style.border-color]="getStatusColor(element,'ASN')"></div>
-                <div style="width: 10px;" [class]="getTimeline(element,'ASN')"></div>
+                <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline(element,'ASN')"></div>
+                <div class="round" (click)="Acknowledgement(element.PO)"
+                  [style.border-color]="getStatusColor(element,'ASN')"></div>
+                <div style="width: 10px; margin-left: -1px !important" [class]="getTimeline(element,'ASN')"></div>
                 <div [class]="getRestTimeline(element,'ASN')" fxFlex></div>
               </div>
               <div fxFlex="30" fxLayout>
-                <div style="width: 10px;" [class]="getTimeline(element,'Gate')"></div>
-                <div class="round" [style.border-color]="getStatusColor(element,'Gate')"></div>
-                <div style="width: 10px;" [class]="getTimeline(element,'Gate')"></div>
+                <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline(element,'Gate')"></div>
+                <div class="round" (click)="Acknowledgement(element.PO)"
+                  [style.border-color]="getStatusColor(element,'Gate')"></div>
+                <div style="width: 10px;margin-left: -1px !important" [class]="getTimeline(element,'Gate')"></div>
                 <div [class]="getRestTimeline(element,'Gate')" fxFlex></div>
               </div>
               <div fxFlex="10" fxLayout>
-                <div style="width: 10px;" [class]="getTimeline(element,'GRN')"></div>
-                <div class="round" [style.border-color]="getStatusColor(element,'GRN')"></div>
+                <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline(element,'GRN')"></div>
+                <div class="round" (click)="Acknowledgement(element.PO)"
+                  [style.border-color]="getStatusColor(element,'GRN')"></div>
               </div>
             </div>
             <div fxLayout class="mr-40 ml-8">
@@ -197,7 +220,7 @@
         </ng-container>
 
         <ng-container matColumnDef="Document">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> Document </th>
+          <th mat-header-cell *matHeaderCellDef style="width: 10%;"> Document </th>
           <td mat-cell *matCellDef="let element">
             <!-- <div fxLayout class="Rectangle">
                 <div class="Rectangle-106 m-8">
@@ -209,47 +232,57 @@
                 </div>
               </div> -->
             <!-- <div fxFlex> -->
-            attachment.jpg
             <!-- </div> -->
+             <div style="margin-top: 3px; margin-left: 15px;">
+                <span matBadge="3" matBadgeColor="accent" matBadgeOverlap="false"></span>
+              </div>
+            <img style="height: 30px" src="assets/images/attachment.png">
           </td>
         </ng-container>
 
         <ng-container matColumnDef="NextProcess">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> NextProcess </th>
-          <td mat-cell *matCellDef="let element">
-
-            <span class="next">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> Next Process </th>
+          <td mat-cell *matCellDef="let element" style="text-align: left;">
+            <span>
               <div [class]="getNextProcess(element)"></div>
-              {{nextProcess}}
+              <button  style="background-color: #e8ffeb;color: #000000;" mat-button
+                (click)="NextProcess(element.NextProcess,element.PO)">{{element.NextProcess}}</button>
+              <!-- {{nextProcess}} -->
             </span>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="Action">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;">Action </th>
+          <th mat-header-cell *matHeaderCellDef style="width: 10%;">Action </th>
           <td mat-cell *matCellDef="let element" style="text-align: center;">
-            <!-- <button mat-stroked-button>Actions</button> -->
             <mat-form-field appearance="outline" style="width: 120px;">
-              <mat-label>Action</mat-label>
-              <mat-select>
-                <!-- [(ngModel)]="ActionModel" -->
+              <mat-label ng-mouseenter="$mdMenu.open()">Action</mat-label>
+              <mat-select ng-mouseleave="$mdMenu.close()">
                 <mat-option value="Acknowledge" (click)="Acknowledgement(element.PO)">ACK</mat-option>
-                <mat-option value="POLookup" (click)="PurchaseOrder(element.PO)">POLookup</mat-option>
+                <mat-option value="POLookup" (click)="PurchaseOrder(element.PO)">PO Lookup</mat-option>
                 <mat-option value="ASN" (click)="AdvanceShipment(element.PO)">ASN</mat-option>
-                <mat-option value="POFlip" (click)="POFlip(element.PO)">POFlip</mat-option>
-                <!-- <mat-option value="GRN">GRN</mat-option> -->
+                <mat-option value="POFlip" (click)="POFlip(element.PO)">PO Flip</mat-option>
               </mat-select>
             </mat-form-field>
           </td>
+          
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="posDisplayedColumns;sticky: true"></tr>
-        <tr mat-row *matRowDef="let row; columns: posDisplayedColumns;let even=even" style=" cursor: pointer;">
+        <!-- <tr mat-header-row *matHeaderRowDef="posDisplayedColumns;sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: posDisplayedColumns;let even=even" matRipple
+          style=" cursor: pointer;"> -->
+          <tr mat-header-row *matHeaderRowDef="posDisplayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: posDisplayedColumns;">
         </tr>
         <!-- <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="posDisplayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: posDisplayedColumns;" (click)="Checked(row)" style=" cursor: pointer;" [class.highlight]="row === selectedPORow"></tr> -->
       </table>
+      <div >
+        <mat-paginator [pageSizeOptions]="[500]"></mat-paginator>
+      </div>
     </div>
+
+    
     <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
     </mat-progress-spinner>
     <div id="overlay" *ngIf="IsProgressBarVisibile"></div>

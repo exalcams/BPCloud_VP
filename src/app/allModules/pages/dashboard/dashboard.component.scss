@@ -16,6 +16,27 @@
     padding: 5px !important;
     background-color: white;
   }
+  .outer {
+    border-bottom: 1px solid rgba(255, 85, 0, 0.1);
+    position: relative;
+    z-index: 1;
+    .bg {
+      position: absolute;
+      z-index: -1;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-image: url("../../../../assets/images/header_2.png");
+      opacity: 0.1;
+      background-repeat: no-repeat;
+    }
+    width: 100%;
+    object-fit: contain;
+    line-height: 50px;
+    display: inline-block;
+    vertical-align: middle;
+  }
   .cardHeader {
     background-color: #fffdf9;
     height: 45px;
@@ -445,5 +466,9 @@
   }
   .progressSubtitle {
     fill: #f3705a !important;
+  }
+  .calendarImg {
+    height: 20px;
+    margin-bottom: 12px;
   }
 }
