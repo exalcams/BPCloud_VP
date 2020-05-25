@@ -189,7 +189,6 @@ export class LoginComponent implements OnInit {
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
       this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
-      // console.log(this.MenuItems);
     } else {
     }
     if (true) {
@@ -241,7 +240,7 @@ export class LoginComponent implements OnInit {
           title: 'Flip',
           translate: 'NAV.SAMPLE.TITLE',
           type: 'item',
-          icon: 'asnIcon',
+          icon: 'flipIcon',
           isSvgIcon: true,
           // icon: 'dashboard',
           url: '/pages/poflip',
@@ -276,7 +275,6 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-
     if (this.MenuItems.indexOf('Fact') >= 0) {
       this.children.push(
         {
@@ -288,6 +286,20 @@ export class LoginComponent implements OnInit {
           isSvgIcon: false,
           // icon: 'dashboard',
           url: '/fact',
+        }
+      );
+    }
+    if (this.MenuItems.indexOf('Resource') >= 0) {
+      this.children.push(
+        {
+          id: 'resource',
+          title: 'Resource',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          icon: 'resourceIcon',
+          isSvgIcon: true,
+          // icon: 'dashboard',
+          url: '/pages/resource',
         }
       );
     }
@@ -379,7 +391,6 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-
     if (this.MenuItems.indexOf('App') >= 0 || this.MenuItems.indexOf('Role') >= 0 ||
       this.MenuItems.indexOf('User') >= 0) {
       this.children.push({

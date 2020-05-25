@@ -1,7 +1,6 @@
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { FuseSidebarModule } from "@fuse/components";
-
 import {
     MatFormFieldModule,
     MatAutocompleteModule,
@@ -40,7 +39,6 @@ import {
     MatTooltipModule,
     MatTreeModule,
 } from "@angular/material";
-
 import { NgxChartsModule } from "@swimlane/ngx-charts";
 import { NgxDonutChartModule } from "ngx-doughnut-chart";
 import {
@@ -49,13 +47,11 @@ import {
     FuseMaterialColorPickerModule,
     FuseWidgetModule,
 } from "@fuse/components";
-
 import { FuseSharedModule } from "@fuse/shared.module";
 import { FormsModule } from "@angular/forms";
 import { DashboardComponent } from "./dashboard/dashboard.component";
 import { DecimalPipe } from "@angular/common";
 import { AttachmentDialogComponent } from "./attachment-dialog/attachment-dialog.component";
-// import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { NgCircleProgressModule } from "ng-circle-progress";
 import { ChartsModule } from "ng2-charts";
 import "chartjs-plugin-labels";
@@ -63,9 +59,9 @@ import "chartjs-plugin-annotation";
 import { PoFlipComponent } from "./po-flip/po-flip.component";
 import { ASNComponent } from "./asn/asn.component";
 import { HomeComponent } from "./home/home.component";
-
 import { OrderFulfilmentComponent } from "./order-fulfilment/order-fulfilment.component";
 import { PaymentComponent } from "./payment/payment.component";
+import { ResourceComponent } from './resource/resource.component';
 // import 'chart.piecelabel.js';
 
 const routes = [
@@ -77,20 +73,8 @@ const routes = [
         path: "asn",
         component: ASNComponent,
     },
-    // {
-    //     path: 'task-group',
-    //     component: TaskGroupComponent
-    // },
-    // {
-    //     path: 'project',
-    //     component: ProjectComponent
-    // },
-    // {
-    //     path: 'task',
-    //     component: TaskComponent
-    // },
     {
-        path: "poflip", 
+        path: "poflip",
         component: PoFlipComponent,
     },
     {
@@ -104,6 +88,10 @@ const routes = [
     {
         path: "polookup",
         component: OrderFulfilmentComponent,
+    },
+    {
+        path: "resource",
+        component: ResourceComponent,
     },
     {
         path: "**",
@@ -187,8 +175,9 @@ const routes = [
         HomeComponent,
         OrderFulfilmentComponent,
         PaymentComponent,
+        ResourceComponent
     ],
     providers: [DecimalPipe],
     entryComponents: [AttachmentDialogComponent],
 })
-export class PagesModule {}
+export class PagesModule { }
