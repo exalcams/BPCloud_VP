@@ -75,9 +75,9 @@
         border-right: 1px solid $color;
     }
 
-    .TablePadFont {
+    .TableCommon {
         padding: 5px;
-        font-size: 12px;
+        font-size: 14px;
         min-width: 100px !important;
     }
 
@@ -86,7 +86,7 @@
 
         th {
             @include TableBorderRight(gray);
-            @extend .TablePadFont;
+            @extend .TableCommon;
             text-align: left;
             color: white;
             background-color: #121214;
@@ -94,10 +94,13 @@
 
         td {
             @include TableBorderRight(rgba(0, 0, 0, 0.12));
-            @extend .TablePadFont;
-            font-size: 12px;
+            @extend .TableCommon;
+            // font-size: 12px;
             padding: 16px 8px;
             // text-align: center;
+            &.AmountClass {
+                text-align: right;
+              }
             min-width: max-content !important;
         }
 

@@ -10,7 +10,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Guid } from 'guid-typescript';
 import { ASNService } from 'app/services/asn.service';
 import { ShareParameterService } from 'app/services/share-parameters.service';
-import { BPCASNHeader, BPCASNItem, DocumentCenter, BPCASNView, BPCInvoiceAttachment, BPCCountryMaster, BPCCurrencyMaster } from 'app/models/ASN';
+import { BPCASNHeader, BPCASNItem, DocumentCenter, BPCASNView, BPCInvoiceAttachment, BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster } from 'app/models/ASN';
 import { BehaviorSubject } from 'rxjs';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { FuseConfigService } from '@fuse/services/config.service';
@@ -18,7 +18,7 @@ import { FactService } from 'app/services/fact.service';
 import { VendorMasterService } from 'app/services/vendor-master.service';
 import { POService } from 'app/services/po.service';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { BPCOFItem } from 'app/models/OrderFulFilment';
+import { BPCOFItem, BPCOFHeader } from 'app/models/OrderFulFilment';
 import { AttachmentDetails } from 'app/models/task';
 import { AttachmentDialogComponent } from '../attachment-dialog/attachment-dialog.component';
 
@@ -43,6 +43,7 @@ export class ASNComponent implements OnInit {
     DocumentCenterFormGroup: FormGroup;
     AllUserWithRoles: UserWithRole[] = [];
     SelectedDocNumber: string;
+    PO: BPCOFHeader;
     POItems: BPCOFItem[] = [];
     SelectedASNHeader: BPCASNHeader;
     SelectedASNNumber: string;
@@ -50,6 +51,7 @@ export class ASNComponent implements OnInit {
     ASNItems: BPCASNItem[] = [];
     ASNItemDisplayedColumns: string[] = [
         'Item',
+        'Material',
         'MaterialText',
         'DeliveryDate',
         'OrderedQty',
@@ -88,6 +90,10 @@ export class ASNComponent implements OnInit {
 
     AllCountries: BPCCountryMaster[] = [];
     AllCurrencies: BPCCurrencyMaster[] = [];
+    AllDocumentCenterMaster: BPCDocumentCenterMaster[] = [];
+    isWeightError: boolean;
+    @ViewChild('fileInput1') fileInput: ElementRef<HTMLElement>;
+    selectedDocCenterMaster: BPCDocumentCenterMaster;
 
     constructor(
         private _fuseConfigService: FuseConfigService,
@@ -105,6 +111,7 @@ export class ASNComponent implements OnInit {
         this.authenticationDetails = new AuthenticationDetails();
         this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
         this.IsProgressBarVisibile = false;
+        this.PO = new BPCOFHeader();
         this.SelectedASNHeader = new BPCASNHeader();
         this.SelectedASNView = new BPCASNView();
         this.SelectedASNNumber = '';
@@ -112,6 +119,8 @@ export class ASNComponent implements OnInit {
         this.minDate = new Date();
         this.minDate.setDate(this.minDate.getDate() + 1);
         this.maxDate = new Date();
+        this.isWeightError = false;
+        this.selectedDocCenterMaster = new BPCDocumentCenterMaster();
     }
 
     ngOnInit(): void {
@@ -140,6 +149,7 @@ export class ASNComponent implements OnInit {
         this.InitializeDocumentCenterFormGroup();
         this.GetAllBPCCountryMasters();
         this.GetAllBPCCurrencyMasters();
+        this.GetAllDocumentCenterMaster();
         this.GetASNBasedOnCondition();
     }
 
@@ -156,8 +166,8 @@ export class ASNComponent implements OnInit {
             VolumetricWeight: ['', [Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
             VolumetricWeightUOM: [''],
             DepartureDate: [new Date(), Validators.required],
-            ArrivalDate: ['', Validators.required],
-            NumberOfPacks: ['', [Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
+            ArrivalDate: [this.minDate, Validators.required],
+            NumberOfPacks: ['', [Validators.pattern('^[1-9][0-9]*$')]],
             CountryOfOrigin: ['IND', Validators.required],
             ShippingAgency: [''],
         });
@@ -170,8 +180,8 @@ export class ASNComponent implements OnInit {
     }
     InitializeInvoiceDetailsFormGroup(): void {
         this.InvoiceDetailsFormGroup = this._formBuilder.group({
-            InvoiceNumber: [''],
-            InvoiceAmount: ['', [Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
+            InvoiceNumber: ['', [Validators.minLength(16), Validators.maxLength(16), Validators.pattern('^[1-9][0-9]*$')]],
+            InvoiceAmount: ['', [Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,2})?$')]],
             InvoiceAmountUOM: [''],
             InvoiceDate: [''],
             InvoiceAttachment: [''],
@@ -196,6 +206,10 @@ export class ASNComponent implements OnInit {
         this.ResetInvoiceDetailsFormGroup();
         this.ResetDocumentCenterFormGroup();
         this.ResetAttachments();
+        this.AllDocumentCenters = [];
+        this.DocumentCenterDataSource = new MatTableDataSource(this.AllDocumentCenters);
+        this.isWeightError = false;
+        this.selectedDocCenterMaster = new BPCDocumentCenterMaster();
     }
 
     ResetASNFormGroup(): void {
@@ -230,6 +244,7 @@ export class ASNComponent implements OnInit {
     GetASNBasedOnCondition(): void {
         if (this.SelectedDocNumber) {
             this.GetASNsByDoc();
+            this.GetPOByDoc();
             this.GetPOItemsByDoc();
         } else {
             this.GetAllASNs();
@@ -243,7 +258,8 @@ export class ASNComponent implements OnInit {
         }
     }
 
-    numberOnly(event): boolean {
+    decimalOnly(event): boolean {
+        // this.AmountSelected();
         const charCode = (event.which) ? event.which : event.keyCode;
         if (charCode === 8 || charCode === 9 || charCode === 13 || charCode === 46
             || charCode === 37 || charCode === 39 || charCode === 123 || charCode === 190) {
@@ -254,17 +270,45 @@ export class ASNComponent implements OnInit {
         }
         return true;
     }
+    numberOnly(event): boolean {
+        const charCode = (event.which) ? event.which : event.keyCode;
+        if (charCode === 8 || charCode === 9 || charCode === 13 || charCode === 46
+            || charCode === 37 || charCode === 39 || charCode === 123) {
+            return true;
+        }
+        else if (charCode < 48 || charCode > 57) {
+            return false;
+        }
+        return true;
+    }
 
     handleFileInput1(evt): void {
         if (evt.target.files && evt.target.files.length > 0) {
+            if (this.invoiceAttachment && this.invoiceAttachment.name) {
+                this.notificationSnackBarComponent.openSnackBar('Maximum one attachment is allowed, old is attachment is replaced', SnackBarStatus.warning);
+            }
+            if (this.invAttach && this.invAttach.AttachmentName) {
+                this.notificationSnackBarComponent.openSnackBar('Maximum one attachment is allowed, old is attachment is replaced', SnackBarStatus.warning);
+            }
             this.invoiceAttachment = evt.target.files[0];
             this.invAttach = new BPCInvoiceAttachment();
         }
     }
     handleFileInput(evt): void {
         if (evt.target.files && evt.target.files.length > 0) {
-            this.fileToUpload = evt.target.files[0];
-            this.fileToUploadList.push(this.fileToUpload);
+            const fil = evt.target.files[0] as File;
+            if (fil.type.includes(this.selectedDocCenterMaster.Extension)) {
+                const fileSize = this.math.round(fil.size / 1024);
+                if (fileSize <= this.selectedDocCenterMaster.SizeInKB) {
+                    this.fileToUpload = fil;
+                    // this.fileToUploadList.push(this.fileToUpload);
+                    this.DocumentCenterFormGroup.get('Filename').patchValue(this.fileToUpload.name);
+                } else {
+                    this.notificationSnackBarComponent.openSnackBar(`Maximum allowed file size is ${this.selectedDocCenterMaster.SizeInKB} KB only`, SnackBarStatus.danger);
+                }
+            } else {
+                this.notificationSnackBarComponent.openSnackBar(`Please select only ${this.selectedDocCenterMaster.Extension} file`, SnackBarStatus.danger);
+            }
         }
     }
 
@@ -289,8 +333,43 @@ export class ASNComponent implements OnInit {
     }
     DepartureDateSelected(): void {
         const DepartureDateDVAL = this.ASNFormGroup.get('DepartureDate').value as Date;
-        this.ASNFormGroup.get('AWBDate').patchValue(DepartureDateDVAL);
+        if (!this.SelectedASNView.ASNNumber) {
+            this.ASNFormGroup.get('AWBDate').patchValue(DepartureDateDVAL);
+        }
     }
+    DocumentTypeSelected(event): void {
+        if (event.value) {
+            this.selectedDocCenterMaster = this.AllDocumentCenterMaster.filter(x => x.DocumentType === event.value)[0];
+            if (this.selectedDocCenterMaster) {
+                if (this.selectedDocCenterMaster.Mandatory) {
+                    this.AddDocumentCenterFileValidator();
+                } else {
+                    this.RemoveDocumentCenterFileValidator();
+                }
+            }
+        }
+    }
+
+    AddDocumentCenterFileValidator(): void {
+        this.DocumentCenterFormGroup.get('Filename').setValidators(Validators.required);
+        this.DocumentCenterFormGroup.get('Filename').updateValueAndValidity();
+    }
+    RemoveDocumentCenterFileValidator(): void {
+        this.DocumentCenterFormGroup.get('Filename').clearValidators();
+        this.DocumentCenterFormGroup.get('Filename').updateValueAndValidity();
+    }
+
+    // AddDocCenterAttClicked(): void {
+    //     const DocumentTypeVal = this.DocumentCenterFormGroup.get('DocumentType').value;
+    //     if (DocumentTypeVal) {
+    //         // const el: HTMLElement = this.fileInput.nativeElement;
+    //         // el.click();
+    //         const event = new MouseEvent('click', {bubbles: false});
+    //         this.fileInput.nativeElement.dispatchEvent(event);
+    //     } else {
+    //         this.notificationSnackBarComponent.openSnackBar('Please selected Document type', SnackBarStatus.danger);
+    //     }
+    // }
 
     AddDocumentCenterToTable(): void {
         if (this.DocumentCenterFormGroup.valid) {
@@ -307,7 +386,8 @@ export class ASNComponent implements OnInit {
             }
             this.AllDocumentCenters.push(documentCenter);
             this.DocumentCenterDataSource = new MatTableDataSource(this.AllDocumentCenters);
-            this.ResetFormGroup(this.DocumentCenterFormGroup);
+            this.ResetDocumentCenterFormGroup();
+            this.selectedDocCenterMaster = new BPCDocumentCenterMaster();
         } else {
             this.ShowValidationErrors(this.DocumentCenterFormGroup);
         }
@@ -329,6 +409,16 @@ export class ASNComponent implements OnInit {
         this._ASNService.GetAllBPCCountryMasters().subscribe(
             (data) => {
                 this.AllCountries = data as BPCCountryMaster[];
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
+    GetAllDocumentCenterMaster(): void {
+        this._ASNService.GetAllDocumentCenterMaster().subscribe(
+            (data) => {
+                this.AllDocumentCenterMaster = data as BPCDocumentCenterMaster[];
             },
             (err) => {
                 console.error(err);
@@ -365,6 +455,17 @@ export class ASNComponent implements OnInit {
         this._ASNService.GetASNsByDoc(this.SelectedDocNumber).subscribe(
             (data) => {
                 this.AllASNHeaders = data as BPCASNHeader[];
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
+    GetPOByDoc(): void {
+        this._POService.GetPOByDoc(this.SelectedDocNumber).subscribe(
+            (data) => {
+                this.PO = data as BPCOFHeader;
+                this.InvoiceDetailsFormGroup.get('InvoiceAmountUOM').patchValue(this.PO.Currency);
             },
             (err) => {
                 console.error(err);
@@ -474,7 +575,7 @@ export class ASNComponent implements OnInit {
             GRQty: [poItem.CompletedQty],
             PipelineQty: [poItem.TransitQty],
             OpenQty: [poItem.OpenQty],
-            ASNQty: [poItem.OpenQty, Validators.required],
+            ASNQty: [poItem.OpenQty, [Validators.required, Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,3})?$')]],
             UOM: [poItem.UOM],
             Batch: [''],
             ManufactureDate: [''],
@@ -500,11 +601,11 @@ export class ASNComponent implements OnInit {
             GRQty: [asnItem.CompletedQty],
             PipelineQty: [asnItem.TransitQty],
             OpenQty: [asnItem.OpenQty],
-            ASNQty: [asnItem.ASNQty, Validators.required],
+            ASNQty: [asnItem.ASNQty, [Validators.required, Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,3})?$')]],
             UOM: [asnItem.UOM],
-            Batch: [asnItem.Batch, Validators.required],
-            ManufactureDate: [asnItem.ManufactureDate, Validators.required],
-            ExpiryDate: [asnItem.ExpiryDate, Validators.required],
+            Batch: [asnItem.Batch],
+            ManufactureDate: [asnItem.ManufactureDate],
+            ExpiryDate: [asnItem.ExpiryDate],
         });
         row.disable();
         row.get('ASNQty').enable();
@@ -582,27 +683,34 @@ export class ASNComponent implements OnInit {
 
     SaveClicked(): void {
         if (this.ASNFormGroup.valid) {
-            if (this.ASNItemFormGroup.valid) {
-                if (this.InvoiceDetailsFormGroup.valid) {
-                    this.GetASNValues();
-                    this.GetASNItemValues();
-                    this.GetInvoiceDetailValues();
-                    this.GetDocumentCenterValues();
-                    this.SetActionToOpenConfirmation();
+            if (!this.isWeightError) {
+                if (this.ASNItemFormGroup.valid) {
+                    if (this.InvoiceDetailsFormGroup.valid) {
+                        this.GetASNValues();
+                        this.GetASNItemValues();
+                        this.GetInvoiceDetailValues();
+                        this.GetDocumentCenterValues();
+                        this.SetActionToOpenConfirmation();
+                    } else {
+                        this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
+                    }
+
                 } else {
-                    this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
+                    this.ShowValidationErrors(this.ASNItemFormGroup);
                 }
-
-            } else {
-                this.ShowValidationErrors(this.ASNItemFormGroup);
             }
-
 
         } else {
             this.ShowValidationErrors(this.ASNFormGroup);
         }
     }
-
+    DeleteClicked(): void {
+        if (this.SelectedASNHeader.ASNNumber) {
+            const Actiontype = 'Delete';
+            const Catagory = 'ASN';
+            this.OpenConfirmationDialog(Actiontype, Catagory);
+        }
+    }
     SetActionToOpenConfirmation(): void {
         if (this.SelectedASNHeader.ASNNumber) {
             const Actiontype = 'Update';
@@ -742,7 +850,7 @@ export class ASNComponent implements OnInit {
                 this.ResetControl();
                 this.notificationSnackBarComponent.openSnackBar('ASN deleted successfully', SnackBarStatus.success);
                 this.IsProgressBarVisibile = false;
-                // this.GetAllASNs();
+                this.GetASNBasedOnCondition();
             },
             (err) => {
                 console.error(err);
@@ -854,6 +962,15 @@ export class ASNComponent implements OnInit {
         });
     }
 
+    AmountSelected(): void {
+        const GrossWeightVAL = +this.ASNFormGroup.get('GrossWeight').value;
+        const NetWeightVAL = + this.ASNFormGroup.get('NetWeight').value;
+        if (GrossWeightVAL && GrossWeightVAL && GrossWeightVAL <= NetWeightVAL) {
+            this.isWeightError = true;
+        } else {
+            this.isWeightError = false;
+        }
+    }
 
 }
 

@@ -5,7 +5,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { BPCASNHeader, BPCASNView, BPCASNItem, DocumentCenter, BPCInvoiceAttachment, BPCCountryMaster, BPCCurrencyMaster } from 'app/models/ASN';
+import { BPCASNHeader, BPCASNView, BPCASNItem, DocumentCenter, BPCInvoiceAttachment, BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster } from 'app/models/ASN';
 
 @Injectable({
     providedIn: 'root'
@@ -162,6 +162,10 @@ export class ASNService {
     }
     GetAllBPCCurrencyMasters(): Observable<BPCCurrencyMaster[] | string> {
         return this._httpClient.get<BPCCurrencyMaster[]>(`${this.baseAddress}poapi/Master/GetAllBPCCurrencyMasters`)
+            .pipe(catchError(this.errorHandler));
+    }
+    GetAllDocumentCenterMaster(): Observable<BPCDocumentCenterMaster[] | string> {
+        return this._httpClient.get<BPCDocumentCenterMaster[]>(`${this.baseAddress}poapi/Master/GetAllDocumentCenterMaster`)
             .pipe(catchError(this.errorHandler));
     }
 }

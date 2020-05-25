@@ -162,4 +162,14 @@ export class BPCCurrencyMaster extends CommonClass {
     CurrencyCode: string;
     CurrencyName: string;
 }
+export class BPCDocumentCenterMaster extends CommonClass
+{
+    AppID: number;
+    DocumentType: string;
+    Text: string;
+    Mandatory: boolean;
+    Extension: string;
+    SizeInKB: number;
+    ForwardMail: string;
+}
 
