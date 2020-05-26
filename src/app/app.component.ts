@@ -101,16 +101,13 @@ export class AppComponent implements OnInit, OnDestroy {
         mdIconRegistry.addSvgIcon('asnIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/asn.svg'));
         mdIconRegistry.addSvgIcon('billIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/bill.svg'));
         mdIconRegistry.addSvgIcon('paymentIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/payment.svg'));
-<<<<<<< HEAD
 
         mdIconRegistry.addSvgIcon('calendarIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/calendar.svg'));
 
-=======
         mdIconRegistry.addSvgIcon('flipIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/flip.svg'));
         mdIconRegistry.addSvgIcon('resourceIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/resource.svg'));
         mdIconRegistry.addSvgIcon('questionIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/question.svg'));
         mdIconRegistry.addSvgIcon('articleIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/article.svg'));
->>>>>>> resource changes
         /**
          * ------------------------------------------------------------------
          * ngxTranslate Fix Start

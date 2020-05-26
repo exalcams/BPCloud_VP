@@ -74,13 +74,13 @@
               <div fxFlex="60" class="ml-180 pl-32 pr-8" fxLayout="column">
                 <!-- <mat-form-field class="px-32" style="width: 100%;"> -->
                 <div>Status</div>
-                <div fxLayout fxFlex class="mt-4">
+                <div fxLayout fxLayoutAlign="center" fxFlex class="mt-4">
                   <mat-radio-group placeholder="Status" formControlName="Status">
                     <mat-radio-button value="All">All</mat-radio-button>
                     <mat-radio-button value="Open" class="ml-40">Open</mat-radio-button>
                     <mat-radio-button value="Closed" class="ml-40">Closed</mat-radio-button>
                   </mat-radio-group>
-                  <div fxFlex class="ml-44">
+                  <div fxFlex fxLayoutAlign="center" class="ml-8">
                     <button mat-raised-button class="SaveBtn" (click)="SearchClicked()">Search</button>
                   </div>
                 </div>
@@ -104,7 +104,7 @@
       <div fxLayout class="mt-24">
         <table class="table" mat-table [dataSource]="InvoiceDataSource" matSort>
           <ng-container matColumnDef="InvoiceNo">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Purchase Order </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice No </th>
             <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
               <div fxLayout>
                 <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
@@ -119,7 +119,7 @@
           </ng-container>
 
           <ng-container matColumnDef="PoReference">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Po Reference </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Purchase order </th>
             <td mat-cell *matCellDef="let element">
               {{element.PoReference}} </td>
           </ng-container>
