@@ -2,7 +2,7 @@ export class CommonClass {
     IsActive: boolean;
     CreatedOn: Date;
     CreatedBy: string;
-    ModifiedOn?: Date;
+    ModifiedOn: Date | string | null;
     ModifiedBy: string;
 }
 
@@ -14,15 +14,15 @@ export class BPCInvoice extends CommonClass {
     PatnerID: string;
     FiscalYear: string;
     InvoiceNo: string;
-    InvoiceDate?: Date;
+    InvoiceDate: Date | string | null;
     InvoiceAmount: number;
     PoReference: string;
     PaidAmount: number;
     Currency: string;
-    DateofPayment?: Date;
+    DateofPayment: Date | string | null;
     Status: string;
     AttID: string;
-    PODDate?: Date;
+    PODDate: Date | string | null;
     PODConfirmedBy: string;
 }
 export class BPCPayment extends CommonClass {
@@ -33,7 +33,7 @@ export class BPCPayment extends CommonClass {
     PatnerID: string;
     FiscalYear: string;
     PaymentDoc: string;
-    Date?: Date;
+    Date: Date | string | null;
     Amount: number;
     Currency: string;
     Remark: string;
