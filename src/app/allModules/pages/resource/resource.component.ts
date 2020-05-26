@@ -40,6 +40,7 @@ export class ResourceComponent implements OnInit {
   // @ViewChild(MatSort) sort: MatSort;
   // SearchFormGroup: FormGroup;
   isDateError: boolean;
+  searchText = '';
   constructor(
     private _formBuilder: FormBuilder,
     private _router: Router,
