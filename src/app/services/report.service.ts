@@ -26,9 +26,18 @@ export class ReportService {
     return this._httpClient.get<BPCInvoice[]>(`${this.baseAddress}reportapi/InvoiceReport/GetAllInvoices`)
       .pipe(catchError(this.errorHandler));
   }
+  GetAllInvoicesByPartnerID(PartnerID: string): Observable<BPCInvoice[] | string> {
+    return this._httpClient.get<BPCInvoice[]>(`${this.baseAddress}reportapi/InvoiceReport/GetAllInvoicesByPartnerID?PartnerID=${PartnerID}`)
+      .pipe(catchError(this.errorHandler));
+  }
   GetFilteredInvoices(InvoiceNo: string, PoReference: string, FromDate: string, ToDate: string, Status: string): Observable<BPCInvoice[] | string> {
     return this._httpClient.get<BPCInvoice[]>
       (`${this.baseAddress}reportapi/InvoiceReport/GetFilteredInvoices?InvoiceNo=${InvoiceNo}&PoReference=${PoReference}&FromDate=${FromDate}&ToDate=${ToDate}&Status=${Status}`)
+      .pipe(catchError(this.errorHandler));
+  }
+  GetFilteredInvoicesByPartnerID(PartnerID: string, InvoiceNo: string, PoReference: string, FromDate: string, ToDate: string, Status: string): Observable<BPCInvoice[] | string> {
+    return this._httpClient.get<BPCInvoice[]>
+      (`${this.baseAddress}reportapi/InvoiceReport/GetFilteredInvoicesByPartnerID?PartnerID=${PartnerID}&InvoiceNo=${InvoiceNo}&PoReference=${PoReference}&FromDate=${FromDate}&ToDate=${ToDate}&Status=${Status}`)
       .pipe(catchError(this.errorHandler));
   }
 

@@ -73,7 +73,7 @@
                 </div>
                 <div fxFlex class="Date px-20 pb-12">
                   <div fxFlex='30' fxLayout="row" fxLayoutGap="2px">
-                    <div fxFlex> <span>Date : </span><span>20/05/2020</span></div>
+                    <div fxFlex> <span>Date : </span><span>{{PO?.DocDate | date :'dd/MM/yyyy'}}</span></div>
                   </div>
                 </div>
               </div>
@@ -938,7 +938,10 @@
           <div fxLayout fxFlex fxLayoutAlign="end">
             <button *ngIf="SelectedASNHeader?.ASNNumber" mat-stroked-button class="DeleteBtn mr-4 mb-4"
               (click)="DeleteClicked()">Delete</button>
-            <button mat-raised-button class="SaveBtn mb-4" (click)="SaveClicked()">Save</button>
+            <button *ngIf="( SelectedASNHeader?.ASNNumber|| PO?.DocNumber) && !SelectedASNHeader?.IsSubmitted"
+              mat-raised-button class="SaveBtn mb-4" (click)="SaveClicked()">Save</button>
+            <button *ngIf="( SelectedASNHeader?.ASNNumber|| PO?.DocNumber)" mat-raised-button class="SaveBtn mb-4"
+              (click)="SubmitClicked()">Submit</button>
           </div>
         </mat-card-actions>
       </mat-card>

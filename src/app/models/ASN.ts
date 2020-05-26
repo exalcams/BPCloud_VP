@@ -2,7 +2,7 @@ export class CommonClass {
     IsActive: boolean;
     CreatedOn: Date;
     CreatedBy: string;
-    ModifiedOn?: Date;
+    ModifiedOn: Date | string | null;
     ModifiedBy: string;
 }
 
@@ -18,9 +18,9 @@ export class BPCASNHeader extends CommonClass {
     VessleNumber: string;
     CountryOfOrigin: string;
     AWBNumber: string;
-    AWBDate?: Date;
-    DepartureDate?: Date;
-    ArrivalDate?: Date;
+    AWBDate: Date | string | null;
+    DepartureDate: Date | string | null;
+    ArrivalDate: Date | string | null;
     ShippingAgency: string;
     GrossWeight: number;
     GrossWeightUOM: string;
@@ -30,10 +30,12 @@ export class BPCASNHeader extends CommonClass {
     VolumetricWeightUOM: string;
     NumberOfPacks: number;
     InvoiceNumber: string;
-    InvoiceDate?: Date;
+    InvoiceDate: Date | string | null;
     InvoiceAmount: number;
     InvoiceAmountUOM: string;
     InvDocReferenceNo: string;
+    IsSubmitted: boolean;
+    ArrivalDateInterval: number;
 }
 
 export class BPCASNItem extends CommonClass {
@@ -46,7 +48,7 @@ export class BPCASNItem extends CommonClass {
     Item: string;
     Material: string;
     MaterialText: string;
-    DeliveryDate?: Date;
+    DeliveryDate: Date | string | null;
     OrderedQty: number;
     CompletedQty: number;
     TransitQty: number;
@@ -54,8 +56,8 @@ export class BPCASNItem extends CommonClass {
     ASNQty: number;
     UOM: string;
     Batch: string;
-    ManufactureDate?: Date;
-    ExpiryDate?: Date;
+    ManufactureDate: Date | string | null;
+    ExpiryDate: Date | string | null;
     ManfCountry: string;
 }
 
@@ -67,7 +69,7 @@ export class BPCFLIPHeader extends CommonClass {
     PatnerID: string;
     FLIPID: string;
     InvoiceNumber: string;
-    InvoiceDate?: Date;
+    InvoiceDate: Date | string | null;
     InvoiceAmount: number;
 }
 
@@ -81,7 +83,7 @@ export class BPCFLIPItem extends CommonClass {
     Item: string;
     Material: string;
     MaterialText: string;
-    DeliveryDate?: Date;
+    DeliveryDate: Date | string | null;
     OrderedQty: number;
     OpenQty: number;
     InvoiceQty: number;
@@ -113,9 +115,9 @@ export class BPCASNView extends CommonClass {
     VessleNumber: string;
     CountryOfOrigin: string;
     AWBNumber: string;
-    AWBDate?: Date;
-    DepartureDate?: Date;
-    ArrivalDate?: Date;
+    AWBDate: Date | string | null;
+    DepartureDate: Date | string | null;
+    ArrivalDate: Date | string | null;
     ShippingAgency: string;
     GrossWeight: number;
     GrossWeightUOM: string;
@@ -125,10 +127,12 @@ export class BPCASNView extends CommonClass {
     VolumetricWeightUOM: string;
     NumberOfPacks: number;
     InvoiceNumber: string;
-    InvoiceDate?: Date;
+    InvoiceDate: Date | string | null;
     InvoiceAmount: number;
     InvoiceAmountUOM: string;
     InvDocReferenceNo: string;
+    IsSubmitted: boolean;
+    ArrivalDateInterval: number;
     ASNItems: BPCASNItem[];
     DocumentCenters: DocumentCenter[];
     constructor() {
@@ -162,8 +166,7 @@ export class BPCCurrencyMaster extends CommonClass {
     CurrencyCode: string;
     CurrencyName: string;
 }
-export class BPCDocumentCenterMaster extends CommonClass
-{
+export class BPCDocumentCenterMaster extends CommonClass {
     AppID: number;
     DocumentType: string;
     Text: string;

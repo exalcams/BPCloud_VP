@@ -23,6 +23,7 @@ import { ExcelService } from 'app/services/excel.service';
 export class InvoiceComponent implements OnInit {
   authenticationDetails: AuthenticationDetails;
   currentUserID: Guid;
+  currentUserName: string;
   currentUserRole: string;
   MenuItems: string[];
   notificationSnackBarComponent: NotificationSnackBarComponent;
@@ -63,6 +64,7 @@ export class InvoiceComponent implements OnInit {
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
       this.currentUserID = this.authenticationDetails.UserID;
+      this.currentUserName = this.authenticationDetails.UserName;
       this.currentUserRole = this.authenticationDetails.UserRole;
       this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
       if (this.MenuItems.indexOf('Dashboard') < 0) {
@@ -75,7 +77,7 @@ export class InvoiceComponent implements OnInit {
       this._router.navigate(['/auth/login']);
     }
     this.InitializeSearchFormGroup();
-    this.GetAllInvoices();
+    this.GetAllInvoicesByPartnerID();
   }
 
   InitializeSearchFormGroup(): void {
@@ -111,9 +113,9 @@ export class InvoiceComponent implements OnInit {
     }
   }
 
-  GetAllInvoices(): void {
+  GetAllInvoicesByPartnerID(): void {
     this.IsProgressBarVisibile = true;
-    this._reportService.GetAllInvoices().subscribe(
+    this._reportService.GetAllInvoicesByPartnerID(this.currentUserName).subscribe(
       (data) => {
         this.AllInvoices = data as BPCInvoice[];
         this.InvoiceDataSource = new MatTableDataSource(this.AllInvoices);
@@ -145,7 +147,7 @@ export class InvoiceComponent implements OnInit {
         const InvoiceNumberr = this.SearchFormGroup.get('InvoiceNumber').value;
         const Statuss = this.SearchFormGroup.get('Status').value;
         this.IsProgressBarVisibile = true;
-        this._reportService.GetFilteredInvoices(InvoiceNumberr, PONumberr, FromDate, ToDate, Statuss).subscribe(
+        this._reportService.GetFilteredInvoicesByPartnerID(this.currentUserName, InvoiceNumberr, PONumberr, FromDate, ToDate, Statuss).subscribe(
           (data) => {
             this.AllInvoices = data as BPCInvoice[];
             this.InvoiceDataSource = new MatTableDataSource(this.AllInvoices);

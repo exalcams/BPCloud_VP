@@ -21,6 +21,7 @@ import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notific
 import { BPCOFItem, BPCOFHeader } from 'app/models/OrderFulFilment';
 import { AttachmentDetails } from 'app/models/task';
 import { AttachmentDialogComponent } from '../attachment-dialog/attachment-dialog.component';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'app-asn',
@@ -32,6 +33,7 @@ import { AttachmentDialogComponent } from '../attachment-dialog/attachment-dialo
 export class ASNComponent implements OnInit {
     authenticationDetails: AuthenticationDetails;
     currentUserID: Guid;
+    currentUserName: string;
     currentUserRole: string;
     MenuItems: string[];
     notificationSnackBarComponent: NotificationSnackBarComponent;
@@ -94,6 +96,7 @@ export class ASNComponent implements OnInit {
     isWeightError: boolean;
     @ViewChild('fileInput1') fileInput: ElementRef<HTMLElement>;
     selectedDocCenterMaster: BPCDocumentCenterMaster;
+    ArrivalDateInterval: number;
 
     constructor(
         private _fuseConfigService: FuseConfigService,
@@ -102,6 +105,7 @@ export class ASNComponent implements OnInit {
         private _POService: POService,
         private _ASNService: ASNService,
         private _vendorMasterService: VendorMasterService,
+        private _datePipe: DatePipe,
         private _route: ActivatedRoute,
         private _router: Router,
         public snackBar: MatSnackBar,
@@ -121,6 +125,7 @@ export class ASNComponent implements OnInit {
         this.maxDate = new Date();
         this.isWeightError = false;
         this.selectedDocCenterMaster = new BPCDocumentCenterMaster();
+        this.ArrivalDateInterval = 1;
     }
 
     ngOnInit(): void {
@@ -129,6 +134,7 @@ export class ASNComponent implements OnInit {
         if (retrievedObject) {
             this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
             this.currentUserID = this.authenticationDetails.UserID;
+            this.currentUserName = this.authenticationDetails.UserName;
             this.currentUserRole = this.authenticationDetails.UserRole;
             this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
             // if (this.MenuItems.indexOf('ASN') < 0) {
@@ -173,6 +179,15 @@ export class ASNComponent implements OnInit {
         });
         // this.DynamicallyAddAcceptedValidation();
     }
+    SetInitialValueForASNFormGroup(): void {
+        this.ASNFormGroup.get('TransportMode').patchValue('Road');
+        this.ASNFormGroup.get('AWBDate').patchValue(new Date());
+        this.ASNFormGroup.get('NetWeightUOM').patchValue('KG');
+        this.ASNFormGroup.get('GrossWeightUOM').patchValue('KG');
+        this.ASNFormGroup.get('DepartureDate').patchValue(new Date());
+        this.ASNFormGroup.get('ArrivalDate').patchValue(this.minDate);
+        this.ASNFormGroup.get('CountryOfOrigin').patchValue('IND');
+    }
     InitializeASNItemFormGroup(): void {
         this.ASNItemFormGroup = this._formBuilder.group({
             ASNItems: this.ASNItemFormArray
@@ -203,6 +218,7 @@ export class ASNComponent implements OnInit {
         this.SelectedASNView = new BPCASNView();
         this.SelectedASNNumber = '';
         this.ResetASNFormGroup();
+        this.SetInitialValueForASNFormGroup();
         this.ResetInvoiceDetailsFormGroup();
         this.ResetDocumentCenterFormGroup();
         this.ResetAttachments();
@@ -243,11 +259,12 @@ export class ASNComponent implements OnInit {
 
     GetASNBasedOnCondition(): void {
         if (this.SelectedDocNumber) {
-            this.GetASNsByDoc();
-            this.GetPOByDoc();
-            this.GetPOItemsByDoc();
+            this.GetASNByDocAndPartnerID();
+            this.GetPOByDocAndPartnerID(this.SelectedDocNumber);
+            this.GetPOItemsByDocAndPartnerID();
+            this.GetArrivalDateIntervalByPOAndPartnerID();
         } else {
-            this.GetAllASNs();
+            this.GetAllASNByPartnerID();
         }
     }
 
@@ -437,8 +454,8 @@ export class ASNComponent implements OnInit {
         );
     }
 
-    GetAllASNs(): void {
-        this._ASNService.GetAllASNs().subscribe(
+    GetAllASNByPartnerID(): void {
+        this._ASNService.GetAllASNByPartnerID(this.currentUserName).subscribe(
             (data) => {
                 this.AllASNHeaders = data as BPCASNHeader[];
                 if (this.AllASNHeaders && this.AllASNHeaders.length) {
@@ -451,8 +468,8 @@ export class ASNComponent implements OnInit {
         );
     }
 
-    GetASNsByDoc(): void {
-        this._ASNService.GetASNsByDoc(this.SelectedDocNumber).subscribe(
+    GetASNByDocAndPartnerID(): void {
+        this._ASNService.GetASNByDocAndPartnerID(this.SelectedDocNumber, this.currentUserName).subscribe(
             (data) => {
                 this.AllASNHeaders = data as BPCASNHeader[];
             },
@@ -461,11 +478,13 @@ export class ASNComponent implements OnInit {
             }
         );
     }
-    GetPOByDoc(): void {
-        this._POService.GetPOByDoc(this.SelectedDocNumber).subscribe(
+    GetPOByDocAndPartnerID(selectedDocNumber: string): void {
+        this._POService.GetPOByDocAndPartnerID(selectedDocNumber, this.currentUserName).subscribe(
             (data) => {
                 this.PO = data as BPCOFHeader;
-                this.InvoiceDetailsFormGroup.get('InvoiceAmountUOM').patchValue(this.PO.Currency);
+                if (this.SelectedDocNumber) {
+                    this.InvoiceDetailsFormGroup.get('InvoiceAmountUOM').patchValue(this.PO.Currency);
+                }
             },
             (err) => {
                 console.error(err);
@@ -473,8 +492,8 @@ export class ASNComponent implements OnInit {
         );
     }
 
-    GetPOItemsByDoc(): void {
-        this._POService.GetPOItemsByDoc(this.SelectedDocNumber).subscribe(
+    GetPOItemsByDocAndPartnerID(): void {
+        this._POService.GetPOItemsByDocAndPartnerID(this.SelectedDocNumber, this.currentUserName).subscribe(
             (data) => {
                 this.POItems = data as BPCOFItem[];
                 this.ClearFormArray(this.ASNItemFormArray);
@@ -495,10 +514,27 @@ export class ASNComponent implements OnInit {
         );
     }
 
+    GetArrivalDateIntervalByPOAndPartnerID(): void {
+        this._ASNService.GetArrivalDateIntervalByPOAndPartnerID(this.SelectedDocNumber, this.currentUserName).subscribe(
+            (data) => {
+                this.ArrivalDateInterval = data as number;
+                if (this.ArrivalDateInterval) {
+                    let today = new Date();
+                    today.setDate(today.getDate() + this.ArrivalDateInterval);
+                    this.ASNFormGroup.get('ArrivalDate').patchValue(today);
+                }
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
+
     LoadSelectedASN(seletedASN: BPCASNHeader): void {
         this.SelectedASNHeader = seletedASN;
         this.SelectedASNView.ASNNumber = this.SelectedASNHeader.ASNNumber;
         this.SelectedASNNumber = this.SelectedASNHeader.ASNNumber;
+        this.GetPOByDocAndPartnerID(this.SelectedASNHeader.DocNumber);
         this.GetASNItemsByASN();
         this.GetDocumentCentersByASN();
         this.GetInvoiceAttachmentByASN();
@@ -631,8 +667,18 @@ export class ASNComponent implements OnInit {
         this.SelectedASNHeader.AWBDate = this.SelectedASNView.AWBDate = this.ASNFormGroup.get('AWBDate').value;
         this.SelectedASNHeader.CountryOfOrigin = this.SelectedASNView.CountryOfOrigin = this.ASNFormGroup.get('CountryOfOrigin').value;
         this.SelectedASNHeader.ShippingAgency = this.SelectedASNView.ShippingAgency = this.ASNFormGroup.get('ShippingAgency').value;
-        this.SelectedASNHeader.DepartureDate = this.SelectedASNView.DepartureDate = this.ASNFormGroup.get('DepartureDate').value;
-        this.SelectedASNHeader.ArrivalDate = this.SelectedASNView.ArrivalDate = this.ASNFormGroup.get('ArrivalDate').value;
+        const depDate = this.ASNFormGroup.get('DepartureDate').value;
+        if (depDate) {
+            this.SelectedASNHeader.DepartureDate = this.SelectedASNView.DepartureDate = this._datePipe.transform(depDate, 'yyyy-MM-dd HH:mm:ss');
+        } else {
+            this.SelectedASNHeader.DepartureDate = this.SelectedASNView.DepartureDate = this.ASNFormGroup.get('DepartureDate').value;
+        }
+        const arrDate = this.ASNFormGroup.get('ArrivalDate').value;
+        if (arrDate) {
+            this.SelectedASNHeader.ArrivalDate = this.SelectedASNView.ArrivalDate = this._datePipe.transform(arrDate, 'yyyy-MM-dd HH:mm:ss');
+        } else {
+            this.SelectedASNHeader.ArrivalDate = this.SelectedASNView.ArrivalDate = this.ASNFormGroup.get('ArrivalDate').value;
+        }
         this.SelectedASNHeader.GrossWeight = this.SelectedASNView.GrossWeight = this.ASNFormGroup.get('GrossWeight').value;
         this.SelectedASNHeader.GrossWeightUOM = this.SelectedASNView.GrossWeightUOM = this.ASNFormGroup.get('GrossWeightUOM').value;
         this.SelectedASNHeader.NetWeight = this.SelectedASNView.NetWeight = this.ASNFormGroup.get('NetWeight').value;
@@ -642,6 +688,26 @@ export class ASNComponent implements OnInit {
         this.SelectedASNHeader.NumberOfPacks = this.SelectedASNView.NumberOfPacks = this.ASNFormGroup.get('NumberOfPacks').value;
         // this.SelectedASNHeader.ParentVendor = this.SelectedASNView.ParentVendor = this.ASNFormGroup.get('ParentVendor').value;
         // this.SelectedASNHeader.Status = this.SelectedASNView.Status = this.ASNFormGroup.get('Status').value;
+        this.SelectedASNHeader.ArrivalDateInterval = this.SelectedASNView.ArrivalDateInterval = this.calculateDiff(this.SelectedASNHeader.ArrivalDate);
+        this.SelectedASNHeader.DocNumber = this.SelectedASNView.DocNumber = this.SelectedDocNumber ? this.SelectedDocNumber : this.SelectedASNHeader.DocNumber;
+        if (this.SelectedDocNumber && this.PO) {
+            this.SelectedASNHeader.Client = this.SelectedASNView.Client = this.PO.Client;
+            this.SelectedASNHeader.Company = this.SelectedASNView.Company = this.PO.Company;
+            this.SelectedASNHeader.Type = this.SelectedASNView.Type = this.PO.Type;
+            this.SelectedASNHeader.PatnerID = this.SelectedASNView.PatnerID = this.PO.PatnerID;
+        } else {
+            this.SelectedASNHeader.Client = this.SelectedASNView.Client = this.SelectedASNHeader.Client;
+            this.SelectedASNHeader.Company = this.SelectedASNView.Company = this.SelectedASNHeader.Company;
+            this.SelectedASNHeader.Type = this.SelectedASNView.Type = this.SelectedASNHeader.Type;
+            this.SelectedASNHeader.PatnerID = this.SelectedASNView.PatnerID = this.SelectedASNHeader.PatnerID;
+        }
+    }
+
+    calculateDiff(sentDate): number {
+        const dateSent: Date = new Date(sentDate);
+        const currentDate: Date = new Date();
+        return Math.floor((Date.UTC(dateSent.getFullYear(), dateSent.getMonth(), dateSent.getDate()) -
+            Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate())) / (1000 * 60 * 60 * 24));
     }
 
     GetASNItemValues(): void {
@@ -660,15 +726,41 @@ export class ASNComponent implements OnInit {
             item.OpenQty = x.get('OpenQty').value;
             item.ASNQty = x.get('ASNQty').value;
             item.Batch = x.get('Batch').value;
-            item.ManufactureDate = x.get('ManufactureDate').value;
-            item.ExpiryDate = x.get('ExpiryDate').value;
+            const manufDate = x.get('ManufactureDate').value;
+            if (manufDate) {
+                item.ManufactureDate = this._datePipe.transform(manufDate, 'yyyy-MM-dd HH:mm:ss');
+            } else {
+                item.ManufactureDate = x.get('ManufactureDate').value;
+            }
+            const expDate = x.get('ExpiryDate').value;
+            if (expDate) {
+                item.ExpiryDate = this._datePipe.transform(expDate, 'yyyy-MM-dd HH:mm:ss');
+            } else {
+                item.ExpiryDate = x.get('ExpiryDate').value;
+            }
+            if (this.SelectedDocNumber && this.PO) {
+                item.Client = this.PO.Client;
+                item.Company = this.PO.Company;
+                item.Type = this.PO.Type;
+                item.PatnerID = this.PO.PatnerID;
+            } else {
+                item.Client = this.SelectedASNHeader.Client;
+                item.Company = this.SelectedASNHeader.Company;
+                item.Type = this.SelectedASNHeader.Type;
+                item.PatnerID = this.SelectedASNHeader.PatnerID;
+            }
             this.SelectedASNView.ASNItems.push(item);
         });
     }
 
     GetInvoiceDetailValues(): void {
         this.SelectedASNHeader.InvoiceNumber = this.SelectedASNView.InvoiceNumber = this.InvoiceDetailsFormGroup.get('InvoiceNumber').value;
-        this.SelectedASNHeader.InvoiceDate = this.SelectedASNView.InvoiceDate = this.InvoiceDetailsFormGroup.get('InvoiceDate').value;
+        const invDate = this.InvoiceDetailsFormGroup.get('InvoiceDate').value;
+        if (invDate) {
+            this.SelectedASNHeader.InvoiceDate = this.SelectedASNView.InvoiceDate = this._datePipe.transform(invDate, 'yyyy-MM-dd HH:mm:ss');
+        } else {
+            this.SelectedASNHeader.InvoiceDate = this.SelectedASNView.InvoiceDate = this.InvoiceDetailsFormGroup.get('InvoiceDate').value;
+        }
         this.SelectedASNHeader.InvoiceAmountUOM = this.SelectedASNView.InvoiceAmountUOM = this.InvoiceDetailsFormGroup.get('InvoiceAmountUOM').value;
         this.SelectedASNHeader.InvoiceAmount = this.SelectedASNView.InvoiceAmount = this.InvoiceDetailsFormGroup.get('InvoiceAmount').value;
     }
@@ -690,7 +782,32 @@ export class ASNComponent implements OnInit {
                         this.GetASNItemValues();
                         this.GetInvoiceDetailValues();
                         this.GetDocumentCenterValues();
-                        this.SetActionToOpenConfirmation();
+                        this.SelectedASNView.IsSubmitted = false;
+                        this.SetActionToOpenConfirmation('Save');
+                    } else {
+                        this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
+                    }
+
+                } else {
+                    this.ShowValidationErrors(this.ASNItemFormGroup);
+                }
+            }
+
+        } else {
+            this.ShowValidationErrors(this.ASNFormGroup);
+        }
+    }
+    SubmitClicked(): void {
+        if (this.ASNFormGroup.valid) {
+            if (!this.isWeightError) {
+                if (this.ASNItemFormGroup.valid) {
+                    if (this.InvoiceDetailsFormGroup.valid) {
+                        this.GetASNValues();
+                        this.GetASNItemValues();
+                        this.GetInvoiceDetailValues();
+                        this.GetDocumentCenterValues();
+                        this.SelectedASNView.IsSubmitted = true;
+                        this.SetActionToOpenConfirmation('Submit');
                     } else {
                         this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
                     }
@@ -711,16 +828,16 @@ export class ASNComponent implements OnInit {
             this.OpenConfirmationDialog(Actiontype, Catagory);
         }
     }
-    SetActionToOpenConfirmation(): void {
-        if (this.SelectedASNHeader.ASNNumber) {
-            const Actiontype = 'Update';
-            const Catagory = 'ASN';
-            this.OpenConfirmationDialog(Actiontype, Catagory);
-        } else {
-            const Actiontype = 'Create';
-            const Catagory = 'ASN';
-            this.OpenConfirmationDialog(Actiontype, Catagory);
-        }
+    SetActionToOpenConfirmation(Actiontype: string): void {
+        // if (this.SelectedASNHeader.ASNNumber) {
+        //     const Catagory = 'ASN';
+        //     this.OpenConfirmationDialog(Actiontype, Catagory);
+        // } else {
+        //     const Catagory = 'ASN';
+        //     this.OpenConfirmationDialog(Actiontype, Catagory);
+        // }
+        const Catagory = 'ASN';
+        this.OpenConfirmationDialog(Actiontype, Catagory);
     }
 
     OpenConfirmationDialog(Actiontype: string, Catagory: string): void {
@@ -735,10 +852,12 @@ export class ASNComponent implements OnInit {
         dialogRef.afterClosed().subscribe(
             result => {
                 if (result) {
-                    if (Actiontype === 'Create') {
-                        this.CreateASN();
-                    } else if (Actiontype === 'Update') {
-                        this.UpdateASN();
+                    if (Actiontype === 'Save' || Actiontype === 'Submit') {
+                        if (this.SelectedASNHeader.ASNNumber) {
+                            this.UpdateASN(Actiontype);
+                        } else {
+                            this.CreateASN(Actiontype);
+                        }
                     } else if (Actiontype === 'Delete') {
                         this.DeleteASN();
                     }
@@ -747,7 +866,7 @@ export class ASNComponent implements OnInit {
     }
 
 
-    CreateASN(): void {
+    CreateASN(Actiontype: string): void {
         // this.GetASNValues();
         // this.GetBPASNSubItemValues();
         // this.SelectedASNView.CreatedBy = this.authenticationDetails.UserID.toString();
@@ -756,13 +875,13 @@ export class ASNComponent implements OnInit {
             (data) => {
                 this.SelectedASNHeader.ASNNumber = (data as BPCASNHeader).ASNNumber;
                 if (this.invoiceAttachment) {
-                    this.AddInvoiceAttachment();
+                    this.AddInvoiceAttachment(Actiontype);
                 } else {
                     if (this.fileToUploadList && this.fileToUploadList.length) {
-                        this.AddDocumentCenterAttachment();
+                        this.AddDocumentCenterAttachment(Actiontype);
                     } else {
                         this.ResetControl();
-                        this.notificationSnackBarComponent.openSnackBar('ASN saved successfully', SnackBarStatus.success);
+                        this.notificationSnackBarComponent.openSnackBar(`ASN ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
                         this.IsProgressBarVisibile = false;
                         this.GetASNBasedOnCondition();
                     }
@@ -774,14 +893,14 @@ export class ASNComponent implements OnInit {
         );
     }
 
-    AddInvoiceAttachment(): void {
+    AddInvoiceAttachment(Actiontype: string): void {
         this._ASNService.AddInvoiceAttachment(this.SelectedASNHeader.ASNNumber, this.currentUserID.toString(), this.invoiceAttachment).subscribe(
             (dat) => {
                 if (this.fileToUploadList && this.fileToUploadList.length) {
-                    this.AddDocumentCenterAttachment();
+                    this.AddDocumentCenterAttachment(Actiontype);
                 } else {
                     this.ResetControl();
-                    this.notificationSnackBarComponent.openSnackBar('ASN saved successfully', SnackBarStatus.success);
+                    this.notificationSnackBarComponent.openSnackBar(`ASN ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
                     this.IsProgressBarVisibile = false;
                     this.GetASNBasedOnCondition();
                 }
@@ -790,11 +909,11 @@ export class ASNComponent implements OnInit {
                 this.showErrorNotificationSnackBar(err);
             });
     }
-    AddDocumentCenterAttachment(): void {
+    AddDocumentCenterAttachment(Actiontype: string): void {
         this._ASNService.AddDocumentCenterAttachment(this.SelectedASNHeader.ASNNumber, this.currentUserID.toString(), this.fileToUploadList).subscribe(
             (dat) => {
                 this.ResetControl();
-                this.notificationSnackBarComponent.openSnackBar('ASN saved successfully', SnackBarStatus.success);
+                this.notificationSnackBarComponent.openSnackBar(`ASN ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
                 this.IsProgressBarVisibile = false;
                 this.GetASNBasedOnCondition();
             },
@@ -810,7 +929,7 @@ export class ASNComponent implements OnInit {
         this.IsProgressBarVisibile = false;
     }
 
-    UpdateASN(): void {
+    UpdateASN(Actiontype: string): void {
         // this.GetASNValues();
         // this.GetBPASNSubItemValues();
         // this.SelectedBPASNView.TransID = this.SelectedBPASN.TransID;
@@ -820,13 +939,13 @@ export class ASNComponent implements OnInit {
             (data) => {
                 this.SelectedASNHeader.ASNNumber = (data as BPCASNHeader).ASNNumber;
                 if (this.invoiceAttachment) {
-                    this.AddInvoiceAttachment();
+                    this.AddInvoiceAttachment(Actiontype);
                 } else {
                     if (this.fileToUploadList && this.fileToUploadList.length) {
-                        this.AddDocumentCenterAttachment();
+                        this.AddDocumentCenterAttachment(Actiontype);
                     } else {
                         this.ResetControl();
-                        this.notificationSnackBarComponent.openSnackBar('ASN saved successfully', SnackBarStatus.success);
+                        this.notificationSnackBarComponent.openSnackBar(`ASN ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
                         this.IsProgressBarVisibile = false;
                         this.GetASNBasedOnCondition();
                     }

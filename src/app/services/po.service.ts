@@ -27,9 +27,17 @@ export class POService {
     return this._httpClient.get<any>(`${this.baseAddress}poapi/PO/GetPOByDoc?DocNumber=${DocNumber}`)
       .pipe(catchError(this.errorHandler));
   }
+  GetPOByDocAndPartnerID(DocNumber: string, PartnerID: string): Observable<BPCOFHeader | string> {
+    return this._httpClient.get<any>(`${this.baseAddress}poapi/PO/GetPOByDocAndPartnerID?DocNumber=${DocNumber}&PartnerID=${PartnerID}`)
+      .pipe(catchError(this.errorHandler));
+  }
 
-  GetPOItemsByDoc(DocNumber: string): Observable< BPCOFItem[] | string> {
-    return this._httpClient.get< BPCOFItem[]>(`${this.baseAddress}poapi/PO/GetPOItemsByDoc?DocNumber=${DocNumber}`)
+  GetPOItemsByDoc(DocNumber: string): Observable<BPCOFItem[] | string> {
+    return this._httpClient.get<BPCOFItem[]>(`${this.baseAddress}poapi/PO/GetPOItemsByDoc?DocNumber=${DocNumber}`)
+      .pipe(catchError(this.errorHandler));
+  }
+  GetPOItemsByDocAndPartnerID(DocNumber: string, PartnerID: string): Observable<BPCOFItem[] | string> {
+    return this._httpClient.get<BPCOFItem[]>(`${this.baseAddress}poapi/PO/GetPOItemsByDocAndPartnerID?DocNumber=${DocNumber}&PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));
   }
 }

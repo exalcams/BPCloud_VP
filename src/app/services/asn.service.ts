@@ -40,6 +40,11 @@ export class ASNService {
             .pipe(catchError(this.errorHandler));
     }
 
+    GetAllASNByPartnerID(PartnerID: string): Observable<BPCASNHeader[] | string> {
+        return this._httpClient.get<BPCASNHeader[]>(`${this.baseAddress}poapi/ASN/GetAllASNByPartnerID?PartnerID=${PartnerID}`)
+            .pipe(catchError(this.errorHandler));
+    }
+
     GetASNByPartnerID(PartnerID: string): Observable<BPCASNHeader | string> {
         return this._httpClient.get<BPCASNHeader>(`${this.baseAddress}poapi/ASN/GetASNByPartnerID?PartnerID=${PartnerID}`)
             .pipe(catchError(this.errorHandler));
@@ -47,6 +52,11 @@ export class ASNService {
 
     GetASNsByDoc(DocNumber: string): Observable<BPCASNHeader[] | string> {
         return this._httpClient.get<BPCASNHeader[]>(`${this.baseAddress}poapi/ASN/GetASNsByDoc?DocNumber=${DocNumber}`)
+            .pipe(catchError(this.errorHandler));
+    }
+    GetASNByDocAndPartnerID(DocNumber: string, PartnerID: string): Observable<BPCASNHeader[] | string> {
+        return this._httpClient.get<BPCASNHeader[]>
+            (`${this.baseAddress}poapi/ASN/GetASNsByDoc?DocNumber=${DocNumber}&PartnerID=${PartnerID}`)
             .pipe(catchError(this.errorHandler));
     }
 
@@ -87,7 +97,14 @@ export class ASNService {
             })
             .pipe(catchError(this.errorHandler));
     }
-
+    GetArrivalDateIntervalByPO(DocNumber: string): Observable<number | string> {
+        return this._httpClient.get<number>(`${this.baseAddress}poapi/ASN/GetArrivalDateIntervalByPO?DocNumber=${DocNumber}`)
+            .pipe(catchError(this.errorHandler));
+    }
+    GetArrivalDateIntervalByPOAndPartnerID(DocNumber: string, PartnerID: string): Observable<number | string> {
+        return this._httpClient.get<number>(`${this.baseAddress}poapi/ASN/GetArrivalDateIntervalByPOAndPartnerID?DocNumber=${DocNumber}&PartnerID=${PartnerID}`)
+            .pipe(catchError(this.errorHandler));
+    }
     GetASNItemsByASN(ASNNumber: string): Observable<BPCASNItem[] | string> {
         return this._httpClient.get<BPCASNItem[]>(`${this.baseAddress}poapi/ASN/GetASNItemsByASN?ASNNumber=${ASNNumber}`)
             .pipe(catchError(this.errorHandler));
