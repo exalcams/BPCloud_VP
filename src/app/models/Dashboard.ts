@@ -71,8 +71,56 @@ export class POSearch {
     Status: string;
     FromDate: string;
     ToDate: string;
+    PartnerID:string;
 }
-export class Status{
-    Value:string;
-    Name:string;
+export class Status {
+    Value: string;
+    Name: string;
 }
+export class DashboardGraphStatus {
+    oTIFStatus: OTIFStatus;
+    qualityStatus: QualityStatus;
+    fulfilmentStatus: FulfilmentStatus;
+    deliverystatus: Deliverystatus;
+}
+export class OTIFStatus {
+    OTIF: number;
+}
+export class QualityStatus {
+    Quality: number;
+}
+export class FulfilmentStatus {
+    OpenDetails: FulfilmentDetails;
+    ScheduledDetails: FulfilmentDetails;
+    InProgressDetails: FulfilmentDetails;
+    PendingDetails: FulfilmentDetails;
+}
+export class FulfilmentDetails {
+    Name: string;
+    Value: string;
+    label: string;
+}
+export class Deliverystatus {
+    Planned1: DeliverystatusDetails;
+    Planned2: DeliverystatusDetails;
+    Planned3: DeliverystatusDetails;
+    Planned4: DeliverystatusDetails;
+    Planned5: DeliverystatusDetails;
+}
+export class DeliverystatusDetails {
+    Planned: string;
+    Actual: string;
+    Date: Date;
+}
+// export class Deliverystatus {
+//     Planned1:DeliverystatusDetails;
+//     Planned2:DeliverystatusDetails;
+//     Planned3:DeliverystatusDetails;
+//     Planned4:DeliverystatusDetails;
+//     Planned5:DeliverystatusDetails;
+// }
+// export class DeliverystatusDetails{
+//     Planned:string;
+//     Actual:string;
+//     Date:Date;
+// }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatDialogConfig, MatDialog, MatSort } from '@angular/material';
 import { ASNDetails, ItemDetails, GRNDetails, QADetails, OrderFulfilmentDetails, Acknowledgement } from 'app/models/Dashboard';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,11 +8,16 @@ import { DatePipe } from '@angular/common';
 import { BPCOFItem } from 'app/models/OrderFulFilment';
 import { BehaviorSubject } from 'rxjs';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
+import { fuseAnimations } from '@fuse/animations';
+import { Guid } from 'guid-typescript';
+import { AuthenticationDetails } from 'app/models/master';
 
 @Component({
     selector: 'app-order-fulfilment',
     templateUrl: './order-fulfilment.component.html',
-    styleUrls: ['./order-fulfilment.component.scss']
+    styleUrls: ['./order-fulfilment.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    animations: fuseAnimations
 })
 export class OrderFulfilmentComponent implements OnInit {
 
@@ -91,7 +96,10 @@ export class OrderFulfilmentComponent implements OnInit {
     @ViewChild(MatSort) asnSort: MatSort;
     @ViewChild(MatSort) grnSort: MatSort;
     @ViewChild(MatSort) qaSort: MatSort;
-
+    authenticationDetails: AuthenticationDetails;
+    currentUserID: Guid;
+    currentUserRole: string;
+    PartnerID: string;
 
     constructor(
         private route: ActivatedRoute,
@@ -102,9 +110,27 @@ export class OrderFulfilmentComponent implements OnInit {
         private dialog: MatDialog,
     ) {
 
+        const retrievedObject = localStorage.getItem('authorizationData');
+        if (retrievedObject) {
+            this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+            this.currentUserID = this.authenticationDetails.UserID;
+            this.PartnerID = this.authenticationDetails.UserName;
+            this.currentUserRole = this.authenticationDetails.UserRole;
+            // this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
+            // // console.log(this.authenticationDetails);
+            // if (this.MenuItems.indexOf('Dashboard') < 0) {
+            //     this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
+            //     );
+            //     this._router.navigate(['/auth/login']);
+            // }
+
+        } else {
+            this._router.navigate(['/auth/login']);
+        }
+
         this.route.queryParams.subscribe(params => {
             this.PO = params['id'];
-            this._dashboardService.GetOrderFulfilmentDetails(this.PO).subscribe(
+            this._dashboardService.GetOrderFulfilmentDetails(this.PO,this.PartnerID).subscribe(
                 data => {
                     if (data) {
                         this.OrderFulfilmentDetails = <OrderFulfilmentDetails>data;
@@ -149,7 +175,7 @@ export class OrderFulfilmentComponent implements OnInit {
             );
         });
         this.ACKFormGroup = this.formBuilder.group({
-            DalivaryDate: ['', Validators.required]
+            Proposeddeliverydate: ['', Validators.required]
         });
         this.tab1 = true;
         this.tab2 = false;
@@ -248,7 +274,7 @@ export class OrderFulfilmentComponent implements OnInit {
             const item: ItemDetails = new ItemDetails();
             item.Item = x.get('Item').value;
             item.MaterialText = x.get('MaterialText').value;
-            item.DalivaryDate = x.get('DaliveryDate').value;
+            // item.DalivaryDate = x.get('DaliveryDate').value;
             const proposeddeliverydate = this.datepipe.transform(x.get('Proposeddeliverydate').value, 'yyyy-MM-dd HH:mm:ss');
             item.Proposeddeliverydate = proposeddeliverydate;
             item.OrderQty = x.get('OrderQty').value;
@@ -286,6 +312,7 @@ export class OrderFulfilmentComponent implements OnInit {
                     Actiontype: 'Acknowledgement',
                     Catagory: 'PO'
                 },
+                panelClass: 'confirmation-dialog'
             };
             const dialogRef = this.dialog.open(NotificationDialogComponent, dialogConfig);
             dialogRef.afterClosed().subscribe(

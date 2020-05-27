@@ -187,7 +187,7 @@
       <div class="content" fxLayout="column" *ngIf="tab1">
         <form name="ACKFormGroup" [formGroup]="ACKFormGroup" fxLayout="column" fxFlex>
           <div class="p-12 mt-24">
-            <table class="table" style="width: 75% !important;" mat-table [dataSource]="itemDataSource" matSort
+            <table class="table" style="width: 85% !important;" mat-table [dataSource]="itemDataSource" matSort
               formArrayName="POItems">
 
               <!-- <ng-container matColumnDef="Item">
@@ -225,7 +225,7 @@
               </ng-container>
 
               <ng-container matColumnDef="DalivaryDate">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Delivery Date</th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10% !important;">Delivery Date</th>
                 <td mat-cell style="text-align: left" *matCellDef="let element; let index = index"
                   [formGroupName]="index">
                   <!-- <input matInput formControlName="DalivaryDate"> -->
@@ -235,7 +235,7 @@
               </ng-container>
 
               <ng-container matColumnDef="Proposeddeliverydate">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Proposed delivery date</th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20% !important;">Proposed delivery date</th>
                 <td mat-cell style="text-align: left" *matCellDef="let element; let index = index"
                   [formGroupName]="index">
                   <!-- <input matInput formControlName="Proposeddeliverydate"> -->
@@ -266,7 +266,7 @@
               </ng-container>
 
               <ng-container matColumnDef="OrderQty">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: right">Order Qty
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 11% !important;">Order Qty
                 <td style="text-align: right" mat-cell *matCellDef="let element; let index = index"
                   [formGroupName]="index">
                   <!-- <input matInput formControlName="OrderQty"> -->
@@ -276,7 +276,7 @@
               </ng-container>
 
               <ng-container matColumnDef="GRQty">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: right">GR Qty</th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 11% !important;">GR Qty</th>
                 <td style="text-align: right" mat-cell *matCellDef="let element; let index = index"
                   [formGroupName]="index">
                   <!-- <input matInput formControlName="GRQty"> -->
@@ -286,7 +286,7 @@
               </ng-container>
 
               <ng-container matColumnDef="PipelineQty">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: right">Pipeline Qty</th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 11% !important;">Pipeline Qty</th>
                 <td mat-cell style="text-align: right" *matCellDef="let element; let index = index"
                   [formGroupName]="index">
                   <!-- <input matInput formControlName="PipelineQty"> -->
@@ -296,7 +296,7 @@
               </ng-container>
 
               <ng-container matColumnDef="OpenQty">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: right">Open Qty</th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 11% !important;">Open Qty</th>
                 <td style="text-align: right" mat-cell *matCellDef="let element; let index = index"
                   [formGroupName]="index">
                   <!-- <input matInput formControlName="OpenQty"> -->
@@ -306,7 +306,7 @@
               </ng-container>
 
               <ng-container matColumnDef="UOM">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>UOM</th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 11% !important;">UOM</th>
                 <td mat-cell style="text-align: left" *matCellDef="let element; let index = index"
                   [formGroupName]="index">
                   <!-- <input matInput formControlName="UOM"> -->
