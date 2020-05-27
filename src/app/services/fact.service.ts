@@ -31,7 +31,10 @@ export class FactService {
     return this._httpClient.get<any>(`${this.baseAddress}factapi/Fact/GetFactByPartnerID?PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));
   }
-
+  GetFactByPartnerIDAndType(PartnerID: string, Type: string): Observable<any | string> {
+    return this._httpClient.get<any>(`${this.baseAddress}factapi/Fact/GetFactByPartnerIDAndType?PartnerID=${PartnerID}&Type=${Type}`)
+      .pipe(catchError(this.errorHandler));
+  }
   GetFactByEmailID(EmailID: string): Observable<BPCFact | string> {
     return this._httpClient.get<BPCFact>(`${this.baseAddress}factapi/Fact/GetFactByEmailID?EmailID=${EmailID}`)
       .pipe(catchError(this.errorHandler));

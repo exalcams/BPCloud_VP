@@ -1,12 +1,21 @@
 <div id="chat" class="page-layout carded fullwidth">
-  <div class="center normal" style="margin-top: -27px !important;padding:32px 0px 1px !important;">
+  <div class="center">
+    <div class="outer" fxLayout>
+      <div class="bg"></div>
+      <div>
+        <h3 style="margin: 0px;padding-left: 10px;"><b>Fact details</b></h3>
+      </div>
+      <div fxFlex align="end">
+        <span><img src="assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
+      </div>
+    </div>
     <div fxLayout class="content-card1">
       <div fxFlex class="side-bar">
         <div class="sidenav-content" fxFlex fxLayout="column">
-          <mat-card style="margin-top: 5px;" fxFlex fxLayout="column">
+          <mat-card fxFlex fxLayout="column" class="mb-32">
             <form autocomplete="off" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" name="form" novalidate
               [formGroup]="FactFormGroup">
-              <div fxLayout class="mt-20">
+              <div fxLayout>
                 <div fxFlex fxLayout="column">
                   <div fxLayout="row wrap" fxLayoutAlign="start">
                     <div fxFlex="100">
@@ -304,18 +313,17 @@
                   </ng-container> -->
 
                   <tr mat-header-row *matHeaderRowDef="ContactPersonDisplayedColumns;sticky: true"></tr>
-                  <tr mat-row *matRowDef="let row; columns: ContactPersonDisplayedColumns;" matRipple
-                    style=" cursor: pointer;">
+                  <tr mat-row *matRowDef="let row; columns: ContactPersonDisplayedColumns;">
                   </tr>
                 </table>
-                <div flex *ngIf="ContactPersonsByPartnerID?.length">
+                <!-- <div flex *ngIf="ContactPersonsByPartnerID?.length">
                   <mat-paginator [pageSizeOptions]="[10, 20, 30, 50, 75, 100]" showFirstLastButtons>
                   </mat-paginator>
-                </div>
+                </div> -->
               </div>
             </div>
 
-            <div fxFlex fxLayout="column" *ngIf="BanksByPartnerID?.length">
+            <div fxFlex fxLayout="column" class="mt-24" *ngIf="BanksByPartnerID?.length">
               <div style="margin-left: 7px">
                 <div class="SectionTitle">
                   <strong>Bank Table</strong>
@@ -434,15 +442,14 @@
                     </ng-container> -->
 
                     <tr mat-header-row *matHeaderRowDef="bankDetailsDisplayedColumns;sticky: true"></tr>
-                    <tr mat-row *matRowDef="let row; columns: bankDetailsDisplayedColumns;" matRipple
-                      style=" cursor: pointer;">
+                    <tr mat-row *matRowDef="let row; columns: bankDetailsDisplayedColumns;">
                     </tr>
                   </table>
                 </div>
-                <div flex *ngIf="BanksByPartnerID?.length">
+                <!-- <div flex *ngIf="BanksByPartnerID?.length">
                   <mat-paginator [pageSizeOptions]="[10, 20, 30, 50, 75, 100]" showFirstLastButtons>
                   </mat-paginator>
-                </div>
+                </div> -->
                 <!-- </div> -->
               </div>
             </div>
@@ -539,13 +546,13 @@
                   </ng-container> -->
 
                   <tr mat-header-row *matHeaderRowDef="KRADisplayedColumns;sticky: true"></tr>
-                  <tr mat-row *matRowDef="let row; columns: KRADisplayedColumns;" matRipple style=" cursor: pointer;">
+                  <tr mat-row *matRowDef="let row; columns: KRADisplayedColumns;">
                   </tr>
                 </table>
-                <div flex *ngIf="KRAsByPartnerID?.length">
+                <!-- <div flex *ngIf="KRAsByPartnerID?.length">
                   <mat-paginator [pageSizeOptions]="[10, 20, 30, 50, 75, 100]" showFirstLastButtons>
                   </mat-paginator>
-                </div>
+                </div> -->
               </div>
             </div>
 
@@ -642,13 +649,13 @@
                   </ng-container> -->
 
                   <tr mat-header-row *matHeaderRowDef="AIACTDisplayedColumns;sticky: true"></tr>
-                  <tr mat-row *matRowDef="let row; columns: AIACTDisplayedColumns;" matRipple style=" cursor: pointer;">
+                  <tr mat-row *matRowDef="let row; columns: AIACTDisplayedColumns;">
                   </tr>
                 </table>
-                <div flex *ngIf="AIACTsByPartnerID?.length">
+                <!-- <div flex *ngIf="AIACTsByPartnerID?.length">
                   <mat-paginator [pageSizeOptions]="[10, 20, 30, 50, 75, 100]" showFirstLastButtons>
                   </mat-paginator>
-                </div>
+                </div> -->
               </div>
             </div>
           </mat-card>
@@ -657,9 +664,9 @@
     </div>
     <div fxLayout id="footerCard">
       <div fxLayout fxFlex class="my-8 px-24" fxLayoutAlign="end">
-        <button (click)="SaveClicked()" class="SaveAsDraftBtn mr-8" mat-stroked-button>
-          Save as Draft</button>
-        <button (click)="SaveClicked()" class="SaveBtn mr-40" mat-raised-button>
+        <!-- <button (click)="SaveClicked()" class="SaveAsDraftBtn mr-8" mat-stroked-button>
+          Save as Draft</button> -->
+        <button (click)="SaveClicked()" class="SaveBtn" mat-raised-button>
           Save</button>
       </div>
     </div>

@@ -18,8 +18,9 @@ fuse-sidebar {
 
                         .logo {
                             .logo-icon {
-                                width: 32px;
-                                height: 32px;
+                                // width: 32px;
+                                // height: 32px;
+                                display: none;
                             }
 
                             .logo-text {
@@ -110,12 +111,13 @@ navbar {
             }
 
             .logo {
-                display: flex;
-                align-items: center;
+                // display: flex;
+                // align-items: center;
 
                 .logo-icon {
-                    width: 138px;
+                    // width: 138px;
                     height: 50px;
+                    width: 50px;
                 }
 
                 .logo-text {
@@ -127,9 +129,9 @@ navbar {
                 }
             }
 
-            .buttons {
-                margin-left: 200px;
-            }
+            // .buttons {
+            //     margin-left: 200px;
+            // }
         }
 
         .navbar-scroll-container {

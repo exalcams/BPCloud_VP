@@ -191,7 +191,7 @@ export class LoginComponent implements OnInit {
       this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
     } else {
     }
-    if (true) {
+    if (this.MenuItems.indexOf('Dashboard') >= 0) {
       this.children.push(
         {
           id: 'dashboard',
@@ -205,7 +205,7 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (true) {
+    if (this.MenuItems.indexOf('OrderFulFilmentCenter') >= 0) {
       this.children.push(
         {
           id: 'orderfulfilmentCenter',
@@ -286,6 +286,20 @@ export class LoginComponent implements OnInit {
           isSvgIcon: false,
           // icon: 'dashboard',
           url: '/fact',
+        }
+      );
+    }
+    if (this.MenuItems.indexOf('CustomerFact') >= 0) {
+      this.children.push(
+        {
+          id: 'fact',
+          title: 'Fact',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          icon: 'home',
+          isSvgIcon: false,
+          // icon: 'dashboard',
+          url: '/customer/fact',
         }
       );
     }
