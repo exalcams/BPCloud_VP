@@ -26,6 +26,7 @@ export class FactComponent implements OnInit {
   SelectedMenuApp: MenuApp;
   authenticationDetails: AuthenticationDetails;
   CurrentUserID: Guid;
+  currentUserName: string;
   CurrentUserRole = '';
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
@@ -134,26 +135,27 @@ export class FactComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // const retrievedObject = localStorage.getItem('authorizationData');
-    // if (retrievedObject) {
-    //   this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
-    //   this.CurrentUserID = this.authenticationDetails.UserID;
-    //   this.CurrentUserRole = this.authenticationDetails.UserRole;
-    //   this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
-    //   if (false && this.MenuItems.indexOf('Fact') < 0) {
-    //     this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
-    //     );
-    //     this._router.navigate(['/auth/login']);
-    //   }
-    //   this.InitializeFactFormGroup();
-    //   this.InitializeKRAFormGroup();
-    //   this.InitializeBankDetailsFormGroup();
-    //   this.InitializeContactPersonFormGroup();
-    //   this.InitializeAIACTFormGroup();
-    //   this.GetFactByEmailID();
-    // } else {
-    //   this._router.navigate(['/auth/login']);
-    // }
+    const retrievedObject = localStorage.getItem('authorizationData');
+    if (retrievedObject) {
+      this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+      this.CurrentUserID = this.authenticationDetails.UserID;
+      this.currentUserName = this.authenticationDetails.UserName;
+      this.CurrentUserRole = this.authenticationDetails.UserRole;
+      this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
+      if (this.MenuItems.indexOf('Fact') < 0) {
+        this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
+        );
+        this._router.navigate(['/auth/login']);
+      }
+      this.InitializeFactFormGroup();
+      this.InitializeKRAFormGroup();
+      this.InitializeBankDetailsFormGroup();
+      this.InitializeContactPersonFormGroup();
+      this.InitializeAIACTFormGroup();
+      this.GetFactByPartnerIDAndType();
+    } else {
+      this._router.navigate(['/auth/login']);
+    }
   }
 
   InitializeFactFormGroup(): void {
@@ -277,8 +279,8 @@ export class FactComponent implements OnInit {
     this.AIACTDataSource = new MatTableDataSource(this.AIACTsByPartnerID);
   }
 
-  GetFactByEmailID(): void {
-    this._FactService.GetFactByEmailID(this.authenticationDetails.EmailAddress).subscribe(
+  GetFactByPartnerIDAndType(): void {
+    this._FactService.GetFactByPartnerIDAndType(this.currentUserName, 'Vendor').subscribe(
       (data) => {
         const fact = data as BPCFact;
         if (fact) {
@@ -639,7 +641,10 @@ export class FactComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       result => {
         if (result) {
-          if (Actiontype === 'Approve') {
+          if (Actiontype === 'Update') {
+            this.UpdateFact();
+          }
+          else if (Actiontype === 'Approve') {
             // this.ApproveVendor();
           } else if (Actiontype === 'Reject') {
             // this.RejectVendor();
@@ -660,6 +665,7 @@ export class FactComponent implements OnInit {
     this.SelectedBPCFact.City = this.SelectedBPCFactView.City = this.FactFormGroup.get('City').value;
     this.SelectedBPCFact.State = this.SelectedBPCFactView.State = this.FactFormGroup.get('State').value;
     this.SelectedBPCFact.Country = this.SelectedBPCFactView.Country = this.FactFormGroup.get('Country').value;
+    this.SelectedBPCFact.PinCode = this.SelectedBPCFactView.PinCode = this.FactFormGroup.get('PinCode').value;
     this.SelectedBPCFact.Phone1 = this.SelectedBPCFactView.Phone1 = this.FactFormGroup.get('Phone1').value;
     this.SelectedBPCFact.Phone2 = this.SelectedBPCFactView.Phone2 = this.FactFormGroup.get('Phone2').value;
     this.SelectedBPCFact.Email1 = this.SelectedBPCFactView.Email1 = this.FactFormGroup.get('Email1').value;
@@ -710,7 +716,13 @@ export class FactComponent implements OnInit {
   }
 
   SaveClicked(): void {
-
+    if (this.FactFormGroup.valid) {
+      const Actiontype = 'Update';
+      const Catagory = 'Fact';
+      this.OpenConfirmationDialog(Actiontype, Catagory);
+    } else {
+      this.ShowValidationErrors(this.FactFormGroup);
+    }
   }
 
   CreateFact(): void {
@@ -736,17 +748,17 @@ export class FactComponent implements OnInit {
   }
 
   UpdateFact(): void {
-    // this.GetBPCFactValues();
-    // this.GetBPCFactSubItemValues();
+    this.GetBPCFactValues();
+    this.GetBPCFactSubItemValues();
     this.SelectedBPCFactView.PatnerID = this.SelectedBPCFact.PatnerID;
-    // this.SelectedBPCFactView.ModifiedBy = this.authenticationDetails.userID.toString();
+    this.SelectedBPCFactView.ModifiedBy = this.authenticationDetails.UserID.toString();
     this.IsProgressBarVisibile = true;
     this._FactService.UpdateFact(this.SelectedBPCFactView).subscribe(
       (data) => {
         this.ResetControl();
-        this.notificationSnackBarComponent.openSnackBar('Vendor registration updated successfully', SnackBarStatus.success);
+        this.notificationSnackBarComponent.openSnackBar('Fact details updated successfully', SnackBarStatus.success);
         this.IsProgressBarVisibile = false;
-        // this.GetRegisteredFacts();
+        this.GetFactByPartnerIDAndType();
       },
       (err) => {
         console.error(err);
