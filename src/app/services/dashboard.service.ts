@@ -5,7 +5,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { PO, OrderFulfilmentDetails, Acknowledgement, POSearch } from 'app/models/Dashboard';
+import { PO, OrderFulfilmentDetails, Acknowledgement, POSearch, DashboardGraphStatus } from 'app/models/Dashboard';
 
 @Injectable({
     providedIn: 'root'
@@ -34,13 +34,13 @@ export class DashboardService {
     errorHandler(error: HttpErrorResponse): Observable<string> {
         return throwError(error.error || error.message || 'Server Error');
     }
-    GetPODetails(): Observable<any | string> {
-        return this._httpClient.get<any>(`${this.baseAddress}poapi/Dashboard/GetPODetails`)
+    GetPODetails(PatnerID: any): Observable<any | string> {
+        return this._httpClient.get<any>(`${this.baseAddress}poapi/Dashboard/GetPODetails?PatnerID=${PatnerID}`)
           .pipe(catchError(this.errorHandler));
       }
-      GetOrderFulfilmentDetails(PO: any): Observable<OrderFulfilmentDetails | string> {
+      GetOrderFulfilmentDetails(PO: any,PatnerID: any): Observable<OrderFulfilmentDetails | string> {
         return this._httpClient
-            .get<OrderFulfilmentDetails>(`${this.baseAddress}poapi/Dashboard/GetOrderFulfilmentDetails?PO=${PO}`)
+            .get<OrderFulfilmentDetails>(`${this.baseAddress}poapi/Dashboard/GetOrderFulfilmentDetails?PO=${PO}&PatnerID=${PatnerID}`)
             .pipe(catchError(this.errorHandler));
     }
     CreateAcknowledgement(ACK: Acknowledgement): Observable<any> {
@@ -63,4 +63,9 @@ export class DashboardService {
           })
           .pipe(catchError(this.errorHandler));
       }
+      GetDashboardGraphStatus(PartnerID: string): Observable<DashboardGraphStatus | string> {
+        return this._httpClient
+            .get<DashboardGraphStatus>(`${this.baseAddress}factapi/Fact/GetDashboardGraphStatus?PartnerID=${PartnerID}`)
+            .pipe(catchError(this.errorHandler));
+    }
 }

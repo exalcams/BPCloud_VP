@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef } from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
-import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatDialog } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatDialog, MatMenuTrigger } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AuthenticationDetails, UserWithRole } from 'app/models/master';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
@@ -15,7 +15,7 @@ import { ShareParameterService } from 'app/services/share-parameters.service';
 import { ChartType } from 'chart.js';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { PO, POSearch, Status } from 'app/models/Dashboard';
+import { PO, POSearch, Status, DashboardGraphStatus, OTIFStatus, QualityStatus, FulfilmentStatus, Deliverystatus } from 'app/models/Dashboard';
 import { DatePipe } from '@angular/common';
 // import 'chartjs-plugin-annotation';
 // import 'chart.piecelabel.js';
@@ -31,6 +31,7 @@ export class DashboardComponent implements OnInit {
     authenticationDetails: AuthenticationDetails;
     currentUserID: Guid;
     currentUserRole: string;
+    PartnerID: string;
     MenuItems: string[];
     notificationSnackBarComponent: NotificationSnackBarComponent;
     IsProgressBarVisibile: boolean;
@@ -55,6 +56,7 @@ export class DashboardComponent implements OnInit {
     poSearch: POSearch;
     posDataSource: MatTableDataSource<PO>;
     @ViewChild(MatPaginator) poPaginator: MatPaginator;
+    @ViewChild(MatMenuTrigger) matMenuTrigger: MatMenuTrigger;
     // @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) poSort: MatSort;
     selection = new SelectionModel<any>(true, []);
@@ -77,6 +79,11 @@ export class DashboardComponent implements OnInit {
     FilterVal = 'All';
     ActionModel = 'Acknowledge';
     Pos: PO[] = [];
+    DashboardGraphStatus: DashboardGraphStatus = new DashboardGraphStatus();
+    OTIFStatus: OTIFStatus = new OTIFStatus();
+    QualityStatus: QualityStatus = new QualityStatus();
+    FulfilmentStatus: FulfilmentStatus = new FulfilmentStatus();
+    dashboardDeliverystatus: Deliverystatus = new Deliverystatus();
     selectedPORow: PO = new PO();
 
     // Circular Progress bar
@@ -119,9 +126,10 @@ export class DashboardComponent implements OnInit {
     };
     public doughnutChartType: ChartType = 'doughnut';
     public doughnutChartLabels: any[] = ['Open', 'Scheduled', 'In Progress', 'Pending'];
-    public doughnutChartData: any[] = [
-        [40, 20, 30, 10]
-    ];
+    // public doughnutChartData: any[] = [
+    //     [40, 20, 30, 10]
+    // ];
+    public doughnutChartData: any[] = [];
     public colors: any[] = [{ backgroundColor: ['#fb863a', '#40a8e2', '#485865', '#40ed9a'] }];
 
     // Bar chart
@@ -170,12 +178,22 @@ export class DashboardComponent implements OnInit {
         // }]
     };
     @ViewChild('barCanvas') barCanvas: ElementRef;
-    public barChartLabels: any[] = ['17/02/20', '18/02/20', '19/02/20', '20/02/20', '21/02/20'];
+    // public barChartLabels: any[] = ['17/02/20', '18/02/20', '19/02/20', '20/02/20', '21/02/20'];
+    barChartLabels: any[] = [];
+    date1 = new Date;
+    date2 = new Date;
+    date3 = new Date;
+    date4 = new Date;
+    date5 = new Date;
+
     public barChartType: ChartType = 'bar';
     public barChartLegend = true;
-    public barChartData: any[] = [
-        { data: [45, 70, 65, 20, 80], label: 'Actual' },
-        { data: [87, 50, 40, 71, 56], label: 'Planned' }
+    // public barChartData: any[] = [
+    //     { data: [45, 70, 65, 20, 80], label: 'Actual' },
+    //     { data: [87, 50, 40, 71, 56], label: 'Planned' }
+    // ];
+    barChartData: any[] = [{ data: [], label: 'Actual' },
+    { data: [], label: 'Planned' },
     ];
     public barColors: any[] = [{ backgroundColor: '#40a8e2' }, { backgroundColor: '#fb863a' }];
 
@@ -190,25 +208,35 @@ export class DashboardComponent implements OnInit {
         this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
         this.authenticationDetails = new AuthenticationDetails();
         this.IsProgressBarVisibile = false;
-        this.progress1(85);
-        this.progress2(99);
         this.poFormGroup = this._formBuilder.group({
             FromDate: [''],
             ToDate: [''],
             Status: ['']
         });
+        this.date1.setDate(this.date1.getDate());
+        this.date2.setDate(this.date2.getDate() - 1);
+        this.date3.setDate(this.date3.getDate() - 2);
+        this.date4.setDate(this.date2.getDate() - 2);
+        this.date5.setDate(this.date2.getDate() - 3);
+        const dat1 = this.datePipe.transform(this.date1, 'dd/MM/yyyy');
+        const dat2 = this.datePipe.transform(this.date2, 'dd/MM/yyyy');
+        const dat3 = this.datePipe.transform(this.date3, 'dd/MM/yyyy');
+        const dat4 = this.datePipe.transform(this.date4, 'dd/MM/yyyy');
+        const dat5 = this.datePipe.transform(this.date5, 'dd/MM/yyyy');
+        // this.barChartLabels = [this.date1, this.date2, this.date3, this.date4, this.date5];
+        this.barChartLabels = [dat1, dat2, dat3, dat4, dat5];
     }
 
     ngOnInit(): void {
         // Retrive authorizationData
-        this.GetPODetails();
-        
         const retrievedObject = localStorage.getItem('authorizationData');
         if (retrievedObject) {
             this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
             this.currentUserID = this.authenticationDetails.UserID;
+            this.PartnerID = this.authenticationDetails.UserName;
             this.currentUserRole = this.authenticationDetails.UserRole;
             this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
+            // console.log(this.authenticationDetails);
             if (this.MenuItems.indexOf('Dashboard') < 0) {
                 this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
                 );
@@ -218,7 +246,19 @@ export class DashboardComponent implements OnInit {
         } else {
             this._router.navigate(['/auth/login']);
         }
-        
+        this.GetPODetails();
+        this.GetDashboardGraphStatus();
+        console.log(this.dashboardDeliverystatus);
+        // const OTIF = Number(this.OTIFStatus.OTIF);
+        // this.progress1(OTIF);
+        // this.progress2(this.QualityStatus.Quality);
+        // this.doughnutChartData = [this.FulfilmentStatus.OpenDetails.Value, this.FulfilmentStatus.ScheduledDetails.Value, this.FulfilmentStatus.InProgressDetails.Value, this.FulfilmentStatus.PendingDetails];
+        // this.barChartData = [
+        //     { data: [45, 70, 65, 20, 80], label: 'Actual' },
+        //     { data: [87, 50, 40, 71, 56], label: 'Planned' }
+        // ];
+        // console.log(this.barChartData);
+
         // const gradient = this.barCanvas.nativeElement.getContext('2d').createLinearGradient(0, 0, 0, 600);
         // gradient.addColorStop(0, 'red');
         // gradient.addColorStop(1, 'green');
@@ -319,16 +359,64 @@ export class DashboardComponent implements OnInit {
         // ];
         // this.posDataSource = new MatTableDataSource(this.Pos);
     }
+    openMyMenu(index: any) {
+        alert(index);
+        this.matMenuTrigger.openMenu();
+
+    }
+    closeMyMenu(index: any) {
+        alert(index);
+        this.matMenuTrigger.closeMenu();
+    }
     GetPODetails() {
         this.IsProgressBarVisibile = true;
         this._dashboardService
-            .GetPODetails()
+            .GetPODetails(this.PartnerID)
             .subscribe((data) => {
                 if (data) {
                     this.Pos = <PO[]>data;
                     this.posDataSource = new MatTableDataSource(this.Pos);
                     this.posDataSource.paginator = this.poPaginator;
                     this.posDataSource.sort = this.poSort;
+                }
+                this.IsProgressBarVisibile = false;
+            },
+                (err) => {
+                    console.error(err);
+                    this.IsProgressBarVisibile = false;
+                });
+    }
+    GetDashboardGraphStatus() {
+        this.IsProgressBarVisibile = true;
+        this._dashboardService
+            .GetDashboardGraphStatus(this.PartnerID)
+            .subscribe((data) => {
+                if (data) {
+                    this.DashboardGraphStatus = <DashboardGraphStatus>data;
+                    this.dashboardDeliverystatus = this.DashboardGraphStatus.deliverystatus;
+                    this.OTIFStatus = this.DashboardGraphStatus.oTIFStatus;
+                    this.QualityStatus = this.DashboardGraphStatus.qualityStatus;
+                    this.FulfilmentStatus = this.DashboardGraphStatus.fulfilmentStatus;
+                    const OTIF = Number(this.OTIFStatus.OTIF);
+                    this.progress1(OTIF);
+                    const Quality = Number(this.QualityStatus.Quality);
+                    this.progress2(Quality);
+                    this.doughnutChartData = [this.FulfilmentStatus.OpenDetails.Value, this.FulfilmentStatus.ScheduledDetails.Value, this.FulfilmentStatus.InProgressDetails.Value, this.FulfilmentStatus.PendingDetails.Value];
+                    // this.dashboardDeliverystatus.Planned1.Date = this.dashboardDeliverystatus.Planned1.Date 
+                    const Planned1Date = this.datePipe.transform(this.dashboardDeliverystatus.Planned1.Date, 'dd/MM/yyyy');
+                    const Planned2Date = this.datePipe.transform(this.dashboardDeliverystatus.Planned2.Date, 'dd/MM/yyyy');
+                    const Planned3Date = this.datePipe.transform(this.dashboardDeliverystatus.Planned3.Date, 'dd/MM/yyyy');
+                    const Planned4Date = this.datePipe.transform(this.dashboardDeliverystatus.Planned4.Date, 'dd/MM/yyyy');
+                    const Planned5Date = this.datePipe.transform(this.dashboardDeliverystatus.Planned4.Date, 'dd/MM/yyyy');
+
+                    // this.barChartLabels = [Planned1Date, Planned2Date, Planned3Date, Planned4Date, Planned5Date];
+                    this.barChartData = [
+                        { data: [this.dashboardDeliverystatus.Planned1.Actual, this.dashboardDeliverystatus.Planned2.Actual, this.dashboardDeliverystatus.Planned3.Actual, this.dashboardDeliverystatus.Planned4.Actual, this.dashboardDeliverystatus.Planned5.Actual], label: 'Actual' },
+                        { data: [this.dashboardDeliverystatus.Planned1.Planned, this.dashboardDeliverystatus.Planned2.Planned, this.dashboardDeliverystatus.Planned3.Planned, this.dashboardDeliverystatus.Planned4.Planned, this.dashboardDeliverystatus.Planned5.Planned], label: 'Planned' }
+                    ];
+                    console.log(this.barChartData);
+                    console.log(this.barChartLabels);
+                    console.log(this.DashboardGraphStatus);
                 }
                 this.IsProgressBarVisibile = false;
             },
@@ -355,6 +443,7 @@ export class DashboardComponent implements OnInit {
                 this.poSearch.FromDate = this.datePipe.transform(this.poFormGroup.get('FromDate').value as Date, 'yyyy-MM-dd');
                 this.poSearch.ToDate = this.datePipe.transform(this.poFormGroup.get('ToDate').value as Date, 'yyyy-MM-dd');
                 this.poSearch.Status = this.poFormGroup.get('Status').value;
+                this.poSearch.PartnerID = this.PartnerID;
                 // this.getDocument.FromDate = this.poFormGroup.get('FromDate').value;
                 // this.getDocument.ToDate = this.poFormGroup.get('ToDate').value;
                 this._dashboardService.GetAllPOBasedOnDate(this.poSearch)
@@ -414,14 +503,18 @@ export class DashboardComponent implements OnInit {
         // if true then the mouse is on control and false when you leave the mouse
     }
     progress1(value: number): void {
+        // alert(value);
         const progress = value / 100;
         this.progressPercentage1 = Math.round(progress * 100);
         this.dashoffset1 = this.circumference * (progress);
+        // console.log(this.progressPercentage1);
     }
     progress2(value: number): void {
+        // alert(value);
         const progress = value / 100;
         this.progressPercentage2 = Math.round(progress * 100);
         this.dashoffset2 = this.circumference * (progress);
+        // console.log(this.progressPercentage2);
     }
     formatSubtitle = (): string => {
         return 'Effiency';
