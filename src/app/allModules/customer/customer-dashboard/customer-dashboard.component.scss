@@ -1,5 +1,6 @@
 @import "src/@fuse/scss/fuse";
-#customerDashboard {
+#home {
+    background-color: white;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     h1,
     h2,
@@ -11,8 +12,8 @@
         margin: 0px;
     }
     &.topbarClass {
-        background-image: url("../../../../assets/images/header_2.png");
-        background-repeat: no-repeat;
+        // background-image: url("../../../../assets/images/header_2.png");
+        // background-repeat: no-repeat;
         width: 100%;
         object-fit: contain;
     }
@@ -82,5 +83,9 @@
         max-width: 100%;
         border-style: none none none solid;
         border-left-width: 5px;
+    }
+    .viewMoreDetails {
+        font-weight: 600;
+        color: #000000;
     }
 }

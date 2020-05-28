@@ -51,14 +51,27 @@ import {
 
 import { FuseSharedModule } from '@fuse/shared.module';
 import { FormsModule } from '@angular/forms';
+import { ChartsModule } from "ng2-charts";
+import "chartjs-plugin-labels";
+import "chartjs-plugin-annotation";
 import { DecimalPipe } from '@angular/common';
 import { CustomerDashboardComponent } from './customer-dashboard/customer-dashboard.component';
 import { CustomerFactComponent } from './customer-fact/customer-fact.component';
+import { CustomerOrderfulfilmentComponent } from './customer-orderfulfilment/customer-orderfulfilment.component';
+import { CustomerPolookupComponent } from './customer-polookup/customer-polookup.component';
 
 const routes = [
     {
         path: 'dashboard',
         component: CustomerDashboardComponent
+    },
+    {
+        path: 'orderfulfilment',
+        component: CustomerOrderfulfilmentComponent
+    },
+    {
+        path: 'polookup',
+        component: CustomerPolookupComponent
     },
     {
         path: 'fact',
@@ -122,9 +135,11 @@ const routes = [
         FuseMaterialColorPickerModule,
         FuseWidgetModule,
 
-        FormsModule
+        FormsModule,
+        ChartsModule
     ],
-    declarations: [CustomerDashboardComponent, CustomerFactComponent],
+    declarations: [CustomerDashboardComponent, CustomerFactComponent,
+        CustomerOrderfulfilmentComponent, CustomerPolookupComponent],
     providers: [
         DecimalPipe
     ],

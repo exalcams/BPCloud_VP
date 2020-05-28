@@ -25,6 +25,7 @@ export class HomeComponent implements OnInit {
   SelectedMenuApp: MenuApp;
   authenticationDetails: AuthenticationDetails;
   CurrentUserID: Guid;
+  CurrentUserName: string;
   CurrentUserRole = '';
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
@@ -64,28 +65,29 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     const retrievedObject = localStorage.getItem('authorizationData');
     this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
-    // if (retrievedObject) {
-    //   this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
-    //   this.CurrentUserID = this.authenticationDetails.UserID;
-    //   this.CurrentUserRole = this.authenticationDetails.UserRole;
-    //   this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
-    //   if (this.MenuItems.indexOf('Home') < 0) {
-    //     this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
-    //     );
-    //     this._router.navigate(['/auth/login']);
-    //   }
-    this.GetFactByEmailID();
-    // } else {
-    //   this._router.navigate(['/auth/login']);
-    // }
+    if (retrievedObject) {
+      this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+      this.CurrentUserID = this.authenticationDetails.UserID;
+      this.CurrentUserName = this.authenticationDetails.UserName;
+      this.CurrentUserRole = this.authenticationDetails.UserRole;
+      this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
+      if (this.MenuItems.indexOf('Dashboard') < 0) {
+        this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
+        );
+        this._router.navigate(['/auth/login']);
+      }
+      this.GetFactByPartnerIDAndType();
+    } else {
+      this._router.navigate(['/auth/login']);
+    }
   }
 
-  GetFactByEmailID(): void {
-    console.log(this.authenticationDetails.EmailAddress);
-    this._FactService.GetFactByEmailID(this.authenticationDetails.EmailAddress).subscribe(
+  GetFactByPartnerIDAndType(): void {
+    // console.log(this.authenticationDetails.EmailAddress);
+    this._FactService.GetFactByPartnerIDAndType(this.CurrentUserName, 'Vendor').subscribe(
       (data) => {
         const fact = data as BPCFact;
-        console.log(fact);
+        // console.log(fact);
         if (fact) {
           this.GetAIACTsByPartnerID(fact.PatnerID);
           this.loadSelectedBPCFact(fact);
@@ -169,7 +171,7 @@ export class HomeComponent implements OnInit {
           if (x.Type === 'Action') {
             this.AllActions.push(x);
           }
-          else{
+          else {
             this.AllNotifications.push(x);
           }
         });
