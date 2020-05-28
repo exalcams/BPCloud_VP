@@ -9,7 +9,7 @@
         <h3 style="margin: 0px;padding-left: 10px;"><b>PO Factsheet</b></h3>
       </div>
       <div fxFlex align="end">
-        <span><img src="../../../../assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
+        <span><img src="assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
       </div>
     </div>
     <div fxLayout="row" style="margin-top: 20px !important;margin-top: 10px !important;">
@@ -316,8 +316,7 @@
               </ng-container>
 
               <tr mat-header-row *matHeaderRowDef="itemDisplayedColumns;sticky: true"></tr>
-              <tr mat-row *matRowDef="let row; columns: itemDisplayedColumns;let even=even" matRipple
-                style=" cursor: pointer;">
+              <tr mat-row *matRowDef="let row; columns: itemDisplayedColumns;let even=even">
               </tr>
             </table>
             <!-- <div *ngIf="!PO_OrderLookUpDetails.PO_ScheduleDetails.length">
@@ -370,8 +369,7 @@
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="asnDisplayedColumns;sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: asnDisplayedColumns;let even=even" matRipple
-              style=" cursor: pointer;">
+            <tr mat-row *matRowDef="let row; columns: asnDisplayedColumns;let even=even">
             </tr>
           </table>
 
@@ -424,8 +422,7 @@
 
 
             <tr mat-header-row *matHeaderRowDef="grnDisplayedColumns;sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: grnDisplayedColumns;let even=even" matRipple
-              style=" cursor: pointer;">
+            <tr mat-row *matRowDef="let row; columns: grnDisplayedColumns;let even=even">
             </tr>
           </table>
 
@@ -483,8 +480,7 @@
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="qaDisplayedColumns;sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: qaDisplayedColumns;let even=even" matRipple
-              style=" cursor: pointer;">
+            <tr mat-row *matRowDef="let row; columns: qaDisplayedColumns;let even=even">
             </tr>
           </table>
 

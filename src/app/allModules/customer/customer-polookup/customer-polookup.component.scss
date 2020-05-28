@@ -25,6 +25,7 @@
   .center {
     // padding: 20px !important;
     background-color: white;
+    max-width: 2000px;
   }
   @mixin TableBorderRight($color) {
     border-right: 1px solid $color;
@@ -50,7 +51,7 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background-image: url("../../../../assets/images/header_2.png");
+      background-image: url("assets/images/header_2.png");
       opacity: 0.1;
       background-repeat: no-repeat;
     }
