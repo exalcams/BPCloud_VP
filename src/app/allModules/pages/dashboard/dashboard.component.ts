@@ -237,7 +237,7 @@ export class DashboardComponent implements OnInit {
             this.currentUserRole = this.authenticationDetails.UserRole;
             this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
             // console.log(this.authenticationDetails);
-            if (this.MenuItems.indexOf('Dashboard') < 0) {
+            if (this.MenuItems.indexOf('OrderFulFilmentCenter') < 0) {
                 this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
                 );
                 this._router.navigate(['/auth/login']);

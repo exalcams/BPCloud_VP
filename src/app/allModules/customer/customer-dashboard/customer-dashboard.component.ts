@@ -26,6 +26,7 @@ export class CustomerDashboardComponent implements OnInit {
   SelectedMenuApp: MenuApp;
   authenticationDetails: AuthenticationDetails;
   CurrentUserID: Guid;
+  CurrentUserName: string;
   CurrentUserRole = '';
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
@@ -38,6 +39,8 @@ export class CustomerDashboardComponent implements OnInit {
   BanksByPartnerID: BPCFactBank[] = [];
   ContactPersonsByPartnerID: BPCFactContactPerson[] = [];
   AIACTsByPartnerID: BPCAIACT[] = [];
+  AllActions: BPCAIACT[] = [];
+  AllNotifications: BPCAIACT[] = [];
   selection = new SelectionModel<any>(true, []);
   todayDate: any;
   SelectedBPCAIACTByPartnerID: BPCAIACT;
@@ -63,28 +66,29 @@ export class CustomerDashboardComponent implements OnInit {
   ngOnInit(): void {
     const retrievedObject = localStorage.getItem('authorizationData');
     this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
-    // if (retrievedObject) {
-    //   this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
-    //   this.CurrentUserID = this.authenticationDetails.UserID;
-    //   this.CurrentUserRole = this.authenticationDetails.UserRole;
-    //   this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
-    //   if (this.MenuItems.indexOf('Home') < 0) {
-    //     this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
-    //     );
-    //     this._router.navigate(['/auth/login']);
-    //   }
-    this.GetFactByEmailID();
-    // } else {
-    //   this._router.navigate(['/auth/login']);
-    // }
+    if (retrievedObject) {
+      this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+      this.CurrentUserID = this.authenticationDetails.UserID;
+      this.CurrentUserName = this.authenticationDetails.UserName;
+      this.CurrentUserRole = this.authenticationDetails.UserRole;
+      this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
+      if (this.MenuItems.indexOf('CustomerDashboard') < 0) {
+        this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
+        );
+        this._router.navigate(['/auth/login']);
+      }
+      this.GetFactByPartnerIDAndType();
+    } else {
+      this._router.navigate(['/auth/login']);
+    }
   }
 
-  GetFactByEmailID(): void {
-    console.log(this.authenticationDetails.EmailAddress);
-    this._FactService.GetFactByEmailID(this.authenticationDetails.EmailAddress).subscribe(
+  GetFactByPartnerIDAndType(): void {
+    // console.log(this.authenticationDetails.EmailAddress);
+    this._FactService.GetFactByPartnerIDAndType(this.CurrentUserName, 'Customer').subscribe(
       (data) => {
         const fact = data as BPCFact;
-        console.log(fact);
+        // console.log(fact);
         if (fact) {
           this.GetAIACTsByPartnerID(fact.PatnerID);
           this.loadSelectedBPCFact(fact);
@@ -164,6 +168,14 @@ export class CustomerDashboardComponent implements OnInit {
       (data) => {
         this.IsProgressBarVisibile = false;
         this.AIACTsByPartnerID = data as BPCAIACT[];
+        this.AIACTsByPartnerID.forEach(x => {
+          if (x.Type === 'Action') {
+            this.AllActions.push(x);
+          }
+          else {
+            this.AllNotifications.push(x);
+          }
+        });
       },
       (err) => {
         console.error(err);
@@ -279,7 +291,7 @@ export class CustomerDashboardComponent implements OnInit {
         this.OpenConfirmationDialog(Actiontype, Catagory);
       } else if (aIACTByPartnerID.ActionText.toLowerCase() === "view") {
         console.log("view called");
-        this._router.navigate(['/pages/order-fulfilment'], { queryParams: { id: aIACTByPartnerID.DocNumber } });
+        this._router.navigate(['/pages/orderfulfilmentCenter'], { queryParams: { id: aIACTByPartnerID.DocNumber } });
       }
     }
     else {
