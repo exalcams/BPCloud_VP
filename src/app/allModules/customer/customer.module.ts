@@ -59,6 +59,8 @@ import { CustomerDashboardComponent } from './customer-dashboard/customer-dashbo
 import { CustomerFactComponent } from './customer-fact/customer-fact.component';
 import { CustomerOrderfulfilmentComponent } from './customer-orderfulfilment/customer-orderfulfilment.component';
 import { CustomerPolookupComponent } from './customer-polookup/customer-polookup.component';
+import { PurchaseIndentComponent } from './purchase-indent/purchase-indent.component';
+import { ReturnComponent } from './return/return.component';
 
 const routes = [
     {
@@ -76,6 +78,14 @@ const routes = [
     {
         path: 'fact',
         component: CustomerFactComponent
+    },
+    {
+        path: 'purchaseindent',
+        component: PurchaseIndentComponent
+    },
+    {
+        path: 'return',
+        component: ReturnComponent
     },
     {
         path: '**',
@@ -139,7 +149,8 @@ const routes = [
         ChartsModule
     ],
     declarations: [CustomerDashboardComponent, CustomerFactComponent,
-        CustomerOrderfulfilmentComponent, CustomerPolookupComponent],
+        CustomerOrderfulfilmentComponent, CustomerPolookupComponent, 
+        PurchaseIndentComponent, ReturnComponent],
     providers: [
         DecimalPipe
     ],

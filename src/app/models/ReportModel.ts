@@ -25,6 +25,24 @@ export class BPCInvoice extends CommonClass {
     PODDate: Date | string | null;
     PODConfirmedBy: string;
 }
+export class BPCInvoiceItem extends CommonClass
+{
+    ID: number;
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
+    FiscalYear: string;
+    InvoiceNo: string;
+    Item: string;
+    Material: string;
+    MaterialText: string;
+    InvoiceQty: number;
+    PODQty: number;
+    ReasonCode: string;
+    Status: string;
+}
+
 export class BPCPayment extends CommonClass {
     ID: number;
     Client: string;

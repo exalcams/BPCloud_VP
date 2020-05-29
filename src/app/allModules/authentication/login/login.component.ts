@@ -123,7 +123,11 @@ export class LoginComponent implements OnInit {
     // } else {
     //   this._router.navigate(['pages/dashboard']);
     // }
-    this._router.navigate(['pages/dashboard']);
+    if (data.UserRole === 'Customer') {
+      this._router.navigate(['customer/dashboard']);
+    } else {
+      this._router.navigate(['pages/dashboard']);
+    }
   }
 
   OpenChangePasswordDialog(data: AuthenticationDetails): void {
@@ -328,6 +332,34 @@ export class LoginComponent implements OnInit {
           isSvgIcon: false,
           // icon: 'dashboard',
           url: '/customer/fact',
+        }
+      );
+    }
+    if (this.MenuItems.indexOf('PurchaseIndent') >= 0) {
+      this.children.push(
+        {
+          id: 'fact',
+          title: 'Purchase Indent',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          icon: 'article',
+          isSvgIcon: false,
+          // icon: 'dashboard',
+          url: '/customer/purchaseindent',
+        }
+      );
+    }
+    if (this.MenuItems.indexOf('Return') >= 0) {
+      this.children.push(
+        {
+          id: 'fact',
+          title: 'Return',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          icon: 'style',
+          isSvgIcon: false,
+          // icon: 'dashboard',
+          url: '/customer/return',
         }
       );
     }
