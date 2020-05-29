@@ -169,34 +169,35 @@
     background-color: white;
     color: #efb577;
   }
-
   @mixin TableBorderRight($color) {
     border-right: 1px solid $color;
   }
-
   .TablePadFont {
     padding: 5px;
     font-size: 12px;
     min-width: 100px !important;
   }
-
+  .TableCommon {
+    padding: 5px;
+    font-size: 14px;
+    min-width: 50px !important;
+    white-space: nowrap;
+  }
   table {
     width: 100%;
 
     th {
       @include TableBorderRight(gray);
-      @extend .TablePadFont;
+      @extend .TableCommon;
+      // min-width: max-content !important;
       color: white;
       background-color: #121214;
-      text-align: left;
     }
 
     td {
       @include TableBorderRight(rgba(0, 0, 0, 0.12));
-      @extend .TablePadFont;
-      font-size: 12px;
-      // text-align: center;
-      min-width: max-content !important;
+      @extend .TableCommon;
+      // min-width: max-content !important;
       &.QtyClass {
         text-align: right;
       }
@@ -214,7 +215,30 @@
       // justify-content: center;
     }
   }
-
+  .abnormal {
+    .mat-form-field-flex > .mat-form-field-infix {
+      padding: 0.3em 0px !important;
+    }
+    .mat-form-field-label-wrapper {
+      top: -1.5em;
+    }
+    .mat-form-field-wrapper {
+      margin: 0 !important;
+      padding-bottom: 4px !important;
+      padding-top: 4px !important;
+    }
+    .mat-form-field-appearance-outline .mat-form-field-flex {
+      padding: 0 0.4em 0 0.4em;
+    }
+    .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
+      transform: translateY(-1.1em) scale(0.75);
+      width: 133.33333%;
+    }
+    .mat-form-field-outline-start,
+    .mat-form-field-outline-end {
+      border-radius: 0 !important;
+    }
+  }
   .tableLeftBorder {
     border-left: 1px solid rgba(0, 0, 0, 0.12);
   }
@@ -340,26 +364,6 @@
   .mat-header {
     display: flex;
     justify-content: center !important;
-  }
-  .abnormal {
-    .mat-form-field-flex > .mat-form-field-infix {
-      padding: 0.3em 0px !important;
-    }
-    .mat-form-field-label-wrapper {
-      top: -1.5em;
-    }
-    .mat-form-field-wrapper {
-      margin: 0 !important;
-      padding-bottom: 4px !important;
-      padding-top: 4px !important;
-    }
-    .mat-form-field-appearance-outline .mat-form-field-flex {
-      padding: 0 0.4em 0 0.4em;
-    }
-    .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
-      transform: translateY(-1.1em) scale(0.75);
-      width: 133.33333%;
-    }
   }
   #footerCard {
     position: fixed;

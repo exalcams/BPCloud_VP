@@ -434,10 +434,12 @@
 
                       <ng-container matColumnDef="Tax">
                         <th mat-header-cell *matHeaderCellDef>Tax</th>
-                        <td mat-cell class="QtyClass" *matCellDef="let element; let index = index"
-                          [formGroupName]="index">
-                          <input matInput formControlName="Tax" style="color:#ef8377"><img class="mt-4 ml-4"
-                            style="height: 7px;" src="assets/images/play-button-arrowhead.png"> </td>
+                        <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+                          <input matInput formControlName="Tax">
+                          <!-- style="color:#ef8377" -->
+                          <!-- <img class="mt-4" style="height: 8px;margin-left: -52px;"
+                            src="assets/images/play-button-arrowhead.png"> -->
+                        </td>
                       </ng-container>
 
                       <!-- <ng-container matColumnDef="Tax">

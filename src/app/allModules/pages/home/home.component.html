@@ -10,10 +10,10 @@
   </div>
   <div fxLayout fxLayoutAlign="stretch" fxLayoutGap="15px" style="margin-top: 0px;background-color: #F1F1F6;">
     <!-- First Div -->
-    <div fxFlex="30%">
-      <div style="height: 100%;background-color: white;padding: 0px 20px 10px 20px;">
+    <mat-card fxFlex="30%" class="p-0">
+      <div style="height: 100%;background-color: white;margin-bottom: -55px; padding: 15px;">
         <div fxLayout="column" fxLayoutAlign="stretch" fxLayoutGap="15px">
-          <mat-card fxFlex="100%" style="padding: 10px;">
+          <mat-card fxFlex="100%">
             <mat-card-content>
               <div style="background-color: #f2f7fe;height: 80px;">
                 <table style="width: 100%;">
@@ -66,25 +66,26 @@
             </mat-card-content>
           </mat-card>
 
-          <mat-card fxFlex="100%" style="padding: 10px;">
-            <mat-card-content>
-              <h2 style="padding:0px 0px 5px 5px;"><strong>{{SelectedBPCFact.Company}}</strong></h2>
-              <h6 style="padding:5px 0px 5px 5px;">{{SelectedBPCFact.Email1}}</h6>
-              <h5 style="padding:5px 0px 5px 5px;"> <span><img src="../../../../assets/images/phone-call.svg"> </span>
-                {{SelectedBPCFact.Phone1}}
-              </h5>
-              <h5 style="padding:5px 0px 5px 5px;"> <span><img
-                    src="../../../../assets/images/noun_mobile phone_117228.svg"> </span>
-                {{SelectedBPCFact.Phone2}}
-              </h5>
-              <h5 style="padding:5px 0px 5px 5px;">Vendor Type : <strong>{{SelectedBPCFact.Type}}</strong></h5>
-              <hr>
-              <h6 style="padding:5px 0px 5px 5px;"><strong> GST Information</strong></h6>
-              <h5 style="padding:5px 0px 5px 5px;">GST Treatment : <strong>Registered Business - Regular</strong></h5>
-              <h5 style="padding:5px 0px 5px 5px;">Business GSTIN : <strong>{{SelectedBPCFact.TaxID1}}</strong></h5>
-            </mat-card-content>
+          <mat-card fxFlex="100%">
+            <!-- <mat-card-content> -->
+            <h2 style="padding:0px 0px 5px 5px;"><strong>{{SelectedBPCFact.Company}}</strong></h2>
+            <h6 style="padding:5px 0px 5px 5px;">{{SelectedBPCFact.Email1}}</h6>
+            <h5 style="padding:5px 0px 5px 5px;"> <span><img src="../../../../assets/images/phone-call.svg"> </span>
+              {{SelectedBPCFact.Phone1}}
+            </h5>
+            <h5 style="padding:5px 0px 5px 5px;"> <span><img
+                  src="../../../../assets/images/noun_mobile phone_117228.svg"> </span>
+              {{SelectedBPCFact.Phone2}}
+            </h5>
+            <h5 style="padding:5px 0px 5px 5px;">Vendor Type : <strong>{{SelectedBPCFact.Type}}</strong></h5>
+            <hr>
+            <h6 style="padding:5px 0px 5px 5px;"><strong> GST Information</strong></h6>
+            <h5 style="padding:5px 0px 5px 5px;">GST Treatment : <strong>Registered Business - Regular</strong></h5>
+            <h5 style="padding:5px 0px 5px 5px;">Business GSTIN : <strong>{{SelectedBPCFact.TaxID1}}</strong></h5>
+            <!-- </mat-card-content> -->
           </mat-card>
-          <mat-card fxFlex="100%" style="padding: 10px;background-color: #e6e6e6 !important;">
+
+          <!-- <mat-card fxFlex="100%" style="padding: 10px;background-color: #e6e6e6 !important;">
             <mat-card-content>
               <div fxFlex fxLayout>
                 <div fxFlex fxLayoutAlign="start center">
@@ -95,10 +96,21 @@
                 </div>
               </div>
             </mat-card-content>
-          </mat-card>
+          </mat-card> -->
+
         </div>
       </div>
-    </div>
+      <mat-card-actions class="m-0 cardActions">
+        <div fxFlex fxLayout>
+          <div fxFlex="75" fxLayoutAlign="start center">
+            <span class="viewMoreDetails">View more details/Change</span>
+          </div>
+          <div fxFlex="25" fxLayoutAlign="end center">
+            <span><img src="../../../../assets/images/ellipsis.png" style="height: 25px;width: 40px;"></span>
+          </div>
+        </div>
+      </mat-card-actions>
+    </mat-card>
     <!-- First Div -->
 
     <!-- Second Div -->
@@ -215,5 +227,15 @@
     </div>
     <!-- Third Div -->
 
+    <!-- <div fxFlex fxLayout class="theme-options-button">
+      <div fxFlex="33%" fxLayoutAlign="start center" style="padding-left: 10px;">
+        <span class="viewMoreDetails">View more details/Change</span>
+      </div>
+      <div fxFlex="33%" fxLayoutAlign="start center">
+      </div>
+      <div fxFlex="33%" fxLayoutAlign="end center" style="padding-right: 10px;">
+        <span><img src="../../../../assets/images/ellipsis.png" style="height: 25px;width: 40px;"></span>
+      </div>
+    </div> -->
   </div>
 </div>

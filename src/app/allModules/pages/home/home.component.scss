@@ -88,4 +88,55 @@
         font-weight: 600;
         color: #000000;
     }
+    #viewMoreDetailsCard {
+        position: fixed;
+        height: 50px;
+        width: 390px;
+        // box-shadow: 0 -5px 10px 0 rgba(0, 0, 0, 0.16);
+        background-color: #e6e6e6;
+        bottom: 40px;
+        left: 65px;
+        margin-bottom: 0px;
+        z-index: 100;
+    }
+    .theme-options-button {
+        background-color: #e6e6e6;
+        position: absolute;
+        bottom: 0px;
+        left: 1px;
+        right: 911px;
+        height: 50px;
+        // width: 390px;
+        // line-height: 48px;
+        text-align: center;
+        cursor: pointer;
+        border-radius: 0;
+        margin: 0;
+        pointer-events: auto;
+        opacity: 0.9;
+        z-index: 998;
+
+        &.right-side-panel {
+            @include media-breakpoint-up("lg") {
+                right: 12px;
+            }
+        }
+
+        &.side-panel-hidden {
+            right: 0 !important;
+        }
+
+        // mat-icon {
+        //   animation: rotating 3s linear infinite;
+        // }
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+    .cardActions {
+        // box-shadow: 0 -5px 10px 0 rgba(0, 0, 0, 0.16);
+        background-color:#e6e6e6 ;
+        padding: 15px;
+      }
 }
