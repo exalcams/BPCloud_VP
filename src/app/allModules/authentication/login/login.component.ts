@@ -251,6 +251,7 @@ export class LoginComponent implements OnInit {
         }
       );
     }
+
     if (this.MenuItems.indexOf('ASN') >= 0) {
       this.children.push(
         {
@@ -374,6 +375,20 @@ export class LoginComponent implements OnInit {
           isSvgIcon: true,
           // icon: 'dashboard',
           url: '/pages/resource',
+        }
+      );
+    }
+    if (this.MenuItems.indexOf('SupportDesk') >= 0) {
+      this.children.push(
+        {
+          id: 'supportdesk',
+          title: 'Support Desk',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          icon: 'supportIcon',
+          isSvgIcon: true,
+          // icon: 'dashboard',
+          url: '/pages/supportdesk',
         }
       );
     }

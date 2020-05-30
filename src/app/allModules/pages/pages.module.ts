@@ -62,6 +62,9 @@ import { HomeComponent } from "./home/home.component";
 import { OrderFulfilmentComponent } from "./order-fulfilment/order-fulfilment.component";
 import { PaymentComponent } from "./payment/payment.component";
 import { ResourceComponent } from './resource/resource.component';
+import { SupportdeskComponent } from './supportdesk/supportdesk.component';
+import { SupportTicketComponent } from './support-ticket/support-ticket.component';
+import { SupportChatComponent } from './support-chat/support-chat.component';
 // import 'chart.piecelabel.js';
 
 const routes = [
@@ -90,8 +93,20 @@ const routes = [
         component: OrderFulfilmentComponent,
     },
     {
-        path: "resource",
+        path: "resource", 
         component: ResourceComponent,
+    },
+    {
+        path: "supportdesk",
+        component: SupportdeskComponent,
+    },
+    {
+        path: "createTicket",
+        component: SupportTicketComponent,
+    },
+    {
+        path: "supportchat",
+        component: SupportChatComponent,
     },
     {
         path: "**",
@@ -175,7 +190,10 @@ const routes = [
         HomeComponent,
         OrderFulfilmentComponent,
         PaymentComponent,
-        ResourceComponent
+        ResourceComponent,
+        SupportdeskComponent,
+        SupportTicketComponent,
+        SupportChatComponent
     ],
     providers: [DecimalPipe],
     entryComponents: [AttachmentDialogComponent],
