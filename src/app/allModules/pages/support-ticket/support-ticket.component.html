@@ -1,0 +1,72 @@
+<div id="support-ticket" class="page-layout carded" fusePerfectScrollbar>
+  <div class="center" fxLayout="column" fxLayoutGap="10px">
+    <div class="outer" fxLayout>
+      <div class="bg"></div>
+      <div>
+        <h3 style="margin: 0px;padding-left: 10px;"><b>Support Ticket</b></h3>
+      </div>
+      <div fxFlex align="end">
+        <span><img src="../../../../assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
+      </div>
+    </div>
+    <div style="padding: 20px">
+      <form autocomplete="off" class="normal" fxLayout="column" fxLayoutAlign="start" name="form" novalidate
+        [formGroup]="SupportFormGroup">
+
+        <div fxFlex fxLayout="row">
+          <div fxFlex="50">
+            <mat-form-field class="pl-8 pr-12" style="width: 100%;">
+              <mat-select placeholder="Reason Select" formControlName="ReasonCode">
+                <mat-option *ngFor="let reason of supportMaster" [value]="reason.ReasionCode">{{reason.ReasionText}}
+              </mat-option>
+                <!-- <mat-option value="Road">Road</mat-option>
+                <mat-option value="Train">Train</mat-option>
+                <mat-option value="Air">Air</mat-option> -->
+              </mat-select>
+              <mat-error
+              *ngIf="SupportFormGroup.get('ReasonCode').touched && SupportFormGroup.get('ReasonCode').hasError('required')">
+              Reasion Text is required
+            </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="mt-12" fxLayout="row" fxLayoutAlign="start">
+          <img class="addBlueIcon" src="assets/images/addBlue.png" (click)="fileInput2.click()">
+          <span class="attachClass" (click)="fileInput2.click()">
+            Add Attachment
+          </span>
+          <input hidden type="file" #fileInput2 id="file" (change)="handleFileInput1($event)"
+            accept="image/x-png,image/gif,image/jpeg,image/jpg,application/pdf" />
+        </div>
+        <div fxFlex="40">
+          <div fxFlex *ngIf="!invAttach?.AttachmentName"
+            (click)="GetInvoiceAttachment(invoiceAttachment?.name,invoiceAttachment)" class="pdfLinkClass pl-8">
+            {{invoiceAttachment?.name}}</div>
+          <div fxFlex *ngIf="invAttach?.AttachmentName" (click)="GetInvoiceAttachment(invAttach?.AttachmentName)"
+            class="pdfLinkClass pl-8">
+            {{invAttach?.AttachmentName}}
+          </div>
+        </div>
+        <div fxFlex fxLayout="row" class="mt-12" fxLayoutGap="20px">
+          <div fxFlex="100">
+            <mat-form-field style="width: 80% !important;" class="example-full-width">
+              <!-- <mat-label>Leave a comment</mat-label> -->
+              <textarea matInput style="height: 200px !important;" formControlName="Remarks" placeholder="Remarks......"></textarea>
+            </mat-form-field>
+            <mat-error *ngIf="SupportFormGroup.get('Remarks').touched && SupportFormGroup.get('Remarks').hasError('required')">
+            Remarks is required
+          </mat-error>
+          </div>
+        </div>
+        <div>
+          <div fxFlex>
+            <div fxLayoutAlign="end">
+              <button mat-raised-button class="SaveBtn mb-4" (click)="SaveClicked()">Save</button>
+              <!-- <button mat-button class="Btn1" (click)="YesClicked()">Acknowledge PO</button> -->
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

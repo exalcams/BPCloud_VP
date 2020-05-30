@@ -541,19 +541,6 @@ export class DashboardComponent implements OnInit {
         }
     }
     getNextProcess(element: any) {
-        // console.log(element);
-        // if (element.Status === 'Open') {
-        //     this.nextProcess = 'ACK';
-        // }
-        // else if (element.Status === 'ACK') {
-        //     this.nextProcess = 'ASN';
-        // }
-        // else if (element.Status === 'ASN') {
-        //     this.nextProcess = 'Gate';
-        // }
-        // else {
-        //     this.nextProcess = 'GRN';
-        // }
         if (element.Status === 'Open') {
             element.NextProcess = 'ACK';
         }
