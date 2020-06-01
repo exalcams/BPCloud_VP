@@ -3,14 +3,14 @@
     <div class="outer" fxLayout>
       <div class="bg"></div>
       <div>
-        <h3 style="margin: 0px;padding-left: 10px;"><b>Purchase Indent</b></h3>
+        <h3 style="margin: 0px;padding-left: 10px;"><b>Return</b></h3>
       </div>
       <div fxFlex align="end">
         <span><img src="assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
       </div>
     </div>
     <div fxLayout class="content-card1">
-      <div fxFlex="23" class="side-bar" style="background-color: #f5f5f5">
+      <!-- <div fxFlex="23" class="side-bar" style="background-color: #f5f5f5">
         <div class="sidenav-header">
           <mat-toolbar>
             <mat-toolbar-row fxLayout="row" class="px-8" fxLayoutAlign="space-between center">
@@ -24,12 +24,12 @@
           </mat-toolbar>
         </div>
         <div class="sidenav-content" fusePerfectScrollbar fxFlex>
-          <div *ngFor="let usr of AllPurchaseIndentHeaders | filter: searchText">
+          <div *ngFor="let usr of AllReturnHeaders | filter: searchText">
             <div>
-              <div class="mx-8 mb-8 mt-0 p-8 leftCard" (click)="LoadSelectedPurchaseIndent(usr)"
-                [style.border-left-color]="SelectedPurchaseIndentNumber==usr.PurchaseIndentNumber?'#efb577':'#cccccc'">
+              <div class="mx-8 mb-8 mt-0 p-8 leftCard" (click)="LoadSelectedReturn(usr)"
+                [style.border-left-color]="SelectedReturnNumber==usr.ReturnNumber?'#efb577':'#cccccc'">
                 <div fxLayout class="pb-4" fxLayoutAlign="space-between center">
-                  <div fxFlex><strong>{{usr.PurchaseIndentNumber}}</strong></div>
+                  <div fxFlex><strong>{{usr.ReturnNumber}}</strong></div>
                   <div fxFlex align="end">{{usr.CreatedOn | date :'dd/MM/yyyy'}}</div>
                 </div>
                 <div fxLayout class="pb-4" fxLayoutAlign="space-between center">
@@ -44,472 +44,244 @@
               </div>
             </div>
           </div>
-          <div *ngIf="(AllPurchaseIndentHeaders | filter: searchText)?.length === 0" class="no-results-message">
+          <div *ngIf="(AllReturnHeaders | filter: searchText)?.length === 0" class="no-results-message">
             <span class="pl-12"> No results..</span>
           </div>
         </div>
         <div class="borderRight1"></div>
-      </div>
-      <mat-card fxFlex="77" class="side-bar p-0">
+      </div> -->
+      <mat-card fxFlex="100" class="side-bar p-0">
         <div class="sidenav-content" fxFlex fxLayout="column">
-          <div fxFlex fxLayout="column" class="p-0 pt-8">
-            <div fxFlex fxLayout class="px-12 mt-4">
-              <div fxFlex="100" fxLayout="column" class="Rectangle-721">
-                <div fxFlex>
-                  <div fxLayout="row" class="PO-No px-20 py-12">
-                    <div fxFlex='40'>
-                      <div fxLayout="row" fxLayoutGap="2px">
-                        <div fxFlex> <span> PO NO: {{SelectedPurchaseIndentHeader?.DocNumber}}</span></div>
-                      </div>
-                    </div>
-                    <div fxFlex='60' *ngIf="SelectedDocNumber && !AllPurchaseIndentHeaders.length" fxLayout fxLayoutGap="10px"
-                      class="No-Invoice-Created-for-this-PO">
-                      <div fxFlex fxLayoutAlign="end center" align="end">
-                        <img src="assets/images/PurchaseIndent/alert.png" class="alert">
-                        <span>No PurchaseIndent Created for this PO</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div fxFlex class="Date px-20 pb-12">
-                  <div fxFlex='30' fxLayout="row" fxLayoutGap="2px">
-                    <div fxFlex> <span>Date : </span><span>{{PO?.Date | date :'dd/MM/yyyy'}}</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div fxFlex fxLayout class="p-0 pt-8">
             <div fxFlex class="px-12 mt-4">
               <form autocomplete="off" class="normal" fxLayout="column" fxLayoutAlign="start" name="form" novalidate
-                [formGroup]="PurchaseIndentFormGroup">
-
-                <div fxFlex fxLayout="row" fxLayoutGap="20px">
-                  <div fxFlex="33">
-                    <mat-form-field class="pl-8 pr-12" style="width: 100%;">
+                [formGroup]="ReturnFormGroup">
+                <div fxFlex fxLayout="row wrap">
+                  <div *ngIf="SelectedRetReqID" fxFlex="50" class="px-12">
+                    <mat-form-field style="width: 100%;">
+                      <input matInput placeholder="Ret Req ID" formControlName="RetReqID">
+                      <mat-error
+                        *ngIf="ReturnFormGroup.get('RetReqID').touched && ReturnFormGroup.get('RetReqID').hasError('required')">
+                        RetReqID is required
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div fxFlex="50" class="px-12">
+                    <mat-form-field style="width: 100%;">
                       <input matInput placeholder="Text" formControlName="Text">
                       <mat-error
-                        *ngIf="PurchaseIndentFormGroup.get('Text').touched && PurchaseIndentFormGroup.get('Text').hasError('required')">
+                        *ngIf="ReturnFormGroup.get('Text').touched && ReturnFormGroup.get('Text').hasError('required')">
                         Text is required
                       </mat-error>
                     </mat-form-field>
                   </div>
-                  <div fxFlex="33">
-                    <mat-form-field class="pl-8 pr-12" style="width: 100%;">
-                      <input matInput placeholder="Date" [matDatepicker]="picker0" formControlName="Date">
+                  <div fxFlex="50" class="px-12">
+                    <mat-form-field style="width: 100%;">
+                      <input matInput placeholder="Doc Date" [matDatepicker]="picker0" formControlName="Date">
                       <mat-datepicker-toggle matSuffix [for]="picker0">
                         <mat-icon matDatepickerToggleIcon svgIcon="calendarIcon" class="mb-12"></mat-icon>
                       </mat-datepicker-toggle>
                       <mat-datepicker #picker0></mat-datepicker>
                       <mat-error
-                        *ngIf="PurchaseIndentFormGroup.get('Date').touched && PurchaseIndentFormGroup.get('Date').hasError('required')">
-                        Date is required
+                        *ngIf="ReturnFormGroup.get('Date').touched && ReturnFormGroup.get('Date').hasError('required')">
+                        Doc Date is required
                       </mat-error>
                     </mat-form-field>
                   </div>
-                  <div fxFlex="33">
-                    <mat-form-field class="pl-8 pr-12" style="width: 100%;">
-                      <input matInput placeholder="Invoice Doc" formControlName="InvoiceDoc">
+                  <div fxFlex="50" class="px-12">
+                    <mat-form-field style="width: 100%;">
+                      <input matInput placeholder="Reference Doc" formControlName="InvoiceDoc">
                       <mat-error
-                        *ngIf="PurchaseIndentFormGroup.get('InvoiceDoc').touched && PurchaseIndentFormGroup.get('InvoiceDoc').hasError('required')">
-                        Invoice Doc is required
+                        *ngIf="ReturnFormGroup.get('InvoiceDoc').touched && ReturnFormGroup.get('InvoiceDoc').hasError('required')">
+                        Reference Doc is required
                       </mat-error>
                     </mat-form-field>
                   </div>
-                </div>
-               
-              </form>
-            </div>
-            <div fxFlex fxLayout="column" fxLayoutGap="20px" class="px-12 mt-4">
-              <div fxFlex>
-                <span class="Shipment-Proposal">Purchase indent items</span>
-              </div>
-              <div fxFlex fxLayout="column">
-                <form autocomplete="off" class="abnormal" fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto"
-                  name="form" novalidate [formGroup]="PurchaseIndentItemFormGroup">
-                  <div style="overflow-x:auto;">
-                    <table
-                      *ngIf="(POItems && POItems.length)|| (SelectedPurchaseIndentView?.PurchaseIndentItems && SelectedPurchaseIndentView?.PurchaseIndentItems?.length)"
-                      class="table" mat-table [dataSource]="PurchaseIndentItemDataSource" formArrayName="PurchaseIndentItems">
-
-                      <ng-container matColumnDef="Item">
-                        <th mat-header-cell *matHeaderCellDef> Item </th>
-                        <td mat-cell *matCellDef="let element;let odd=odd;let index=index" [formGroupName]="index"
-                          class="tableLeftBorder pl-0">
-                          <div fxLayout>
-                            <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
-                            <div fxFlex class="pl-4">
-                              {{PurchaseIndentItemFormGroup.get('PurchaseIndentItems')?.controls[index]?.get('Item')?.value}}
-                            </div>
-                          </div>
-                        </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="Material">
-                        <th mat-header-cell *matHeaderCellDef> Material </th>
-                        <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
-                          <!-- <input matInput formControlName="MaterialText">  -->
-                          {{PurchaseIndentItemFormGroup.get('PurchaseIndentItems')?.controls[index]?.get('Material')?.value}}
-                        </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="MaterialText">
-                        <th mat-header-cell *matHeaderCellDef> Material Text </th>
-                        <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
-                          <!-- <input matInput formControlName="MaterialText">  -->
-                          {{PurchaseIndentItemFormGroup.get('PurchaseIndentItems')?.controls[index]?.get('MaterialText')?.value}}
-                        </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="DeliveryDate">
-                        <th mat-header-cell *matHeaderCellDef> Delivery Date </th>
-                        <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
-                          <!-- <input matInput formControlName="DeliveryDate"> -->
-                          {{PurchaseIndentItemFormGroup.get('PurchaseIndentItems')?.controls[index]?.get('DeliveryDate')?.value | date : 'dd/MM/yyyy'}}
-                        </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="OrderedQty">
-                        <th mat-header-cell *matHeaderCellDef> Order Qty </th>
-                        <td mat-cell class="QtyClass" *matCellDef="let element; let index = index"
-                          [formGroupName]="index">
-                          <input matInput formControlName="OrderedQty"> </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="GRQty">
-                        <th mat-header-cell *matHeaderCellDef> GR Qty </th>
-                        <td mat-cell class="QtyClass" *matCellDef="let element; let index = index"
-                          [formGroupName]="index">
-                          <input matInput formControlName="GRQty"> </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="PipelineQty">
-                        <th mat-header-cell *matHeaderCellDef> Pipeline Qty</th>
-                        <td mat-cell class="QtyClass" *matCellDef="let element; let index = index"
-                          [formGroupName]="index">
-                          <input matInput formControlName="PipelineQty"> </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="OpenQty">
-                        <th mat-header-cell *matHeaderCellDef> Open Qty</th>
-                        <td mat-cell class="QtyClass" *matCellDef="let element; let index = index"
-                          [formGroupName]="index">
-                          <input matInput formControlName="OpenQty"> </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="PurchaseIndentQty">
-                        <th mat-header-cell *matHeaderCellDef style="width: 120px;"> PurchaseIndent Qty</th>
-                        <td mat-cell class="QtyClass editable" *matCellDef="let element; let index = index"
-                          [formGroupName]="index" style="width: 120px;">
-                          <mat-form-field class="pl-8 pr-12" appearance="outline" style="width: 100px;">
-                            <input matInput formControlName="PurchaseIndentQty" (keydown)="decimalOnly($event)">
-                            <mat-error *ngIf="PurchaseIndentItemFormGroup.get('PurchaseIndentItems').controls[index]?.get('PurchaseIndentQty').touched && 
-                            PurchaseIndentItemFormGroup.get('PurchaseIndentItems').controls[index]?.get('PurchaseIndentQty').hasError('required')">
-                              *
-                            </mat-error>
-                            <mat-error *ngIf="PurchaseIndentItemFormGroup.get('PurchaseIndentItems').controls[index]?.get('PurchaseIndentQty').touched && 
-                            !PurchaseIndentItemFormGroup.get('PurchaseIndentItems').controls[index]?.get('PurchaseIndentQty').hasError('required')&&
-                            PurchaseIndentItemFormGroup.get('PurchaseIndentItems').controls[index]?.get('PurchaseIndentQty').hasError('pattern')">
-                              *
-                            </mat-error>
-                          </mat-form-field>
-                      </ng-container>
-
-                      <ng-container matColumnDef="Batch">
-                        <th mat-header-cell *matHeaderCellDef style="width: 150px;"> Batch</th>
-                        <td mat-cell *matCellDef="let element; let index = index" style="width: 150px;"
-                          [formGroupName]="index" class="editable">
-                          <!-- <div class="Rectangle-708">
-                            <span class="Batch-2"> -->
-                          <mat-form-field class="pl-8 pr-12" appearance="outline" style="width: 120px;">
-                            <input matInput formControlName="Batch">
-                            <mat-error *ngIf="PurchaseIndentItemFormGroup.get('PurchaseIndentItems').controls[index]?.get('Batch').touched && 
-                            PurchaseIndentItemFormGroup.get('PurchaseIndentItems').controls[index]?.get('Batch').hasError('required')">
-                              *
-                            </mat-error>
-                          </mat-form-field>
-                          <!-- </span>
-                          </div> -->
-                        </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="ManufactureDate">
-                        <th mat-header-cell *matHeaderCellDef style="width: 180px;"> Manufacture Date</th>
-                        <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index"
-                          class="editable" style="width: 180px;">
-                          <mat-form-field class="pl-8 pr-12" appearance="outline" style="width: 150px;">
-                            <input matInput [matDatepicker]="picker30" [max]="maxDate"
-                              formControlName="ManufactureDate">
-                            <mat-datepicker-toggle matSuffix [for]="picker30">
-                              <mat-icon matDatepickerToggleIcon svgIcon="calendarIcon"></mat-icon>
-                            </mat-datepicker-toggle>
-                            <!-- <mat-datepicker-toggle matSuffix [for]="picker30">
-                              <img matDatepickerToggleIcon class="calendarImg" src="assets/images/calendar.png">
-                            </mat-datepicker-toggle> -->
-                            <mat-datepicker #picker30></mat-datepicker>
-                            <mat-error
-                              *ngIf="PurchaseIndentItemFormGroup.get('PurchaseIndentItems').controls[index]?.get('ManufactureDate').touched && 
-                              PurchaseIndentItemFormGroup.get('PurchaseIndentItems').controls[index]?.get('ManufactureDate').hasError('required')">
-                              *
-                            </mat-error>
-                          </mat-form-field>
-                        </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="ExpiryDate">
-                        <th mat-header-cell *matHeaderCellDef style="width: 180px;"> Expiry Date</th>
-                        <td mat-cell *matCellDef="let element; let index = index" style="width: 180px;"
-                          [formGroupName]="index">
-                          <mat-form-field class="pl-8 pr-12" appearance="outline" style="width: 150px;">
-                            <input matInput [matDatepicker]="picker31" [min]="minDate" formControlName="ExpiryDate">
-                            <mat-datepicker-toggle matSuffix [for]="picker31">
-                              <mat-icon matDatepickerToggleIcon svgIcon="calendarIcon"></mat-icon>
-                            </mat-datepicker-toggle>
-                            <mat-datepicker #picker31></mat-datepicker>
-                            <mat-error
-                              *ngIf="PurchaseIndentItemFormGroup.get('PurchaseIndentItems').controls[index]?.get('ExpiryDate').touched && 
-                              PurchaseIndentItemFormGroup.get('PurchaseIndentItems').controls[index]?.get('ExpiryDate').hasError('required')">
-                              *
-                            </mat-error>
-                          </mat-form-field>
-                        </td>
-                      </ng-container>
-
-                      <tr mat-header-row *matHeaderRowDef="PurchaseIndentItemDisplayedColumns;sticky: true"></tr>
-                      <tr mat-row *matRowDef="let row; columns: PurchaseIndentItemDisplayedColumns;let even=even">
-                      </tr>
-                    </table>
-                  </div>
-                </form>
-                <!-- <div flex
-                  *ngIf="(POItems && POItems.length)|| (SelectedPurchaseIndentView?.PurchaseIndentItems && SelectedPurchaseIndentView?.PurchaseIndentItems?.length)">
-                  <mat-paginator [pageSizeOptions]="[10, 20, 30, 50, 75, 100]" showFirstLastButtons>
-                  </mat-paginator>
-                </div> -->
-              </div>
-            </div>
-            <div fxFlex fxLayout="column" fxLayoutGap="20px" class="px-12 mt-16">
-              <div fxFlex>
-                <span class="Shipment-Proposal">Invoice Details</span>
-              </div>
-              <form autocomplete="off" class="normal" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="20px"
-                fxFlex="1 0 auto" name="form" novalidate [formGroup]="InvoiceDetailsFormGroup">
-                <div fxLayout="row" fxLayoutGap="20px" class="mb-12" fxLayoutAlign="start">
-                  <div fxFlex="33">
-                    <mat-form-field class="pl-8 pr-12" style="width: 100%;">
-                      <input matInput placeholder="Invoice Number (16 Char)" formControlName="InvoiceNumber"
-                        (keydown)="numberOnly($event)">
+                  <div *ngIf="SelectedRetReqID" fxFlex="50" class="px-12">
+                    <mat-form-field style="width: 100%;">
+                      <input matInput placeholder="Status" formControlName="Status">
                       <mat-error
-                        *ngIf="InvoiceDetailsFormGroup.get('InvoiceNumber').touched && InvoiceDetailsFormGroup.get('InvoiceNumber').hasError('required')">
-                        Invoice Number is required
-                      </mat-error>
-                      <mat-error *ngIf="InvoiceDetailsFormGroup.get('InvoiceNumber').touched && !InvoiceDetailsFormGroup.get('InvoiceNumber').hasError('required')
-                      &&InvoiceDetailsFormGroup.get('InvoiceNumber').hasError('pattern')">
-                        Please enter valid Invoice Number
-                      </mat-error>
-                      <mat-error
-                        *ngIf="InvoiceDetailsFormGroup.get('InvoiceNumber').touched && !InvoiceDetailsFormGroup.get('InvoiceNumber').hasError('required')
-                      &&(InvoiceDetailsFormGroup.get('InvoiceNumber').hasError('minlength')||InvoiceDetailsFormGroup.get('InvoiceNumber').hasError('maxlength'))">
-                        Please enter 16 digit value
+                        *ngIf="ReturnFormGroup.get('Status').touched && ReturnFormGroup.get('Status').hasError('required')">
+                        Status is required
                       </mat-error>
                     </mat-form-field>
                   </div>
-                  <div fxFlex="33">
-                    <mat-form-field class="pl-8 pr-12" style="width: 100%;">
-                      <input matInput placeholder="Invoice Date" [matDatepicker]="picker3" formControlName="InvoiceDate"
-                        [max]="maxDate">
-                      <mat-datepicker-toggle matSuffix [for]="picker3">
-                        <mat-icon matDatepickerToggleIcon svgIcon="calendarIcon" class="mb-12"></mat-icon>
-                      </mat-datepicker-toggle>
-                      <mat-datepicker #picker3></mat-datepicker>
-                      <mat-error
-                        *ngIf="InvoiceDetailsFormGroup.get('InvoiceDate').touched && InvoiceDetailsFormGroup.get('InvoiceDate').hasError('required')">
-                        Invoice Date is required
-                      </mat-error>
-                    </mat-form-field>
-                  </div>
-                  <div fxFlex="33">
-                    <div fxLayout="row" fxLayoutAlign="start">
-                      <div fxFlex='70'>
-                        <mat-form-field class="pl-8 pr-12" style="width: 100%;">
-                          <input matInput placeholder="Invoice Value" formControlName="InvoiceAmount"
-                            (keydown)="decimalOnly($event)">
-                          <mat-error
-                            *ngIf="InvoiceDetailsFormGroup.get('InvoiceAmount').touched && InvoiceDetailsFormGroup.get('InvoiceAmount').hasError('required')">
-                            Invoice Value is required
-                          </mat-error>
-                          <mat-error *ngIf="InvoiceDetailsFormGroup.get('InvoiceAmount').touched && !InvoiceDetailsFormGroup.get('InvoiceAmount').hasError('required')
-                &&InvoiceDetailsFormGroup.get('InvoiceAmount').hasError('pattern')">
-                            Enter a valid amount
-                          </mat-error>
-                        </mat-form-field>
-                      </div>
-                      <div fxFlex='30'>
-                        <mat-form-field class="pl-8 pr-12" style="width: 100%;">
-                          <mat-select (selectionChange)="invoiceValueUnitSelected($event)"
-                            formControlName="InvoiceAmountUOM">
-                            <!-- <mat-option value="USD">USD</mat-option>
-                            <mat-option value="RS">RS</mat-option>
-                            <mat-option value="EUROS">EUROS</mat-option> -->
-                            <mat-option *ngFor="let count of AllCurrencies" [value]="count.CurrencyCode">
-                              {{count.CurrencyCode}}
-                            </mat-option>
-                          </mat-select>
-                          <mat-error
-                            *ngIf="InvoiceDetailsFormGroup.get('InvoiceAmountUOM').touched && InvoiceDetailsFormGroup.get('InvoiceAmountUOM').hasError('required')">
-                            UOM is required
-                          </mat-error>
-                        </mat-form-field>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div fxLayout="row" fxLayoutAlign="start">
-                  <img class="addBlueIcon" src="assets/images/addBlue.png" (click)="fileInput2.click()">
-                  <span class="attachClass" (click)="fileInput2.click()">
-                    Add Attachment
-                  </span>
-                  <input hidden type="file" #fileInput2 id="file" (change)="handleFileInput1($event)"
-                    accept="image/x-png,image/gif,image/jpeg,image/jpg,application/pdf" />
-                </div>
-                <div fxFlex="40">
-                  <div fxFlex *ngIf="!invAttach?.AttachmentName"
-                    (click)="GetInvoiceAttachment(invoiceAttachment?.name,invoiceAttachment)" class="pdfLinkClass pl-8">
-                    {{invoiceAttachment?.name}}</div>
-                  <div fxFlex *ngIf="invAttach?.AttachmentName"
-                    (click)="GetInvoiceAttachment(invAttach?.AttachmentName)" class="pdfLinkClass pl-8">
-                    {{invAttach?.AttachmentName}}
-                  </div>
-                  <!-- <div fxLayout class="Rectangle"
-                    (click)="GetInvoiceAttachment(invoiceAttachment?.name,invoiceAttachment)">
-                    <div class="Rectangle-106 m-8">
-                      <img class="m-8" src="assets/images/imageIcon.png">
-                    </div>
-                    <div fxFlex class="m-8" fxLayout="column">
-                      <div fxFlex>{{invoiceAttachment?.name}}</div>
-                      <div fxFlex *ngIf="invAttach?.AttachmentName">{{invoiceAttachment?.name}}</div>
-                      <div fxFlex *ngIf="invoiceAttachment?.size">{{math.round(invoiceAttachment.size / 1024) + ' KB'}}
-                        <div fxFlex *ngIf="invAttach?.ContentLength">
-                          {{math.round(invAttach.ContentLength / 1024) + ' KB'}}
-                        </div>
-                      </div>
-                    </div>
-                  </div> -->
                 </div>
               </form>
             </div>
-            <div fxFlex fxLayout="column" fxLayoutGap="20px" class="px-12 mt-20">
-              <div fxFlex>
-                <span class="Shipment-Proposal">Document Centre</span>
+            <div fxFlex class="borderleft mb-40 pt-40" [class.pt-60]="SelectedReturnHeader?.RetReqID">
+              <div fxLayout class="mx-40">
+                <div fxFlex="30">SO</div>
+                <div fxFlex="30">Shipped</div>
+                <div fxFlex="30">Invoiced</div>
+                <div fxFlex="10">Receipt</div>
               </div>
-              <div>
-                <form autocomplete="off" class="normal" fxLayout="row" fxLayoutAlign="start" fxLayoutGap="20px"
-                  fxFlex="1 0 auto" name="form" novalidate [formGroup]="DocumentCenterFormGroup">
-                  <div fxFlex="30">
-                    <mat-form-field class="pl-8 pr-12" style="width: 100%;">
-                      <!-- <input matInput placeholder="Document Type" formControlName="DocumentType"> -->
-                      <mat-select (selectionChange)="DocumentTypeSelected($event)" placeholder="Document Type"
-                        formControlName="DocumentType">
-                        <mat-option *ngFor="let count of AllDocumentCenterMaster" [value]="count.DocumentType">
-                          {{count.DocumentType}}
-                        </mat-option>
-                      </mat-select>
-                      <mat-error
-                        *ngIf="DocumentCenterFormGroup.get('DocumentType').touched && DocumentCenterFormGroup.get('DocumentType').hasError('required')">
-                        Document Type is required
-                      </mat-error>
-                    </mat-form-field>
+              <div fxLayout class="mx-40 my-8">
+                <div fxFlex="30" fxLayout>
+                  <div class="round" [style.border-color]="SelectedReturnHeader.Status==='Open'?'#efb577':'#34ad65'">
                   </div>
-                  <div fxFlex="30">
-                    <mat-form-field class="pl-8 pr-12" style="width: 100%;">
-                      <input matInput placeholder="Document Title" formControlName="DocumentTitle">
-                      <mat-error
-                        *ngIf="DocumentCenterFormGroup.get('DocumentTitle').touched && DocumentCenterFormGroup.get('DocumentTitle').hasError('required')">
-                        Document Title is required
-                      </mat-error>
-                    </mat-form-field>
+                  <div style="width: 10px;margin-left: -1px !important"
+                    [class]="SelectedReturnHeader.Status==='Open'?'orange-timeline':'green-timeline'"></div>
+                  <div [class]="SelectedReturnHeader.Status==='Open'?'white-timeline':'green-timeline'" fxFlex>
                   </div>
-                  <div fxFlex="30" fxLayoutAlign="start center" class="mt-16">
-                    <!-- <mat-form-field class="pl-8 pr-12" style="width: 100%;">
-                      <input matInput placeholder="Filename" formControlName="Filename">
-                      <mat-error
-                        *ngIf="DocumentCenterFormGroup.get('Filename').touched && DocumentCenterFormGroup.get('Filename').hasError('required')">
-                        Filename is required
-                      </mat-error>
-                    </mat-form-field> -->
-                    <img class="addBlueIcon" src="assets/images/addBlue.png"
-                      (click)="DocumentCenterFormGroup.get('DocumentType').value && fileInput1.click()">
-                    <span class="attachClass"
-                      (click)="DocumentCenterFormGroup.get('DocumentType').value && fileInput1.click()">
-                      Add Attachment
-                    </span>
-                    <input hidden type="file" #fileInput1 (change)="handleFileInput($event)"
-                      accept="image/x-png,image/gif,image/jpeg,image/jpg,application/pdf" />
-                  </div>
-                  <div fxFlex="10" fxLayoutAlign="start center">
-                    <!-- <img class="addIcon" src="assets/images/logos/add-button.png" (click)="AddDocumentCenterToTable()"> -->
-                    <button class="SaveBtn" mat-raised-button (click)="AddDocumentCenterToTable()">Add</button>
-                  </div>
-                </form>
+                </div>
+                <div fxFlex="30" fxLayout>
+                  <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline('Shipped')"></div>
+                  <div class="round" [style.border-color]="getStatusColor('Shipped')"></div>
+                  <div style="width: 10px; margin-left: -1px !important" [class]="getTimeline('Shipped')"></div>
+                  <div [class]="getRestTimeline('Shipped')" fxFlex></div>
+                </div>
+                <div fxFlex="30" fxLayout>
+                  <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline('Invoiced')"></div>
+                  <div class="round" [style.border-color]="getStatusColor('Invoiced')"></div>
+                  <div style="width: 10px;margin-left: -1px !important" [class]="getTimeline('Invoiced')"></div>
+                  <div [class]="getRestTimeline('Invoiced')" fxFlex></div>
+                </div>
+                <div fxFlex="10" fxLayout>
+                  <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline('Receipt')"></div>
+                  <div class="round" [style.border-color]="getStatusColor('Receipt')"></div>
+                </div>
+              </div>
+              <div fxLayout class="mx-40">
+                <div fxFlex="30"> {{getStatusDate('SO')}} </div>
+                <div fxFlex="30"> {{getStatusDate('Shipped')}}</div>
+                <div fxFlex="30"> {{getStatusDate('Invoiced')}}</div>
+                <div fxFlex="10"> {{getStatusDate('Receipt')}}</div>
               </div>
             </div>
-            <div fxLayout *ngIf="DocumentCenterFormGroup.get('Filename')?.value"
-              style="margin-top: -12px;padding-left: 8px;">
-              <div fxFlex="60"></div>
-              <div fxFlex="40">
-                {{DocumentCenterFormGroup.get('Filename')?.value}}
-              </div>
+          </div>
+
+          <div class="px-12 mt-20">
+            <div>
+              <span class="Shipment-Proposal">Item</span>
             </div>
-            <div fxLayout
-              *ngIf="DocumentCenterFormGroup.get('Filename').touched && DocumentCenterFormGroup.get('Filename').hasError('required')"
-              style="margin-top: -12px;padding-left: 8px;">
-              <div fxFlex="60"></div>
-              <div fxFlex="40">
-                <span class="AttError">Please add an attachment</span>
-              </div>
+            <div>
+              <form autocomplete="off" class="normal" fxLayout="row" fxLayoutAlign="start" name="form" novalidate
+                [formGroup]="ReturnItemFormGroup">
+                <div fxFlex="20">
+                  <mat-form-field class="px-12" style="width: 100%;">
+                    <input matInput placeholder="Item" formControlName="Item">
+                    <mat-error
+                      *ngIf="ReturnItemFormGroup.get('Item').touched && ReturnItemFormGroup.get('Item').hasError('required')">
+                      Item is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="20">
+                  <mat-form-field class="px-12" style="width: 100%;">
+                    <mat-select (selectionChange)="ProductSelected($event)" placeholder="Prodcut ID"
+                      formControlName="ProdcutID">
+                      <mat-option *ngFor="let count of AllProducts" [value]="count.ProductID">
+                        {{count.ProductID}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="ReturnItemFormGroup.get('ProdcutID').touched && ReturnItemFormGroup.get('ProdcutID').hasError('required')">
+                      Prodcut ID is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="15">
+                  <mat-form-field class="px-12" style="width: 100%;">
+                    <input matInput placeholder="Order Qty" formControlName="OrderQty" (keyup)="QtySelected()">
+                    <mat-error
+                      *ngIf="ReturnItemFormGroup.get('OrderQty').touched && ReturnItemFormGroup.get('OrderQty').hasError('required')">
+                      Order Qty is required
+                    </mat-error>
+                    <mat-error *ngIf="ReturnItemFormGroup.get('OrderQty').touched && !ReturnItemFormGroup.get('OrderQty').hasError('required')
+                    &&ReturnItemFormGroup.get('OrderQty').hasError('pattern')">
+                      Enter valid Quantity
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="15">
+                  <mat-form-field class="px-12" style="width: 100%;">
+                    <input matInput placeholder="RetQty" formControlName="RetQty" (keyup)="QtySelected()">
+                    <mat-error
+                      *ngIf="ReturnItemFormGroup.get('RetQty').touched && ReturnItemFormGroup.get('RetQty').hasError('required')">
+                      RetQty is required
+                    </mat-error>
+                  </mat-form-field>
+                  <div *ngIf="isQtyError" class="WeightError">
+                    Return Qty should not greater than Order Qty
+                  </div>
+                </div>
+                <div fxFlex="20">
+                  <mat-form-field class="px-12" style="width: 100%;">
+                    <input matInput placeholder="ReasonText" formControlName="ReasonText">
+                    <mat-error
+                      *ngIf="ReturnItemFormGroup.get('ReasonText').touched && ReturnItemFormGroup.get('ReasonText').hasError('required')">
+                      ReasonText is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="10" fxLayoutAlign="center start">
+                  <img class="addIcon" src="assets/images/logos/add-button.png" (click)="AddReturnItemToTable()">
+                  <!-- <button class="SaveBtn" mat-raised-button (click)="AddDocumentCenterToTable()">Add</button> -->
+                </div>
+              </form>
             </div>
-            <div fxFlex fxLayout="column" class="table mx-20 my-12">
-              <table *ngIf="AllDocumentCenters?.length" mat-table [dataSource]="DocumentCenterDataSource" matSort>
-                <ng-container matColumnDef="DocumentType">
-                  <th mat-header-cell *matHeaderCellDef style="width: 30%;"> Document Type </th>
-                  <td mat-cell style="width: 30%;" *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
-                    <div fxLayout>
-                      <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
-                      <div fxFlex class="pl-4">{{element.DocumentType}} </div>
-                    </div>
-                  </td>
-                </ng-container>
+          </div>
 
-                <ng-container matColumnDef="DocumentTitle">
-                  <th mat-header-cell *matHeaderCellDef style="width: 30%;"> Document Title </th>
-                  <td mat-cell style="width: 30%;" *matCellDef="let element">
-                    {{element.DocumentTitle}} </td>
-                </ng-container>
+          <div fxFlex fxLayout="column" class="table mx-20 my-12">
+            <table *ngIf="AllReturnItems?.length" mat-table [dataSource]="ReturnItemDataSource" matSort>
+              <ng-container matColumnDef="Item">
+                <th mat-header-cell *matHeaderCellDef style="width: 20%;"> Item </th>
+                <td mat-cell style="width: 20%;" *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
+                  <div fxLayout>
+                    <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
+                    <div fxFlex class="pl-4">{{element.Item}} </div>
+                  </div>
+                </td>
+              </ng-container>
 
-                <ng-container matColumnDef="Filename">
-                  <th mat-header-cell *matHeaderCellDef style="width: 32%;"> Filename </th>
-                  <td mat-cell style="width: 32%;" *matCellDef="let element">
-                    <span class="pdfLinkClass" (click)="GetDocumentCenterAttachment(element.Filename)">
-                      {{element.Filename}}
-                    </span>
-                  </td>
-                </ng-container>
+              <ng-container matColumnDef="ProdcutID">
+                <th mat-header-cell *matHeaderCellDef style="width: 20%;"> Material </th>
+                <td mat-cell style="width: 20%;" *matCellDef="let element">
+                  {{element.ProdcutID}} </td>
+              </ng-container>
 
-                <ng-container matColumnDef="Action">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 8%"> </th>
-                  <td mat-cell *matCellDef="let element" style="text-align: right;width: 8%">
-                    <img class="removeIcon" src="assets/images/remove-button.png"
-                      (click)="RemoveDocumentCenterFromTable(element)">
-                  </td>
-                </ng-container>
 
-                <tr mat-header-row *matHeaderRowDef="DocumentCenterDisplayedColumns;sticky: true"></tr>
-                <tr mat-row *matRowDef="let row; columns: DocumentCenterDisplayedColumns;let even=even">
-                </tr>
-              </table>
-              <!-- <div flex *ngIf="AllDocumentCenters?.length">
+              <ng-container matColumnDef="OrderQty">
+                <th mat-header-cell *matHeaderCellDef style="width: 15%;"> Order Qty </th>
+                <td mat-cell style="width: 15%;" *matCellDef="let element">
+                  {{element.OrderQty}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="RetQty">
+                <th mat-header-cell *matHeaderCellDef style="width: 15%;"> RetQty </th>
+                <td mat-cell style="width: 15%;" *matCellDef="let element">
+                  {{element.RetQty}} </td>
+              </ng-container>
+
+              <!-- <ng-container matColumnDef="DeliveryDate">
+                <th mat-header-cell *matHeaderCellDef style="width: 15%;"> Delivery Date </th>
+                <td mat-cell style="width: 15%;" *matCellDef="let element">
+                  {{element.DeliveryDate | date :'dd/MM/yyyy'}} </td>
+              </ng-container> -->
+
+              <ng-container matColumnDef="ReasonText">
+                <th mat-header-cell *matHeaderCellDef style="width: 20%;"> ReasonText </th>
+                <td mat-cell style="width: 20%;" *matCellDef="let element">
+                  {{element.ReasonText}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Action">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%"> </th>
+                <td mat-cell *matCellDef="let element" style="text-align: center;width: 10%">
+                  <img class="removeIcon" src="assets/images/remove-button.png"
+                    (click)="RemoveReturnItemFromTable(element)">
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="ReturnItemDisplayedColumns;sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: ReturnItemDisplayedColumns;let even=even">
+              </tr>
+            </table>
+            <!-- <div flex *ngIf="AllDocumentCenters?.length">
                 <mat-paginator [pageSizeOptions]="[10, 20, 30, 50, 75, 100]" showFirstLastButtons>
                 </mat-paginator>
               </div> -->
-            </div>
           </div>
         </div>
         <!-- <div fxLayout id="footerCard">
@@ -518,13 +290,16 @@
           </div>
         </div> -->
         <mat-card-actions class="m-0 pl-12 pr-16 cardActions">
-          <div fxLayout fxFlex fxLayoutAlign="end">
-            <button *ngIf="SelectedPurchaseIndentHeader?.PurchaseIndentNumber" mat-stroked-button class="DeleteBtn mr-4 mb-4"
-              (click)="DeleteClicked()">Delete</button>
-            <button *ngIf="( SelectedPurchaseIndentHeader?.PurchaseIndentNumber|| PO?.DocNumber) && !SelectedPurchaseIndentHeader?.IsSubmitted"
-              mat-raised-button class="SaveBtn mb-4" (click)="SaveClicked()">Save</button>
-            <button *ngIf="( SelectedPurchaseIndentHeader?.PurchaseIndentNumber|| PO?.DocNumber)" mat-raised-button class="SaveBtn mb-4"
-              (click)="SubmitClicked()">Submit</button>
+          <div fxLayout fxLayoutAlign="space-between center">
+            <div fxFlex>
+              <button *ngIf="SelectedReturnHeader?.RetReqID" mat-stroked-button class="DeleteBtn mr-4 mb-4"
+                (click)="DeleteClicked()">Delete</button>
+            </div>
+            <div fxFlex align="end">
+              <button mat-stroked-button class="SaveBtn mb-4" (click)="SaveClicked()">Save
+              </button>
+              <button mat-raised-button class="SubmitBtn mb-4" (click)="SubmitClicked()">Submit</button>
+            </div>
           </div>
         </mat-card-actions>
       </mat-card>

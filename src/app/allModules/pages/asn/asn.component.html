@@ -191,7 +191,7 @@
                           </mat-error>
                         </mat-form-field>
                         <div *ngIf="isWeightError" class="WeightError">
-                          Gross Weight should be greater than NetWeight
+                          Gross Weight should not less than NetWeight
                         </div>
                       </div>
                       <div fxFlex='40'>
@@ -203,7 +203,7 @@
                           </mat-select>
                           <mat-error
                             *ngIf="ASNFormGroup.get('GrossWeightUOM').touched && ASNFormGroup.get('GrossWeightUOM').hasError('required')">
-                            Mode Of Transport is required
+                            UOM is required
                           </mat-error>
                         </mat-form-field>
                       </div>
@@ -723,9 +723,14 @@
                         Please enter valid Invoice Number
                       </mat-error>
                       <mat-error
+                      *ngIf="InvoiceDetailsFormGroup.get('InvoiceNumber').touched && !InvoiceDetailsFormGroup.get('InvoiceNumber').hasError('required')
+                    &&(InvoiceDetailsFormGroup.get('InvoiceNumber').hasError('minlength'))">
+                    Minimum allowed character is 10
+                    </mat-error>
+                      <mat-error
                         *ngIf="InvoiceDetailsFormGroup.get('InvoiceNumber').touched && !InvoiceDetailsFormGroup.get('InvoiceNumber').hasError('required')
-                      &&(InvoiceDetailsFormGroup.get('InvoiceNumber').hasError('minlength')||InvoiceDetailsFormGroup.get('InvoiceNumber').hasError('maxlength'))">
-                        Please enter 16 digit value
+                      &&(InvoiceDetailsFormGroup.get('InvoiceNumber').hasError('maxlength'))">
+                        Maximum allowed character is 16
                       </mat-error>
                     </mat-form-field>
                   </div>

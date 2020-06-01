@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AuthenticationDetails, UserWithRole } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
-import { BPCRetHeader, BPCRetView, BPCPIItem } from 'app/models/customer';
+
 import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { BPCOFHeader, BPCOFItem } from 'app/models/OrderFulFilment';
 import { BehaviorSubject } from 'rxjs';
@@ -21,6 +21,7 @@ import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notific
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { AttachmentDetails } from 'app/models/task';
 import { AttachmentDialogComponent } from 'app/allModules/pages/attachment-dialog/attachment-dialog.component';
+import { BPCRetHeader, BPCRetView, BPCRetItem, BPCProd } from 'app/models/customer';
 
 @Component({
   selector: 'app-return',
@@ -42,29 +43,24 @@ export class ReturnComponent implements OnInit {
   InvoiceDetailsFormGroup: FormGroup;
   DocumentCenterFormGroup: FormGroup;
   AllUserWithRoles: UserWithRole[] = [];
-  SelectedDocNumber: string;
+  SelectedRetReqID: string;
   PO: BPCOFHeader;
   POItems: BPCOFItem[] = [];
   SelectedReturnHeader: BPCRetHeader;
   SelectedReturnNumber: string;
   SelectedReturnView: BPCRetView;
-  ReturnItems: BPCPIItem[] = [];
+  AllReturnItems: BPCRetItem[] = [];
   ReturnItemDisplayedColumns: string[] = [
     'Item',
-    'Material',
-    'MaterialText',
-    'DeliveryDate',
-    'OrderedQty',
-    'GRQty',
-    'PipelineQty',
-    'OpenQty',
-    'ReturnQty',
-    'Batch',
-    'ManufactureDate',
-    'ExpiryDate'
+    'ProdcutID',
+    // 'MaterialText',
+    'OrderQty',
+    'RetQty',
+    // 'DeliveryDate',
+    'ReasonText',
+    'Action'
   ];
-  ReturnItemFormArray: FormArray = this._formBuilder.array([]);
-  ReturnItemDataSource = new BehaviorSubject<AbstractControl[]>([]);
+  ReturnItemDataSource: MatTableDataSource<BPCRetItem>;
   @ViewChild(MatPaginator) ReturnItemPaginator: MatPaginator;
   @ViewChild(MatSort) ReturnItemSort: MatSort;
   invoiceAttachment: File;
@@ -74,24 +70,14 @@ export class ReturnComponent implements OnInit {
   math = Math;
   minDate: Date;
   maxDate: Date;
-  AllDocumentCenters: DocumentCenter[] = [];
-  DocumentCenterDisplayedColumns: string[] = [
-    'DocumentType',
-    'DocumentTitle',
-    'Filename',
-    'Action'
-  ];
-  DocumentCenterDataSource: MatTableDataSource<DocumentCenter>;
-  @ViewChild(MatPaginator) DocumentCenterPaginator: MatPaginator;
-  @ViewChild(MatSort) DocumentCenterSort: MatSort;
 
   selection = new SelectionModel<any>(true, []);
   searchText = '';
 
   AllCountries: BPCCountryMaster[] = [];
   AllCurrencies: BPCCurrencyMaster[] = [];
-  AllDocumentCenterMaster: BPCDocumentCenterMaster[] = [];
-  isWeightError: boolean;
+  AllProducts: BPCProd[] = [];
+  isQtyError: boolean;
   @ViewChild('fileInput1') fileInput: ElementRef<HTMLElement>;
   selectedDocCenterMaster: BPCDocumentCenterMaster;
   ArrivalDateInterval: number;
@@ -115,13 +101,14 @@ export class ReturnComponent implements OnInit {
     this.IsProgressBarVisibile = false;
     this.PO = new BPCOFHeader();
     this.SelectedReturnHeader = new BPCRetHeader();
+    this.SelectedReturnHeader.Status = 'Open';
     this.SelectedReturnView = new BPCRetView();
     this.SelectedReturnNumber = '';
     this.invAttach = new BPCInvoiceAttachment();
     this.minDate = new Date();
     this.minDate.setDate(this.minDate.getDate() + 1);
     this.maxDate = new Date();
-    this.isWeightError = false;
+    this.isQtyError = false;
     this.selectedDocCenterMaster = new BPCDocumentCenterMaster();
     this.ArrivalDateInterval = 1;
   }
@@ -135,92 +122,75 @@ export class ReturnComponent implements OnInit {
       this.currentUserName = this.authenticationDetails.UserName;
       this.currentUserRole = this.authenticationDetails.UserRole;
       this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
-      // if (this.MenuItems.indexOf('Return') < 0) {
-      //     this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
-      //     );
-      //     this._router.navigate(['/auth/login']);
-      // }
-
+      if (this.MenuItems.indexOf('Return') < 0) {
+        this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
+        );
+        this._router.navigate(['/auth/login']);
+      }
     } else {
       this._router.navigate(['/auth/login']);
     }
     this._route.queryParams.subscribe(params => {
-      this.SelectedDocNumber = params['id'];
+      this.SelectedRetReqID = params['id'];
     });
     this.InitializeReturnFormGroup();
     this.InitializeReturnItemFormGroup();
-    this.InitializeInvoiceDetailsFormGroup();
-    this.InitializeDocumentCenterFormGroup();
     this.GetAllBPCCountryMasters();
     this.GetAllBPCCurrencyMasters();
-    this.GetAllDocumentCenterMaster();
-    // this.GetReturnBasedOnCondition();
+    this.GetAllProducts();
+    this.GetReturnBasedOnCondition();
   }
 
   InitializeReturnFormGroup(): void {
     this.ReturnFormGroup = this._formBuilder.group({
-      Text: ['', Validators.required],
+      RetReqID: [''],
       Date: [new Date(), Validators.required],
       InvoiceDoc: ['', Validators.required],
-      // NetAmount: ['', [Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
-      // GrossAmount: ['', [Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
+      Text: ['', Validators.required],
+      Status: [''],
     });
   }
   // SetInitialValueForReturnFormGroup(): void {
   //     this.ReturnFormGroup.get('Date').patchValue('Road');
   //     this.ReturnFormGroup.get('AWBDate').patchValue(new Date());
-  //     this.ReturnFormGroup.get('NetWeightUOM').patchValue('KG');
-  //     this.ReturnFormGroup.get('GrossWeightUOM').patchValue('KG');
+  //     this.ReturnFormGroup.get('NetAmountReasonText').patchValue('KG');
+  //     this.ReturnFormGroup.get('GrossAmountReasonText').patchValue('KG');
   //     this.ReturnFormGroup.get('DepartureDate').patchValue(new Date());
   //     this.ReturnFormGroup.get('ArrivalDate').patchValue(this.minDate);
   //     this.ReturnFormGroup.get('CountryOfOrigin').patchValue('IND');
   // }
   InitializeReturnItemFormGroup(): void {
     this.ReturnItemFormGroup = this._formBuilder.group({
-      ReturnItems: this.ReturnItemFormArray
-    });
-  }
-  InitializeInvoiceDetailsFormGroup(): void {
-    this.InvoiceDetailsFormGroup = this._formBuilder.group({
-      InvoiceNumber: ['', [Validators.minLength(16), Validators.maxLength(16), Validators.pattern('^[1-9][0-9]*$')]],
-      InvoiceAmount: ['', [Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,2})?$')]],
-      InvoiceAmountUOM: [''],
-      InvoiceDate: [''],
-      InvoiceAttachment: [''],
-    });
-  }
-
-  InitializeDocumentCenterFormGroup(): void {
-    this.DocumentCenterFormGroup = this._formBuilder.group({
-      DocumentType: ['', Validators.required],
-      DocumentTitle: ['', Validators.required],
-      Filename: [''],
+      Item: ['', Validators.required],
+      ProdcutID: ['', Validators.required],
+      MaterialText: [''],
+      RetQty: ['', [Validators.required, Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,2})?$')]],
+      OrderQty: ['', [Validators.required, Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,2})?$')]],
+      // DeliveryDate: ['', Validators.required],
+      ReasonText: [''],
     });
   }
 
   ResetControl(): void {
     this.SelectedReturnHeader = new BPCRetHeader();
+    this.SelectedReturnHeader.Status = 'Open';
     this.SelectedReturnView = new BPCRetView();
     this.SelectedReturnNumber = '';
     this.ResetReturnFormGroup();
     // this.SetInitialValueForReturnFormGroup();
-    this.ResetInvoiceDetailsFormGroup();
-    this.ResetDocumentCenterFormGroup();
+    this.ResetReturnItemFormGroup();
     this.ResetAttachments();
-    this.AllDocumentCenters = [];
-    this.DocumentCenterDataSource = new MatTableDataSource(this.AllDocumentCenters);
-    this.isWeightError = false;
+    this.AllReturnItems = [];
+    this.ReturnItemDataSource = new MatTableDataSource(this.AllReturnItems);
+    this.isQtyError = false;
     this.selectedDocCenterMaster = new BPCDocumentCenterMaster();
   }
 
   ResetReturnFormGroup(): void {
     this.ResetFormGroup(this.ReturnFormGroup);
   }
-  ResetInvoiceDetailsFormGroup(): void {
-    this.ResetFormGroup(this.InvoiceDetailsFormGroup);
-  }
-  ResetDocumentCenterFormGroup(): void {
-    this.ResetFormGroup(this.DocumentCenterFormGroup);
+  ResetReturnItemFormGroup(): void {
+    this.ResetFormGroup(this.ReturnItemFormGroup);
   }
 
   ResetFormGroup(formGroup: FormGroup): void {
@@ -242,16 +212,11 @@ export class ReturnComponent implements OnInit {
     this.invoiceAttachment = null;
   }
 
-  // GetReturnBasedOnCondition(): void {
-  //   if (this.SelectedDocNumber) {
-  //     this.GetReturnByDocAndPartnerID();
-  //     this.GetPOByDocAndPartnerID(this.SelectedDocNumber);
-  //     this.GetPOItemsByDocAndPartnerID();
-  //     this.GetArrivalDateIntervalByPOAndPartnerID();
-  //   } else {
-  //     this.GetAllReturnByPartnerID();
-  //   }
-  // }
+  GetReturnBasedOnCondition(): void {
+    if (this.SelectedRetReqID) {
+      this.GetReturnByRetAndPartnerID();
+    }
+  }
 
   DateSelected(event): void {
     const selectedType = event.value;
@@ -314,15 +279,11 @@ export class ReturnComponent implements OnInit {
     }
   }
 
-  DocumentTypeSelected(event): void {
+  ProductSelected(event): void {
     if (event.value) {
-      this.selectedDocCenterMaster = this.AllDocumentCenterMaster.filter(x => x.DocumentType === event.value)[0];
-      if (this.selectedDocCenterMaster) {
-        if (this.selectedDocCenterMaster.Mandatory) {
-          this.AddDocumentCenterFileValidator();
-        } else {
-          this.RemoveDocumentCenterFileValidator();
-        }
+      const selectedProd = this.AllProducts.filter(x => x.ProductID === event.value)[0];
+      if (selectedProd) {
+        this.ReturnItemFormGroup.get('MaterialText').patchValue(selectedProd.Text);
       }
     }
   }
@@ -336,66 +297,40 @@ export class ReturnComponent implements OnInit {
     this.DocumentCenterFormGroup.get('Filename').updateValueAndValidity();
   }
 
-  // AddDocCenterAttClicked(): void {
-  //     const DocumentTypeVal = this.DocumentCenterFormGroup.get('DocumentType').value;
-  //     if (DocumentTypeVal) {
-  //         // const el: HTMLElement = this.fileInput.nativeElement;
-  //         // el.click();
-  //         const event = new MouseEvent('click', {bubbles: false});
-  //         this.fileInput.nativeElement.dispatchEvent(event);
-  //     } else {
-  //         this.notificationSnackBarComponent.openSnackBar('Please selected Document type', SnackBarStatus.danger);
-  //     }
-  // }
-
-  AddDocumentCenterToTable(): void {
-    if (this.DocumentCenterFormGroup.valid) {
-      const documentCenter = new DocumentCenter();
-      documentCenter.DocumentType = this.DocumentCenterFormGroup.get('DocumentType').value;
-      documentCenter.DocumentTitle = this.DocumentCenterFormGroup.get('DocumentTitle').value;
-      if (this.fileToUpload) {
-        documentCenter.Filename = this.fileToUpload.name;
-        this.fileToUploadList.push(this.fileToUpload);
-        this.fileToUpload = null;
+  AddReturnItemToTable(): void {
+    if (this.ReturnItemFormGroup.valid) {
+      const PIItem = new BPCRetItem();
+      PIItem.Item = this.ReturnItemFormGroup.get('Item').value;
+      PIItem.ProdcutID = this.ReturnItemFormGroup.get('ProdcutID').value;
+      PIItem.MaterialText = this.ReturnItemFormGroup.get('MaterialText').value;
+      PIItem.RetQty = this.ReturnItemFormGroup.get('RetQty').value;
+      PIItem.OrderQty = this.ReturnItemFormGroup.get('OrderQty').value;
+      // PIItem.DeliveryDate = this.ReturnItemFormGroup.get('DeliveryDate').value;
+      PIItem.ReasonText = this.ReturnItemFormGroup.get('ReasonText').value;
+      if (!this.AllReturnItems || !this.AllReturnItems.length) {
+        this.AllReturnItems = [];
       }
-      if (!this.AllDocumentCenters || !this.AllDocumentCenters.length) {
-        this.AllDocumentCenters = [];
-      }
-      this.AllDocumentCenters.push(documentCenter);
-      this.DocumentCenterDataSource = new MatTableDataSource(this.AllDocumentCenters);
-      this.ResetDocumentCenterFormGroup();
+      this.AllReturnItems.push(PIItem);
+      this.ReturnItemDataSource = new MatTableDataSource(this.AllReturnItems);
+      this.ResetReturnItemFormGroup();
       this.selectedDocCenterMaster = new BPCDocumentCenterMaster();
     } else {
       this.ShowValidationErrors(this.DocumentCenterFormGroup);
     }
   }
 
-  RemoveDocumentCenterFromTable(doc: DocumentCenter): void {
-    const index: number = this.AllDocumentCenters.indexOf(doc);
+  RemoveReturnItemFromTable(doc: BPCRetItem): void {
+    const index: number = this.AllReturnItems.indexOf(doc);
     if (index > -1) {
-      this.AllDocumentCenters.splice(index, 1);
-      const indexx = this.fileToUploadList.findIndex(x => x.name === doc.Filename);
-      if (indexx > -1) {
-        this.fileToUploadList.splice(indexx, 1);
-      }
+      this.AllReturnItems.splice(index, 1);
     }
-    this.DocumentCenterDataSource = new MatTableDataSource(this.AllDocumentCenters);
+    this.ReturnItemDataSource = new MatTableDataSource(this.AllReturnItems);
   }
 
   GetAllBPCCountryMasters(): void {
     this._ASNService.GetAllBPCCountryMasters().subscribe(
       (data) => {
         this.AllCountries = data as BPCCountryMaster[];
-      },
-      (err) => {
-        console.error(err);
-      }
-    );
-  }
-  GetAllDocumentCenterMaster(): void {
-    this._ASNService.GetAllDocumentCenterMaster().subscribe(
-      (data) => {
-        this.AllDocumentCenterMaster = data as BPCDocumentCenterMaster[];
       },
       (err) => {
         console.error(err);
@@ -414,13 +349,10 @@ export class ReturnComponent implements OnInit {
     );
   }
 
-  GetAllReturnByPartnerID(): void {
-    this._CustomerService.GetAllReturnsByPartnerID(this.currentUserName).subscribe(
+  GetAllProducts(): void {
+    this._CustomerService.GetAllProducts().subscribe(
       (data) => {
-        this.AllReturnHeaders = data as BPCRetHeader[];
-        if (this.AllReturnHeaders && this.AllReturnHeaders.length) {
-          this.LoadSelectedReturn(this.AllReturnHeaders[0]);
-        }
+        this.AllProducts = data as BPCProd[];
       },
       (err) => {
         console.error(err);
@@ -428,22 +360,26 @@ export class ReturnComponent implements OnInit {
     );
   }
 
-  // GetReturnByDocAndPartnerID(): void {
-  //   this._CustomerService.GetReturnByDocAndPartnerID(this.SelectedDocNumber, this.currentUserName).subscribe(
-  //     (data) => {
-  //       this.AllReturnHeaders = data as BPCRetHeader[];
-  //     },
-  //     (err) => {
-  //       console.error(err);
-  //     }
-  //   );
+  // GetAllReturnByPartnerID(): void {
+  //     this._CustomerService.GetAllReturnByPartnerID(this.currentUserName).subscribe(
+  //         (data) => {
+  //             this.AllReturnHeaders = data as BPCRetHeader[];
+  //             if (this.AllReturnHeaders && this.AllReturnHeaders.length) {
+  //                 this.LoadSelectedReturn(this.AllReturnHeaders[0]);
+  //             }
+  //         },
+  //         (err) => {
+  //             console.error(err);
+  //         }
+  //     );
   // }
-  GetPOByDocAndPartnerID(selectedDocNumber: string): void {
-    this._POService.GetPOByDocAndPartnerID(selectedDocNumber, this.currentUserName).subscribe(
+
+  GetReturnByRetAndPartnerID(): void {
+    this._CustomerService.GetReturnByRetAndPartnerID(this.SelectedRetReqID, this.currentUserName).subscribe(
       (data) => {
-        this.PO = data as BPCOFHeader;
-        if (this.SelectedDocNumber) {
-          this.InvoiceDetailsFormGroup.get('InvoiceAmountUOM').patchValue(this.PO.Currency);
+        this.SelectedReturnHeader = data as BPCRetHeader;
+        if (this.SelectedReturnHeader) {
+          this.LoadSelectedReturn(this.SelectedReturnHeader);
         }
       },
       (err) => {
@@ -451,152 +387,40 @@ export class ReturnComponent implements OnInit {
       }
     );
   }
-
-  GetPOItemsByDocAndPartnerID(): void {
-    this._POService.GetPOItemsByDocAndPartnerID(this.SelectedDocNumber, this.currentUserName).subscribe(
-      (data) => {
-        this.POItems = data as BPCOFItem[];
-        this.ClearFormArray(this.ReturnItemFormArray);
-        if (this.POItems && this.POItems.length) {
-          this.SelectedReturnHeader.Client = this.SelectedReturnView.Client = this.POItems[0].Client;
-          this.SelectedReturnHeader.Company = this.SelectedReturnView.Company = this.POItems[0].Company;
-          this.SelectedReturnHeader.Type = this.SelectedReturnView.Type = this.POItems[0].Type;
-          this.SelectedReturnHeader.PatnerID = this.SelectedReturnView.PatnerID = this.POItems[0].PatnerID;
-          // this.SelectedReturnHeader.RetReqID = this.SelectedReturnView.RetReqID = this.POItems[0].RetReqID;
-          this.POItems.forEach(x => {
-            this.InsertPOItemsFormGroup(x);
-          });
-        }
-      },
-      (err) => {
-        console.error(err);
-      }
-    );
-  }
-
-  
 
   LoadSelectedReturn(seletedReturn: BPCRetHeader): void {
     this.SelectedReturnHeader = seletedReturn;
     this.SelectedReturnView.RetReqID = this.SelectedReturnHeader.RetReqID;
     this.SelectedReturnNumber = this.SelectedReturnHeader.RetReqID;
-    // this.GetPOByDocAndPartnerID(this.SelectedReturnHeader.DocNumber);
-    // this.GetReturnItemsByReturn();
-    // this.GetDocumentCentersByReturn();
-    // this.GetInvoiceAttachmentByReturn();
     this.SetReturnHeaderValues();
-    // this.SetInvoiceDetailValues();
+    this.GetReturnItemsByRet();
   }
 
-  // GetReturnItemsByReturn(): void {
-  //   this._CustomerService.GetReturnItemsByReturn(this.SelectedReturnHeader.ReturnNumber).subscribe(
-  //     (data) => {
-  //       this.SelectedReturnView.ReturnItems = data as BBPCPIItem[];
-  //       this.ClearFormArray(this.ReturnItemFormArray);
-  //       if (this.SelectedReturnView.ReturnItems && this.SelectedReturnView.ReturnItems.length) {
-  //         this.SelectedReturnView.ReturnItems.forEach(x => {
-  //           this.InsertReturnItemsFormGroup(x);
-  //         });
-  //       }
-  //     },
-  //     (err) => {
-  //       console.error(err);
-  //     }
-  //   );
-  // }
-
-  // GetDocumentCentersByReturn(): void {
-  //   this._CustomerService.GetDocumentCentersByReturn(this.SelectedReturnHeader.ReturnNumber).subscribe(
-  //     (data) => {
-  //       this.AllDocumentCenters = data as DocumentCenter[];
-  //       this.DocumentCenterDataSource = new MatTableDataSource(this.AllDocumentCenters);
-  //     },
-  //     (err) => {
-  //       console.error(err);
-  //     }
-  //   );
-  // }
-  // GetInvoiceAttachmentByReturn(): void {
-  //   this._CustomerService.GetInvoiceAttachmentByReturn(this.SelectedReturnHeader.ReturnNumber, this.SelectedReturnHeader.InvDocReferenceNo).subscribe(
-  //     (data) => {
-  //       this.invAttach = data as BPCInvoiceAttachment;
-  //     },
-  //     (err) => {
-  //       console.error(err);
-  //     }
-  //   );
-  // }
+  GetReturnItemsByRet(): void {
+    this._CustomerService.GetReturnItemsByRet(this.SelectedReturnHeader.RetReqID).subscribe(
+      (data) => {
+        const dt = data as BPCRetItem[];
+        if (dt && dt.length && dt.length > 0) {
+          this.AllReturnItems = data as BPCRetItem[];
+          this.ReturnItemDataSource = new MatTableDataSource(this.AllReturnItems);
+        }
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
 
   SetReturnHeaderValues(): void {
-    this.ReturnFormGroup.get('Text').patchValue(this.SelectedReturnHeader.Text);
+    this.ReturnFormGroup.get('RetReqID').patchValue(this.SelectedReturnHeader.RetReqID);
     this.ReturnFormGroup.get('Date').patchValue(this.SelectedReturnHeader.Date);
     this.ReturnFormGroup.get('InvoiceDoc').patchValue(this.SelectedReturnHeader.InvoiceDoc);
-    // this.ReturnFormGroup.get('GrossAmount').patchValue(this.SelectedReturnHeader.GrossAmount);
-    // this.ReturnFormGroup.get('NetAmount').patchValue(this.SelectedReturnHeader.NetAmount);
-
+    this.ReturnFormGroup.get('RetReqID').patchValue(this.SelectedReturnHeader.RetReqID);
+    this.ReturnFormGroup.get('Text').patchValue(this.SelectedReturnHeader.Text);
+    this.ReturnFormGroup.get('Status').patchValue(this.SelectedReturnHeader.Status);
   }
-
-  InsertPOItemsFormGroup(poItem: BPCOFItem): void {
-    const row = this._formBuilder.group({
-      Item: [poItem.Item],
-      Material: [poItem.Material],
-      MaterialText: [poItem.MaterialText],
-      DeliveryDate: [poItem.DeliveryDate],
-      OrderedQty: [poItem.OrderedQty],
-      GRQty: [poItem.CompletedQty],
-      PipelineQty: [poItem.TransitQty],
-      OpenQty: [poItem.OpenQty],
-      ReturnQty: [poItem.OpenQty, [Validators.required, Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,3})?$')]],
-      UOM: [poItem.UOM],
-      Batch: [''],
-      ManufactureDate: [''],
-      ExpiryDate: [''],
-    });
-    row.disable();
-    row.get('ReturnQty').enable();
-    row.get('Batch').enable();
-    row.get('ManufactureDate').enable();
-    row.get('ExpiryDate').enable();
-    this.ReturnItemFormArray.push(row);
-    this.ReturnItemDataSource.next(this.ReturnItemFormArray.controls);
-    // return row;
-  }
-
-  // InsertReturnItemsFormGroup(ReturnItem: BBPCPIItem): void {
-  //   const row = this._formBuilder.group({
-  //     Item: [ReturnItem.Item],
-  //     Material: [ReturnItem.Material],
-  //     MaterialText: [ReturnItem.MaterialText],
-  //     DeliveryDate: [ReturnItem.DeliveryDate],
-  //     OrderedQty: [ReturnItem.OrderedQty],
-  //     GRQty: [ReturnItem.CompletedQty],
-  //     PipelineQty: [ReturnItem.TransitQty],
-  //     OpenQty: [ReturnItem.OpenQty],
-  //     ReturnQty: [ReturnItem.ReturnQty, [Validators.required, Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,3})?$')]],
-  //     UOM: [ReturnItem.UOM],
-  //     Batch: [ReturnItem.Batch],
-  //     ManufactureDate: [ReturnItem.ManufactureDate],
-  //     ExpiryDate: [ReturnItem.ExpiryDate],
-  //   });
-  //   row.disable();
-  //   row.get('ReturnQty').enable();
-  //   row.get('Batch').enable();
-  //   row.get('ManufactureDate').enable();
-  //   row.get('ExpiryDate').enable();
-  //   this.ReturnItemFormArray.push(row);
-  //   this.ReturnItemDataSource.next(this.ReturnItemFormArray.controls);
-  //   // return row;
-  // }
-
-  // SetInvoiceDetailValues(): void {
-  //   this.InvoiceDetailsFormGroup.get('InvoiceNumber').patchValue(this.SelectedReturnHeader.InvoiceNumber);
-  //   this.InvoiceDetailsFormGroup.get('InvoiceDate').patchValue(this.SelectedReturnHeader.InvoiceDate);
-  //   this.InvoiceDetailsFormGroup.get('InvoiceAmount').patchValue(this.SelectedReturnHeader.InvoiceAmount);
-  //   this.InvoiceDetailsFormGroup.get('InvoiceAmountUOM').patchValue(this.SelectedReturnHeader.InvoiceAmountUOM);
-  // }
 
   GetReturnValues(): void {
-    this.SelectedReturnHeader.Text = this.SelectedReturnView.Text = this.ReturnFormGroup.get('Text').value;
     const depDate = this.ReturnFormGroup.get('Date').value;
     if (depDate) {
       this.SelectedReturnHeader.Date = this.SelectedReturnView.Date = this._datePipe.transform(depDate, 'yyyy-MM-dd HH:mm:ss');
@@ -604,16 +428,22 @@ export class ReturnComponent implements OnInit {
       this.SelectedReturnHeader.Date = this.SelectedReturnView.Date = this.ReturnFormGroup.get('Date').value;
     }
     this.SelectedReturnHeader.InvoiceDoc = this.SelectedReturnView.InvoiceDoc = this.ReturnFormGroup.get('InvoiceDoc').value;
-    if (this.SelectedDocNumber && this.PO) {
-      this.SelectedReturnHeader.Client = this.SelectedReturnView.Client = this.PO.Client;
-      this.SelectedReturnHeader.Company = this.SelectedReturnView.Company = this.PO.Company;
-      this.SelectedReturnHeader.Type = this.SelectedReturnView.Type = this.PO.Type;
-      this.SelectedReturnHeader.PatnerID = this.SelectedReturnView.PatnerID = this.PO.PatnerID;
-    } else {
-      this.SelectedReturnHeader.Client = this.SelectedReturnView.Client = this.SelectedReturnHeader.Client;
-      this.SelectedReturnHeader.Company = this.SelectedReturnView.Company = this.SelectedReturnHeader.Company;
-      this.SelectedReturnHeader.Type = this.SelectedReturnView.Type = this.SelectedReturnHeader.Type;
-      this.SelectedReturnHeader.PatnerID = this.SelectedReturnView.PatnerID = this.SelectedReturnHeader.PatnerID;
+    this.SelectedReturnHeader.Text = this.SelectedReturnView.Text = this.ReturnFormGroup.get('Text').value;
+    if (this.SelectedRetReqID) {
+      // this.SelectedReturnHeader.Client = this.SelectedReturnView.Client = this.PO.Client;
+      // this.SelectedReturnHeader.Company = this.SelectedReturnView.Company = this.PO.Company;
+      // this.SelectedReturnHeader.Type = this.SelectedReturnView.Type = this.PO.Type;
+      // this.SelectedReturnHeader.PatnerID = this.SelectedReturnView.PatnerID = this.PO.PatnerID;
+      this.SelectedReturnHeader.Type = this.SelectedReturnView.Type = 'Customer';
+      this.SelectedReturnHeader.PatnerID = this.SelectedReturnView.PatnerID = this.currentUserName;
+      this.SelectedReturnHeader.Status = this.SelectedReturnView.Status = this.SelectedReturnHeader.Status;
+    }
+    else {
+      // this.SelectedReturnHeader.Client = this.SelectedReturnView.Client = this.SelectedReturnHeader.Client;
+      // this.SelectedReturnHeader.Company = this.SelectedReturnView.Company = this.SelectedReturnHeader.Company;
+      this.SelectedReturnHeader.Type = this.SelectedReturnView.Type = 'Customer';
+      this.SelectedReturnHeader.PatnerID = this.SelectedReturnView.PatnerID = this.currentUserName;
+      this.SelectedReturnHeader.Status = this.SelectedReturnView.Status = 'Open';
     }
   }
 
@@ -624,87 +454,33 @@ export class ReturnComponent implements OnInit {
       Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate())) / (1000 * 60 * 60 * 24));
   }
 
-  // GetReturnItemValues(): void {
-  //   this.SelectedReturnView.ReturnItems = [];
-  //   const ReturnItemFormArray = this.ReturnItemFormGroup.get('ReturnItems') as FormArray;
-  //   ReturnItemFormArray.controls.forEach((x, i) => {
-  //     const item: BBPCPIItem = new BBPCPIItem();
-  //     item.Item = x.get('Item').value;
-  //     item.Material = x.get('Material').value;
-  //     item.MaterialText = x.get('MaterialText').value;
-  //     item.DeliveryDate = x.get('DeliveryDate').value;
-  //     item.OrderedQty = x.get('OrderedQty').value;
-  //     item.UOM = x.get('UOM').value;
-  //     item.CompletedQty = x.get('GRQty').value;
-  //     item.TransitQty = x.get('PipelineQty').value;
-  //     item.OpenQty = x.get('OpenQty').value;
-  //     item.ReturnQty = x.get('ReturnQty').value;
-  //     item.Batch = x.get('Batch').value;
-  //     const manufDate = x.get('ManufactureDate').value;
-  //     if (manufDate) {
-  //       item.ManufactureDate = this._datePipe.transform(manufDate, 'yyyy-MM-dd HH:mm:ss');
-  //     } else {
-  //       item.ManufactureDate = x.get('ManufactureDate').value;
-  //     }
-  //     const expDate = x.get('ExpiryDate').value;
-  //     if (expDate) {
-  //       item.ExpiryDate = this._datePipe.transform(expDate, 'yyyy-MM-dd HH:mm:ss');
-  //     } else {
-  //       item.ExpiryDate = x.get('ExpiryDate').value;
-  //     }
-  //     if (this.SelectedDocNumber && this.PO) {
-  //       item.Client = this.PO.Client;
-  //       item.Company = this.PO.Company;
-  //       item.Type = this.PO.Type;
-  //       item.PatnerID = this.PO.PatnerID;
-  //     } else {
-  //       item.Client = this.SelectedReturnHeader.Client;
-  //       item.Company = this.SelectedReturnHeader.Company;
-  //       item.Type = this.SelectedReturnHeader.Type;
-  //       item.PatnerID = this.SelectedReturnHeader.PatnerID;
-  //     }
-  //     this.SelectedReturnView.ReturnItems.push(item);
-  //   });
-  // }
-
-  // GetInvoiceDetailValues(): void {
-  //   this.SelectedReturnHeader.RetReqID = this.SelectedReturnView.RetReqID = this.InvoiceDetailsFormGroup.get('RetReqID').value;
-  //   const invDate = this.InvoiceDetailsFormGroup.get('InvoiceDate').value;
-  //   if (invDate) {
-  //     this.SelectedReturnHeader.InvoiceDate = this.SelectedReturnView.InvoiceDate = this._datePipe.transform(invDate, 'yyyy-MM-dd HH:mm:ss');
-  //   } else {
-  //     this.SelectedReturnHeader.InvoiceDate = this.SelectedReturnView.InvoiceDate = this.InvoiceDetailsFormGroup.get('InvoiceDate').value;
-  //   }
-  //   this.SelectedReturnHeader.InvoiceAmountUOM = this.SelectedReturnView.InvoiceAmountUOM = this.InvoiceDetailsFormGroup.get('InvoiceAmountUOM').value;
-  //   this.SelectedReturnHeader.InvoiceAmount = this.SelectedReturnView.InvoiceAmount = this.InvoiceDetailsFormGroup.get('InvoiceAmount').value;
-  // }
-
-  // GetDocumentCenterValues(): void {
-  //   this.SelectedReturnView.DocumentCenters = [];
-  //   // this.SelectedBPVendorOnBoardingView.BPBanks.push(...this.BanksByVOB);
-  //   this.AllDocumentCenters.forEach(x => {
-  //     this.SelectedReturnView.DocumentCenters.push(x);
-  //   });
-  // }
+  GetReturnItemValues(): void {
+    this.SelectedReturnView.Items = [];
+    this.AllReturnItems.forEach(x => {
+      x.Type = 'Customer';
+      x.PatnerID = this.currentUserName;
+      this.SelectedReturnView.Items.push(x);
+    });
+  }
 
   SaveClicked(): void {
     if (this.ReturnFormGroup.valid) {
-      if (!this.isWeightError) {
-        if (this.ReturnItemFormGroup.valid) {
-          if (this.InvoiceDetailsFormGroup.valid) {
-            this.GetReturnValues();
-            // this.GetReturnItemValues();
-            // this.GetInvoiceDetailValues();
-            // this.GetDocumentCenterValues();
-            // this.SelectedReturnView.IsSubmitted = false;
-            this.SetActionToOpenConfirmation('Save');
-          } else {
-            this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
-          }
+      if (!this.isQtyError) {
+        // if (this.ReturnItemFormGroup.valid) {
+        //     if (this.InvoiceDetailsFormGroup.valid) {
+        this.GetReturnValues();
+        this.GetReturnItemValues();
+        // this.GetInvoiceDetailValues();
+        // this.GetDocumentCenterValues();
+        // this.SelectedReturnView.IsSubmitted = false;
+        this.SetActionToOpenConfirmation('Save');
+        //     } else {
+        //         this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
+        //     }
 
-        } else {
-          this.ShowValidationErrors(this.ReturnItemFormGroup);
-        }
+        // } else {
+        //     this.ShowValidationErrors(this.ReturnItemFormGroup);
+        // }
       }
 
     } else {
@@ -713,22 +489,22 @@ export class ReturnComponent implements OnInit {
   }
   SubmitClicked(): void {
     if (this.ReturnFormGroup.valid) {
-      if (!this.isWeightError) {
-        if (this.ReturnItemFormGroup.valid) {
-          if (this.InvoiceDetailsFormGroup.valid) {
-            this.GetReturnValues();
-            // this.GetReturnItemValues();
-            // this.GetInvoiceDetailValues();
-            // this.GetDocumentCenterValues();
-            // this.SelectedReturnView.IsSubmitted = true;
-            this.SetActionToOpenConfirmation('Submit');
-          } else {
-            this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
-          }
+      if (!this.isQtyError) {
+        // if (this.ReturnItemFormGroup.valid) {
+        //     if (this.InvoiceDetailsFormGroup.valid) {
+        this.GetReturnValues();
+        this.GetReturnItemValues();
+        // this.GetInvoiceDetailValues();
+        // this.GetDocumentCenterValues();
+        // this.SelectedReturnView.IsSubmitted = true;
+        this.SetActionToOpenConfirmation('Submit');
+        //     } else {
+        //         this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
+        //     }
 
-        } else {
-          this.ShowValidationErrors(this.ReturnItemFormGroup);
-        }
+        // } else {
+        //     this.ShowValidationErrors(this.ReturnItemFormGroup);
+        // }
       }
 
     } else {
@@ -788,17 +564,21 @@ export class ReturnComponent implements OnInit {
     this._CustomerService.CreateReturn(this.SelectedReturnView).subscribe(
       (data) => {
         this.SelectedReturnHeader.RetReqID = (data as BPCRetHeader).RetReqID;
+        this.ResetControl();
+        this.notificationSnackBarComponent.openSnackBar(`Return ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
+        this.IsProgressBarVisibile = false;
+
         // if (this.invoiceAttachment) {
-        //   this.AddInvoiceAttachment(Actiontype);
+        //     this.AddInvoiceAttachment(Actiontype);
         // } else {
-        //   if (this.fileToUploadList && this.fileToUploadList.length) {
-        //     this.AddDocumentCenterAttachment(Actiontype);
-        //   } else {
-        //     this.ResetControl();
-        //     this.notificationSnackBarComponent.openSnackBar(`Return ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
-        //     this.IsProgressBarVisibile = false;
-        //     this.GetReturnBasedOnCondition();
-        //   }
+        //     if (this.fileToUploadList && this.fileToUploadList.length) {
+        //         this.AddDocumentCenterAttachment(Actiontype);
+        //     } else {
+        //         this.ResetControl();
+        //         this.notificationSnackBarComponent.openSnackBar(`Return ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
+        //         this.IsProgressBarVisibile = false;
+        //         // this.GetReturnBasedOnCondition();
+        //     }
         // }
       },
       (err) => {
@@ -808,33 +588,33 @@ export class ReturnComponent implements OnInit {
   }
 
   // AddInvoiceAttachment(Actiontype: string): void {
-  //   this._CustomerService.AddInvoiceAttachment(this.SelectedReturnHeader.ReturnNumber, this.currentUserID.toString(), this.invoiceAttachment).subscribe(
-  //     (dat) => {
-  //       if (this.fileToUploadList && this.fileToUploadList.length) {
-  //         this.AddDocumentCenterAttachment(Actiontype);
-  //       } else {
-  //         this.ResetControl();
-  //         this.notificationSnackBarComponent.openSnackBar(`Return ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
-  //         this.IsProgressBarVisibile = false;
-  //         this.GetReturnBasedOnCondition();
-  //       }
-  //     },
-  //     (err) => {
-  //       this.showErrorNotificationSnackBar(err);
-  //     });
+  //     this._CustomerService.AddInvoiceAttachment(this.SelectedReturnHeader.RetReqID, this.currentUserID.toString(), this.invoiceAttachment).subscribe(
+  //         (dat) => {
+  //             if (this.fileToUploadList && this.fileToUploadList.length) {
+  //                 this.AddDocumentCenterAttachment(Actiontype);
+  //             } else {
+  //                 this.ResetControl();
+  //                 this.notificationSnackBarComponent.openSnackBar(`Return ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
+  //                 this.IsProgressBarVisibile = false;
+  //                 this.GetReturnBasedOnCondition();
+  //             }
+  //         },
+  //         (err) => {
+  //             this.showErrorNotificationSnackBar(err);
+  //         });
   // }
   // AddDocumentCenterAttachment(Actiontype: string): void {
-  //   this._CustomerService.AddDocumentCenterAttachment(this.SelectedReturnHeader.ReturnNumber, this.currentUserID.toString(), this.fileToUploadList).subscribe(
-  //     (dat) => {
-  //       this.ResetControl();
-  //       this.notificationSnackBarComponent.openSnackBar(`Return ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
-  //       this.IsProgressBarVisibile = false;
-  //       this.GetReturnBasedOnCondition();
-  //     },
-  //     (err) => {
-  //       this.showErrorNotificationSnackBar(err);
-  //     }
-  //   );
+  //     this._CustomerService.AddDocumentCenterAttachment(this.SelectedReturnHeader.ReturnNumber, this.currentUserID.toString(), this.fileToUploadList).subscribe(
+  //         (dat) => {
+  //             this.ResetControl();
+  //             this.notificationSnackBarComponent.openSnackBar(`Return ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
+  //             this.IsProgressBarVisibile = false;
+  //             this.GetReturnBasedOnCondition();
+  //         },
+  //         (err) => {
+  //             this.showErrorNotificationSnackBar(err);
+  //         }
+  //     );
   // }
 
   showErrorNotificationSnackBar(err: any): void {
@@ -852,17 +632,21 @@ export class ReturnComponent implements OnInit {
     this._CustomerService.UpdateReturn(this.SelectedReturnView).subscribe(
       (data) => {
         this.SelectedReturnHeader.RetReqID = (data as BPCRetHeader).RetReqID;
+        this.ResetControl();
+        this.notificationSnackBarComponent.openSnackBar(`Return ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
+        this.IsProgressBarVisibile = false;
+
         // if (this.invoiceAttachment) {
-        //   this.AddInvoiceAttachment(Actiontype);
+        //     this.AddInvoiceAttachment(Actiontype);
         // } else {
-        //   if (this.fileToUploadList && this.fileToUploadList.length) {
-        //     this.AddDocumentCenterAttachment(Actiontype);
-        //   } else {
-        //     this.ResetControl();
-        //     this.notificationSnackBarComponent.openSnackBar(`Return ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
-        //     this.IsProgressBarVisibile = false;
-        //     this.GetReturnBasedOnCondition();
-        //   }
+        //     if (this.fileToUploadList && this.fileToUploadList.length) {
+        //         this.AddDocumentCenterAttachment(Actiontype);
+        //     } else {
+        //         this.ResetControl();
+        //         this.notificationSnackBarComponent.openSnackBar(`Return ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
+        //         this.IsProgressBarVisibile = false;
+        //         this.GetReturnBasedOnCondition();
+        //     }
         // }
       },
       (err) => {
@@ -923,60 +707,60 @@ export class ReturnComponent implements OnInit {
   }
 
   // GetInvoiceAttachment(fileName: string, file?: File): void {
-  //   if (file && file.size) {
-  //     const blob = new Blob([file], { type: file.type });
-  //     this.OpenAttachmentDialog(fileName, blob);
-  //   } else {
-  //     this.IsProgressBarVisibile = true;
-  //     this._CustomerService.DowloandInvoiceAttachment(fileName, this.SelectedReturnHeader.ReturnNumber).subscribe(
-  //       data => {
-  //         if (data) {
-  //           let fileType = 'image/jpg';
-  //           fileType = fileName.toLowerCase().includes('.jpg') ? 'image/jpg' :
-  //             fileName.toLowerCase().includes('.jpeg') ? 'image/jpeg' :
-  //               fileName.toLowerCase().includes('.png') ? 'image/png' :
-  //                 fileName.toLowerCase().includes('.gif') ? 'image/gif' :
-  //                   fileName.toLowerCase().includes('.pdf') ? 'application/pdf' : '';
-  //           const blob = new Blob([data], { type: fileType });
-  //           this.OpenAttachmentDialog(fileName, blob);
-  //         }
-  //         this.IsProgressBarVisibile = false;
-  //       },
-  //       error => {
-  //         console.error(error);
-  //         this.IsProgressBarVisibile = false;
-  //       }
-  //     );
-  //   }
+  //     if (file && file.size) {
+  //         const blob = new Blob([file], { type: file.type });
+  //         this.OpenAttachmentDialog(fileName, blob);
+  //     } else {
+  //         this.IsProgressBarVisibile = true;
+  //         this._CustomerService.DowloandInvoiceAttachment(fileName, this.SelectedReturnHeader.ReturnNumber).subscribe(
+  //             data => {
+  //                 if (data) {
+  //                     let fileType = 'image/jpg';
+  //                     fileType = fileName.toLowerCase().includes('.jpg') ? 'image/jpg' :
+  //                         fileName.toLowerCase().includes('.jpeg') ? 'image/jpeg' :
+  //                             fileName.toLowerCase().includes('.png') ? 'image/png' :
+  //                                 fileName.toLowerCase().includes('.gif') ? 'image/gif' :
+  //                                     fileName.toLowerCase().includes('.pdf') ? 'application/pdf' : '';
+  //                     const blob = new Blob([data], { type: fileType });
+  //                     this.OpenAttachmentDialog(fileName, blob);
+  //                 }
+  //                 this.IsProgressBarVisibile = false;
+  //             },
+  //             error => {
+  //                 console.error(error);
+  //                 this.IsProgressBarVisibile = false;
+  //             }
+  //         );
+  //     }
   // }
 
   // GetDocumentCenterAttachment(fileName: string): void {
-  //   const file = this.fileToUploadList.filter(x => x.name === fileName)[0];
-  //   if (file && file.size) {
-  //     const blob = new Blob([file], { type: file.type });
-  //     this.OpenAttachmentDialog(fileName, blob);
-  //   } else {
-  //     this.IsProgressBarVisibile = true;
-  //     this._CustomerService.DowloandDocumentCenterAttachment(fileName, this.SelectedReturnHeader.ReturnNumber).subscribe(
-  //       data => {
-  //         if (data) {
-  //           let fileType = 'image/jpg';
-  //           fileType = fileName.toLowerCase().includes('.jpg') ? 'image/jpg' :
-  //             fileName.toLowerCase().includes('.jpeg') ? 'image/jpeg' :
-  //               fileName.toLowerCase().includes('.png') ? 'image/png' :
-  //                 fileName.toLowerCase().includes('.gif') ? 'image/gif' :
-  //                   fileName.toLowerCase().includes('.pdf') ? 'application/pdf' : '';
-  //           const blob = new Blob([data], { type: fileType });
-  //           this.OpenAttachmentDialog(fileName, blob);
-  //         }
-  //         this.IsProgressBarVisibile = false;
-  //       },
-  //       error => {
-  //         console.error(error);
-  //         this.IsProgressBarVisibile = false;
-  //       }
-  //     );
-  //   }
+  //     const file = this.fileToUploadList.filter(x => x.name === fileName)[0];
+  //     if (file && file.size) {
+  //         const blob = new Blob([file], { type: file.type });
+  //         this.OpenAttachmentDialog(fileName, blob);
+  //     } else {
+  //         this.IsProgressBarVisibile = true;
+  //         this._CustomerService.DowloandDocumentCenterAttachment(fileName, this.SelectedReturnHeader.ReturnNumber).subscribe(
+  //             data => {
+  //                 if (data) {
+  //                     let fileType = 'image/jpg';
+  //                     fileType = fileName.toLowerCase().includes('.jpg') ? 'image/jpg' :
+  //                         fileName.toLowerCase().includes('.jpeg') ? 'image/jpeg' :
+  //                             fileName.toLowerCase().includes('.png') ? 'image/png' :
+  //                                 fileName.toLowerCase().includes('.gif') ? 'image/gif' :
+  //                                     fileName.toLowerCase().includes('.pdf') ? 'application/pdf' : '';
+  //                     const blob = new Blob([data], { type: fileType });
+  //                     this.OpenAttachmentDialog(fileName, blob);
+  //                 }
+  //                 this.IsProgressBarVisibile = false;
+  //             },
+  //             error => {
+  //                 console.error(error);
+  //                 this.IsProgressBarVisibile = false;
+  //             }
+  //         );
+  //     }
   // }
 
   OpenAttachmentDialog(FileName: string, blob: Blob): void {
@@ -995,14 +779,90 @@ export class ReturnComponent implements OnInit {
     });
   }
 
-  AmountSelected(): void {
-    const GrossWeightVAL = +this.ReturnFormGroup.get('GrossWeight').value;
-    const NetWeightVAL = + this.ReturnFormGroup.get('NetWeight').value;
-    if (GrossWeightVAL && GrossWeightVAL && GrossWeightVAL <= NetWeightVAL) {
-      this.isWeightError = true;
+  QtySelected(): void {
+    const OrderQtyVAL = +this.ReturnItemFormGroup.get('OrderQty').value;
+    const RetQtyVAL = + this.ReturnItemFormGroup.get('RetQty').value;
+    if (OrderQtyVAL < RetQtyVAL) {
+      this.isQtyError = true;
     } else {
-      this.isWeightError = false;
+      this.isQtyError = false;
     }
   }
 
+  getStatusColor(StatusFor: string): string {
+    switch (StatusFor) {
+      case 'Shipped':
+        return this.SelectedReturnHeader.Status === 'Open' ? 'gray' :
+          this.SelectedReturnHeader.Status === 'SO' ? '#efb577' : '#34ad65';
+      case 'Invoiced':
+        return this.SelectedReturnHeader.Status === 'Open' ? 'gray' :
+          this.SelectedReturnHeader.Status === 'SO' ? 'gray' :
+            this.SelectedReturnHeader.Status === 'Shipped' ? '#efb577' : '#34ad65';
+      case 'Receipt':
+        return this.SelectedReturnHeader.Status === 'Open' ? 'gray' :
+          this.SelectedReturnHeader.Status === 'SO' ? 'gray' :
+            this.SelectedReturnHeader.Status === 'Shipped' ? 'gray' :
+              this.SelectedReturnHeader.Status === 'Invoiced' ? '#efb577' : '#34ad65';
+      default:
+        return '';
+    }
+  }
+
+  getTimeline(StatusFor: string): string {
+    switch (StatusFor) {
+      case 'Shipped':
+        return this.SelectedReturnHeader.Status === 'Open' ? 'white-timeline' :
+          this.SelectedReturnHeader.Status === 'SO' ? 'orange-timeline' : 'green-timeline';
+      case 'Invoiced':
+        return this.SelectedReturnHeader.Status === 'Open' ? 'white-timeline' :
+          this.SelectedReturnHeader.Status === 'SO' ? 'white-timeline' :
+            this.SelectedReturnHeader.Status === 'Shipped' ? 'orange-timeline' : 'green-timeline';
+      case 'Receipt':
+        return this.SelectedReturnHeader.Status === 'Open' ? 'white-timeline' :
+          this.SelectedReturnHeader.Status === 'SO' ? 'white-timeline' :
+            this.SelectedReturnHeader.Status === 'Shipped' ? 'white-timeline' :
+              this.SelectedReturnHeader.Status === 'Invoiced' ? 'orange-timeline' : 'green-timeline';
+      default:
+        return '';
+    }
+  }
+  getRestTimeline(StatusFor: string): string {
+    switch (StatusFor) {
+      case 'Shipped':
+        return this.SelectedReturnHeader.Status === 'Open' ? 'white-timeline' :
+          this.SelectedReturnHeader.Status === 'SO' ? 'white-timeline' : 'green-timeline';
+      case 'Invoiced':
+        return this.SelectedReturnHeader.Status === 'Open' ? 'white-timeline' :
+          this.SelectedReturnHeader.Status === 'SO' ? 'white-timeline' :
+            this.SelectedReturnHeader.Status === 'Shipped' ? 'white-timeline' : 'green-timeline';
+      case 'Receipt':
+        return this.SelectedReturnHeader.Status === 'Open' ? 'white-timeline' :
+          this.SelectedReturnHeader.Status === 'SO' ? 'white-timeline' :
+            this.SelectedReturnHeader.Status === 'Shipped' ? 'white-timeline' :
+              this.SelectedReturnHeader.Status === 'Invoiced' ? 'white-timeline' : 'green-timeline';
+      default:
+        return '';
+    }
+  }
+  getStatusDate(StatusFor: string): string {
+    const tt = this._datePipe.transform(this.maxDate, 'dd/MM/yyyy');
+    switch (StatusFor) {
+      case 'SO':
+        return this.SelectedReturnHeader.Status === 'Open' ? '' : tt;
+      case 'Shipped':
+        return this.SelectedReturnHeader.Status === 'Open' ? '' :
+          this.SelectedReturnHeader.Status === 'SO' ? '' : tt;
+      case 'Invoiced':
+        return this.SelectedReturnHeader.Status === 'Open' ? '' :
+          this.SelectedReturnHeader.Status === 'SO' ? '' :
+            this.SelectedReturnHeader.Status === 'Shipped' ? '' : tt;
+      case 'Receipt':
+        return this.SelectedReturnHeader.Status === 'Open' ? '' :
+          this.SelectedReturnHeader.Status === 'SO' ? '' :
+            this.SelectedReturnHeader.Status === '' ? '' :
+              this.SelectedReturnHeader.Status === '' ? '' : tt;
+      default:
+        return '';
+    }
+  }
 }
