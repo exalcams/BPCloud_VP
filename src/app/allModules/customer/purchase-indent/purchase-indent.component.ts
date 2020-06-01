@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ViewEncapsulation } from '@angular/core';
 import { AuthenticationDetails, UserWithRole } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
@@ -18,15 +18,19 @@ import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notific
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { AttachmentDetails } from 'app/models/task';
 import { AttachmentDialogComponent } from 'app/allModules/pages/attachment-dialog/attachment-dialog.component';
-import { BPCPIHeader, BPCPIView, BPCPIItem } from 'app/models/customer';
+import { BPCPIHeader, BPCPIView, BPCPIItem, BPCProd } from 'app/models/customer';
 import { BPCInvoiceAttachment, DocumentCenter, BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster } from 'app/models/ASN';
 import { CustomerService } from 'app/services/customer.service';
 import { ASNService } from 'app/services/asn.service';
+import { fuseAnimations } from '@fuse/animations';
+import { PO } from 'app/models/Dashboard';
 
 @Component({
     selector: 'app-purchase-indent',
     templateUrl: './purchase-indent.component.html',
-    styleUrls: ['./purchase-indent.component.scss']
+    styleUrls: ['./purchase-indent.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    animations: fuseAnimations
 })
 export class PurchaseIndentComponent implements OnInit {
 
@@ -43,29 +47,24 @@ export class PurchaseIndentComponent implements OnInit {
     InvoiceDetailsFormGroup: FormGroup;
     DocumentCenterFormGroup: FormGroup;
     AllUserWithRoles: UserWithRole[] = [];
-    SelectedDocNumber: string;
+    SelectedPINumber: string;
     PO: BPCOFHeader;
     POItems: BPCOFItem[] = [];
     SelectedPurchaseIndentHeader: BPCPIHeader;
     SelectedPurchaseIndentNumber: string;
     SelectedPurchaseIndentView: BPCPIView;
-    PurchaseIndentItems: BPCPIItem[] = [];
+    AllPurchaseIndentItems: BPCPIItem[] = [];
     PurchaseIndentItemDisplayedColumns: string[] = [
         'Item',
-        'Material',
-        'MaterialText',
+        'ProdcutID',
+        // 'MaterialText',
+        'HSN',
+        'OrderQty',
         'DeliveryDate',
-        'OrderedQty',
-        'GRQty',
-        'PipelineQty',
-        'OpenQty',
-        'PurchaseIndentQty',
-        'Batch',
-        'ManufactureDate',
-        'ExpiryDate'
+        'UOM',
+        'Action'
     ];
-    PurchaseIndentItemFormArray: FormArray = this._formBuilder.array([]);
-    PurchaseIndentItemDataSource = new BehaviorSubject<AbstractControl[]>([]);
+    PurchaseIndentItemDataSource: MatTableDataSource<BPCPIItem>;
     @ViewChild(MatPaginator) PurchaseIndentItemPaginator: MatPaginator;
     @ViewChild(MatSort) PurchaseIndentItemSort: MatSort;
     invoiceAttachment: File;
@@ -75,23 +74,13 @@ export class PurchaseIndentComponent implements OnInit {
     math = Math;
     minDate: Date;
     maxDate: Date;
-    AllDocumentCenters: DocumentCenter[] = [];
-    DocumentCenterDisplayedColumns: string[] = [
-        'DocumentType',
-        'DocumentTitle',
-        'Filename',
-        'Action'
-    ];
-    DocumentCenterDataSource: MatTableDataSource<DocumentCenter>;
-    @ViewChild(MatPaginator) DocumentCenterPaginator: MatPaginator;
-    @ViewChild(MatSort) DocumentCenterSort: MatSort;
 
     selection = new SelectionModel<any>(true, []);
     searchText = '';
 
     AllCountries: BPCCountryMaster[] = [];
     AllCurrencies: BPCCurrencyMaster[] = [];
-    AllDocumentCenterMaster: BPCDocumentCenterMaster[] = [];
+    AllProducts: BPCProd[] = [];
     isWeightError: boolean;
     @ViewChild('fileInput1') fileInput: ElementRef<HTMLElement>;
     selectedDocCenterMaster: BPCDocumentCenterMaster;
@@ -116,6 +105,7 @@ export class PurchaseIndentComponent implements OnInit {
         this.IsProgressBarVisibile = false;
         this.PO = new BPCOFHeader();
         this.SelectedPurchaseIndentHeader = new BPCPIHeader();
+        this.SelectedPurchaseIndentHeader.Status = 'Open';
         this.SelectedPurchaseIndentView = new BPCPIView();
         this.SelectedPurchaseIndentNumber = '';
         this.invAttach = new BPCInvoiceAttachment();
@@ -145,70 +135,59 @@ export class PurchaseIndentComponent implements OnInit {
             this._router.navigate(['/auth/login']);
         }
         this._route.queryParams.subscribe(params => {
-            this.SelectedDocNumber = params['id'];
+            this.SelectedPINumber = params['id'];
         });
         this.InitializePurchaseIndentFormGroup();
         this.InitializePurchaseIndentItemFormGroup();
-        this.InitializeInvoiceDetailsFormGroup();
-        this.InitializeDocumentCenterFormGroup();
         this.GetAllBPCCountryMasters();
         this.GetAllBPCCurrencyMasters();
-        this.GetAllDocumentCenterMaster();
-        // this.GetPurchaseIndentBasedOnCondition();
+        this.GetAllProducts();
+        this.GetPurchaseIndentBasedOnCondition();
     }
 
     InitializePurchaseIndentFormGroup(): void {
         this.PurchaseIndentFormGroup = this._formBuilder.group({
+            PINumber: [''],
             DocDate: [new Date(), Validators.required],
             ReferenceDoc: ['', Validators.required],
             Currency: ['', Validators.required],
             NetAmount: ['', [Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
             GrossAmount: ['', [Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
+            Status: [''],
         });
     }
     // SetInitialValueForPurchaseIndentFormGroup(): void {
     //     this.PurchaseIndentFormGroup.get('DocDate').patchValue('Road');
     //     this.PurchaseIndentFormGroup.get('AWBDate').patchValue(new Date());
-    //     this.PurchaseIndentFormGroup.get('NetWeightUOM').patchValue('KG');
-    //     this.PurchaseIndentFormGroup.get('GrossWeightUOM').patchValue('KG');
+    //     this.PurchaseIndentFormGroup.get('NetAmountUOM').patchValue('KG');
+    //     this.PurchaseIndentFormGroup.get('GrossAmountUOM').patchValue('KG');
     //     this.PurchaseIndentFormGroup.get('DepartureDate').patchValue(new Date());
     //     this.PurchaseIndentFormGroup.get('ArrivalDate').patchValue(this.minDate);
     //     this.PurchaseIndentFormGroup.get('CountryOfOrigin').patchValue('IND');
     // }
     InitializePurchaseIndentItemFormGroup(): void {
         this.PurchaseIndentItemFormGroup = this._formBuilder.group({
-            PurchaseIndentItems: this.PurchaseIndentItemFormArray
-        });
-    }
-    InitializeInvoiceDetailsFormGroup(): void {
-        this.InvoiceDetailsFormGroup = this._formBuilder.group({
-            InvoiceNumber: ['', [Validators.minLength(16), Validators.maxLength(16), Validators.pattern('^[1-9][0-9]*$')]],
-            InvoiceAmount: ['', [Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,2})?$')]],
-            InvoiceAmountUOM: [''],
-            InvoiceDate: [''],
-            InvoiceAttachment: [''],
-        });
-    }
-
-    InitializeDocumentCenterFormGroup(): void {
-        this.DocumentCenterFormGroup = this._formBuilder.group({
-            DocumentType: ['', Validators.required],
-            DocumentTitle: ['', Validators.required],
-            Filename: [''],
+            Item: ['', Validators.required],
+            ProdcutID: ['', Validators.required],
+            MaterialText: [''],
+            HSN: ['', Validators.required],
+            OrderQty: ['', [Validators.required, Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,2})?$')]],
+            DeliveryDate: ['', Validators.required],
+            UOM: [''],
         });
     }
 
     ResetControl(): void {
         this.SelectedPurchaseIndentHeader = new BPCPIHeader();
+        this.SelectedPurchaseIndentHeader.Status = 'Open';
         this.SelectedPurchaseIndentView = new BPCPIView();
         this.SelectedPurchaseIndentNumber = '';
         this.ResetPurchaseIndentFormGroup();
-        //this.SetInitialValueForPurchaseIndentFormGroup();
-        this.ResetInvoiceDetailsFormGroup();
-        this.ResetDocumentCenterFormGroup();
+        // this.SetInitialValueForPurchaseIndentFormGroup();
+        this.ResetPurchaseIndentItemFormGroup();
         this.ResetAttachments();
-        this.AllDocumentCenters = [];
-        this.DocumentCenterDataSource = new MatTableDataSource(this.AllDocumentCenters);
+        this.AllPurchaseIndentItems = [];
+        this.PurchaseIndentItemDataSource = new MatTableDataSource(this.AllPurchaseIndentItems);
         this.isWeightError = false;
         this.selectedDocCenterMaster = new BPCDocumentCenterMaster();
     }
@@ -216,11 +195,8 @@ export class PurchaseIndentComponent implements OnInit {
     ResetPurchaseIndentFormGroup(): void {
         this.ResetFormGroup(this.PurchaseIndentFormGroup);
     }
-    ResetInvoiceDetailsFormGroup(): void {
-        this.ResetFormGroup(this.InvoiceDetailsFormGroup);
-    }
-    ResetDocumentCenterFormGroup(): void {
-        this.ResetFormGroup(this.DocumentCenterFormGroup);
+    ResetPurchaseIndentItemFormGroup(): void {
+        this.ResetFormGroup(this.PurchaseIndentItemFormGroup);
     }
 
     ResetFormGroup(formGroup: FormGroup): void {
@@ -242,16 +218,11 @@ export class PurchaseIndentComponent implements OnInit {
         this.invoiceAttachment = null;
     }
 
-    // GetPurchaseIndentBasedOnCondition(): void {
-    //     if (this.SelectedDocNumber) {
-    //         this.GetPurchaseIndentByDocAndPartnerID();
-    //         this.GetPOByDocAndPartnerID(this.SelectedDocNumber);
-    //         this.GetPOItemsByDocAndPartnerID();
-    //         this.GetArrivalDateIntervalByPOAndPartnerID();
-    //     } else {
-    //         this.GetAllPurchaseIndentByPartnerID();
-    //     }
-    // }
+    GetPurchaseIndentBasedOnCondition(): void {
+        if (this.SelectedPINumber) {
+            this.GetPurchaseIndentByPIAndPartnerID();
+        }
+    }
 
     DocDateSelected(event): void {
         const selectedType = event.value;
@@ -314,15 +285,11 @@ export class PurchaseIndentComponent implements OnInit {
         }
     }
 
-    DocumentTypeSelected(event): void {
+    ProductSelected(event): void {
         if (event.value) {
-            this.selectedDocCenterMaster = this.AllDocumentCenterMaster.filter(x => x.DocumentType === event.value)[0];
-            if (this.selectedDocCenterMaster) {
-                if (this.selectedDocCenterMaster.Mandatory) {
-                    this.AddDocumentCenterFileValidator();
-                } else {
-                    this.RemoveDocumentCenterFileValidator();
-                }
+            const selectedProd = this.AllProducts.filter(x => x.ProductID === event.value)[0];
+            if (selectedProd) {
+                this.PurchaseIndentItemFormGroup.get('MaterialText').patchValue(selectedProd.Text);
             }
         }
     }
@@ -336,38 +303,34 @@ export class PurchaseIndentComponent implements OnInit {
         this.DocumentCenterFormGroup.get('Filename').updateValueAndValidity();
     }
 
-    AddDocumentCenterToTable(): void {
-        if (this.DocumentCenterFormGroup.valid) {
-            const documentCenter = new DocumentCenter();
-            documentCenter.DocumentType = this.DocumentCenterFormGroup.get('DocumentType').value;
-            documentCenter.DocumentTitle = this.DocumentCenterFormGroup.get('DocumentTitle').value;
-            if (this.fileToUpload) {
-                documentCenter.Filename = this.fileToUpload.name;
-                this.fileToUploadList.push(this.fileToUpload);
-                this.fileToUpload = null;
+    AddPurchaseIndentItemToTable(): void {
+        if (this.PurchaseIndentItemFormGroup.valid) {
+            const PIItem = new BPCPIItem();
+            PIItem.Item = this.PurchaseIndentItemFormGroup.get('Item').value;
+            PIItem.ProdcutID = this.PurchaseIndentItemFormGroup.get('ProdcutID').value;
+            PIItem.MaterialText = this.PurchaseIndentItemFormGroup.get('MaterialText').value;
+            PIItem.HSN = this.PurchaseIndentItemFormGroup.get('HSN').value;
+            PIItem.OrderQty = this.PurchaseIndentItemFormGroup.get('OrderQty').value;
+            PIItem.DeliveryDate = this.PurchaseIndentItemFormGroup.get('DeliveryDate').value;
+            PIItem.UOM = this.PurchaseIndentItemFormGroup.get('UOM').value;
+            if (!this.AllPurchaseIndentItems || !this.AllPurchaseIndentItems.length) {
+                this.AllPurchaseIndentItems = [];
             }
-            if (!this.AllDocumentCenters || !this.AllDocumentCenters.length) {
-                this.AllDocumentCenters = [];
-            }
-            this.AllDocumentCenters.push(documentCenter);
-            this.DocumentCenterDataSource = new MatTableDataSource(this.AllDocumentCenters);
-            this.ResetDocumentCenterFormGroup();
+            this.AllPurchaseIndentItems.push(PIItem);
+            this.PurchaseIndentItemDataSource = new MatTableDataSource(this.AllPurchaseIndentItems);
+            this.ResetPurchaseIndentItemFormGroup();
             this.selectedDocCenterMaster = new BPCDocumentCenterMaster();
         } else {
             this.ShowValidationErrors(this.DocumentCenterFormGroup);
         }
     }
 
-    RemoveDocumentCenterFromTable(doc: DocumentCenter): void {
-        const index: number = this.AllDocumentCenters.indexOf(doc);
+    RemovePurchaseIndentItemFromTable(doc: BPCPIItem): void {
+        const index: number = this.AllPurchaseIndentItems.indexOf(doc);
         if (index > -1) {
-            this.AllDocumentCenters.splice(index, 1);
-            const indexx = this.fileToUploadList.findIndex(x => x.name === doc.Filename);
-            if (indexx > -1) {
-                this.fileToUploadList.splice(indexx, 1);
-            }
-        }
-        this.DocumentCenterDataSource = new MatTableDataSource(this.AllDocumentCenters);
+            this.AllPurchaseIndentItems.splice(index, 1);
+          }
+        this.PurchaseIndentItemDataSource = new MatTableDataSource(this.AllPurchaseIndentItems);
     }
 
     GetAllBPCCountryMasters(): void {
@@ -380,10 +343,11 @@ export class PurchaseIndentComponent implements OnInit {
             }
         );
     }
-    GetAllDocumentCenterMaster(): void {
-        this._ASNService.GetAllDocumentCenterMaster().subscribe(
+
+    GetAllBPCCurrencyMasters(): void {
+        this._ASNService.GetAllBPCCurrencyMasters().subscribe(
             (data) => {
-                this.AllDocumentCenterMaster = data as BPCDocumentCenterMaster[];
+                this.AllCurrencies = data as BPCCurrencyMaster[];
             },
             (err) => {
                 console.error(err);
@@ -391,10 +355,10 @@ export class PurchaseIndentComponent implements OnInit {
         );
     }
 
-    GetAllBPCCurrencyMasters(): void {
-        this._ASNService.GetAllBPCCurrencyMasters().subscribe(
+    GetAllProducts(): void {
+        this._CustomerService.GetAllProducts().subscribe(
             (data) => {
-                this.AllCurrencies = data as BPCCurrencyMaster[];
+                this.AllProducts = data as BPCProd[];
             },
             (err) => {
                 console.error(err);
@@ -416,185 +380,53 @@ export class PurchaseIndentComponent implements OnInit {
     //     );
     // }
 
-    // GetPurchaseIndentByDocAndPartnerID(): void {
-    //     this._CustomerService.GetPurchaseIndentByDocAndPartnerID(this.SelectedDocNumber, this.currentUserName).subscribe(
-    //         (data) => {
-    //             this.AllPurchaseIndentHeaders = data as BPCPIHeader[];
-    //         },
-    //         (err) => {
-    //             console.error(err);
-    //         }
-    //     );
-    // }
-    // GetPOByDocAndPartnerID(selectedDocNumber: string): void {
-    //     this._POService.GetPOByDocAndPartnerID(selectedDocNumber, this.currentUserName).subscribe(
-    //         (data) => {
-    //             this.PO = data as BPCOFHeader;
-    //             if (this.SelectedDocNumber) {
-    //                 this.InvoiceDetailsFormGroup.get('InvoiceAmountUOM').patchValue(this.PO.Currency);
-    //             }
-    //         },
-    //         (err) => {
-    //             console.error(err);
-    //         }
-    //     );
-    // }
+    GetPurchaseIndentByPIAndPartnerID(): void {
+        this._CustomerService.GetPurchaseIndentByPIAndPartnerID(this.SelectedPINumber, this.currentUserName).subscribe(
+            (data) => {
+                this.SelectedPurchaseIndentHeader = data as BPCPIHeader;
+                if (this.SelectedPurchaseIndentHeader) {
+                    this.LoadSelectedPurchaseIndent(this.SelectedPurchaseIndentHeader);
+                }
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
 
-    // GetPOItemsByDocAndPartnerID(): void {
-    //     this._POService.GetPOItemsByDocAndPartnerID(this.SelectedDocNumber, this.currentUserName).subscribe(
-    //         (data) => {
-    //             this.POItems = data as BPCOFItem[];
-    //             this.ClearFormArray(this.PurchaseIndentItemFormArray);
-    //             if (this.POItems && this.POItems.length) {
-    //                 this.SelectedPurchaseIndentHeader.Client = this.SelectedPurchaseIndentView.Client = this.POItems[0].Client;
-    //                 this.SelectedPurchaseIndentHeader.Company = this.SelectedPurchaseIndentView.Company = this.POItems[0].Company;
-    //                 this.SelectedPurchaseIndentHeader.Type = this.SelectedPurchaseIndentView.Type = this.POItems[0].Type;
-    //                 this.SelectedPurchaseIndentHeader.PatnerID = this.SelectedPurchaseIndentView.PatnerID = this.POItems[0].PatnerID;
-    //                 this.SelectedPurchaseIndentHeader.PINumber = this.SelectedPurchaseIndentView.PINumber = this.POItems[0].PINumber;
-    //                 this.POItems.forEach(x => {
-    //                     this.InsertPOItemsFormGroup(x);
-    //                 });
-    //             }
-    //         },
-    //         (err) => {
-    //             console.error(err);
-    //         }
-    //     );
-    // }
+    LoadSelectedPurchaseIndent(seletedPurchaseIndent: BPCPIHeader): void {
+        this.SelectedPurchaseIndentHeader = seletedPurchaseIndent;
+        this.SelectedPurchaseIndentView.PINumber = this.SelectedPurchaseIndentHeader.PINumber;
+        this.SelectedPurchaseIndentNumber = this.SelectedPurchaseIndentHeader.PINumber;
+        this.SetPurchaseIndentHeaderValues();
+        this.GetPurchaseIndentItemsByPI();
+    }
 
-    // GetArrivalDateIntervalByPOAndPartnerID(): void {
-    //     this._CustomerService.GetArrivalDateIntervalByPOAndPartnerID(this.SelectedDocNumber, this.currentUserName).subscribe(
-    //         (data) => {
-    //             this.ArrivalDateInterval = data as number;
-    //             if (this.ArrivalDateInterval) {
-    //                 let today = new Date();
-    //                 today.setDate(today.getDate() + this.ArrivalDateInterval);
-    //                 this.PurchaseIndentFormGroup.get('ArrivalDate').patchValue(today);
-    //             }
-    //         },
-    //         (err) => {
-    //             console.error(err);
-    //         }
-    //     );
-    // }
-
-    // LoadSelectedPurchaseIndent(seletedPurchaseIndent: BPCPIHeader): void {
-    //     this.SelectedPurchaseIndentHeader = seletedPurchaseIndent;
-    //     this.SelectedPurchaseIndentView.PurchaseIndentNumber = this.SelectedPurchaseIndentHeader.PurchaseIndentNumber;
-    //     this.SelectedPurchaseIndentNumber = this.SelectedPurchaseIndentHeader.PurchaseIndentNumber;
-    //     this.GetPOByDocAndPartnerID(this.SelectedPurchaseIndentHeader.DocNumber);
-    //     this.GetPurchaseIndentItemsByPurchaseIndent();
-    //     this.GetDocumentCentersByPurchaseIndent();
-    //     this.GetInvoiceAttachmentByPurchaseIndent();
-    //     this.SetPurchaseIndentHeaderValues();
-    //     this.SetInvoiceDetailValues();
-    // }
-
-    // GetPurchaseIndentItemsByPurchaseIndent(): void {
-    //     this._CustomerService.GetPurchaseIndentItemsByPurchaseIndent(this.SelectedPurchaseIndentHeader.PurchaseIndentNumber).subscribe(
-    //         (data) => {
-    //             this.SelectedPurchaseIndentView.PurchaseIndentItems = data as BBPCPIItem[];
-    //             this.ClearFormArray(this.PurchaseIndentItemFormArray);
-    //             if (this.SelectedPurchaseIndentView.PurchaseIndentItems && this.SelectedPurchaseIndentView.PurchaseIndentItems.length) {
-    //                 this.SelectedPurchaseIndentView.PurchaseIndentItems.forEach(x => {
-    //                     this.InsertPurchaseIndentItemsFormGroup(x);
-    //                 });
-    //             }
-    //         },
-    //         (err) => {
-    //             console.error(err);
-    //         }
-    //     );
-    // }
-
-    // GetDocumentCentersByPurchaseIndent(): void {
-    //     this._CustomerService.GetDocumentCentersByPurchaseIndent(this.SelectedPurchaseIndentHeader.PurchaseIndentNumber).subscribe(
-    //         (data) => {
-    //             this.AllDocumentCenters = data as DocumentCenter[];
-    //             this.DocumentCenterDataSource = new MatTableDataSource(this.AllDocumentCenters);
-    //         },
-    //         (err) => {
-    //             console.error(err);
-    //         }
-    //     );
-    // }
-    // GetInvoiceAttachmentByPurchaseIndent(): void {
-    //     this._CustomerService.GetInvoiceAttachmentByPurchaseIndent(this.SelectedPurchaseIndentHeader.PurchaseIndentNumber, this.SelectedPurchaseIndentHeader.InvDocReferenceNo).subscribe(
-    //         (data) => {
-    //             this.invAttach = data as BPCInvoiceAttachment;
-    //         },
-    //         (err) => {
-    //             console.error(err);
-    //         }
-    //     );
-    // }
+    GetPurchaseIndentItemsByPI(): void {
+        this._CustomerService.GetPurchaseIndentItemsByPI(this.SelectedPurchaseIndentHeader.PINumber).subscribe(
+            (data) => {
+                const dt = data as BPCPIItem[];
+                if (dt && dt.length && dt.length > 0) {
+                    this.AllPurchaseIndentItems = data as BPCPIItem[];
+                    this.PurchaseIndentItemDataSource = new MatTableDataSource(this.AllPurchaseIndentItems);
+                }
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
 
     SetPurchaseIndentHeaderValues(): void {
+        this.PurchaseIndentFormGroup.get('PINumber').patchValue(this.SelectedPurchaseIndentHeader.PINumber);
         this.PurchaseIndentFormGroup.get('DocDate').patchValue(this.SelectedPurchaseIndentHeader.DocDate);
         this.PurchaseIndentFormGroup.get('ReferenceDoc').patchValue(this.SelectedPurchaseIndentHeader.ReferenceDoc);
         this.PurchaseIndentFormGroup.get('GrossAmount').patchValue(this.SelectedPurchaseIndentHeader.GrossAmount);
         this.PurchaseIndentFormGroup.get('NetAmount').patchValue(this.SelectedPurchaseIndentHeader.NetAmount);
+        this.PurchaseIndentFormGroup.get('PINumber').patchValue(this.SelectedPurchaseIndentHeader.PINumber);
         this.PurchaseIndentFormGroup.get('Currency').patchValue(this.SelectedPurchaseIndentHeader.Currency);
+        this.PurchaseIndentFormGroup.get('Status').patchValue(this.SelectedPurchaseIndentHeader.Status);
     }
-
-    InsertPOItemsFormGroup(poItem: BPCOFItem): void {
-        const row = this._formBuilder.group({
-            Item: [poItem.Item],
-            Material: [poItem.Material],
-            MaterialText: [poItem.MaterialText],
-            DeliveryDate: [poItem.DeliveryDate],
-            OrderedQty: [poItem.OrderedQty],
-            GRQty: [poItem.CompletedQty],
-            PipelineQty: [poItem.TransitQty],
-            OpenQty: [poItem.OpenQty],
-            PurchaseIndentQty: [poItem.OpenQty, [Validators.required, Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,3})?$')]],
-            UOM: [poItem.UOM],
-            Batch: [''],
-            ManufactureDate: [''],
-            ExpiryDate: [''],
-        });
-        row.disable();
-        row.get('PurchaseIndentQty').enable();
-        row.get('Batch').enable();
-        row.get('ManufactureDate').enable();
-        row.get('ExpiryDate').enable();
-        this.PurchaseIndentItemFormArray.push(row);
-        this.PurchaseIndentItemDataSource.next(this.PurchaseIndentItemFormArray.controls);
-        // return row;
-    }
-
-    // InsertPurchaseIndentItemsFormGroup(PurchaseIndentItem: BBPCPIItem): void {
-    //     const row = this._formBuilder.group({
-    //         Item: [PurchaseIndentItem.Item],
-    //         Material: [PurchaseIndentItem.Material],
-    //         MaterialText: [PurchaseIndentItem.MaterialText],
-    //         DeliveryDate: [PurchaseIndentItem.DeliveryDate],
-    //         OrderedQty: [PurchaseIndentItem.OrderedQty],
-    //         GRQty: [PurchaseIndentItem.CompletedQty],
-    //         PipelineQty: [PurchaseIndentItem.TransitQty],
-    //         OpenQty: [PurchaseIndentItem.OpenQty],
-    //         PurchaseIndentQty: [PurchaseIndentItem.PurchaseIndentQty, [Validators.required, Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,3})?$')]],
-    //         UOM: [PurchaseIndentItem.UOM],
-    //         Batch: [PurchaseIndentItem.Batch],
-    //         ManufactureDate: [PurchaseIndentItem.ManufactureDate],
-    //         ExpiryDate: [PurchaseIndentItem.ExpiryDate],
-    //     });
-    //     row.disable();
-    //     row.get('PurchaseIndentQty').enable();
-    //     row.get('Batch').enable();
-    //     row.get('ManufactureDate').enable();
-    //     row.get('ExpiryDate').enable();
-    //     this.PurchaseIndentItemFormArray.push(row);
-    //     this.PurchaseIndentItemDataSource.next(this.PurchaseIndentItemFormArray.controls);
-    //     // return row;
-    // }
-
-    // SetInvoiceDetailValues(): void {
-    //     this.InvoiceDetailsFormGroup.get('InvoiceNumber').patchValue(this.SelectedPurchaseIndentHeader.InvoiceNumber);
-    //     this.InvoiceDetailsFormGroup.get('InvoiceDate').patchValue(this.SelectedPurchaseIndentHeader.InvoiceDate);
-    //     this.InvoiceDetailsFormGroup.get('InvoiceAmount').patchValue(this.SelectedPurchaseIndentHeader.InvoiceAmount);
-    //     this.InvoiceDetailsFormGroup.get('InvoiceAmountUOM').patchValue(this.SelectedPurchaseIndentHeader.InvoiceAmountUOM);
-    // }
 
     GetPurchaseIndentValues(): void {
         const depDate = this.PurchaseIndentFormGroup.get('DocDate').value;
@@ -607,16 +439,21 @@ export class PurchaseIndentComponent implements OnInit {
         this.SelectedPurchaseIndentHeader.GrossAmount = this.SelectedPurchaseIndentView.GrossAmount = this.PurchaseIndentFormGroup.get('GrossAmount').value;
         this.SelectedPurchaseIndentHeader.NetAmount = this.SelectedPurchaseIndentView.NetAmount = this.PurchaseIndentFormGroup.get('NetAmount').value;
         this.SelectedPurchaseIndentHeader.Currency = this.SelectedPurchaseIndentView.Currency = this.PurchaseIndentFormGroup.get('Currency').value;
-        if (this.SelectedDocNumber && this.PO) {
-            this.SelectedPurchaseIndentHeader.Client = this.SelectedPurchaseIndentView.Client = this.PO.Client;
-            this.SelectedPurchaseIndentHeader.Company = this.SelectedPurchaseIndentView.Company = this.PO.Company;
-            this.SelectedPurchaseIndentHeader.Type = this.SelectedPurchaseIndentView.Type = this.PO.Type;
-            this.SelectedPurchaseIndentHeader.PatnerID = this.SelectedPurchaseIndentView.PatnerID = this.PO.PatnerID;
-        } else {
-            this.SelectedPurchaseIndentHeader.Client = this.SelectedPurchaseIndentView.Client = this.SelectedPurchaseIndentHeader.Client;
-            this.SelectedPurchaseIndentHeader.Company = this.SelectedPurchaseIndentView.Company = this.SelectedPurchaseIndentHeader.Company;
-            this.SelectedPurchaseIndentHeader.Type = this.SelectedPurchaseIndentView.Type = this.SelectedPurchaseIndentHeader.Type;
-            this.SelectedPurchaseIndentHeader.PatnerID = this.SelectedPurchaseIndentView.PatnerID = this.SelectedPurchaseIndentHeader.PatnerID;
+        if (this.SelectedPINumber) {
+            // this.SelectedPurchaseIndentHeader.Client = this.SelectedPurchaseIndentView.Client = this.PO.Client;
+            // this.SelectedPurchaseIndentHeader.Company = this.SelectedPurchaseIndentView.Company = this.PO.Company;
+            // this.SelectedPurchaseIndentHeader.Type = this.SelectedPurchaseIndentView.Type = this.PO.Type;
+            // this.SelectedPurchaseIndentHeader.PatnerID = this.SelectedPurchaseIndentView.PatnerID = this.PO.PatnerID;
+            this.SelectedPurchaseIndentHeader.Type = this.SelectedPurchaseIndentView.Type = 'Customer';
+            this.SelectedPurchaseIndentHeader.PatnerID = this.SelectedPurchaseIndentView.PatnerID = this.currentUserName;
+            this.SelectedPurchaseIndentHeader.Status = this.SelectedPurchaseIndentView.Status = this.SelectedPurchaseIndentHeader.Status;
+        }
+        else {
+            // this.SelectedPurchaseIndentHeader.Client = this.SelectedPurchaseIndentView.Client = this.SelectedPurchaseIndentHeader.Client;
+            // this.SelectedPurchaseIndentHeader.Company = this.SelectedPurchaseIndentView.Company = this.SelectedPurchaseIndentHeader.Company;
+            this.SelectedPurchaseIndentHeader.Type = this.SelectedPurchaseIndentView.Type = 'Customer';
+            this.SelectedPurchaseIndentHeader.PatnerID = this.SelectedPurchaseIndentView.PatnerID = this.currentUserName;
+            this.SelectedPurchaseIndentHeader.Status = this.SelectedPurchaseIndentView.Status = 'Open';
         }
     }
 
@@ -627,87 +464,33 @@ export class PurchaseIndentComponent implements OnInit {
             Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate())) / (1000 * 60 * 60 * 24));
     }
 
-    // GetPurchaseIndentItemValues(): void {
-    //     this.SelectedPurchaseIndentView.PurchaseIndentItems = [];
-    //     const PurchaseIndentItemFormArray = this.PurchaseIndentItemFormGroup.get('PurchaseIndentItems') as FormArray;
-    //     PurchaseIndentItemFormArray.controls.forEach((x, i) => {
-    //         const item: BBPCPIItem = new BBPCPIItem();
-    //         item.Item = x.get('Item').value;
-    //         item.Material = x.get('Material').value;
-    //         item.MaterialText = x.get('MaterialText').value;
-    //         item.DeliveryDate = x.get('DeliveryDate').value;
-    //         item.OrderedQty = x.get('OrderedQty').value;
-    //         item.UOM = x.get('UOM').value;
-    //         item.CompletedQty = x.get('GRQty').value;
-    //         item.TransitQty = x.get('PipelineQty').value;
-    //         item.OpenQty = x.get('OpenQty').value;
-    //         item.PurchaseIndentQty = x.get('PurchaseIndentQty').value;
-    //         item.Batch = x.get('Batch').value;
-    //         const manufDate = x.get('ManufactureDate').value;
-    //         if (manufDate) {
-    //             item.ManufactureDate = this._datePipe.transform(manufDate, 'yyyy-MM-dd HH:mm:ss');
-    //         } else {
-    //             item.ManufactureDate = x.get('ManufactureDate').value;
-    //         }
-    //         const expDate = x.get('ExpiryDate').value;
-    //         if (expDate) {
-    //             item.ExpiryDate = this._datePipe.transform(expDate, 'yyyy-MM-dd HH:mm:ss');
-    //         } else {
-    //             item.ExpiryDate = x.get('ExpiryDate').value;
-    //         }
-    //         if (this.SelectedDocNumber && this.PO) {
-    //             item.Client = this.PO.Client;
-    //             item.Company = this.PO.Company;
-    //             item.Type = this.PO.Type;
-    //             item.PatnerID = this.PO.PatnerID;
-    //         } else {
-    //             item.Client = this.SelectedPurchaseIndentHeader.Client;
-    //             item.Company = this.SelectedPurchaseIndentHeader.Company;
-    //             item.Type = this.SelectedPurchaseIndentHeader.Type;
-    //             item.PatnerID = this.SelectedPurchaseIndentHeader.PatnerID;
-    //         }
-    //         this.SelectedPurchaseIndentView.PurchaseIndentItems.push(item);
-    //     });
-    // }
-
-    // GetInvoiceDetailValues(): void {
-    //     this.SelectedPurchaseIndentHeader.InvoiceNumber = this.SelectedPurchaseIndentView.InvoiceNumber = this.InvoiceDetailsFormGroup.get('InvoiceNumber').value;
-    //     const invDate = this.InvoiceDetailsFormGroup.get('InvoiceDate').value;
-    //     if (invDate) {
-    //         this.SelectedPurchaseIndentHeader.InvoiceDate = this.SelectedPurchaseIndentView.InvoiceDate = this._datePipe.transform(invDate, 'yyyy-MM-dd HH:mm:ss');
-    //     } else {
-    //         this.SelectedPurchaseIndentHeader.InvoiceDate = this.SelectedPurchaseIndentView.InvoiceDate = this.InvoiceDetailsFormGroup.get('InvoiceDate').value;
-    //     }
-    //     this.SelectedPurchaseIndentHeader.InvoiceAmountUOM = this.SelectedPurchaseIndentView.InvoiceAmountUOM = this.InvoiceDetailsFormGroup.get('InvoiceAmountUOM').value;
-    //     this.SelectedPurchaseIndentHeader.InvoiceAmount = this.SelectedPurchaseIndentView.InvoiceAmount = this.InvoiceDetailsFormGroup.get('InvoiceAmount').value;
-    // }
-
-    // GetDocumentCenterValues(): void {
-    //     this.SelectedPurchaseIndentView.DocumentCenters = [];
-    //     // this.SelectedBPVendorOnBoardingView.BPBanks.push(...this.BanksByVOB);
-    //     this.AllDocumentCenters.forEach(x => {
-    //         this.SelectedPurchaseIndentView.DocumentCenters.push(x);
-    //     });
-    // }
+    GetPurchaseIndentItemValues(): void {
+        this.SelectedPurchaseIndentView.Items = [];
+        this.AllPurchaseIndentItems.forEach(x => {
+            x.Type = 'Customer';
+            x.PatnerID = this.currentUserName;
+            this.SelectedPurchaseIndentView.Items.push(x);
+        });
+    }
 
     SaveClicked(): void {
         if (this.PurchaseIndentFormGroup.valid) {
             if (!this.isWeightError) {
-                if (this.PurchaseIndentItemFormGroup.valid) {
-                    if (this.InvoiceDetailsFormGroup.valid) {
-                        this.GetPurchaseIndentValues();
-                        // this.GetPurchaseIndentItemValues();
-                        // this.GetInvoiceDetailValues();
-                        // this.GetDocumentCenterValues();
-                        // this.SelectedPurchaseIndentView.IsSubmitted = false;
-                        this.SetActionToOpenConfirmation('Save');
-                    } else {
-                        this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
-                    }
+                // if (this.PurchaseIndentItemFormGroup.valid) {
+                //     if (this.InvoiceDetailsFormGroup.valid) {
+                this.GetPurchaseIndentValues();
+                this.GetPurchaseIndentItemValues();
+                // this.GetInvoiceDetailValues();
+                // this.GetDocumentCenterValues();
+                // this.SelectedPurchaseIndentView.IsSubmitted = false;
+                this.SetActionToOpenConfirmation('Save');
+                //     } else {
+                //         this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
+                //     }
 
-                } else {
-                    this.ShowValidationErrors(this.PurchaseIndentItemFormGroup);
-                }
+                // } else {
+                //     this.ShowValidationErrors(this.PurchaseIndentItemFormGroup);
+                // }
             }
 
         } else {
@@ -717,21 +500,21 @@ export class PurchaseIndentComponent implements OnInit {
     SubmitClicked(): void {
         if (this.PurchaseIndentFormGroup.valid) {
             if (!this.isWeightError) {
-                if (this.PurchaseIndentItemFormGroup.valid) {
-                    if (this.InvoiceDetailsFormGroup.valid) {
-                        this.GetPurchaseIndentValues();
-                        // this.GetPurchaseIndentItemValues();
-                        // this.GetInvoiceDetailValues();
-                        // this.GetDocumentCenterValues();
-                        // this.SelectedPurchaseIndentView.IsSubmitted = true;
-                        this.SetActionToOpenConfirmation('Submit');
-                    } else {
-                        this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
-                    }
+                // if (this.PurchaseIndentItemFormGroup.valid) {
+                //     if (this.InvoiceDetailsFormGroup.valid) {
+                this.GetPurchaseIndentValues();
+                this.GetPurchaseIndentItemValues();
+                // this.GetInvoiceDetailValues();
+                // this.GetDocumentCenterValues();
+                // this.SelectedPurchaseIndentView.IsSubmitted = true;
+                this.SetActionToOpenConfirmation('Submit');
+                //     } else {
+                //         this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
+                //     }
 
-                } else {
-                    this.ShowValidationErrors(this.PurchaseIndentItemFormGroup);
-                }
+                // } else {
+                //     this.ShowValidationErrors(this.PurchaseIndentItemFormGroup);
+                // }
             }
 
         } else {
@@ -791,6 +574,10 @@ export class PurchaseIndentComponent implements OnInit {
         this._CustomerService.CreatePurchaseIndent(this.SelectedPurchaseIndentView).subscribe(
             (data) => {
                 this.SelectedPurchaseIndentHeader.PINumber = (data as BPCPIHeader).PINumber;
+                this.ResetControl();
+                this.notificationSnackBarComponent.openSnackBar(`PurchaseIndent ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
+                this.IsProgressBarVisibile = false;
+
                 // if (this.invoiceAttachment) {
                 //     this.AddInvoiceAttachment(Actiontype);
                 // } else {
@@ -855,6 +642,10 @@ export class PurchaseIndentComponent implements OnInit {
         this._CustomerService.UpdatePurchaseIndent(this.SelectedPurchaseIndentView).subscribe(
             (data) => {
                 this.SelectedPurchaseIndentHeader.PINumber = (data as BPCPIHeader).PINumber;
+                this.ResetControl();
+                this.notificationSnackBarComponent.openSnackBar(`PurchaseIndent ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
+                this.IsProgressBarVisibile = false;
+
                 // if (this.invoiceAttachment) {
                 //     this.AddInvoiceAttachment(Actiontype);
                 // } else {
@@ -999,13 +790,89 @@ export class PurchaseIndentComponent implements OnInit {
     }
 
     AmountSelected(): void {
-        const GrossWeightVAL = +this.PurchaseIndentFormGroup.get('GrossWeight').value;
-        const NetWeightVAL = + this.PurchaseIndentFormGroup.get('NetWeight').value;
-        if (GrossWeightVAL && GrossWeightVAL && GrossWeightVAL <= NetWeightVAL) {
+        const GrossAmountVAL = +this.PurchaseIndentFormGroup.get('GrossAmount').value;
+        const NetAmountVAL = + this.PurchaseIndentFormGroup.get('NetAmount').value;
+        if (GrossAmountVAL && GrossAmountVAL && GrossAmountVAL <= NetAmountVAL) {
             this.isWeightError = true;
         } else {
             this.isWeightError = false;
         }
     }
 
+    getStatusColor(StatusFor: string): string {
+        switch (StatusFor) {
+            case 'Shipped':
+                return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'gray' :
+                    this.SelectedPurchaseIndentHeader.Status === 'SO' ? '#efb577' : '#34ad65';
+            case 'Invoiced':
+                return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'gray' :
+                    this.SelectedPurchaseIndentHeader.Status === 'SO' ? 'gray' :
+                        this.SelectedPurchaseIndentHeader.Status === 'Shipped' ? '#efb577' : '#34ad65';
+            case 'Receipt':
+                return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'gray' :
+                    this.SelectedPurchaseIndentHeader.Status === 'SO' ? 'gray' :
+                        this.SelectedPurchaseIndentHeader.Status === 'Shipped' ? 'gray' :
+                            this.SelectedPurchaseIndentHeader.Status === 'Invoiced' ? '#efb577' : '#34ad65';
+            default:
+                return '';
+        }
+    }
+
+    getTimeline(StatusFor: string): string {
+        switch (StatusFor) {
+            case 'Shipped':
+                return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'white-timeline' :
+                    this.SelectedPurchaseIndentHeader.Status === 'SO' ? 'orange-timeline' : 'green-timeline';
+            case 'Invoiced':
+                return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'white-timeline' :
+                    this.SelectedPurchaseIndentHeader.Status === 'SO' ? 'white-timeline' :
+                        this.SelectedPurchaseIndentHeader.Status === 'Shipped' ? 'orange-timeline' : 'green-timeline';
+            case 'Receipt':
+                return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'white-timeline' :
+                    this.SelectedPurchaseIndentHeader.Status === 'SO' ? 'white-timeline' :
+                        this.SelectedPurchaseIndentHeader.Status === 'Shipped' ? 'white-timeline' :
+                            this.SelectedPurchaseIndentHeader.Status === 'Invoiced' ? 'orange-timeline' : 'green-timeline';
+            default:
+                return '';
+        }
+    }
+    getRestTimeline(StatusFor: string): string {
+        switch (StatusFor) {
+            case 'Shipped':
+                return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'white-timeline' :
+                    this.SelectedPurchaseIndentHeader.Status === 'SO' ? 'white-timeline' : 'green-timeline';
+            case 'Invoiced':
+                return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'white-timeline' :
+                    this.SelectedPurchaseIndentHeader.Status === 'SO' ? 'white-timeline' :
+                        this.SelectedPurchaseIndentHeader.Status === 'Shipped' ? 'white-timeline' : 'green-timeline';
+            case 'Receipt':
+                return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'white-timeline' :
+                    this.SelectedPurchaseIndentHeader.Status === 'SO' ? 'white-timeline' :
+                        this.SelectedPurchaseIndentHeader.Status === 'Shipped' ? 'white-timeline' :
+                            this.SelectedPurchaseIndentHeader.Status === 'Invoiced' ? 'white-timeline' : 'green-timeline';
+            default:
+                return '';
+        }
+    }
+    getStatusDate(StatusFor: string): string {
+        const tt = this._datePipe.transform(this.maxDate, 'dd/MM/yyyy');
+        switch (StatusFor) {
+            case 'SO':
+                return this.SelectedPurchaseIndentHeader.Status === 'Open' ? '' : tt;
+            case 'Shipped':
+                return this.SelectedPurchaseIndentHeader.Status === 'Open' ? '' :
+                    this.SelectedPurchaseIndentHeader.Status === 'SO' ? '' : tt;
+            case 'Invoiced':
+                return this.SelectedPurchaseIndentHeader.Status === 'Open' ? '' :
+                    this.SelectedPurchaseIndentHeader.Status === 'SO' ? '' :
+                        this.SelectedPurchaseIndentHeader.Status === 'Shipped' ? '' : tt;
+            case 'Receipt':
+                return this.SelectedPurchaseIndentHeader.Status === 'Open' ? '' :
+                    this.SelectedPurchaseIndentHeader.Status === 'SO' ? '' :
+                        this.SelectedPurchaseIndentHeader.Status === '' ? '' :
+                            this.SelectedPurchaseIndentHeader.Status === '' ? '' : tt;
+            default:
+                return '';
+        }
+    }
 }

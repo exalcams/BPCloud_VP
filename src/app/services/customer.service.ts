@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { Observable, throwError } from 'rxjs';
 import { Guid } from 'guid-typescript';
 import { catchError } from 'rxjs/operators';
-import { BPCPIView, BPCPIHeader, BPCRetView, BPCRetHeader, BPCProd } from 'app/models/customer';
+import { BPCPIView, BPCPIHeader, BPCRetView, BPCRetHeader, BPCProd, BPCPIItem, BPCRetItem } from 'app/models/customer';
 
 @Injectable({
     providedIn: 'root'
@@ -65,6 +65,15 @@ export class CustomerService {
             .pipe(catchError(this.errorHandler));
     }
 
+    GetPurchaseIndentByPIAndPartnerID(PINumber: string, PartnerID: string): Observable<BPCPIHeader | string> {
+        return this._httpClient.get<BPCPIHeader>(`${this.baseAddress}customerapi/PurchaseIndent/GetPurchaseIndentByPIAndPartnerID?PINumber=${PINumber}&PartnerID=${PartnerID}`)
+            .pipe(catchError(this.errorHandler));
+    }
+    GetPurchaseIndentItemsByPI(PINumber: string): Observable<BPCPIItem[] | string> {
+        return this._httpClient.get<BPCPIItem[]>(`${this.baseAddress}customerapi/PurchaseIndent/GetPurchaseIndentItemsByPI?PINumber=${PINumber}`)
+            .pipe(catchError(this.errorHandler));
+    }
+
     // Return
 
     CreateReturn(Return: BPCRetView): Observable<any> {
@@ -110,8 +119,19 @@ export class CustomerService {
             .pipe(catchError(this.errorHandler));
     }
 
+    GetReturnByRetAndPartnerID(RetReqID: string, PartnerID: string): Observable<BPCRetHeader | string> {
+        return this._httpClient.get<BPCRetHeader>(`${this.baseAddress}customerapi/Return/GetReturnByRetAndPartnerID?RetReqID=${RetReqID}&PartnerID=${PartnerID}`)
+            .pipe(catchError(this.errorHandler));
+    }
+    GetReturnItemsByRet(RetReqID: string): Observable<BPCRetItem[] | string> {
+        return this._httpClient.get<BPCRetItem[]>(`${this.baseAddress}customerapi/Return/GetReturnItemsByRet?RetReqID=${RetReqID}`)
+            .pipe(catchError(this.errorHandler));
+    }
+
+    // Products
     GetAllProducts(): Observable<BPCProd[] | string> {
         return this._httpClient.get<BPCProd[]>(`${this.baseAddress}customerapi/Product/GetAllProducts`)
             .pipe(catchError(this.errorHandler));
     }
+
 }

@@ -165,9 +165,9 @@ export class ASNComponent implements OnInit {
             VessleNumber: ['', Validators.required],
             AWBNumber: ['', Validators.required],
             AWBDate: [new Date(), Validators.required],
-            NetWeight: ['', [Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
+            NetWeight: ['', [ Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
             NetWeightUOM: ['KG', Validators.required],
-            GrossWeight: ['', [Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
+            GrossWeight: ['', [Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
             GrossWeightUOM: ['KG', Validators.required],
             VolumetricWeight: ['', [Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
             VolumetricWeightUOM: [''],
@@ -195,7 +195,7 @@ export class ASNComponent implements OnInit {
     }
     InitializeInvoiceDetailsFormGroup(): void {
         this.InvoiceDetailsFormGroup = this._formBuilder.group({
-            InvoiceNumber: ['', [Validators.minLength(16), Validators.maxLength(16), Validators.pattern('^[1-9][0-9]*$')]],
+            InvoiceNumber: ['', [Validators.minLength(10), Validators.maxLength(16), Validators.pattern('^[1-9][0-9]*$')]],
             InvoiceAmount: ['', [Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,2})?$')]],
             InvoiceAmountUOM: [''],
             InvoiceDate: [''],
@@ -1084,7 +1084,7 @@ export class ASNComponent implements OnInit {
     AmountSelected(): void {
         const GrossWeightVAL = +this.ASNFormGroup.get('GrossWeight').value;
         const NetWeightVAL = + this.ASNFormGroup.get('NetWeight').value;
-        if (GrossWeightVAL && GrossWeightVAL && GrossWeightVAL <= NetWeightVAL) {
+        if (GrossWeightVAL < NetWeightVAL) {
             this.isWeightError = true;
         } else {
             this.isWeightError = false;

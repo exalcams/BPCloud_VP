@@ -161,13 +161,17 @@
     text-align: left;
     color: #3e3e3e;
   }
-  .SaveBtn {
+  .SubmitBtn {
     background-color: #efb577;
     color: white;
   }
-  .DeleteBtn {
+  .SaveBtn {
     background-color: white;
     color: #efb577;
+  }
+  .DeleteBtn {
+    background-color: white;
+    color: #e03b3b;
   }
   .Rectangle-721 {
     // height: 115px;
@@ -291,12 +295,6 @@
     cursor: pointer !important;
     color: #74a2f9;
   }
-  .addIcon {
-    height: 26px;
-    margin-top: 25px;
-    padding-left: 8px;
-    cursor: pointer !important;
-  }
   .cardHeader {
     background-color: #fffdf9;
     height: 45px;
@@ -325,7 +323,7 @@
   }
   .addIcon {
     height: 20px;
-    margin-top: 16px;
+    margin-top: 24px;
     padding-left: 4px;
     cursor: pointer !important;
   }
@@ -347,7 +345,7 @@
   }
   .removeIcon {
     height: 20px;
-    padding-right: 16px;
+    padding-left: 16px;
     cursor: pointer !important;
   }
   .mat-input-element:disabled {
@@ -531,6 +529,9 @@
   }
   .topLeftBorderRadius {
     border-top-left-radius: 20px;
+  }
+  .borderleft {
+    border-left: 1px solid #cccccc;
   }
   .ticketTile {
     background-color: white;
@@ -815,7 +816,7 @@
     margin-top: -16px;
     // margin-left: 32px;
   }
-  .AttError{
+  .AttError {
     color: #f44336;
     font-size: 12px;
   }
