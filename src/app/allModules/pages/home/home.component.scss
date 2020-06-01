@@ -11,19 +11,100 @@
         padding: 0px;
         margin: 0px;
     }
-    &.topbarClass {
-        // background-image: url("../../../../assets/images/header_2.png");
-        // background-repeat: no-repeat;
+    .outer {
+        border-bottom: 1px solid rgba(255, 85, 0, 0.1);
+        position: relative;
+        z-index: 1;
+        .bg {
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-image: url("assets/images/header_2.png");
+            opacity: 0.1;
+            background-repeat: no-repeat;
+        }
         width: 100%;
         object-fit: contain;
-    }
-
-    .outer > * {
         line-height: 50px;
         display: inline-block;
         vertical-align: middle;
     }
-
+    .topbarClass {
+        background: url("/assets/images/backgrounds/header 2.png") no-repeat;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    .center {
+        padding: 0px !important;
+        max-width: 2000px;
+        margin: 0 auto;
+    
+        @include media-breakpoint-down(md) {
+          padding: 0 !important;
+        }
+        #headerCard {
+          position: fixed;
+          height: 50px;
+          box-shadow: 0 -5px 10px 0 rgba(0, 0, 0, 0.16);
+          background-color: #ffffff;
+          top: 0px;
+          left: 0px;
+          right: 0px;
+          margin-bottom: 0px;
+          z-index: 100;
+        }
+        .content-pos {
+          margin-top: -27px !important;
+        }
+        .content-card1 {
+          display: flex;
+          flex: 1;
+          position: relative;
+          border-radius: 10px;
+    
+          //   .mat-sidenav-container {
+          //     display: flex;
+          //     flex: 1;
+          //     width: 100%;
+    
+          //     > .mat-sidenav-content,
+          //     > .mat-drawer-content {
+          //       display: flex;
+          //       flex: 1 1 auto;
+          //       min-height: 100%;
+          //       height: auto;
+          //     }
+    
+          //     > .mat-drawer-content {
+          //       max-width: 100%;
+          //     }
+    
+          //     mat-sidenav {
+          //       display: flex;
+          //       flex-direction: column;
+          //       width: 400px;
+          //       max-width: 90%;
+          //       box-shadow: 0 0 1px rgba(0, 0, 0, 0.37);
+          //       overflow: hidden;
+          //     }
+          //   }
+        }
+      }
+    .side-bar {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        .sidenav-content {
+            overflow: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            background-color: white;
+            padding: 15px 15px 0px 15px;
+        }
+    }
     .staySafe {
         background-image: url("../../../../assets/images/StaySafe.png");
         background-repeat: no-repeat;
@@ -41,14 +122,12 @@
             }
         }
     }
-
     .safetyFirst {
         background-image: url("../../../../assets/images/SafetyFirst.png");
         background-repeat: no-repeat;
         background-size: cover;
         height: 400px;
     }
-
     .translucentDiv {
         -webkit-backdrop-filter: blur(37.4px);
         backdrop-filter: blur(37.4px);
@@ -59,22 +138,25 @@
         border-radius: 15px;
         margin-bottom: 10px;
     }
-
     table,
     th,
     td {
         border: none;
     }
-
     .rightFlexHr {
         margin: 0px 0px 10px 0px;
-        width: 48%;
-        margin-left: 40px;
+        width: 45%;
+        margin-left: 45px;
         height: 3px;
         background-color: #efb577;
         border: none;
-    }
 
+        // margin: 0px;
+        // width: 6%;
+        // height: 3px;
+        // background-color: #efb577;
+        // border: none;
+    }
     .rightBorder {
         margin: 10px;
         padding: 10px;
@@ -136,7 +218,7 @@
     }
     .cardActions {
         // box-shadow: 0 -5px 10px 0 rgba(0, 0, 0, 0.16);
-        background-color:#e6e6e6 ;
-        padding: 15px;
-      }
+        background-color: #e6e6e6;
+        padding: 10px;
+    }
 }

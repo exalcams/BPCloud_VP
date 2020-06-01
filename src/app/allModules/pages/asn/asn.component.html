@@ -863,7 +863,8 @@
                   </div>
                   <div fxFlex="10" fxLayoutAlign="start center">
                     <!-- <img class="addIcon" src="assets/images/logos/add-button.png" (click)="AddDocumentCenterToTable()"> -->
-                    <button type="button" class="SaveBtn" mat-raised-button (click)="AddDocumentCenterToTable()">Add</button>
+                    <button type="button" class="SaveBtn" mat-raised-button
+                      (click)="AddDocumentCenterToTable()">Add</button>
                   </div>
                 </form>
               </div>
@@ -936,11 +937,11 @@
         </div> -->
         <mat-card-actions class="m-0 pl-12 pr-16 cardActions">
           <div fxLayout fxFlex fxLayoutAlign="end">
-            <button *ngIf="SelectedASNHeader?.ASNNumber" mat-stroked-button class="DeleteBtn mr-4 mb-4"
+            <button *ngIf="SelectedASNHeader?.ASNNumber" mat-stroked-button class="DeleteBtn mr-4 mb-8"
               (click)="DeleteClicked()">Delete</button>
             <button *ngIf="( SelectedASNHeader?.ASNNumber|| PO?.DocNumber) && !SelectedASNHeader?.IsSubmitted"
-              mat-raised-button class="SaveBtn mb-4" (click)="SaveClicked()">Save</button>
-            <button *ngIf="( SelectedASNHeader?.ASNNumber|| PO?.DocNumber)" mat-raised-button class="SaveBtn mb-4"
+              mat-raised-button class="SaveBtn" (click)="SaveClicked()">Save</button>
+            <button *ngIf="( SelectedASNHeader?.ASNNumber|| PO?.DocNumber)" mat-raised-button class="SaveBtn"
               (click)="SubmitClicked()">Submit</button>
           </div>
         </mat-card-actions>
