@@ -41,58 +41,58 @@
         padding: 0px !important;
         max-width: 2000px;
         margin: 0 auto;
-    
+
         @include media-breakpoint-down(md) {
-          padding: 0 !important;
+            padding: 0 !important;
         }
         #headerCard {
-          position: fixed;
-          height: 50px;
-          box-shadow: 0 -5px 10px 0 rgba(0, 0, 0, 0.16);
-          background-color: #ffffff;
-          top: 0px;
-          left: 0px;
-          right: 0px;
-          margin-bottom: 0px;
-          z-index: 100;
+            position: fixed;
+            height: 50px;
+            box-shadow: 0 -5px 10px 0 rgba(0, 0, 0, 0.16);
+            background-color: #ffffff;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            margin-bottom: 0px;
+            z-index: 100;
         }
         .content-pos {
-          margin-top: -27px !important;
+            margin-top: -27px !important;
         }
         .content-card1 {
-          display: flex;
-          flex: 1;
-          position: relative;
-          border-radius: 10px;
-    
-          //   .mat-sidenav-container {
-          //     display: flex;
-          //     flex: 1;
-          //     width: 100%;
-    
-          //     > .mat-sidenav-content,
-          //     > .mat-drawer-content {
-          //       display: flex;
-          //       flex: 1 1 auto;
-          //       min-height: 100%;
-          //       height: auto;
-          //     }
-    
-          //     > .mat-drawer-content {
-          //       max-width: 100%;
-          //     }
-    
-          //     mat-sidenav {
-          //       display: flex;
-          //       flex-direction: column;
-          //       width: 400px;
-          //       max-width: 90%;
-          //       box-shadow: 0 0 1px rgba(0, 0, 0, 0.37);
-          //       overflow: hidden;
-          //     }
-          //   }
+            display: flex;
+            flex: 1;
+            position: relative;
+            border-radius: 10px;
+
+            //   .mat-sidenav-container {
+            //     display: flex;
+            //     flex: 1;
+            //     width: 100%;
+
+            //     > .mat-sidenav-content,
+            //     > .mat-drawer-content {
+            //       display: flex;
+            //       flex: 1 1 auto;
+            //       min-height: 100%;
+            //       height: auto;
+            //     }
+
+            //     > .mat-drawer-content {
+            //       max-width: 100%;
+            //     }
+
+            //     mat-sidenav {
+            //       display: flex;
+            //       flex-direction: column;
+            //       width: 400px;
+            //       max-width: 90%;
+            //       box-shadow: 0 0 1px rgba(0, 0, 0, 0.37);
+            //       overflow: hidden;
+            //     }
+            //   }
         }
-      }
+    }
     .side-bar {
         display: flex;
         flex: 1;
@@ -136,7 +136,7 @@
         width: 200px;
         opacity: 0.7;
         border-radius: 15px;
-        margin-bottom: 10px;
+        margin-bottom: 30px;
     }
     table,
     th,
