@@ -82,11 +82,11 @@ export class SupportdeskComponent implements OnInit {
           this.IsProgressBarVisibile = false;
         });
   }
-  CreateTicket(){
+  CreateTicket() {
     // this._router.navigate(['/pages/polookup'], { queryParams: { id: po } });supportchat
     this._router.navigate(['/pages/createTicket']);
   }
   Checked(row: any): void {
-    this._router.navigate(['/pages/supportchat']);
-}
+    this._router.navigate(['/pages/supportchat'], { queryParams: { SupportID: row.SupportID } });
+  }
 }

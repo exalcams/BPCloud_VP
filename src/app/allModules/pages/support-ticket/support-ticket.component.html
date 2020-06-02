@@ -18,44 +18,49 @@
             <mat-form-field class="pl-8 pr-12" style="width: 100%;">
               <mat-select placeholder="Reason Select" formControlName="ReasonCode">
                 <mat-option *ngFor="let reason of supportMaster" [value]="reason.ReasionCode">{{reason.ReasionText}}
-              </mat-option>
+                </mat-option>
                 <!-- <mat-option value="Road">Road</mat-option>
                 <mat-option value="Train">Train</mat-option>
                 <mat-option value="Air">Air</mat-option> -->
               </mat-select>
               <mat-error
-              *ngIf="SupportFormGroup.get('ReasonCode').touched && SupportFormGroup.get('ReasonCode').hasError('required')">
-              Reasion Text is required
-            </mat-error>
+                *ngIf="SupportFormGroup.get('ReasonCode').touched && SupportFormGroup.get('ReasonCode').hasError('required')">
+                Reasion Text is required
+              </mat-error>
             </mat-form-field>
           </div>
         </div>
         <div class="mt-12" fxLayout="row" fxLayoutAlign="start">
           <img class="addBlueIcon" src="assets/images/addBlue.png" (click)="fileInput2.click()">
+          <span class="attachClass" (click)="fileInput1.click()">  add Attachment </span>
+          <input hidden type="file" accept="image/x-png,image/gif,image/jpeg,image/jpg,application/pdf" #fileInput1
+            id="file" (change)="handleFileInput($event)" />
+          <!-- <img class="addBlueIcon" src="assets/images/addBlue.png" (click)="fileInput2.click()">
           <span class="attachClass" (click)="fileInput2.click()">
             Add Attachment
           </span>
-          <input hidden type="file" #fileInput2 id="file" (change)="handleFileInput1($event)"
-            accept="image/x-png,image/gif,image/jpeg,image/jpg,application/pdf" />
+          <input hidden type="file" #fileInput2 id="file" (change)="handleFileInput($event)"
+            accept="image/x-png,image/gif,image/jpeg,image/jpg,application/pdf" /> -->
         </div>
-        <div fxFlex="40">
-          <div fxFlex *ngIf="!invAttach?.AttachmentName"
-            (click)="GetInvoiceAttachment(invoiceAttachment?.name,invoiceAttachment)" class="pdfLinkClass pl-8">
-            {{invoiceAttachment?.name}}</div>
-          <div fxFlex *ngIf="invAttach?.AttachmentName" (click)="GetInvoiceAttachment(invAttach?.AttachmentName)"
+        <div fxFlex="40"  *ngFor="let file1 of fileToUploadList">
+          <div fxFlex (click)="GetInvoiceAttachment(file1?.name,file1)"
             class="pdfLinkClass pl-8">
-            {{invAttach?.AttachmentName}}
+            {{file1?.name}}</div>
+          <div fxFlex (click)="GetInvoiceAttachment(file1?.name)" class="pdfLinkClass pl-8">
+            {{file1?.size}}
           </div>
         </div>
         <div fxFlex fxLayout="row" class="mt-12" fxLayoutGap="20px">
           <div fxFlex="100">
             <mat-form-field style="width: 80% !important;" class="example-full-width">
               <!-- <mat-label>Leave a comment</mat-label> -->
-              <textarea matInput style="height: 200px !important;" formControlName="Remarks" placeholder="Remarks......"></textarea>
+              <textarea matInput style="height: 200px !important;" formControlName="Remarks"
+                placeholder="Remarks......"></textarea>
             </mat-form-field>
-            <mat-error *ngIf="SupportFormGroup.get('Remarks').touched && SupportFormGroup.get('Remarks').hasError('required')">
-            Remarks is required
-          </mat-error>
+            <mat-error
+              *ngIf="SupportFormGroup.get('Remarks').touched && SupportFormGroup.get('Remarks').hasError('required')">
+              Remarks is required
+            </mat-error>
           </div>
         </div>
         <div>
@@ -67,6 +72,10 @@
           </div>
         </div>
       </form>
+    </div>
+    <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
+    </mat-progress-spinner>
+    <div id="overlay" *ngIf="IsProgressBarVisibile">
     </div>
   </div>
 </div>

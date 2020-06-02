@@ -33,7 +33,9 @@ export class SupportTicketComponent implements OnInit {
   SupportFormGroup: FormGroup;
   supportMaster: SupportMaster[] = [];
   fileToUploadList: File[] = [];
-  SupportTicket: SupportHeader;
+  SupportTicket = new SupportHeader();
+  supportticket: SupportHeader;
+
   notificationSnackBarComponent: NotificationSnackBarComponent;
   constructor(
     private _route: ActivatedRoute,
@@ -83,7 +85,7 @@ export class SupportTicketComponent implements OnInit {
   // }
   AddInvoiceAttachment(): void {
 
-    this._supportdeskService.AddInvoiceAttachment(this.SupportTicket.SupportID, this.currentUserID.toString(), this.invoiceAttachment).subscribe(
+    this._supportdeskService.AddInvoiceAttachment(this.supportticket.SupportID, this.currentUserID.toString(), this.invoiceAttachment).subscribe(
       (dat) => {
         if (this.fileToUploadList && this.fileToUploadList.length) {
           this.AddDocumentCenterAttachment();
@@ -97,7 +99,7 @@ export class SupportTicketComponent implements OnInit {
       });
   }
   AddDocumentCenterAttachment(): void {
-    this._supportdeskService.AddDocumentCenterAttachment(this.SupportTicket.SupportID, this.currentUserID.toString(), this.fileToUploadList).subscribe(
+    this._supportdeskService.AddDocumentCenterAttachment(this.supportticket.SupportID, this.currentUserID.toString(), this.fileToUploadList).subscribe(
       (dat) => {
         // this.ResetControl();
         // this.notificationSnackBarComponent.openSnackBar(`ASN ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
@@ -119,27 +121,35 @@ export class SupportTicketComponent implements OnInit {
         panelClass: 'confirmation-dialog'
       };
       const dialogRef = this.dialog.open(NotificationDialogComponent, dialogConfig);
-      this.IsProgressBarVisibile = false;
+      // this.IsProgressBarVisibile = false;
       dialogRef.afterClosed().subscribe(
         result => {
           if (result) {
+            this.IsProgressBarVisibile = true;
+            this.SupportTicket.ReasionCode = this.SupportFormGroup.get('ReasonCode').value;
+            this.SupportTicket.ReasionRemarks = this.SupportFormGroup.get('Remarks').value;
+            this.SupportTicket.PatnerID = this.PartnerID;
             this._supportdeskService.CreateSupportTicket(this.SupportTicket).subscribe(
               (data) => {
-                this.SupportTicket.SupportID = (data as SupportHeader).SupportID;
-                if (this.invoiceAttachment) {
-                  this.AddInvoiceAttachment();
-                } else {
+                this.supportticket = (data as SupportHeader);
+                console.log(this.supportticket);
+                // if (this.invoiceAttachment) {
+                //   this.AddInvoiceAttachment();
+                // } else {
                   if (this.fileToUploadList && this.fileToUploadList.length) {
                     this.AddDocumentCenterAttachment();
+                    this.IsProgressBarVisibile = false;
+                    this.notificationSnackBarComponent.openSnackBar('Ticket Create successfully', SnackBarStatus.success);
+                    this._router.navigate(['/pages/supportdesk']);
                   } else {
                     // this.ResetControl();
                     // this.notificationSnackBarComponent.openSnackBar(`ASN ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
                     this.IsProgressBarVisibile = false;
                     // this.GetASNBasedOnCondition();
                   }
-                }
+                // }
                 // this._router.navigate(['/pages/orderfulfilmentCenter']);
-                this.IsProgressBarVisibile = false;
+               
               },
               (err) => {
                 this.IsProgressBarVisibile = false;
@@ -172,33 +182,45 @@ export class SupportTicketComponent implements OnInit {
   }
   handleFileInput1(evt): void {
     if (evt.target.files && evt.target.files.length > 0) {
-      if (this.invoiceAttachment && this.invoiceAttachment.name) {
-        this.notificationSnackBarComponent.openSnackBar('Maximum one attachment is allowed, old is attachment is replaced', SnackBarStatus.warning);
-      }
-      if (this.invAttach && this.invAttach.AttachmentName) {
-        this.notificationSnackBarComponent.openSnackBar('Maximum one attachment is allowed, old is attachment is replaced', SnackBarStatus.warning);
-      }
+      // if (this.invoiceAttachment && this.invoiceAttachment.name) {
+      //   this.notificationSnackBarComponent.openSnackBar('Maximum one attachment is allowed, old is attachment is replaced', SnackBarStatus.warning);
+      // }
+      // if (this.invAttach && this.invAttach.AttachmentName) {
+      //   this.notificationSnackBarComponent.openSnackBar('Maximum one attachment is allowed, old is attachment is replaced', SnackBarStatus.warning);
+      // }
       this.invoiceAttachment = evt.target.files[0];
-      this.invAttach = new BPCInvoiceAttachment();
+      this.fileToUploadList.push(this.invoiceAttachment);
+      // this.invAttach = new BPCInvoiceAttachment();
     }
+    // if (evt.target.files && evt.target.files.length > 0) {
+    //   this.fileToUpload = evt.target.files[0];
+    //   this.fileToUploadList.push(this.fileToUpload);
+    // }
   }
   handleFileInput(evt): void {
     if (evt.target.files && evt.target.files.length > 0) {
-        const fil = evt.target.files[0] as File;
-        if (fil.type.includes(this.selectedDocCenterMaster.Extension)) {
-            const fileSize = this.math.round(fil.size / 1024);
-            if (fileSize <= this.selectedDocCenterMaster.SizeInKB) {
-                this.fileToUpload = fil;
-                // this.fileToUploadList.push(this.fileToUpload);
-                // this.DocumentCenterFormGroup.get('Filename').patchValue(this.fileToUpload.name);
-            } else {
-                this.notificationSnackBarComponent.openSnackBar(`Maximum allowed file size is ${this.selectedDocCenterMaster.SizeInKB} KB only`, SnackBarStatus.danger);
-            }
-        } else {
-            this.notificationSnackBarComponent.openSnackBar(`Please select only ${this.selectedDocCenterMaster.Extension} file`, SnackBarStatus.danger);
-        }
+      this.fileToUpload = evt.target.files[0];
+      this.fileToUploadList.push(this.fileToUpload);
+      console.log(this.fileToUploadList);
     }
-}
+  }
+  // handleFileInput(evt): void {
+  //   if (evt.target.files && evt.target.files.length > 0) {
+  //     const fil = evt.target.files[0] as File;
+  //     if (fil.type.includes(this.selectedDocCenterMaster.Extension)) {
+  //       const fileSize = this.math.round(fil.size / 1024);
+  //       if (fileSize <= this.selectedDocCenterMaster.SizeInKB) {
+  //         this.fileToUpload = fil;
+  //         // this.fileToUploadList.push(this.fileToUpload);
+  //         // this.DocumentCenterFormGroup.get('Filename').patchValue(this.fileToUpload.name);
+  //       } else {
+  //         this.notificationSnackBarComponent.openSnackBar(`Maximum allowed file size is ${this.selectedDocCenterMaster.SizeInKB} KB only`, SnackBarStatus.danger);
+  //       }
+  //     } else {
+  //       this.notificationSnackBarComponent.openSnackBar(`Please select only ${this.selectedDocCenterMaster.Extension} file`, SnackBarStatus.danger);
+  //     }
+  //   }
+  // }
   GetInvoiceAttachment(fileName: string, file?: File): void {
     if (file && file.size) {
       const blob = new Blob([file], { type: file.type });
@@ -206,7 +228,7 @@ export class SupportTicketComponent implements OnInit {
     }
     else {
       this.IsProgressBarVisibile = true;
-      this._supportdeskService.DowloandInvoiceAttachment(fileName, this.SupportTicket.SupportID).subscribe(
+      this._supportdeskService.DowloandInvoiceAttachment(fileName, this.supportticket.SupportID).subscribe(
         data => {
           if (data) {
             let fileType = 'image/jpg';
