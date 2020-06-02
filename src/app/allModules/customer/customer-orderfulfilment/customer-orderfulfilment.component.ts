@@ -14,6 +14,7 @@ import { DatePipe } from '@angular/common';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { ChartType } from 'chart.js';
 import { fuseAnimations } from '@fuse/animations';
+import { SODetails } from 'app/models/customer';
 
 @Component({
   selector: 'app-customer-orderfulfilment',
@@ -38,10 +39,12 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
   AllOpenTasksCount: number;
   AllEscalatedTasksCount: number;
   AllReworkTasksCount: number;
-  posDisplayedColumns: string[] = [
-    'PO',
-    'Version',
-    'PODate',
+  SODisplayedColumns: string[] = [
+    'SO',
+    // 'Version',
+    'PINumber',
+    'RetReqID',
+    'SODate',
     'Status',
     'Document',
     // 'NextProcess',
@@ -49,12 +52,13 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
   ];
   poFormGroup: FormGroup;
   isDateError: boolean;
-  poSearch: POSearch;
-  posDataSource: MatTableDataSource<PO>;
-  @ViewChild(MatPaginator) poPaginator: MatPaginator;
+  ShowAddBtn: boolean;
+  SOSearch: POSearch;
+  SODataSource: MatTableDataSource<SODetails>;
+  @ViewChild(MatPaginator) SOPaginator: MatPaginator;
+  @ViewChild(MatSort) SOSort: MatSort;
   @ViewChild(MatMenuTrigger) matMenuTrigger: MatMenuTrigger;
   // @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) poSort: MatSort;
   selection = new SelectionModel<any>(true, []);
   AllTickets: any[] = [];
   AllActivities: any[] = [];
@@ -74,7 +78,7 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
   searchText = '';
   FilterVal = 'All';
   ActionModel = 'Acknowledge';
-  Pos: PO[] = [];
+  AllSOs: SODetails[] = [];
   DashboardGraphStatus: DashboardGraphStatus = new DashboardGraphStatus();
   OTIFStatus: OTIFStatus = new OTIFStatus();
   QualityStatus: QualityStatus = new QualityStatus();
@@ -221,6 +225,7 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
     const dat5 = this.datePipe.transform(this.date5, 'dd/MM/yyyy');
     // this.barChartLabels = [this.date1, this.date2, this.date3, this.date4, this.date5];
     this.barChartLabels = [dat1, dat2, dat3, dat4, dat5];
+    this.ShowAddBtn = true;
   }
 
   ngOnInit(): void {
@@ -242,7 +247,7 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
     } else {
       this._router.navigate(['/auth/login']);
     }
-    this.GetPODetails();
+    this.GetSODetails();
     this.GetDashboardGraphStatus();
     console.log(this.dashboardDeliverystatus);
     // const OTIF = Number(this.OTIFStatus.OTIF);
@@ -355,25 +360,25 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
     // ];
     // this.posDataSource = new MatTableDataSource(this.Pos);
   }
-  openMyMenu(index: any): void  {
+  openMyMenu(index: any): void {
     alert(index);
     this.matMenuTrigger.openMenu();
 
   }
-  closeMyMenu(index: any): void  {
+  closeMyMenu(index: any): void {
     alert(index);
     this.matMenuTrigger.closeMenu();
   }
-  GetPODetails(): void  {
+  GetSODetails(): void {
     this.IsProgressBarVisibile = true;
     this._dashboardService
-      .GetPODetails(this.PartnerID)
+      .GetSODetails('Customer', this.PartnerID)
       .subscribe((data) => {
         if (data) {
-          this.Pos = <PO[]>data;
-          this.posDataSource = new MatTableDataSource(this.Pos);
-          this.posDataSource.paginator = this.poPaginator;
-          this.posDataSource.sort = this.poSort;
+          this.AllSOs = data as SODetails[];
+          this.SODataSource = new MatTableDataSource(this.AllSOs);
+          this.SODataSource.paginator = this.SOPaginator;
+          this.SODataSource.sort = this.SOSort;
         }
         this.IsProgressBarVisibile = false;
       },
@@ -382,7 +387,7 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
           this.IsProgressBarVisibile = false;
         });
   }
-  GetDashboardGraphStatus(): void  {
+  GetDashboardGraphStatus(): void {
     this.IsProgressBarVisibile = true;
     this._dashboardService
       .GetDashboardGraphStatus(this.PartnerID)
@@ -448,20 +453,20 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
     if (this.poFormGroup.valid) {
       if (!this.isDateError) {
         this.IsProgressBarVisibile = true;
-        this.poSearch = new POSearch();
-        this.poSearch.FromDate = this.datePipe.transform(this.poFormGroup.get('FromDate').value as Date, 'yyyy-MM-dd');
-        this.poSearch.ToDate = this.datePipe.transform(this.poFormGroup.get('ToDate').value as Date, 'yyyy-MM-dd');
-        this.poSearch.Status = this.poFormGroup.get('Status').value;
-        this.poSearch.PartnerID = this.PartnerID;
+        this.SOSearch = new POSearch();
+        this.SOSearch.FromDate = this.datePipe.transform(this.poFormGroup.get('FromDate').value as Date, 'yyyy-MM-dd');
+        this.SOSearch.ToDate = this.datePipe.transform(this.poFormGroup.get('ToDate').value as Date, 'yyyy-MM-dd');
+        this.SOSearch.Status = this.poFormGroup.get('Status').value;
+        this.SOSearch.PartnerID = this.PartnerID;
         // this.getDocument.FromDate = this.poFormGroup.get('FromDate').value;
         // this.getDocument.ToDate = this.poFormGroup.get('ToDate').value;
-        this._dashboardService.GetAllPOBasedOnDate(this.poSearch)
+        this._dashboardService.GetAllSOBasedOnDate(this.SOSearch)
           .subscribe((data) => {
             if (data) {
-              this.Pos = <PO[]>data;
-              this.posDataSource = new MatTableDataSource(this.Pos);
-              this.posDataSource.paginator = this.poPaginator;
-              this.posDataSource.sort = this.poSort;
+              this.AllSOs = data as SODetails[];
+              this.SODataSource = new MatTableDataSource(this.AllSOs);
+              this.SODataSource.paginator = this.SOPaginator;
+              this.SODataSource.sort = this.SOSort;
             }
 
             this.IsProgressBarVisibile = false;
@@ -479,9 +484,27 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
       this.poFormGroup.get(key).markAsDirty();
     });
   }
-  PurchaseOrder(po: string): void {
+  GotoPOLookup(so: string): void {
     // alert(po);
-    this._router.navigate(['/customer/polookup'], { queryParams: { id: po } });
+    if (so) {
+      this._router.navigate(['/customer/polookup'], { queryParams: { id: so } });
+    }
+  }
+  GotoPI(PINumber?: string): void {
+    // alert(po);
+    if (PINumber) {
+      this._router.navigate(['/customer/purchaseindent'], { queryParams: { id: PINumber } });
+    } else {
+      this._router.navigate(['/customer/purchaseindent']);
+    }
+  }
+  GotoReturn(RetReqID?: string): void {
+    // alert(po);
+    if (RetReqID) {
+      this._router.navigate(['/customer/return'], { queryParams: { id: RetReqID } });
+    } else {
+      this._router.navigate(['/customer/return']);
+    }
   }
   // Acknowledgement(po: string): void {
   //   // alert(po);
@@ -536,15 +559,57 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
     return name;
   }
 
-  getStatusColor(element: PO, StatusFor: string): string {
+  getStatusColor(element: SODetails, StatusFor: string): string {
     switch (StatusFor) {
-      case 'ASN':
-        return element.Status === 'Open' ? 'gray' : element.Status === 'ACK' ? '#efb577' : '#34ad65';
-      case 'Gate':
-        return element.Status === 'Open' ? 'gray' : element.Status === 'ACK' ? 'gray' : element.Status === 'ASN' ? '#efb577' : '#34ad65';
-      case 'GRN':
-        return element.Status === 'Open' ? 'gray' : element.Status === 'ACK' ? 'gray' : element.Status === 'ASN' ? 'gray' :
-          element.Status === 'Gate' ? '#efb577' : '#34ad65';
+      case 'Shipped':
+        return element.Status === 'Open' ? 'gray' :
+          element.Status === 'SO' ? '#efb577' : '#34ad65';
+      case 'Invoiced':
+        return element.Status === 'Open' ? 'gray' :
+          element.Status === 'SO' ? 'gray' :
+            element.Status === 'Shipped' ? '#efb577' : '#34ad65';
+      case 'Receipt':
+        return element.Status === 'Open' ? 'gray' :
+          element.Status === 'SO' ? 'gray' :
+            element.Status === 'Shipped' ? 'gray' :
+              element.Status === 'Invoiced' ? '#efb577' : '#34ad65';
+      default:
+        return '';
+    }
+  }
+
+  getTimeline(element: SODetails, StatusFor: string): string {
+    switch (StatusFor) {
+      case 'Shipped':
+        return element.Status === 'Open' ? 'white-timeline' :
+          element.Status === 'SO' ? 'orange-timeline' : 'green-timeline';
+      case 'Invoiced':
+        return element.Status === 'Open' ? 'white-timeline' :
+          element.Status === 'SO' ? 'white-timeline' :
+            element.Status === 'Shipped' ? 'orange-timeline' : 'green-timeline';
+      case 'Receipt':
+        return element.Status === 'Open' ? 'white-timeline' :
+          element.Status === 'SO' ? 'white-timeline' :
+            element.Status === 'Shipped' ? 'white-timeline' :
+              element.Status === 'Invoiced' ? 'orange-timeline' : 'green-timeline';
+      default:
+        return '';
+    }
+  }
+  getRestTimeline(element: SODetails, StatusFor: string): string {
+    switch (StatusFor) {
+      case 'Shipped':
+        return element.Status === 'Open' ? 'white-timeline' :
+          element.Status === 'SO' ? 'white-timeline' : 'green-timeline';
+      case 'Invoiced':
+        return element.Status === 'Open' ? 'white-timeline' :
+          element.Status === 'SO' ? 'white-timeline' :
+            element.Status === 'Shipped' ? 'white-timeline' : 'green-timeline';
+      case 'Receipt':
+        return element.Status === 'Open' ? 'white-timeline' :
+          element.Status === 'SO' ? 'white-timeline' :
+            element.Status === 'Shipped' ? 'white-timeline' :
+              element.Status === 'Invoiced' ? 'white-timeline' : 'green-timeline';
       default:
         return '';
     }
@@ -577,30 +642,10 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
   //   }
 
   // }
-  getTimeline(element: PO, StatusFor: string): string {
-    switch (StatusFor) {
-      case 'ASN':
-        return element.Status === 'Open' ? 'white-timeline' : element.Status === 'ACK' ? 'orange-timeline' : 'green-timeline';
-      case 'Gate':
-        return element.Status === 'Open' ? 'white-timeline' : element.Status === 'ACK' ? 'white-timeline' : element.Status === 'ASN' ? 'orange-timeline' : 'green-timeline';
-      case 'GRN':
-        return element.Status === 'Open' ? 'white-timeline' : element.Status === 'ACK' ? 'white-timeline' : element.Status === 'ASN' ? 'white-timeline' :
-          element.Status === 'Gate' ? 'orange-timeline' : 'green-timeline';
-      default:
-        return '';
-    }
+  AddClicked(): void {
+    this.ShowAddBtn = false;
   }
-  getRestTimeline(element: PO, StatusFor: string): string {
-    switch (StatusFor) {
-      case 'ASN':
-        return element.Status === 'Open' ? 'white-timeline' : element.Status === 'ACK' ? 'white-timeline' : 'green-timeline';
-      case 'Gate':
-        return element.Status === 'Open' ? 'white-timeline' : element.Status === 'ACK' ? 'white-timeline' : element.Status === 'ASN' ? 'white-timeline' : 'green-timeline';
-      case 'GRN':
-        return element.Status === 'Open' ? 'white-timeline' : element.Status === 'ACK' ? 'white-timeline' : element.Status === 'ASN' ? 'white-timeline' :
-          element.Status === 'Gate' ? 'white-timeline' : 'green-timeline';
-      default:
-        return '';
-    }
+  ClearClicked(): void {
+    this.ShowAddBtn = true;
   }
 }

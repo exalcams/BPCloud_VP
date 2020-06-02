@@ -123,10 +123,12 @@
     border-right: 1px solid $color;
   }
 
-  .TablePadFont {
+  .TableCommon {
     padding: 5px;
-    font-size: 12px;
-    min-width: 100px !important;
+    padding-left: 8px;
+    font-size: 14px;
+    min-width: 50px !important;
+    white-space: nowrap;
   }
 
   table {
@@ -134,17 +136,27 @@
 
     th {
       @include TableBorderRight(gray);
-      @extend .TablePadFont;
+      @extend .TableCommon;
+      // min-width: max-content !important;
       color: white;
       background-color: #121214;
     }
 
     td {
       @include TableBorderRight(rgba(0, 0, 0, 0.12));
-      @extend .TablePadFont;
-      font-size: 12px;
-      text-align: center;
-      min-width: max-content !important;
+      @extend .TableCommon;
+      text-align: left;
+      // min-width: max-content !important;
+      &.QtyClass {
+        text-align: right;
+      }
+      .mat-form-field-underline {
+        display: none;
+      }
+      .cursorPointer {
+        color: #0000ee;
+        cursor: pointer;
+      }
     }
 
     tr {
@@ -215,7 +227,7 @@
   .italicClass {
     font-style: italic;
   }
-  .avatar1 { 
+  .avatar1 {
     height: 40px !important;
     width: 40px !important;
     margin: 0 8px 0 0;
@@ -470,5 +482,27 @@
   .calendarImg {
     height: 20px;
     margin-bottom: 12px;
+  }
+  .floatSection {
+    position: fixed;
+    bottom: 40px !important;
+    right: 20px !important;
+  }
+  .floatBtn {
+    background-color: #f6b570 !important;
+  }
+  .floatMiniBtn {
+    background-color: white !important;
+  }
+  .PIR {
+    background-color: white !important;
+    color: #3e3e3e;
+    padding: 4px;
+    margin: 16px;
+    height: 24px;
+    width: 160px;
+    text-align: center;
+    border-radius: 2px;
+    z-index: 200;
   }
 }

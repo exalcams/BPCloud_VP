@@ -1,16 +1,16 @@
 <div class="navbar-top" [ngClass]="fuseConfig.layout.navbar.secondaryBackground">
-    <div class="logo">
+    <!-- <div class="logo">
         <img class="logo-icon" src="assets/images/logo.svg">
-    </div>
+    </div> -->
     <div class="buttons">
 
-        <button mat-icon-button class="toggle-sidebar-folded" (click)="toggleSidebarFolded()" fxHide.lt-lg>
-            <mat-icon style="height: 40px !important;width: 40px !important;" svgIcon="menuIcon" class="secondary-text">
+        <button mat-icon-button class="toggle-sidebar-folded" (click)="toggleSidebarOpened()">
+            <mat-icon style="height: 50px !important;width: 60px !important;" svgIcon="bpCollapsedMenuIcon" class="secondary-text">
             </mat-icon>
         </button>
 
-        <button mat-icon-button class="toggle-sidebar-opened" (click)="toggleSidebarOpened()" fxHide.gt-md>
-            <mat-icon style="height: 40px !important;width: 40px !important;" svgIcon="menuIcon" class="secondary-text">
+        <button mat-icon-button class="toggle-sidebar-opened" (click)="toggleSidebarFolded()">
+            <mat-icon style="height: 50px !important;width: 100px !important;" svgIcon="bpOpenedMenuIcon" class="secondary-text">
             </mat-icon>
         </button>
 

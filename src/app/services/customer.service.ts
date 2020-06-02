@@ -23,7 +23,7 @@ export class CustomerService {
     }
 
     CreatePurchaseIndent(PurchaseIndent: BPCPIView): Observable<any> {
-        return this._httpClient.post<any>(`${this.baseAddress}customerapi/PurchaseIndent/CreatePurchaseIndent`,
+        return this._httpClient.post<any>(`${this.baseAddress}poapi/PurchaseIndent/CreatePurchaseIndent`,
             PurchaseIndent,
             {
                 headers: new HttpHeaders({
@@ -34,7 +34,7 @@ export class CustomerService {
     }
 
     UpdatePurchaseIndent(PurchaseIndent: BPCPIView): Observable<any> {
-        return this._httpClient.post<any>(`${this.baseAddress}customerapi/PurchaseIndent/UpdatePurchaseIndent`,
+        return this._httpClient.post<any>(`${this.baseAddress}poapi/PurchaseIndent/UpdatePurchaseIndent`,
             PurchaseIndent,
             {
                 headers: new HttpHeaders({
@@ -45,7 +45,7 @@ export class CustomerService {
     }
 
     DeletePurchaseIndent(PurchaseIndent: BPCPIHeader): Observable<any> {
-        return this._httpClient.post<any>(`${this.baseAddress}customerapi/PurchaseIndent/DeletePurchaseIndent`,
+        return this._httpClient.post<any>(`${this.baseAddress}poapi/PurchaseIndent/DeletePurchaseIndent`,
             PurchaseIndent,
             {
                 headers: new HttpHeaders({
@@ -56,28 +56,28 @@ export class CustomerService {
     }
 
     GetAllPurchaseIndents(): Observable<BPCPIHeader[] | string> {
-        return this._httpClient.get<BPCPIHeader[]>(`${this.baseAddress}customerapi/PurchaseIndent/GetAllPurchaseIndents`)
+        return this._httpClient.get<BPCPIHeader[]>(`${this.baseAddress}poapi/PurchaseIndent/GetAllPurchaseIndents`)
             .pipe(catchError(this.errorHandler));
     }
 
     GetAllPurchaseIndentsByPartnerID(PartnerID: string): Observable<BPCPIHeader[] | string> {
-        return this._httpClient.get<BPCPIHeader[]>(`${this.baseAddress}customerapi/PurchaseIndent/GetAllPurchaseIndentsByPartnerID?PartnerID=${PartnerID}`)
+        return this._httpClient.get<BPCPIHeader[]>(`${this.baseAddress}poapi/PurchaseIndent/GetAllPurchaseIndentsByPartnerID?PartnerID=${PartnerID}`)
             .pipe(catchError(this.errorHandler));
     }
 
     GetPurchaseIndentByPIAndPartnerID(PINumber: string, PartnerID: string): Observable<BPCPIHeader | string> {
-        return this._httpClient.get<BPCPIHeader>(`${this.baseAddress}customerapi/PurchaseIndent/GetPurchaseIndentByPIAndPartnerID?PINumber=${PINumber}&PartnerID=${PartnerID}`)
+        return this._httpClient.get<BPCPIHeader>(`${this.baseAddress}poapi/PurchaseIndent/GetPurchaseIndentByPIAndPartnerID?PINumber=${PINumber}&PartnerID=${PartnerID}`)
             .pipe(catchError(this.errorHandler));
     }
     GetPurchaseIndentItemsByPI(PINumber: string): Observable<BPCPIItem[] | string> {
-        return this._httpClient.get<BPCPIItem[]>(`${this.baseAddress}customerapi/PurchaseIndent/GetPurchaseIndentItemsByPI?PINumber=${PINumber}`)
+        return this._httpClient.get<BPCPIItem[]>(`${this.baseAddress}poapi/PurchaseIndent/GetPurchaseIndentItemsByPI?PINumber=${PINumber}`)
             .pipe(catchError(this.errorHandler));
     }
 
     // Return
 
     CreateReturn(Return: BPCRetView): Observable<any> {
-        return this._httpClient.post<any>(`${this.baseAddress}customerapi/Return/CreateReturn`,
+        return this._httpClient.post<any>(`${this.baseAddress}poapi/Return/CreateReturn`,
             Return,
             {
                 headers: new HttpHeaders({
@@ -88,7 +88,7 @@ export class CustomerService {
     }
 
     UpdateReturn(Return: BPCRetView): Observable<any> {
-        return this._httpClient.post<any>(`${this.baseAddress}customerapi/Return/UpdateReturn`,
+        return this._httpClient.post<any>(`${this.baseAddress}poapi/Return/UpdateReturn`,
             Return,
             {
                 headers: new HttpHeaders({
@@ -99,7 +99,7 @@ export class CustomerService {
     }
 
     DeleteReturn(Return: BPCRetHeader): Observable<any> {
-        return this._httpClient.post<any>(`${this.baseAddress}customerapi/Return/DeleteReturn`,
+        return this._httpClient.post<any>(`${this.baseAddress}poapi/Return/DeleteReturn`,
             Return,
             {
                 headers: new HttpHeaders({
@@ -110,27 +110,27 @@ export class CustomerService {
     }
 
     GetAllReturns(): Observable<BPCRetHeader[] | string> {
-        return this._httpClient.get<BPCRetHeader[]>(`${this.baseAddress}customerapi/Return/GetAllReturns`)
+        return this._httpClient.get<BPCRetHeader[]>(`${this.baseAddress}poapi/Return/GetAllReturns`)
             .pipe(catchError(this.errorHandler));
     }
 
     GetAllReturnsByPartnerID(PartnerID: string): Observable<BPCRetHeader[] | string> {
-        return this._httpClient.get<BPCRetHeader[]>(`${this.baseAddress}customerapi/Return/GetAllReturnsByPartnerID?PartnerID=${PartnerID}`)
+        return this._httpClient.get<BPCRetHeader[]>(`${this.baseAddress}poapi/Return/GetAllReturnsByPartnerID?PartnerID=${PartnerID}`)
             .pipe(catchError(this.errorHandler));
     }
 
     GetReturnByRetAndPartnerID(RetReqID: string, PartnerID: string): Observable<BPCRetHeader | string> {
-        return this._httpClient.get<BPCRetHeader>(`${this.baseAddress}customerapi/Return/GetReturnByRetAndPartnerID?RetReqID=${RetReqID}&PartnerID=${PartnerID}`)
+        return this._httpClient.get<BPCRetHeader>(`${this.baseAddress}poapi/Return/GetReturnByRetAndPartnerID?RetReqID=${RetReqID}&PartnerID=${PartnerID}`)
             .pipe(catchError(this.errorHandler));
     }
     GetReturnItemsByRet(RetReqID: string): Observable<BPCRetItem[] | string> {
-        return this._httpClient.get<BPCRetItem[]>(`${this.baseAddress}customerapi/Return/GetReturnItemsByRet?RetReqID=${RetReqID}`)
+        return this._httpClient.get<BPCRetItem[]>(`${this.baseAddress}poapi/Return/GetReturnItemsByRet?RetReqID=${RetReqID}`)
             .pipe(catchError(this.errorHandler));
     }
 
     // Products
     GetAllProducts(): Observable<BPCProd[] | string> {
-        return this._httpClient.get<BPCProd[]>(`${this.baseAddress}customerapi/Product/GetAllProducts`)
+        return this._httpClient.get<BPCProd[]>(`${this.baseAddress}poapi/Product/GetAllProducts`)
             .pipe(catchError(this.errorHandler));
     }
 
