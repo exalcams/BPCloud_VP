@@ -276,21 +276,18 @@ export class HomeComponent implements OnInit {
   ActionTextClicked(aIACTByPartnerID: BPCAIACT): void {
     if (aIACTByPartnerID) {
       if (aIACTByPartnerID.ActionText.toLowerCase() === "accept") {
-        // this.SetActionToOpenConfirmation('Approve');
         this.SelectedBPCAIACTByPartnerID = aIACTByPartnerID;
         const Actiontype = 'Accept';
         const Catagory = 'PO';
         this.OpenConfirmationDialog(Actiontype, Catagory);
       }
       else if (aIACTByPartnerID.ActionText.toLowerCase() === "reject") {
-        // this.SetActionToOpenConfirmation('Approve');
         this.SelectedBPCAIACTByPartnerID = aIACTByPartnerID;
         const Actiontype = 'Reject';
         const Catagory = 'PO';
         this.OpenConfirmationDialog(Actiontype, Catagory);
       } else if (aIACTByPartnerID.ActionText.toLowerCase() === "view") {
-        console.log("view called");
-        this._router.navigate(['/pages/orderfulfilmentCenter'], { queryParams: { id: aIACTByPartnerID.DocNumber } });
+        this._router.navigate(['/pages/polookup'], { queryParams: { id: aIACTByPartnerID.DocNumber } });
       }
     }
     else {
