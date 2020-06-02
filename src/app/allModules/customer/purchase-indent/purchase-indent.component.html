@@ -357,7 +357,7 @@
               <button *ngIf="SelectedPurchaseIndentHeader?.PINumber" mat-stroked-button class="DeleteBtn mr-4 mb-4"
                 (click)="DeleteClicked()">Delete</button>
             </div>
-            <div fxFlex align="end">
+            <div *ngIf="!SelectedPurchaseIndentHeader?.PINumber" fxFlex align="end">
               <button mat-stroked-button class="SaveBtn mb-4" (click)="SaveClicked()">Save
               </button>
               <button mat-raised-button class="SubmitBtn mb-4" (click)="SubmitClicked()">Submit</button>

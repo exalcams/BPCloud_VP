@@ -92,9 +92,6 @@ export class AppComponent implements OnInit, OnDestroy {
         mdIconRegistry.addSvgIcon('powerIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/power.svg'));
         mdIconRegistry.addSvgIcon('powerOffIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/powerOff.svg'));
 
-        mdIconRegistry.addSvgIcon('taskIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/task.svg'));
-        mdIconRegistry.addSvgIcon('taskGroupIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/taskGroup.svg'));
-        mdIconRegistry.addSvgIcon('projectIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/project.svg'));
         mdIconRegistry.addSvgIcon('addBlueIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/addBlue.svg'));
 
         mdIconRegistry.addSvgIcon('detailsIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/details.svg'));
@@ -109,6 +106,11 @@ export class AppComponent implements OnInit, OnDestroy {
         mdIconRegistry.addSvgIcon('questionIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/question.svg'));
         mdIconRegistry.addSvgIcon('articleIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/article.svg'));
         mdIconRegistry.addSvgIcon('supportIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/headphoneswhite.svg'));
+        mdIconRegistry.addSvgIcon('glyphIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/glyph.svg'));
+
+        mdIconRegistry.addSvgIcon('bpCollapsedMenuIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/bpCollapsedMenu.svg'));
+        mdIconRegistry.addSvgIcon('bpOpenedMenuIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/bpOpenedMenu.svg'));
+
         /**
          * ------------------------------------------------------------------
          * ngxTranslate Fix Start

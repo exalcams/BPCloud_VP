@@ -111,3 +111,13 @@ export class BPCProd extends CommonClass {
     Stock: string;
     StockUpdatedOn: Date | string | null;
 }
+export class SODetails {
+    SO: string;
+    PINumber: string;
+    RetReqID: string;
+    SODate: Date | string | null;
+    Status: string;
+    Document: string;
+    Version: string;
+    Currency: string;
+}

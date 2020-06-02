@@ -1,526 +1,143 @@
-<div id="Order-fuil" class="page-layout carded" fusePerfectScrollbar>
-  <div class="center" fxLayout="column" fxLayoutGap="10px">
-    <!-- <div fxFlex class="mt-4" style="padding-top: 24px;padding-left: 15px;">
-      <span class="PO-Lookup">PO-Lookup</span>
-    </div> -->
+<div id="chat" class="page-layout carded fullwidth">
+  <div class="center">
     <div class="outer" fxLayout>
       <div class="bg"></div>
       <div>
-        <h3 style="margin: 0px;padding-left: 10px;"><b>PO Factsheet</b></h3>
+        <h3 style="margin: 0px;padding-left: 10px;"><b>So Lookup</b></h3>
       </div>
       <div fxFlex align="end">
         <span><img src="assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
       </div>
     </div>
-    <div fxLayout="row" style="margin-top: 20px !important;margin-top: 10px !important;">
-      <div fxFlex="50">
-        <div fxFlex="50" class="mx-8 mb-8 mt-0 p-8">
-          <div fxLayout fxLayoutAlign="space-between center">
-            <div fxFlex>PO No : <strong style="font-size: 18px;">{{OrderFulfilmentDetails.PONumber}}</strong></div>
-          </div>
-          <div>
-            <div style="margin-top: 20px;color: #2e2e2e">
-              <span>PO Date : <strong
-                  style="font-size: 18px;">{{OrderFulfilmentDetails.PODate  | date :'dd/MM/yyyy'}}</strong></span>
-            </div>
-          </div>
-        </div>
-        <!-- <mat-divider></mat-divider> -->
-        <div class="divider1"></div>
-        <div fxFlex="50" class="mx-8 mb-8 mt-0 p-8">
-          <div fxLayout fxLayoutAlign="space-between center">
-            <div fxFlex>Currency : <strong style="font-size: 18px;">{{OrderFulfilmentDetails.Currency}}</strong></div>
-          </div>
-          <div>
-            <div style="margin-top: 20px;color: #2e2e2e">
-              <span>Version :<strong style="font-size: 18px;">{{OrderFulfilmentDetails.Version}}</strong></span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="divider"></div>
-      <!-- <mat-divider></mat-divider> -->
-      <div fxFlex="50" style="margin-top: 10px;">
-        <div fxLayout style="margin-left: -12px !important;width: 130% !important;">
-          <div fxFlex="25" style="margin-left: 15px;;" fxLayout>ACK</div>
-          <div fxFlex="25" fxLayout>ASN</div>
-          <div fxFlex="25" fxLayout>Gate</div>
-          <div fxFlex="25" style="margin-right: 7% !important;" fxLayout>GRN</div>
-        </div>
-        <div fxLayout class="mt-4 mr-40 ml-8" style="width: 115% !important;">
-          <div fxFlex="25" fxLayout>
-            <div class="round" [style.border-color]="Status==='Open'?'#efb577':'#34ad65'"></div>
-            <div style="width: 10px;margin-left: -1px;" [class]="Status==='Open'?'orange-timeline':'green-timeline'"></div>
-            <div [class]="Status==='Open'?'white-timeline':'green-timeline'" fxFlex></div>
-          </div>
-          <div fxFlex="25" fxLayout>
-            <div style="width: 10px;margin-right: -1px;" [class]="getTimeline('ASN')"></div>
-            <div class="round" [style.border-color]="getStatusColor('ASN')"></div>
-            <div style="width: 10px;margin-left: -1px;" [class]="getTimeline('ASN')"></div>
-            <div [class]="getRestTimeline('ASN')" fxFlex></div>
-          </div>
-          <div fxFlex="25" fxLayout>
-            <div style="width: 10px;margin-right: -1px;" [class]="getTimeline('Gate')"></div>
-            <div class="round" [style.border-color]="getStatusColor('Gate')"></div>
-            <div style="width: 10px;margin-left: -1px;" [class]="getTimeline('Gate')"></div>
-            <div [class]="getRestTimeline('Gate')" fxFlex></div>
-          </div>
-          <div fxFlex="25" fxLayout>
-            <div style="width: 10px;margin-right: -1px;" [class]="getTimeline('GRN')"></div>
-            <div class="round" [style.border-color]="getStatusColor('GRN')"></div>
-          </div>
-        </div>
-        <div fxLayout class="mt-8" style="margin-left: -12px">
-          <div fxFlex="25" fxLayout>{{OrderFulfilmentDetails.ACKDate | date :'dd/MM/yyyy' }}</div>
-          <div fxFlex="25" fxLayout></div>
-          <div fxFlex="25" fxLayout></div>
-          <div fxFlex="25" fxLayout></div>
-        </div>
-        <!-- <div fxLayout class="mt-4">
-          <div fxFlex="25" style="height: 10px;" fxLayout>User1</div>
-          <div fxFlex="25" style="height: 10px;" fxLayout>Pending</div>
-          <div fxFlex="25" fxLayout></div>
-          <div fxFlex="25" fxLayout></div>
-        </div> -->
-      </div>
-    </div>
-
-    <div fxFlex class="mt-24" style="background-color: #fef8f1;">
-      <div class="container m-12" fxLayout fxLayout.sm="column" fxLayout.xs="column"
-        fxLayoutGap="10px" fxLayoutGap.xs="10">
-        <div fxFlex="7" (click)="tabone()">
-          <div class="container" fxLayout fxLayoutAlign="center" fxLayoutGap="10px">
-            <div class="item-round1">
-              <div style="margin-top: 3px; margin-left: 30px;">
-                <span class="test" [matBadge]="ItemCount"  matBadgeOverlap="false">
-
-                </span>
-              </div>
-              <div class="item-round2">
-                <img style="margin-top: 10px !important;margin-left: 10px !important;width: 20px;"
-                  src="assets/images/shopping-cart.png">
-                <div style="margin-top: 28px;margin-left: 5px;">Item</div>
-                <div *ngIf="tabCount === 1" class="tab-highlight"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- <div class="tab-divider"></div>
-        <div fxFlex="7" (click)="tabtwo()">
-          <div class="container" fxLayout fxLayoutAlign="center" fxLayoutGap="10px">
-            <div class="asn-round1">
-              <div style="margin-top: 3px; margin-left: 30px;">
-                <span [matBadge]="ASNCount" id="mat-badge-content-1"  matBadgeOverlap="false"></span>
-              </div>
-              <div class="asn-round2">
-                <img style="margin-top: 8px !important;margin-left: 10px;width: 20px;" src="assets/images/phone.png">
-                <div style="margin-top: 28px;margin-left: 5px;">ASN</div>
-                <div *ngIf="tabCount === 2" class="tab-highlight"></div>
-              </div>
-            </div>
-          </div>
-        </div> -->
-        <div class="tab-divider"></div>
-        <div fxFlex="7" (click)="tabthree()">
-          <div class="container" fxLayout fxLayoutAlign="center" fxLayoutGap="10px">
-            <div class="grn-round1">
-              <div style="margin-top: 3px; margin-left: 30px;">
-                <span [matBadge]="GRNCount" matBadgeColor="primary" matBadgeOverlap="false"></span>
-              </div>
-              <div class="grn-round2">
-                <img style="margin-top: 8px !important;margin-left: 13px;width: 20px;" src="assets/images/notes.png">
-                <div style="margin-top: 28px;margin-left: 5px;">GI</div>
-                <div *ngIf="tabCount === 3" class="tab-highlight"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- <div class="tab-divider"></div>
-        <div fxFlex="7" (click)="tabfour()">
-          <div class="container" fxLayout fxLayoutAlign="center" fxLayoutGap="10px">
-            <div class="qa-round1">
-              <div style="margin-top: 3px; margin-left: 30px;">
-                <span [matBadge]="QACount" matBadgeColor="#8ba0f9" matBadgeOverlap="false"></span>
-              </div>
-              <div class="qa-round2">
-                <img style="margin-top: 8px !important; margin-left: 11px;width: 20px;"
-                  src="assets/images/surface1.png">
-                <div style="margin-top: 24px;margin-left: 8px;">QA</div>
-                <div *ngIf="tabCount === 4" class="tab-highlight"></div>
-              </div>
-            </div>
-          </div>
-        </div> -->
-        <div class="tab-divider"></div>
-        <div fxFlex="7" (click)="tabfive()">
-          <div class="container" fxLayout fxLayoutAlign="center" fxLayoutGap="10px">
-            <div class="document-round1">
-              <div style="margin-top: 3px; margin-left: 30px;">
-                <span [matBadge]="DocumentCount" matBadgeColor="#8ba0f9" matBadgeOverlap="false"></span>
-              </div>
-              <div class="document-round2">
-                <img style="margin-top: 8px !important;margin-left: 11px;width: 16px;" src="assets/images/file.png">
-                <div style="margin-top: 24px; margin-left: -5px;">Document</div>
-                <div *ngIf="tabCount === 5" class="tab-highlight"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- <div class="tab-divider"></div>
-        <div fxFlex (click)="tabsix()">
-          <div class="container" style="margin-right: 85%;" fxLayout fxLayoutAlign="center" fxLayoutGap="10px">
-            <div class="flip-round1">
-              <div style="margin-top: 3px; margin-left: 30px;">
-                <span [matBadge]="FlipCount" matBadgeColor="#8ba0f9" matBadgeOverlap="false"></span>
-              </div>
-              <div class="flip-round2">
-                <img style="margin-top: 5px !important;margin-left: 10px;width: 20px;" src="assets/images/reflect.png">
-                <div style="margin-top: 24px;margin-left: 8px;">Flip</div>
-                <div *ngIf="tabCount === 6" class="tab-highlight"></div>
-              </div>
-            </div>
-          </div>
-        </div> -->
-      </div>
-    </div>
-    <div>
-      <div class="content" fxLayout="column" *ngIf="tab1">
-        <form name="ACKFormGroup" [formGroup]="ACKFormGroup" fxLayout="column" fxFlex>
-          <div class="p-12 mt-24">
-            <table class="table" style="width: 85% !important;" mat-table [dataSource]="itemDataSource" matSort
-              formArrayName="POItems">
-
-              <!-- <ng-container matColumnDef="Item">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Item</th>
-            <td mat-cell *matCellDef="let element">{{element.Item}}</td>
-          </ng-container> -->
-              <!-- <ng-container matColumnDef="Item">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Item </th>
-              <td mat-cell style="text-align: left" *matCellDef="let element;let odd=odd;let index=index"
-                [formGroupName]="index" class="tableLeftBorder pl-0">
-                <div fxLayout>
-                  <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
-                  <div fxFlex class="pl-4">
-                    <input matInput formControlName="Item">
-                    
-                  </div>
-                </div>
-              </td>
-            </ng-container> -->
-
-              <ng-container matColumnDef="MaterialText">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15% !important;">Material Text</th>
-                <td mat-cell style="text-align: left" *matCellDef="let element;let odd=odd;let index=index"
-                [formGroupName]="index" class="tableLeftBorder pl-0">
-                  <!-- <input matInput formControlName="MaterialText"> -->
-                  <div fxLayout>
-                    <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
-                    <div fxFlex class="pl-4">
-                      <!-- <input matInput formControlName="MaterialText"> -->
-                      {{ACKFormGroup.get('POItems')?.controls[index]?.get('MaterialText')?.value}}
+    <div fxLayout class="content-card1">
+      <mat-card fxFlex="100" class="side-bar p-0">
+        <div class="sidenav-content" fxFlex fxLayout="column">
+          <div class="mt-24" style="background-color: #fef8f1;">
+            <div class="container m-12" fxLayout fxLayout.sm="column" fxLayout.xs="column" fxLayoutGap="10px"
+              fxLayoutGap.xs="10">
+              <div fxFlex="7" (click)="tabone()">
+                <div class="container" fxLayout fxLayoutAlign="center" fxLayoutGap="10px">
+                  <div class="item-round1">
+                    <div style="margin-top: 3px; margin-left: 30px;">
+                      <span class="test" [matBadge]="ItemCount" matBadgeOverlap="false">
+                      </span>
+                    </div>
+                    <div class="item-round2" [class.unSelected]='!tab1'>
+                      <img style="margin-top: 10px !important;margin-left: 10px !important;width: 20px;"
+                        src="assets/images/shopping-cart.png">
+                      <div style="margin-top: 28px;margin-left: 5px;">Item</div>
+                      <div [class.tab-highlight]='tab1'></div>
                     </div>
                   </div>
-                  <!-- {{element.MaterialText}}  -->
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="DalivaryDate">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10% !important;">Delivery Date</th>
-                <td mat-cell style="text-align: left" *matCellDef="let element; let index = index"
-                  [formGroupName]="index">
-                  <!-- <input matInput formControlName="DalivaryDate"> -->
-                  {{ACKFormGroup.get('POItems')?.controls[index]?.get('DalivaryDate')?.value | date : 'dd/MM/yyyy'}}
-                  <!-- {{element.DalivaryDate| date :'dd/MM/yyyy'}}  -->
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="Proposeddeliverydate">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20% !important;">Proposed delivery date</th>
-                <td mat-cell style="text-align: left" *matCellDef="let element; let index = index"
-                  [formGroupName]="index">
-                  <!-- <input matInput formControlName="Proposeddeliverydate"> -->
-                  <mat-form-field style="width: 65%;">
-                    <input matInput [matDatepicker]="picker" formControlName="Proposeddeliverydate" required>
-                    <!-- <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle> -->
-                    <mat-datepicker-toggle matSuffix [for]="picker">
-                      <img matDatepickerToggleIcon class="calendarImg" src="assets/images/calendar.png">
-                    </mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                    <span class="pl-4 errorClass" *ngIf="ACKFormGroup.get('POItems').controls[index].get('Proposeddeliverydate').touched &&
-                ACKFormGroup.get('POItems').controls[index].get('Proposeddeliverydate').hasError('required')">
-                      *
-                    </span>
-                  </mat-form-field>
-                  <!-- <mat-form-field>
-                  <input matInput placeholder="Proposed delivery date" [matDatepicker]="picker1"
-                    formControlName="DalivaryDate" required>
-                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                  <mat-datepicker #picker1></mat-datepicker>
-                  <mat-error
-                    *ngIf="ACKFormGroup.get('DalivaryDate').touched && ACKFormGroup.get('DalivaryDate').hasError('required')">
-                    Proposed delivery date is required
-                  </mat-error>
-                </mat-form-field> -->
-                  <!-- {{element.DalivaryDate| date :'dd/MM/yyyy'}}  -->
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="OrderQty">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 11% !important;">Order Qty
-                <td style="text-align: right" mat-cell *matCellDef="let element; let index = index"
-                  [formGroupName]="index">
-                  <!-- <input matInput formControlName="OrderQty"> -->
-                  {{ACKFormGroup.get('POItems')?.controls[index]?.get('OrderQty')?.value}}
-                  <!-- {{element.OrderQty}}  -->
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="GRQty">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 11% !important;">GR Qty</th>
-                <td style="text-align: right" mat-cell *matCellDef="let element; let index = index"
-                  [formGroupName]="index">
-                  <!-- <input matInput formControlName="GRQty"> -->
-                  {{ACKFormGroup.get('POItems')?.controls[index]?.get('GRQty')?.value}}
-                  <!-- {{element.GRQty}}  -->
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="PipelineQty">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 11% !important;">Pipeline Qty</th>
-                <td mat-cell style="text-align: right" *matCellDef="let element; let index = index"
-                  [formGroupName]="index">
-                  <!-- <input matInput formControlName="PipelineQty"> -->
-                  {{ACKFormGroup.get('POItems')?.controls[index]?.get('PipelineQty')?.value}}
-                  <!-- {{element.PipelineQty}}  -->
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="OpenQty">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 11% !important;">Open Qty</th>
-                <td style="text-align: right" mat-cell *matCellDef="let element; let index = index"
-                  [formGroupName]="index">
-                  <!-- <input matInput formControlName="OpenQty"> -->
-                  {{ACKFormGroup.get('POItems')?.controls[index]?.get('OpenQty')?.value}}
-                  <!-- {{element.OpenQty}}  -->
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="UOM">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 11% !important;">UOM</th>
-                <td mat-cell style="text-align: left" *matCellDef="let element; let index = index"
-                  [formGroupName]="index">
-                  <!-- <input matInput formControlName="UOM"> -->
-                   {{ACKFormGroup.get('POItems')?.controls[index]?.get('UOM')?.value}}
-                  <!-- {{element.UOM}} -->
-                </td>
-              </ng-container>
-
-              <tr mat-header-row *matHeaderRowDef="itemDisplayedColumns;sticky: true"></tr>
-              <tr mat-row *matRowDef="let row; columns: itemDisplayedColumns;let even=even">
-              </tr>
-            </table>
-            <!-- <div *ngIf="!PO_OrderLookUpDetails.PO_ScheduleDetails.length">
-          <mat-icon style="color: #1b56ca;margin-top: 10px;margin-left: 70px">info</mat-icon>
-          <span style="margin-left: 10px;">The table does not contain any data</span>
-        </div> -->
-          </div>
-          <div fxFlex *ngIf="Status === 'Open'">
-            <div fxLayoutAlign="center">
-              <button mat-button class="Btn1" (click)="YesClicked()">Acknowledge PO</button>
+                </div>
+              </div>
+              <div class="tab-divider"></div>
+              <div fxFlex="7" (click)="tabtwo()">
+                <div class="container" fxLayout fxLayoutAlign="center" fxLayoutGap="10px">
+                  <div class="org-round1">
+                    <div style="margin-top: 3px; margin-left: 30px;">
+                      <span [matBadge]="ASNCount" id="mat-badge-content-1" matBadgeOverlap="false"></span>
+                    </div>
+                    <div class="org-round2" [class.unSelected]='!tab2'>
+                      <img style="margin-top: 12px !important;margin-left: 10px;width: 20px;"
+                        src="assets/images/truck.png">
+                      <div style="margin-top: 28px;margin-left: -5px;">Shipment</div>
+                      <div [class.tab-highlight]='tab2'></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-divider"></div>
+              <div fxFlex="7" (click)="tabthree()">
+                <div class="container" fxLayout fxLayoutAlign="center" fxLayoutGap="10px">
+                  <div class="grn-round1">
+                    <div style="margin-top: 3px; margin-left: 30px;">
+                      <span [matBadge]="GRNCount" matBadgeColor="primary" matBadgeOverlap="false"></span>
+                    </div>
+                    <div class="grn-round2" [class.unSelected]='!tab3'>
+                      <img style="margin-top: 8px !important;margin-left: 11px;width: 17px;"
+                        src="assets/images/deliveryNote.png">
+                      <div style="margin-top: 28px;margin-left: 5px;">POD</div>
+                      <div [class.tab-highlight]='tab3'></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </form>
-        <!-- <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator> -->
-      </div>
-      <div class="content" fxLayout="column" *ngIf="tab2">
-        <div class="p-12  mt-24">
-          <table *ngIf="asn?.length" style="width: 50% !important;" class="table" mat-table [dataSource]="asnDataSource"
-            matSort>
+          <div>
+            <div class="content" fxLayout="column" *ngIf="tab1">
+              <div class="p-12  mt-24">
+                <table class="table" mat-table [dataSource]="SOItemDataSource" matSort>
 
-            <!-- <ng-container matColumnDef="Item">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Item</th>
-            <td mat-cell *matCellDef="let element">{{element.Item}}</td>
-          </ng-container> -->
-            <ng-container matColumnDef="ASN">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> ASN </th>
-              <td mat-cell style="text-align: left" *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0"
-                (click)="AdvanceShipment(PO)">
-                <div fxLayout>
-                  <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
-                  <div fxFlex class="pl-4">{{element.ASN}} </div>
-                </div>
-              </td>
-            </ng-container>
+                  <ng-container matColumnDef="Item">
+                    <th mat-header-cell *matHeaderCellDef>Item</th>
+                    <td mat-cell *matCellDef="let element">{{element.Item}}</td>
+                  </ng-container>
 
-            <ng-container matColumnDef="Date">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
-              <td mat-cell *matCellDef="let element" style="text-align: left"> {{element.Date | date :'dd/MM/yyyy'}}
-              </td>
-            </ng-container>
+                  <ng-container matColumnDef="Material">
+                    <th mat-header-cell *matHeaderCellDef>Material</th>
+                    <td mat-cell *matCellDef="let element">{{element.Material}}</td>
+                  </ng-container>
 
-            <ng-container matColumnDef="Truck">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Truck/AWB</th>
-              <td mat-cell *matCellDef="let element" style="text-align: left"> {{element.Truck}} </td>
-            </ng-container>
+                  <ng-container matColumnDef="MaterialText">
+                    <th mat-header-cell *matHeaderCellDef>Material Text</th>
+                    <td mat-cell *matCellDef="let element">{{element.MaterialText}}</td>
+                  </ng-container>
 
-            <ng-container matColumnDef="Status">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-              <td mat-cell *matCellDef="let element" style="text-align: left"> {{element.Status}} </td>
-            </ng-container>
+                  <ng-container matColumnDef="OrderedQty">
+                    <th mat-header-cell *matHeaderCellDef>Order Qty</th>
+                    <td mat-cell *matCellDef="let element" class="QtyClass">{{element.OrderedQty}}</td>
+                  </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="asnDisplayedColumns;sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: asnDisplayedColumns;let even=even">
-            </tr>
-          </table>
+                  <ng-container matColumnDef="CompletedQty">
+                    <th mat-header-cell *matHeaderCellDef>Invoiced Qty</th>
+                    <td mat-cell *matCellDef="let element" class="QtyClass">{{element.CompletedQty}}</td>
+                  </ng-container>
 
-          <!-- <div *ngIf="!PO_OrderLookUpDetails.PO_ScheduleDetails.length">
-          <mat-icon style="color: #1b56ca;margin-top: 10px;margin-left: 70px">info</mat-icon>
-          <span style="margin-left: 10px;">The table does not contain any data</span>
-        </div> -->
+                  <ng-container matColumnDef="OpenQty">
+                    <th mat-header-cell *matHeaderCellDef>Open Qty</th>
+                    <td mat-cell *matCellDef="let element" class="QtyClass">{{element.OpenQty}}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="UOM">
+                    <th mat-header-cell *matHeaderCellDef>UOM</th>
+                    <td mat-cell *matCellDef="let element">{{element.UOM}}</td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="SOItemDisplayedColumns;sticky: true"></tr>
+                  <tr mat-row *matRowDef="let row; columns: SOItemDisplayedColumns;let even=even">
+                  </tr>
+                </table>
+
+              </div>
+              <!-- <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator> -->
+            </div>
+            <div class="content" fxLayout="column" *ngIf="tab2">
+
+            </div>
+            <div class="content" fxLayout="column" *ngIf="tab3">
+
+            </div>
+          </div>
         </div>
-        <!-- <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator> -->
-      </div>
-      <div class="content" fxLayout="column" *ngIf="tab3">
-        <div class="p-12  mt-24">
-          <table *ngIf="grn?.length" style="width: 50% !important;" class="table" mat-table [dataSource]="grnDataSource"
-            matSort>
-
-            <!-- <ng-container matColumnDef="Item">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Item</th>
-            <td mat-cell *matCellDef="let element">{{element.Item}}</td>
-          </ng-container> -->
-            <ng-container matColumnDef="Item">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Item </th>
-              <td mat-cell *matCellDef="let element;let odd=odd" style="text-align: left" class="tableLeftBorder pl-0">
-                <div fxLayout>
-                  <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
-                  <div fxFlex class="pl-4">{{element.Item}} </div>
-                </div>
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="MaterialText">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Material Text</th>
-              <td mat-cell *matCellDef="let element" style="text-align: left"> {{element.MaterialText}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="GRNDate">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>GRNDate</th>
-              <td mat-cell *matCellDef="let element" style="text-align: left"> {{element.GRNDate| date :'dd/MM/yyyy'}}
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="Qty">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: right">Qty</th>
-              <td mat-cell style="text-align: right" *matCellDef="let element"> {{element.Qty}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="Status">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-              <td mat-cell *matCellDef="let element" style="text-align: left">{{element.Status}} </td>
-            </ng-container>
-
-
-            <tr mat-header-row *matHeaderRowDef="grnDisplayedColumns;sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: grnDisplayedColumns;let even=even">
-            </tr>
-          </table>
-
-          <!-- <div *ngIf="!PO_OrderLookUpDetails.PO_ScheduleDetails.length">
-          <mat-icon style="color: #1b56ca;margin-top: 10px;margin-left: 70px">info</mat-icon>
-          <span style="margin-left: 10px;">The table does not contain any data</span>
-        </div> -->
-        </div>
-        <!-- <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator> -->
-      </div>
-      <div class="content" fxLayout="column" *ngIf="tab4">
-        <div class="p-12  mt-24">
-          <table *ngIf="qa?.length" style="width: 55% !important;" class="table" mat-table [dataSource]="qaDataSource"
-            matSort>
-
-            <!-- <ng-container matColumnDef="Item">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Item</th>
-            <td mat-cell *matCellDef="let element">{{element.Item}}</td>
-          </ng-container> -->
-            <ng-container matColumnDef="Item">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Item </th>
-              <td mat-cell *matCellDef="let element;let odd=odd" style="text-align: left" class="tableLeftBorder pl-0">
-                <div fxLayout>
-                  <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
-                  <div fxFlex class="pl-4">{{element.Item}} </div>
-                </div>
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="MaterialText">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Material Text</th>
-              <td mat-cell *matCellDef="let element" style="text-align: left"> {{element.MaterialText}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="Date">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
-              <td mat-cell *matCellDef="let element" style="text-align: left"> {{element.Date| date :'dd/MM/yyyy'}}
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="LotQty">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: right">Lot Qty</th>
-              <td mat-cell style="text-align: right" *matCellDef="let element"> {{element.LotQty}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="RejQty">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: right">Rej Qty</th>
-              <td style="text-align: right" mat-cell *matCellDef="let element">
-                {{element.RejQty}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="RejReason">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>RejReason</th>
-              <td mat-cell *matCellDef="let element" style="text-align: left"> {{element.RejReason}} </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="qaDisplayedColumns;sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: qaDisplayedColumns;let even=even">
-            </tr>
-          </table>
-
-          <!-- <div *ngIf="!PO_OrderLookUpDetails.PO_ScheduleDetails.length">
-          <mat-icon style="color: #1b56ca;margin-top: 10px;margin-left: 70px">info</mat-icon>
-          <span style="margin-left: 10px;">The table does not contain any data</span>
-        </div> -->
-        </div>
-        <!-- <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator> -->
-      </div>
-      <div class="content" fxLayout="column" *ngIf="tab5">
-
-      </div>
-      <div class="content" fxLayout="column" *ngIf="tab6">
-
-      </div>
+        <mat-card-actions class="m-0 pl-12 pr-16 cardActions">
+          <div fxLayout fxLayoutAlign="space-between center">
+            <div fxFlex>
+              <button mat-stroked-button class="DeleteBtn mr-4 mb-4" (click)="DeleteClicked()">Delete</button>
+            </div>
+            <div fxFlex align="end">
+              <button mat-stroked-button class="SaveBtn mb-4" (click)="SaveClicked()">Save
+              </button>
+              <button mat-raised-button class="SubmitBtn mb-4" (click)="SubmitClicked()">Submit</button>
+            </div>
+          </div>
+        </mat-card-actions>
+      </mat-card>
     </div>
-    <!-- <div>
-      <form name="ACKFormGroup" [formGroup]="ACKFormGroup" fxLayout="column" fxFlex>
-        <div fxFlex fxLayout="column" class="mt-24">
-          <div fxLayoutAlign="center">
-            <div fxLayout="row">
-              <mat-form-field>
-                <input matInput placeholder="Proposed delivery date" [matDatepicker]="picker1"
-                  formControlName="DalivaryDate" required>
-                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                <mat-datepicker #picker1></mat-datepicker>
-                <mat-error
-                  *ngIf="ACKFormGroup.get('DalivaryDate').touched && ACKFormGroup.get('DalivaryDate').hasError('required')">
-                  Proposed delivery date is required
-                </mat-error>
-              </mat-form-field>
-              <button mat-button class="Btn1" (click)="YesClicked()">Acknowledgement</button>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div> -->
     <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
     </mat-progress-spinner>
-    <div id="overlay" *ngIf="IsProgressBarVisibile"></div>
+    <div id="overlay" *ngIf="IsProgressBarVisibile">
+    </div>
   </div>
 </div>

@@ -13,7 +13,13 @@ fuse-sidebar {
 
                         .buttons {
                             // display: none;
-                            margin-left: 5px;
+                            .toggle-sidebar-folded {
+                                display: inline;
+                                margin-left: -20px;
+                            }
+                            .toggle-sidebar-opened {
+                                display: none;
+                            }
                         }
 
                         .logo {
@@ -132,6 +138,15 @@ navbar {
             // .buttons {
             //     margin-left: 200px;
             // }
+            .buttons {
+                // 
+                .toggle-sidebar-folded {
+                   display: none;
+                }
+                .toggle-sidebar-opened {
+                    margin-left: 150px;
+                }
+            }
         }
 
         .navbar-scroll-container {
