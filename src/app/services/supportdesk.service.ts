@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { SupportHeader } from 'app/models/Support';
+import { SupportHeader, SupportItem } from 'app/models/Support';
 
 @Injectable({
     providedIn: 'root'
@@ -42,6 +42,10 @@ export class SupportdeskService {
         return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportItems?SupportID=${SupportID}&PartnerID=${PartnerID}`)
             .pipe(catchError(this.errorHandler));
     }
+    GetSupportChartDetails(SupportID: any, PartnerID: any): Observable<any | string> {
+        return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportChartDetails?SupportID=${SupportID}&PartnerID=${PartnerID}`)
+            .pipe(catchError(this.errorHandler));
+    }
     AddDocumentCenterAttachment(SupportID: string, CreatedBy: string, selectedFiles: File[]): Observable<any> {
         const formData: FormData = new FormData();
         if (selectedFiles && selectedFiles.length) {
@@ -52,7 +56,7 @@ export class SupportdeskService {
         formData.append('SupportID', SupportID);
         formData.append('CreatedBy', CreatedBy.toString());
 
-        return this._httpClient.post<any>(`${this.baseAddress}supportapi/Support/AddDocumentCenterAttachment`,
+        return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/AddDocumentCenterAttachment`,
             formData,
             // {
             //   headers: new HttpHeaders({
@@ -103,4 +107,14 @@ export class SupportdeskService {
         })
             .pipe(catchError(this.errorHandler));
     }
+    CreateSupportTicketResponse(supportTicketResponse: SupportItem): Observable<any> {
+        return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/CreateSupportItem`,
+          supportTicketResponse,
+          {
+            headers: new HttpHeaders({
+              'Content-Type': 'application/json'
+            })
+          })
+          .pipe(catchError(this.errorHandler));
+      }
 }

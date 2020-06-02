@@ -11,31 +11,168 @@
         </div>
       </div>
     </div>
-    <div style="padding: 20px;">
-      <div class="mt-12" fxLayout="row" fxLayoutAlign="start">
-        <div fxFlex="50" class="boldClass p-4">
-          Support Ticket ID : 12346
+    <div style="padding: 5px;">
+      <mat-card>
+        <!-- <div class="mat-card"> -->
+        <div class="mt-12" fxLayout="row" fxLayoutAlign="start">
+          <div fxFlex="50" class="boldClass p-4">
+            Support Ticket ID : <span style="font-weight: bold;font-size: 18px;">{{SupportHeader.SupportID}}</span>
+          </div>
+          <div fxFlex="50" class="boldClass p-4">
+            Created on : <span
+              style="font-weight: bold;font-size: 18px;">{{SupportHeader.Date |  date : 'dd/MM/yyyy'}}</span>
+          </div>
         </div>
-        <div fxFlex="50" class="boldClass p-4">
-          Created on : 20-6-2020
+        <div class="mt-12" fxLayout="row" fxLayoutAlign="start">
+          <div fxFlex="50" class="boldClass p-4">
+            Assignto : <span style="font-weight: bold;font-size: 18px;">{{SupportHeader.Assignto}}</span>
+          </div>
+          <div fxFlex="50" class="boldClass p-4">
+            Reason Code : <span style="font-weight: bold;font-size: 18px;">{{SupportHeader.ReasionCode}}</span>
+          </div>
         </div>
-      </div>
-      <div class="mt-12" fxLayout="row" fxLayoutAlign="start">
-        <div fxFlex="50" class="boldClass p-4">
-          Assignto : support
+        <div class="mt-12" fxLayout="row" fxLayoutAlign="start">
+          <div fxFlex="50" class="boldClass p-4">
+            Attchments :
+            <div *ngFor="let file1 of SupportAttachments">
+              <div fxFlex (click)="GetInvoiceAttachment(file1?.AttachmentName,file1.AttachmentFile)"
+                class="pdfLinkClass pl-8">
+                <span style="font-size: 15px;color: #3380d7;">{{file1?.AttachmentName}}</span></div>
+              <!-- <div fxFlex (click)="GetInvoiceAttachment(file1?.name)" class="pdfLinkClass pl-8">
+              <span style="font-weight: bold;font-size: 20px;">{{file1?.size}}</span>
+            </div> -->
+            </div>
+          </div>
+          <div fxFlex="50" class="boldClass p-4">
+            Status : <span style="font-weight: bold;font-size: 18px;">{{SupportHeader.Status}}</span>
+          </div>
         </div>
-        <div fxFlex="50" class="boldClass p-4">
-          Reason Code : 20-6-2020
+      </mat-card>
+      <!-- </div> -->
+      <mat-card class="mt-12">
+        <div fxFlex>
+          <div fxFlex="30">
+            <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="30px">
+              <div fxFlex="50" fxLayoutAlign="end" style="margin-left: 15px;;" fxLayout>Open</div>
+              <div fxFlex="50" fxLayout>
+                <div class="round" [style.border-color]="Status==='Open'?'#efb577':'#34ad65'"></div>
+                <div style="height: 20px;" [class]="Status==='Open'?'orange-timeline':'green-timeline'"></div>
+                <div style="margin-top: 39px;margin-left: -10px;" [class]="Status==='Open'?'white-timeline':'green-timeline'"></div>
+                <!-- <div style="width: 10px;margin-left: -1px;"
+                [class]="Status==='Open'?'orange-timeline':'green-timeline'"></div>
+              <div [class]="Status==='Open'?'white-timeline':'green-timeline'" fxFlex></div> -->
+              </div>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="30px">
+              <div fxFlex="50" fxLayoutAlign="end" style="margin-left: 15px;;" fxLayout>Pending</div>
+              <div fxFlex="50" fxLayout>
+                <!-- <div style="width: 10px;margin-right: -1px;" [class]="getTimeline('Pending')"></div> -->
+                <div style="height: 20px;margin-top: -15px;margin-left: 5px;" [class]="getTimeline('Pending')"></div>
+                <div class="round" style="margin-left: -15px;" [style.border-color]="getStatusColor('Pending')"></div>
+                <!-- <div style="height: 20px;" [class]="Status==='Pending'?'orange-timeline':'green-timeline'"></div> -->
+                <!-- <div style="margin-top: 39px;margin-left: -10px;" [class]="Status==='Pending'?'white-timeline':'green-timeline'"></div> -->
+                <div [class]="getTimeline('Pending')"></div>
+                <div style="margin-top: 39px;margin-left: -10px;" [class]="getRestTimeline('Pending')"></div>
+                <!-- <div style="width: 10px;margin-left: -1px;" [class]="getTimeline('Pending')"></div>
+                <div [class]="getRestTimeline('Pending')" fxFlex></div> -->
+              </div>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="30px">
+              <div fxFlex="50" fxLayoutAlign="end" style="margin-left: 15px;;" fxLayout>Closed</div>
+              <div fxFlex="50" fxLayout>
+                <!-- <div  [class]="getTimeline('Closed')"></div> -->
+                <div class="round"  [style.border-color]="getStatusColor('Closed')"></div>
+              </div>
+            </div>
+          </div>
+          <div style="border-left: 2px solid;opacity: 0.1;"></div>
+          <div fxFlex="70">
+            <div style="height: 65vh" class="m-4 borderRightClass side-bar">
+              <div class="sidenav-content" fusePerfectScrollbar fxFlex>
+                <div fxLayout fxLayoutAlign="center" class="m-4"
+                  *ngFor="let ven of SupportItem;let i=index;let last = last">
+                  <div fxFlex="8" fxLayout="column" fxLayoutAlign="start center">
+                    <!-- <div class="round1" [style.background-color]="last?'#2ecc71':'white'"></div> -->
+                    <!-- <div fxFlex class="vertical-line"></div> -->
+                  </div>
+                  <div fxFlex fxLayout class="mb-8">
+                    <div fxFlex fxLayoutAlign="center" class="arrow-left"></div>
+                    <div fxFlex="95" fxLayout fxLayoutAlign="center" class="p-12 timeline-content">
+                      <div fxFlex="10">
+                        <mat-icon>account_circle</mat-icon>
+                      </div>
+                      <div fxFlex="90" class="pl-4" fxLayout="column">
+                        <div fxFlex class="mt-4">
+                          <div>{{ven.Remarks}}</div>
+                        </div>
+                      </div>
+                      <!-- <div fxFlex>
+                          <div>{{CurrentDate | date}}</div>
+                        </div> -->
+                    </div>
+                  </div>
+                </div>
+                <div fxLayout fxLayoutAlign="center" class="m-4">
+                  <div fxFlex="8" fxLayoutAlign="start start">
+                    <div class="ml-4">
+                      <!-- <div class="round"></div> -->
+                    </div>
+                  </div>
+                  <div fxFlex fxLayout class="mb-8">
+                    <div fxFlex fxLayoutAlign="center" class="arrow-left"></div>
+                    <div fxFlex="95" fxLayout fxLayoutAlign="center" class="p-12 timeline-content">
+                      <div fxFlex="10">
+                        <mat-icon>account_circle</mat-icon>
+                      </div>
+                      <div fxFlex="90" class="pl-4" fxLayout="column">
+                        <div fxFlex class="mt-8">
+                          <form name="form" class="normal" [formGroup]="SupportTicketResponseFormGroup">
+                            <!-- <mat-form-field> -->
+                            <input matInput placeholder="Reply here.." formControlName="Comments">
+                            <mat-error *ngIf="SupportTicketResponseFormGroup.get('Comments').touched && 
+                              SupportTicketResponseFormGroup.get('Comments').hasError('required')">
+                              Comment is required.
+                            </mat-error>
+                            <!-- </mat-form-field> -->
+                          </form>
+                        </div>
+                      </div>
+                      <!-- <div fxFlex>
+                    <div>{{CurrentDate | date}}</div>
+                  </div> -->
+                    </div>
+                  </div>
+                </div>
+                <div fxLayout fxLayoutAlign="space-between center" class="m-8">
+
+                  <div fxFlex align="end">
+                    <button (click)="ValidateSupportTicketResponse()"
+                      [ngClass]="BGClassName?.layout?.toolbar?.background" class="ml-8" mat-raised-button>
+                      Reply
+                    </button>
+                  </div>
+                  <!-- <div fxFlex align="end" *ngIf="CurrentUserRole === 'Vendor' && SupportHeader.Status!=='Closed'">
+                    <button (click)="CloseTicket()" [ngClass]="BGClassName?.layout?.toolbar?.background" class="ml-8"
+                      mat-raised-button>
+                      Close ticket
+                    </button>
+                  </div> -->
+                  <!-- <div fxFlex align="end" >
+                    <button (click)="ReOpenCloseTicket()" [ngClass]="BGClassName?.layout?.toolbar?.background"
+                      class="ml-8" mat-raised-button>
+                      Reopen
+                    </button>
+                </div> -->
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="mt-12" fxLayout="row" fxLayoutAlign="start">
-        <div fxFlex="50" class="boldClass p-4">
-          Attchments
-        </div>
-        <div fxFlex="50" class="boldClass p-4">
-          
-        </div>
-      </div>
+      </mat-card>
+    </div>
+    <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
+    </mat-progress-spinner>
+    <div id="overlay" *ngIf="IsProgressBarVisibile">
     </div>
   </div>
 </div>
