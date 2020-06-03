@@ -143,7 +143,15 @@ export class CustomerPolookupComponent implements OnInit {
       }
     );
   }
+  SaveClicked(): void {
 
+  }
+  SubmitClicked(): void {
+
+  }
+  DeleteClicked(): void {
+
+  }
 
 }
 
