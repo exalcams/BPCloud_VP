@@ -61,6 +61,7 @@ import { CustomerOrderfulfilmentComponent } from './customer-orderfulfilment/cus
 import { CustomerPolookupComponent } from './customer-polookup/customer-polookup.component';
 import { PurchaseIndentComponent } from './purchase-indent/purchase-indent.component';
 import { ReturnComponent } from './return/return.component';
+import { AttachmentDialogComponent } from '../pages/attachment-dialog/attachment-dialog.component';
 
 const routes = [
     {

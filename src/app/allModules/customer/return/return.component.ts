@@ -41,7 +41,7 @@ export class ReturnComponent implements OnInit {
   ReturnFormGroup: FormGroup;
   ReturnItemFormGroup: FormGroup;
   InvoiceDetailsFormGroup: FormGroup;
-  DocumentCenterFormGroup: FormGroup;
+  // ReturnItemFormGroup: FormGroup;
   AllUserWithRoles: UserWithRole[] = [];
   SelectedRetReqID: string;
   PO: BPCOFHeader;
@@ -58,6 +58,7 @@ export class ReturnComponent implements OnInit {
     'RetQty',
     // 'DeliveryDate',
     'ReasonText',
+    'FileName',
     'Action'
   ];
   ReturnItemDataSource: MatTableDataSource<BPCRetItem>;
@@ -168,6 +169,7 @@ export class ReturnComponent implements OnInit {
       OrderQty: ['', [Validators.required, Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,2})?$')]],
       // DeliveryDate: ['', Validators.required],
       ReasonText: [''],
+      FileName: ['']
     });
   }
 
@@ -264,18 +266,9 @@ export class ReturnComponent implements OnInit {
   handleFileInput(evt): void {
     if (evt.target.files && evt.target.files.length > 0) {
       const fil = evt.target.files[0] as File;
-      if (fil.type.includes(this.selectedDocCenterMaster.Extension)) {
-        const fileSize = this.math.round(fil.size / 1024);
-        if (fileSize <= this.selectedDocCenterMaster.SizeInKB) {
-          this.fileToUpload = fil;
-          // this.fileToUploadList.push(this.fileToUpload);
-          this.DocumentCenterFormGroup.get('Filename').patchValue(this.fileToUpload.name);
-        } else {
-          this.notificationSnackBarComponent.openSnackBar(`Maximum allowed file size is ${this.selectedDocCenterMaster.SizeInKB} KB only`, SnackBarStatus.danger);
-        }
-      } else {
-        this.notificationSnackBarComponent.openSnackBar(`Please select only ${this.selectedDocCenterMaster.Extension} file`, SnackBarStatus.danger);
-      }
+      this.fileToUpload = fil;
+      // this.fileToUploadList.push(this.fileToUpload);
+      this.ReturnItemFormGroup.get('FileName').patchValue(this.fileToUpload.name);
     }
   }
 
@@ -289,12 +282,12 @@ export class ReturnComponent implements OnInit {
   }
 
   AddDocumentCenterFileValidator(): void {
-    this.DocumentCenterFormGroup.get('Filename').setValidators(Validators.required);
-    this.DocumentCenterFormGroup.get('Filename').updateValueAndValidity();
+    this.ReturnItemFormGroup.get('FileName').setValidators(Validators.required);
+    this.ReturnItemFormGroup.get('FileName').updateValueAndValidity();
   }
   RemoveDocumentCenterFileValidator(): void {
-    this.DocumentCenterFormGroup.get('Filename').clearValidators();
-    this.DocumentCenterFormGroup.get('Filename').updateValueAndValidity();
+    this.ReturnItemFormGroup.get('FileName').clearValidators();
+    this.ReturnItemFormGroup.get('FileName').updateValueAndValidity();
   }
 
   AddReturnItemToTable(): void {
@@ -307,6 +300,12 @@ export class ReturnComponent implements OnInit {
       PIItem.OrderQty = this.ReturnItemFormGroup.get('OrderQty').value;
       // PIItem.DeliveryDate = this.ReturnItemFormGroup.get('DeliveryDate').value;
       PIItem.ReasonText = this.ReturnItemFormGroup.get('ReasonText').value;
+      // PIItem.FileName = this.ReturnItemFormGroup.get('FileName').value;
+      if (this.fileToUpload) {
+        PIItem.FileName = this.fileToUpload.name;
+        this.fileToUploadList.push(this.fileToUpload);
+        this.fileToUpload = null;
+      }
       if (!this.AllReturnItems || !this.AllReturnItems.length) {
         this.AllReturnItems = [];
       }
@@ -315,7 +314,7 @@ export class ReturnComponent implements OnInit {
       this.ResetReturnItemFormGroup();
       this.selectedDocCenterMaster = new BPCDocumentCenterMaster();
     } else {
-      this.ShowValidationErrors(this.DocumentCenterFormGroup);
+      this.ShowValidationErrors(this.ReturnItemFormGroup);
     }
   }
 
@@ -323,6 +322,10 @@ export class ReturnComponent implements OnInit {
     const index: number = this.AllReturnItems.indexOf(doc);
     if (index > -1) {
       this.AllReturnItems.splice(index, 1);
+      const indexx = this.fileToUploadList.findIndex(x => x.name === doc.FileName);
+      if (indexx > -1) {
+        this.fileToUploadList.splice(indexx, 1);
+      }
     }
     this.ReturnItemDataSource = new MatTableDataSource(this.AllReturnItems);
   }
@@ -564,22 +567,13 @@ export class ReturnComponent implements OnInit {
     this._CustomerService.CreateReturn(this.SelectedReturnView).subscribe(
       (data) => {
         this.SelectedReturnHeader.RetReqID = (data as BPCRetHeader).RetReqID;
-        this.ResetControl();
-        this.notificationSnackBarComponent.openSnackBar(`Return ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
-        this.IsProgressBarVisibile = false;
-
-        // if (this.invoiceAttachment) {
-        //     this.AddInvoiceAttachment(Actiontype);
-        // } else {
-        //     if (this.fileToUploadList && this.fileToUploadList.length) {
-        //         this.AddDocumentCenterAttachment(Actiontype);
-        //     } else {
-        //         this.ResetControl();
-        //         this.notificationSnackBarComponent.openSnackBar(`Return ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
-        //         this.IsProgressBarVisibile = false;
-        //         // this.GetReturnBasedOnCondition();
-        //     }
-        // }
+        if (this.fileToUploadList && this.fileToUploadList.length) {
+          this.AddReturnItemAttachment(Actiontype);
+        } else {
+          this.ResetControl();
+          this.notificationSnackBarComponent.openSnackBar(`Return ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
+          this.IsProgressBarVisibile = false;
+        }
       },
       (err) => {
         this.showErrorNotificationSnackBar(err);
@@ -591,7 +585,7 @@ export class ReturnComponent implements OnInit {
   //     this._CustomerService.AddInvoiceAttachment(this.SelectedReturnHeader.RetReqID, this.currentUserID.toString(), this.invoiceAttachment).subscribe(
   //         (dat) => {
   //             if (this.fileToUploadList && this.fileToUploadList.length) {
-  //                 this.AddDocumentCenterAttachment(Actiontype);
+  //                 this.AddReturnItemAttachment(Actiontype);
   //             } else {
   //                 this.ResetControl();
   //                 this.notificationSnackBarComponent.openSnackBar(`Return ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
@@ -603,19 +597,48 @@ export class ReturnComponent implements OnInit {
   //             this.showErrorNotificationSnackBar(err);
   //         });
   // }
-  // AddDocumentCenterAttachment(Actiontype: string): void {
-  //     this._CustomerService.AddDocumentCenterAttachment(this.SelectedReturnHeader.ReturnNumber, this.currentUserID.toString(), this.fileToUploadList).subscribe(
-  //         (dat) => {
-  //             this.ResetControl();
-  //             this.notificationSnackBarComponent.openSnackBar(`Return ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
-  //             this.IsProgressBarVisibile = false;
-  //             this.GetReturnBasedOnCondition();
-  //         },
-  //         (err) => {
-  //             this.showErrorNotificationSnackBar(err);
-  //         }
-  //     );
-  // }
+  AddReturnItemAttachment(Actiontype: string): void {
+      this._CustomerService.AddReturnItemAttachment(this.SelectedReturnHeader.RetReqID, this.currentUserID.toString(), this.fileToUploadList).subscribe(
+          (dat) => {
+              this.ResetControl();
+              this.notificationSnackBarComponent.openSnackBar(`Return ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
+              this.IsProgressBarVisibile = false;
+              this.GetReturnBasedOnCondition();
+          },
+          (err) => {
+              this.showErrorNotificationSnackBar(err);
+          }
+      );
+  }
+
+  GetReturnItemAttachment(fileName: string): void {
+    const file = this.fileToUploadList.filter(x => x.name === fileName)[0];
+    if (file && file.size) {
+        const blob = new Blob([file], { type: file.type });
+        this.OpenAttachmentDialog(fileName, blob);
+    } else {
+        this.IsProgressBarVisibile = true;
+        this._CustomerService.DowloandReturnItemAttachment(fileName, this.SelectedReturnHeader.RetReqID).subscribe(
+            data => {
+                if (data) {
+                    let fileType = 'image/jpg';
+                    fileType = fileName.toLowerCase().includes('.jpg') ? 'image/jpg' :
+                        fileName.toLowerCase().includes('.jpeg') ? 'image/jpeg' :
+                            fileName.toLowerCase().includes('.png') ? 'image/png' :
+                                fileName.toLowerCase().includes('.gif') ? 'image/gif' :
+                                    fileName.toLowerCase().includes('.pdf') ? 'application/pdf' : '';
+                    const blob = new Blob([data], { type: fileType });
+                    this.OpenAttachmentDialog(fileName, blob);
+                }
+                this.IsProgressBarVisibile = false;
+            },
+            error => {
+                console.error(error);
+                this.IsProgressBarVisibile = false;
+            }
+        );
+    }
+}
 
   showErrorNotificationSnackBar(err: any): void {
     console.error(err);
@@ -632,22 +655,13 @@ export class ReturnComponent implements OnInit {
     this._CustomerService.UpdateReturn(this.SelectedReturnView).subscribe(
       (data) => {
         this.SelectedReturnHeader.RetReqID = (data as BPCRetHeader).RetReqID;
-        this.ResetControl();
-        this.notificationSnackBarComponent.openSnackBar(`Return ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
-        this.IsProgressBarVisibile = false;
-
-        // if (this.invoiceAttachment) {
-        //     this.AddInvoiceAttachment(Actiontype);
-        // } else {
-        //     if (this.fileToUploadList && this.fileToUploadList.length) {
-        //         this.AddDocumentCenterAttachment(Actiontype);
-        //     } else {
-        //         this.ResetControl();
-        //         this.notificationSnackBarComponent.openSnackBar(`Return ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
-        //         this.IsProgressBarVisibile = false;
-        //         this.GetReturnBasedOnCondition();
-        //     }
-        // }
+        if (this.fileToUploadList && this.fileToUploadList.length) {
+          this.AddReturnItemAttachment(Actiontype);
+        } else {
+          this.ResetControl();
+          this.notificationSnackBarComponent.openSnackBar(`Return ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
+          this.IsProgressBarVisibile = false;
+        }
       },
       (err) => {
         console.error(err);
@@ -706,23 +720,23 @@ export class ReturnComponent implements OnInit {
 
   }
 
-  // GetInvoiceAttachment(fileName: string, file?: File): void {
+  // GetInvoiceAttachment(FileName: string, file?: File): void {
   //     if (file && file.size) {
   //         const blob = new Blob([file], { type: file.type });
-  //         this.OpenAttachmentDialog(fileName, blob);
+  //         this.OpenAttachmentDialog(FileName, blob);
   //     } else {
   //         this.IsProgressBarVisibile = true;
-  //         this._CustomerService.DowloandInvoiceAttachment(fileName, this.SelectedReturnHeader.ReturnNumber).subscribe(
+  //         this._CustomerService.DowloandInvoiceAttachment(FileName, this.SelectedReturnHeader.ReturnNumber).subscribe(
   //             data => {
   //                 if (data) {
   //                     let fileType = 'image/jpg';
-  //                     fileType = fileName.toLowerCase().includes('.jpg') ? 'image/jpg' :
-  //                         fileName.toLowerCase().includes('.jpeg') ? 'image/jpeg' :
-  //                             fileName.toLowerCase().includes('.png') ? 'image/png' :
-  //                                 fileName.toLowerCase().includes('.gif') ? 'image/gif' :
-  //                                     fileName.toLowerCase().includes('.pdf') ? 'application/pdf' : '';
+  //                     fileType = FileName.toLowerCase().includes('.jpg') ? 'image/jpg' :
+  //                         FileName.toLowerCase().includes('.jpeg') ? 'image/jpeg' :
+  //                             FileName.toLowerCase().includes('.png') ? 'image/png' :
+  //                                 FileName.toLowerCase().includes('.gif') ? 'image/gif' :
+  //                                     FileName.toLowerCase().includes('.pdf') ? 'application/pdf' : '';
   //                     const blob = new Blob([data], { type: fileType });
-  //                     this.OpenAttachmentDialog(fileName, blob);
+  //                     this.OpenAttachmentDialog(FileName, blob);
   //                 }
   //                 this.IsProgressBarVisibile = false;
   //             },
@@ -734,24 +748,24 @@ export class ReturnComponent implements OnInit {
   //     }
   // }
 
-  // GetDocumentCenterAttachment(fileName: string): void {
-  //     const file = this.fileToUploadList.filter(x => x.name === fileName)[0];
+  // GetDocumentCenterAttachment(FileName: string): void {
+  //     const file = this.fileToUploadList.filter(x => x.name === FileName)[0];
   //     if (file && file.size) {
   //         const blob = new Blob([file], { type: file.type });
-  //         this.OpenAttachmentDialog(fileName, blob);
+  //         this.OpenAttachmentDialog(FileName, blob);
   //     } else {
   //         this.IsProgressBarVisibile = true;
-  //         this._CustomerService.DowloandDocumentCenterAttachment(fileName, this.SelectedReturnHeader.ReturnNumber).subscribe(
+  //         this._CustomerService.DowloandReturnItemAttachment(FileName, this.SelectedReturnHeader.ReturnNumber).subscribe(
   //             data => {
   //                 if (data) {
   //                     let fileType = 'image/jpg';
-  //                     fileType = fileName.toLowerCase().includes('.jpg') ? 'image/jpg' :
-  //                         fileName.toLowerCase().includes('.jpeg') ? 'image/jpeg' :
-  //                             fileName.toLowerCase().includes('.png') ? 'image/png' :
-  //                                 fileName.toLowerCase().includes('.gif') ? 'image/gif' :
-  //                                     fileName.toLowerCase().includes('.pdf') ? 'application/pdf' : '';
+  //                     fileType = FileName.toLowerCase().includes('.jpg') ? 'image/jpg' :
+  //                         FileName.toLowerCase().includes('.jpeg') ? 'image/jpeg' :
+  //                             FileName.toLowerCase().includes('.png') ? 'image/png' :
+  //                                 FileName.toLowerCase().includes('.gif') ? 'image/gif' :
+  //                                     FileName.toLowerCase().includes('.pdf') ? 'application/pdf' : '';
   //                     const blob = new Blob([data], { type: fileType });
-  //                     this.OpenAttachmentDialog(fileName, blob);
+  //                     this.OpenAttachmentDialog(FileName, blob);
   //                 }
   //                 this.IsProgressBarVisibile = false;
   //             },

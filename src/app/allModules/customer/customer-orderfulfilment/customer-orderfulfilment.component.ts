@@ -15,6 +15,7 @@ import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notific
 import { ChartType } from 'chart.js';
 import { fuseAnimations } from '@fuse/animations';
 import { SODetails } from 'app/models/customer';
+import { BPCKRA } from 'app/models/fact';
 
 @Component({
   selector: 'app-customer-orderfulfilment',
@@ -125,10 +126,11 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
     }
   };
   public doughnutChartType: ChartType = 'doughnut';
-  public doughnutChartLabels: any[] = ['Open', 'Scheduled', 'In Progress', 'Pending'];
+  // public doughnutChartLabels: any[] = ['Open', 'Scheduled', 'In Progress', 'Pending'];
   // public doughnutChartData: any[] = [
   //     [40, 20, 30, 10]
   // ];
+  public doughnutChartLabels: any[] = [];
   public doughnutChartData: any[] = [];
   public colors: any[] = [{ backgroundColor: ['#fb863a', '#40a8e2', '#485865', '#40ed9a'] }];
 
@@ -248,8 +250,9 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
       this._router.navigate(['/auth/login']);
     }
     this.GetSODetails();
-    this.GetDashboardGraphStatus();
-    console.log(this.dashboardDeliverystatus);
+    this.GetCustomerDoughnutChartData();
+    // this.GetDashboardGraphStatus();
+    // console.log(this.dashboardDeliverystatus);
     // const OTIF = Number(this.OTIFStatus.OTIF);
     // this.progress1(OTIF);
     // this.progress2(this.QualityStatus.Quality);
@@ -431,6 +434,23 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
           console.log(this.barChartData);
           console.log(this.barChartLabels);
           console.log(this.DashboardGraphStatus);
+        }
+        this.IsProgressBarVisibile = false;
+      },
+        (err) => {
+          console.error(err);
+          this.IsProgressBarVisibile = false;
+        });
+  }
+  GetCustomerDoughnutChartData(): void {
+    this.IsProgressBarVisibile = true;
+    this._dashboardService
+      .GetCustomerDoughnutChartData(this.PartnerID)
+      .subscribe((data) => {
+        if (data) {
+          const DoughnutChartData = data as BPCKRA[];
+          this.doughnutChartLabels = DoughnutChartData.map(x => x.KRA);
+          this.doughnutChartData = DoughnutChartData.map(x => +x.KRAValue);
         }
         this.IsProgressBarVisibile = false;
       },
