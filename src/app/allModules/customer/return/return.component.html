@@ -158,7 +158,7 @@
             <div>
               <form autocomplete="off" class="normal" fxLayout="row" fxLayoutAlign="start" name="form" novalidate
                 [formGroup]="ReturnItemFormGroup">
-                <div fxFlex="20">
+                <div fxFlex="10">
                   <mat-form-field class="px-12" style="width: 100%;">
                     <input matInput placeholder="Item" formControlName="Item">
                     <mat-error
@@ -167,7 +167,7 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
-                <div fxFlex="20">
+                <div fxFlex="10">
                   <mat-form-field class="px-12" style="width: 100%;">
                     <mat-select (selectionChange)="ProductSelected($event)" placeholder="Prodcut ID"
                       formControlName="ProdcutID">
@@ -201,6 +201,11 @@
                       *ngIf="ReturnItemFormGroup.get('RetQty').touched && ReturnItemFormGroup.get('RetQty').hasError('required')">
                       RetQty is required
                     </mat-error>
+                    <mat-error
+                    *ngIf="ReturnItemFormGroup.get('RetQty').touched && !ReturnItemFormGroup.get('RetQty').hasError('required')
+                    &&ReturnItemFormGroup.get('RetQty').hasError('pattern')">
+                    Enter valid Quantity
+                  </mat-error>
                   </mat-form-field>
                   <div *ngIf="isQtyError" class="WeightError">
                     Return Qty should not greater than Order Qty
@@ -215,6 +220,14 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
+                <div fxFlex="20" fxLayoutAlign="start center" class="mt-16">
+                  <img class="addBlueIcon" src="assets/images/addBlue.png" (click)="fileInput1.click()">
+                  <span class="attachClass" (click)="fileInput1.click()">
+                    Add Attachment
+                  </span>
+                  <input hidden type="file" #fileInput1 (change)="handleFileInput($event)"
+                    accept="image/x-png,image/gif,image/jpeg,image/jpg,application/pdf" />
+                </div>
                 <div fxFlex="10" fxLayoutAlign="center start">
                   <img class="addIcon" src="assets/images/logos/add-button.png" (click)="AddReturnItemToTable()">
                   <!-- <button class="SaveBtn" mat-raised-button (click)="AddDocumentCenterToTable()">Add</button> -->
@@ -222,12 +235,18 @@
               </form>
             </div>
           </div>
-
+          <div fxLayout *ngIf="ReturnItemFormGroup.get('FileName')?.value"
+            style="margin-top: -12px;padding-left: 8px;">
+            <div fxFlex="70"></div>
+            <div fxFlex="30">
+              {{ReturnItemFormGroup.get('FileName')?.value}}
+            </div>
+          </div>
           <div fxFlex fxLayout="column" class="table mx-20 my-12">
             <table *ngIf="AllReturnItems?.length" mat-table [dataSource]="ReturnItemDataSource" matSort>
               <ng-container matColumnDef="Item">
-                <th mat-header-cell *matHeaderCellDef style="width: 20%;"> Item </th>
-                <td mat-cell style="width: 20%;" *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
+                <th mat-header-cell *matHeaderCellDef style="width: 10%;"> Item </th>
+                <td mat-cell style="width: 10%;" *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
                   <div fxLayout>
                     <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
                     <div fxFlex class="pl-4">{{element.Item}} </div>
@@ -236,8 +255,8 @@
               </ng-container>
 
               <ng-container matColumnDef="ProdcutID">
-                <th mat-header-cell *matHeaderCellDef style="width: 20%;"> Material </th>
-                <td mat-cell style="width: 20%;" *matCellDef="let element">
+                <th mat-header-cell *matHeaderCellDef style="width: 10%;"> Material </th>
+                <td mat-cell style="width: 10%;" *matCellDef="let element">
                   {{element.ProdcutID}} </td>
               </ng-container>
 
@@ -264,6 +283,16 @@
                 <th mat-header-cell *matHeaderCellDef style="width: 20%;"> ReasonText </th>
                 <td mat-cell style="width: 20%;" *matCellDef="let element">
                   {{element.ReasonText}} </td>
+              </ng-container>
+
+
+              <ng-container matColumnDef="FileName">
+                <th mat-header-cell *matHeaderCellDef style="width: 20%;"> FileName </th>
+                <td mat-cell style="width: 20%;" *matCellDef="let element">
+                  <span class="pdfLinkClass" (click)="GetReturnItemAttachment(element.FileName)">
+                    {{element.FileName}}
+                  </span>
+                </td>
               </ng-container>
 
               <ng-container matColumnDef="Action">

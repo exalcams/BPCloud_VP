@@ -51,7 +51,6 @@ import { FuseSharedModule } from "@fuse/shared.module";
 import { FormsModule } from "@angular/forms";
 import { DashboardComponent } from "./dashboard/dashboard.component";
 import { DecimalPipe } from "@angular/common";
-import { AttachmentDialogComponent } from "./attachment-dialog/attachment-dialog.component";
 import { NgCircleProgressModule } from "ng-circle-progress";
 import { ChartsModule } from "ng2-charts";
 import "chartjs-plugin-labels";
@@ -184,7 +183,6 @@ const routes = [
     ],
     declarations: [
         DashboardComponent,
-        AttachmentDialogComponent,
         ASNComponent,
         PoFlipComponent,
         HomeComponent,
@@ -196,6 +194,6 @@ const routes = [
         SupportChatComponent
     ],
     providers: [DecimalPipe],
-    entryComponents: [AttachmentDialogComponent],
+    entryComponents: [],
 })
 export class PagesModule { }

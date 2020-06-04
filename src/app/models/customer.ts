@@ -83,6 +83,7 @@ export class BPCRetItem extends CommonClass {
     OrderQty: number;
     RetQty: number;
     ReasonText: string;
+    FileName: string;
 }
 
 export class BPCRetView extends CommonClass {

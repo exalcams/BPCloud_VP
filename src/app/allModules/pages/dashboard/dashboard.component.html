@@ -10,7 +10,7 @@
       </div>
     </div>
     <div fxFlex fxLayout >
-      <div class="tile mr-20" fxFlex="17" fxLayout="column" fxLayoutAlign="start">
+      <div class="tile mx-20" fxFlex="17" fxLayout="column" fxLayoutAlign="start">
         <div fxLayoutAlign="start center" class="pt-8">
           <span class="boldClass orangeBorderBottom pl-8"> Time In Full (OTIF)</span>
         </div>
@@ -133,7 +133,7 @@
             </mat-form-field> -->
           </div>
           <div fxFlex="64%">
-            <button class="mt-24" style="background-color: #efb577;color: white;margin-top: 18px !important;"
+            <button class="mt-4" style="background-color: #efb577;color: white;"
               mat-raised-button (click)="GetAllPOBasedOnDate()">Search</button>
           </div>
         </div>
@@ -154,7 +154,7 @@
 
       <!-- <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator> -->
     </div>
-    <div style="padding: 20px;">
+    <div class="px-20 pb-20">
       <table class="table" mat-table [dataSource]="posDataSource" matSort>
 
         <ng-container matColumnDef="PO">

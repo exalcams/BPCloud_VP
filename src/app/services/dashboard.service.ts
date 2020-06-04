@@ -7,6 +7,7 @@ import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import { PO, OrderFulfilmentDetails, Acknowledgement, POSearch, DashboardGraphStatus } from 'app/models/Dashboard';
 import { SODetails } from 'app/models/customer';
+import { BPCKRA } from 'app/models/fact';
 
 @Injectable({
   providedIn: 'root'
@@ -71,6 +72,10 @@ export class DashboardService {
   GetDashboardGraphStatus(PartnerID: string): Observable<DashboardGraphStatus | string> {
     return this._httpClient
       .get<DashboardGraphStatus>(`${this.baseAddress}factapi/Fact/GetDashboardGraphStatus?PartnerID=${PartnerID}`)
+      .pipe(catchError(this.errorHandler));
+  }
+  GetCustomerDoughnutChartData(PartnerID: string): Observable<BPCKRA[] | string> {
+    return this._httpClient.get<BPCKRA[]>(`${this.baseAddress}factapi/Fact/GetCustomerDoughnutChartData?PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));
   }
 

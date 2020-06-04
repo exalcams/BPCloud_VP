@@ -9,8 +9,8 @@
         <span><img src="../../../../assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
       </div>
     </div>
-    <div fxFlex fxLayout class="p-24">
-      <div class="tile mr-20" fxFlex="17" fxLayout="column" fxLayoutAlign="start">
+    <div fxFlex fxLayout>
+      <div class="tile mx-20" fxFlex="17" fxLayout="column" fxLayoutAlign="start">
         <div fxLayoutAlign="start center" class="pt-8">
           <span class="boldClass orangeBorderBottom pl-8"> Time In Full (OTIF)</span>
         </div>
@@ -49,7 +49,7 @@
         <div fxLayoutAlign="start center" class="pt-8">
           <span class="boldClass orangeBorderBottom pl-8"> Fulfilment </span>
         </div>
-        <div id="doughnutChart" fxFlex fxLayoutAlign="start" class="pt-8 pl-8 pr-4">
+        <div *ngIf="doughnutChartData && doughnutChartData?.length" id="doughnutChart" fxFlex fxLayoutAlign="start" class="pt-8 pl-8 pr-4">
           <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType"
             [options]="doughnutChartOptions" [colors]="colors">
           </canvas>
@@ -72,7 +72,7 @@
     <div class="sidenav-content px-24 mt-4" fxFlex>
       <form class="formGroupStyle" autocomplete="off" fxFlex name="form" [formGroup]="poFormGroup" novalidate>
         <div FxLayout="row" class="formRowStyle" fxLayout.xs="column">
-          <div fxFlex="20%" class="mx-20">
+          <div fxFlex="20%" class="mr-20">
             <mat-form-field>
               <input matInput placeholder="From date" [matDatepicker]="picker1" formControlName="FromDate"
                 (dateChange)="DateSelected()">
@@ -132,8 +132,8 @@
           </mat-error>
             </mat-form-field> -->
           </div>
-          <div fxFlex="40%" class="mx-20">
-            <button class="mt-24" style="background-color: #efb577;color: white;margin-top: 18px !important;"
+          <div fxFlex="40%" class="ml-20">
+            <button class="mt-4" style="background-color: #efb577;color: white;"
               mat-raised-button (click)="GetAllPOBasedOnDate()">Search</button>
           </div>
         </div>
@@ -154,7 +154,7 @@
 
       <!-- <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator> -->
     </div>
-    <div style="padding: 20px;">
+    <div class="px-20 pb-20">
       <table class="table" mat-table [dataSource]="SODataSource" matSort>
 
         <ng-container matColumnDef="SO">

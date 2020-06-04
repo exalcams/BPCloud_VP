@@ -108,7 +108,32 @@ export class CustomerService {
             })
             .pipe(catchError(this.errorHandler));
     }
+    AddReturnItemAttachment(RetReqID: string, CreatedBy: string, selectedFiles: File[]): Observable<any> {
+        const formData: FormData = new FormData();
+        if (selectedFiles && selectedFiles.length) {
+            selectedFiles.forEach(x => {
+                formData.append(x.name, x, x.name);
+            });
+        }
+        formData.append('RetReqID', RetReqID);
+        formData.append('CreatedBy', CreatedBy.toString());
 
+        return this._httpClient.post<any>(`${this.baseAddress}poapi/Return/AddReturnItemAttachment`,
+            formData,
+            // {
+            //   headers: new HttpHeaders({
+            //     'Content-Type': 'application/json'
+            //   })
+            // }
+        ).pipe(catchError(this.errorHandler));
+    }
+    DowloandReturnItemAttachment(AttachmentName: string, RetReqID: string): Observable<Blob | string> {
+        return this._httpClient.get(`${this.baseAddress}poapi/Return/DowloandReturnItemAttachment?AttachmentName=${AttachmentName}&RetReqID=${RetReqID}`, {
+            responseType: 'blob',
+            headers: new HttpHeaders().append('Content-Type', 'application/json')
+        })
+            .pipe(catchError(this.errorHandler));
+    }
     GetAllReturns(): Observable<BPCRetHeader[] | string> {
         return this._httpClient.get<BPCRetHeader[]>(`${this.baseAddress}poapi/Return/GetAllReturns`)
             .pipe(catchError(this.errorHandler));
@@ -127,7 +152,6 @@ export class CustomerService {
         return this._httpClient.get<BPCRetItem[]>(`${this.baseAddress}poapi/Return/GetReturnItemsByRet?RetReqID=${RetReqID}`)
             .pipe(catchError(this.errorHandler));
     }
-
     // Products
     GetAllProducts(): Observable<BPCProd[] | string> {
         return this._httpClient.get<BPCProd[]>(`${this.baseAddress}poapi/Product/GetAllProducts`)
