@@ -182,17 +182,20 @@
           <div fxFlex>
             <mat-tab-group>
               <mat-tab label="Action ({{AllActions?.length}})">
-                <mat-card *ngFor="let aIACTByPartnerID of AllActions" fxFlex="100%" class="rightBorder"
-                  style="height: 80px;margin: 20px 5px 5px 2px;padding: 10px;border-color:#67c18b;">
-                  <mat-card-content>
-                    <h5 style="padding:5px 0px 5px 5px;">PO <strong>{{aIACTByPartnerID.DocNumber}} </strong>
-                    </h5>
-                    <i
-                      style="padding:5px 0px 5px 5px;font-size: smaller;">{{aIACTByPartnerID.Date | date:'dd/MM/yy'}},{{aIACTByPartnerID.Time}}</i>
-                    <button (click)="ActionTextClicked(aIACTByPartnerID)" mat-raised-button
-                      style="float:right;height:32px;background-color:#efb577;color: white; cursor: pointer;">{{aIACTByPartnerID.ActionText}}</button>
-                  </mat-card-content>
-                </mat-card>
+                <div class="mat-tab-body-content">
+                  <mat-card *ngFor="let aIACTByPartnerID of AllActions" fxFlex="100%" fxLayout="column"
+                    class="rightBorder"
+                    style="height: 80px;margin: 20px 5px 5px 2px;padding: 10px;border-color:#67c18b;">
+                    <mat-card-content>
+                      <h5 style="padding:5px 0px 5px 5px;">PO <strong>{{aIACTByPartnerID.DocNumber}} </strong>
+                      </h5>
+                      <i
+                        style="padding:5px 0px 5px 5px;font-size: smaller;">{{aIACTByPartnerID.Date | date:'dd/MM/yy'}},{{aIACTByPartnerID.Time}}</i>
+                      <button (click)="ActionTextClicked(aIACTByPartnerID)" mat-raised-button
+                        style="float:right;height:32px;background-color:#efb577;color: white; cursor: pointer;">{{aIACTByPartnerID.ActionText}}</button>
+                    </mat-card-content>
+                  </mat-card>
+                </div>
                 <!-- <mat-card fxFlex="100%" class="rightBorder"
                     style="height: 80px;margin: 20px 5px 5px 2px;padding: 10px;border-color:#67c18b;">
                     <mat-card-content>
@@ -240,18 +243,21 @@
                   </mat-card> -->
               </mat-tab>
               <mat-tab label="Notifications ({{AllNotifications?.length}})">
-                <mat-card *ngFor="let aIACTByPartnerID of AllNotifications" fxFlex="100%" class="rightBorder"
-                  style="height: 80px;margin: 20px 5px 5px 2px;padding: 10px;border-color:#67c18b;">
-                  <mat-card-content>
-                    <h5 style="padding:5px 0px 5px 5px;">PO <strong>{{aIACTByPartnerID.DocNumber}}</strong> is
-                      {{aIACTByPartnerID.Status}}
-                    </h5>
-                    <i
-                      style="padding:5px 0px 5px 5px;font-size: smaller;">{{aIACTByPartnerID.Date | date:'dd/MM/yy'}},{{aIACTByPartnerID.Time}}</i>
-                    <!-- <button (click)="ActionTextClicked(aIACTByPartnerID)" mat-raised-button
+                <div class="mat-tab-body-content">
+                  <mat-card *ngFor="let aIACTByPartnerID of AllNotifications" fxFlex="100%" fxLayout="column"
+                    class="rightBorder"
+                    style="height: 80px;margin: 20px 5px 5px 2px;padding: 10px;border-color:#67c18b;">
+                    <mat-card-content>
+                      <h5 style="padding:5px 0px 5px 5px;">PO <strong>{{aIACTByPartnerID.DocNumber}}</strong> is
+                        {{aIACTByPartnerID.Status}}
+                      </h5>
+                      <i
+                        style="padding:5px 0px 5px 5px;font-size: smaller;">{{aIACTByPartnerID.Date | date:'dd/MM/yy'}},{{aIACTByPartnerID.Time}}</i>
+                      <!-- <button (click)="ActionTextClicked(aIACTByPartnerID)" mat-raised-button
                         style="float:right;height:32px;background-color:#efb577;color: white; cursor: pointer;">{{aIACTByPartnerID.ActionText}}</button> -->
-                  </mat-card-content>
-                </mat-card>
+                    </mat-card-content>
+                  </mat-card>
+                </div>
               </mat-tab>
             </mat-tab-group>
           </div>
