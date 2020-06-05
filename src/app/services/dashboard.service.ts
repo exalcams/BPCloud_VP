@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import { PO, OrderFulfilmentDetails, Acknowledgement, POSearch, DashboardGraphStatus } from 'app/models/Dashboard';
 import { SODetails } from 'app/models/customer';
-import { BPCKRA } from 'app/models/fact';
+import { BPCKRA, CustomerBarChartData } from 'app/models/fact';
 
 @Injectable({
   providedIn: 'root'
@@ -78,7 +78,18 @@ export class DashboardService {
     return this._httpClient.get<BPCKRA[]>(`${this.baseAddress}factapi/Fact/GetCustomerDoughnutChartData?PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));
   }
-
+  GetCustomerOpenProcessCircle(PartnerID: string): Observable<BPCKRA | string> {
+    return this._httpClient.get<BPCKRA>(`${this.baseAddress}factapi/Fact/GetCustomerOpenProcessCircle?PartnerID=${PartnerID}`)
+      .pipe(catchError(this.errorHandler));
+  }
+  GetCustomerCreditLimitProcessCircle(PartnerID: string): Observable<BPCKRA | string> {
+    return this._httpClient.get<BPCKRA>(`${this.baseAddress}factapi/Fact/GetCustomerCreditLimitProcessCircle?PartnerID=${PartnerID}`)
+      .pipe(catchError(this.errorHandler));
+  }
+  GetCustomerBarChartData(PartnerID: string): Observable<CustomerBarChartData | string> {
+    return this._httpClient.get<CustomerBarChartData>(`${this.baseAddress}factapi/Fact/GetCustomerBarChartData?PartnerID=${PartnerID}`)
+      .pipe(catchError(this.errorHandler));
+  }
   GetAllSOBasedOnDate(poSearch: POSearch): Observable<SODetails[] | string> {
     return this._httpClient.post<SODetails[]>(`${this.baseAddress}poapi/Dashboard/GetAllSOBasedOnDate`,
       poSearch,

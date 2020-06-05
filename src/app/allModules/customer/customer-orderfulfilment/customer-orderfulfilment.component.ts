@@ -15,7 +15,7 @@ import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notific
 import { ChartType } from 'chart.js';
 import { fuseAnimations } from '@fuse/animations';
 import { SODetails } from 'app/models/customer';
-import { BPCKRA } from 'app/models/fact';
+import { BPCKRA, CustomerBarChartData } from 'app/models/fact';
 
 @Component({
   selector: 'app-customer-orderfulfilment',
@@ -118,7 +118,8 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
       labels: {
         // tslint:disable-next-line:typedef
         render: function (args) {
-          return args.value + '%';
+          // return args.value + '%';
+          return args.value;
         },
         fontColor: '#000',
         position: 'outside'
@@ -180,21 +181,14 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
     // }]
   };
   @ViewChild('barCanvas') barCanvas: ElementRef;
-  // public barChartLabels: any[] = ['17/02/20', '18/02/20', '19/02/20', '20/02/20', '21/02/20'];
-  barChartLabels: any[] = [];
-  date1 = new Date;
-  date2 = new Date;
-  date3 = new Date;
-  date4 = new Date;
-  date5 = new Date;
-
+  public barChartLabels: any[] = [];
   public barChartType: ChartType = 'bar';
   public barChartLegend = true;
   // public barChartData: any[] = [
   //     { data: [45, 70, 65, 20, 80], label: 'Actual' },
   //     { data: [87, 50, 40, 71, 56], label: 'Planned' }
   // ];
-  barChartData: any[] = [{ data: [], label: 'Actual' },
+  public barChartData: any[] = [{ data: [], label: 'Actual' },
   { data: [], label: 'Planned' },
   ];
   public barColors: any[] = [{ backgroundColor: '#40a8e2' }, { backgroundColor: '#fb863a' }];
@@ -215,18 +209,6 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
       ToDate: [''],
       Status: ['']
     });
-    this.date1.setDate(this.date1.getDate());
-    this.date2.setDate(this.date2.getDate() - 1);
-    this.date3.setDate(this.date3.getDate() - 2);
-    this.date4.setDate(this.date2.getDate() - 2);
-    this.date5.setDate(this.date2.getDate() - 3);
-    const dat1 = this.datePipe.transform(this.date1, 'dd/MM/yyyy');
-    const dat2 = this.datePipe.transform(this.date2, 'dd/MM/yyyy');
-    const dat3 = this.datePipe.transform(this.date3, 'dd/MM/yyyy');
-    const dat4 = this.datePipe.transform(this.date4, 'dd/MM/yyyy');
-    const dat5 = this.datePipe.transform(this.date5, 'dd/MM/yyyy');
-    // this.barChartLabels = [this.date1, this.date2, this.date3, this.date4, this.date5];
-    this.barChartLabels = [dat1, dat2, dat3, dat4, dat5];
     this.ShowAddBtn = true;
   }
 
@@ -250,28 +232,10 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
       this._router.navigate(['/auth/login']);
     }
     this.GetSODetails();
+    this.GetCustomerOpenProcessCircle();
+    this.GetCustomerCreditLimitProcessCircle();
     this.GetCustomerDoughnutChartData();
-    // this.GetDashboardGraphStatus();
-    // console.log(this.dashboardDeliverystatus);
-    // const OTIF = Number(this.OTIFStatus.OTIF);
-    // this.progress1(OTIF);
-    // this.progress2(this.QualityStatus.Quality);
-    // this.doughnutChartData = [this.FulfilmentStatus.OpenDetails.Value, this.FulfilmentStatus.ScheduledDetails.Value, this.FulfilmentStatus.InProgressDetails.Value, this.FulfilmentStatus.PendingDetails];
-    // this.barChartData = [
-    //     { data: [45, 70, 65, 20, 80], label: 'Actual' },
-    //     { data: [87, 50, 40, 71, 56], label: 'Planned' }
-    // ];
-    // console.log(this.barChartData);
-
-    // const gradient = this.barCanvas.nativeElement.getContext('2d').createLinearGradient(0, 0, 0, 600);
-    // gradient.addColorStop(0, 'red');
-    // gradient.addColorStop(1, 'green');
-    // this.barColors = [
-    //     {
-    //         backgroundColor: gradient
-    //     }
-    // ];
-
+    this.GetCustomerBarChartData();
     this.Fulfilments = [
       {
         'name': 'Open',
@@ -390,50 +354,35 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
           this.IsProgressBarVisibile = false;
         });
   }
-  GetDashboardGraphStatus(): void {
+
+  GetCustomerOpenProcessCircle(): void {
     this.IsProgressBarVisibile = true;
     this._dashboardService
-      .GetDashboardGraphStatus(this.PartnerID)
+      .GetCustomerOpenProcessCircle(this.PartnerID)
       .subscribe((data) => {
         if (data) {
-          this.DashboardGraphStatus = <DashboardGraphStatus>data;
-          this.dashboardDeliverystatus = this.DashboardGraphStatus.deliverystatus;
-          this.OTIFStatus = this.DashboardGraphStatus.oTIFStatus;
-          this.QualityStatus = this.DashboardGraphStatus.qualityStatus;
-          this.FulfilmentStatus = this.DashboardGraphStatus.fulfilmentStatus;
-          if (this.OTIFStatus && this.OTIFStatus.OTIF) {
-            const OTIF = Number(this.OTIFStatus.OTIF);
-            this.progress1(OTIF);
+          const OpenProcessCircle = data as BPCKRA;
+          if (OpenProcessCircle && OpenProcessCircle.KRAValue) {
+            this.progress1(+OpenProcessCircle.KRAValue);
           }
-          if (this.QualityStatus && this.QualityStatus.Quality) {
-            const Quality = Number(this.QualityStatus.Quality);
-            this.progress2(Quality);
+        }
+        this.IsProgressBarVisibile = false;
+      },
+        (err) => {
+          console.error(err);
+          this.IsProgressBarVisibile = false;
+        });
+  }
+  GetCustomerCreditLimitProcessCircle(): void {
+    this.IsProgressBarVisibile = true;
+    this._dashboardService
+      .GetCustomerCreditLimitProcessCircle(this.PartnerID)
+      .subscribe((data) => {
+        if (data) {
+          const CreditLimitProcessCircle = data as BPCKRA;
+          if (CreditLimitProcessCircle && CreditLimitProcessCircle.KRAValue) {
+            this.progress2(+CreditLimitProcessCircle.KRAValue);
           }
-          if (this.FulfilmentStatus && this.FulfilmentStatus.OpenDetails && this.FulfilmentStatus.ScheduledDetails
-            && this.FulfilmentStatus.InProgressDetails && this.FulfilmentStatus.PendingDetails) {
-            this.doughnutChartData = [this.FulfilmentStatus.OpenDetails.Value,
-            this.FulfilmentStatus.ScheduledDetails.Value,
-            this.FulfilmentStatus.InProgressDetails.Value,
-            this.FulfilmentStatus.PendingDetails.Value];
-          }
-          // this.dashboardDeliverystatus.Planned1.Date = this.dashboardDeliverystatus.Planned1.Date 
-          if (this.dashboardDeliverystatus && this.dashboardDeliverystatus.Planned1 && this.dashboardDeliverystatus.Planned2
-            && this.dashboardDeliverystatus.Planned3 && this.dashboardDeliverystatus.Planned4 && this.dashboardDeliverystatus.Planned5) {
-            const Planned1Date = this.datePipe.transform(this.dashboardDeliverystatus.Planned1.Date, 'dd/MM/yyyy');
-            const Planned2Date = this.datePipe.transform(this.dashboardDeliverystatus.Planned2.Date, 'dd/MM/yyyy');
-            const Planned3Date = this.datePipe.transform(this.dashboardDeliverystatus.Planned3.Date, 'dd/MM/yyyy');
-            const Planned4Date = this.datePipe.transform(this.dashboardDeliverystatus.Planned4.Date, 'dd/MM/yyyy');
-            const Planned5Date = this.datePipe.transform(this.dashboardDeliverystatus.Planned5.Date, 'dd/MM/yyyy');
-
-            // this.barChartLabels = [Planned1Date, Planned2Date, Planned3Date, Planned4Date, Planned5Date];
-            this.barChartData = [
-              { data: [this.dashboardDeliverystatus.Planned1.Actual, this.dashboardDeliverystatus.Planned2.Actual, this.dashboardDeliverystatus.Planned3.Actual, this.dashboardDeliverystatus.Planned4.Actual, this.dashboardDeliverystatus.Planned5.Actual], label: 'Actual' },
-              { data: [this.dashboardDeliverystatus.Planned1.Planned, this.dashboardDeliverystatus.Planned2.Planned, this.dashboardDeliverystatus.Planned3.Planned, this.dashboardDeliverystatus.Planned4.Planned, this.dashboardDeliverystatus.Planned5.Planned], label: 'Planned' }
-            ];
-          }
-          console.log(this.barChartData);
-          console.log(this.barChartLabels);
-          console.log(this.DashboardGraphStatus);
         }
         this.IsProgressBarVisibile = false;
       },
@@ -451,6 +400,26 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
           const DoughnutChartData = data as BPCKRA[];
           this.doughnutChartLabels = DoughnutChartData.map(x => x.KRA);
           this.doughnutChartData = DoughnutChartData.map(x => +x.KRAValue);
+        }
+        this.IsProgressBarVisibile = false;
+      },
+        (err) => {
+          console.error(err);
+          this.IsProgressBarVisibile = false;
+        });
+  }
+  GetCustomerBarChartData(): void {
+    this.IsProgressBarVisibile = true;
+    this._dashboardService
+      .GetCustomerBarChartData(this.PartnerID)
+      .subscribe((data) => {
+        if (data) {
+          const BarChartData = data as CustomerBarChartData;
+          this.barChartLabels = BarChartData.BarChartLabels;
+          this.barChartData = [
+            { data: BarChartData.ActualData.map(x => +x), label: 'Actual' },
+            { data: BarChartData.PlannedData.map(x => +x), label: 'Planned' }
+          ];
         }
         this.IsProgressBarVisibile = false;
       },

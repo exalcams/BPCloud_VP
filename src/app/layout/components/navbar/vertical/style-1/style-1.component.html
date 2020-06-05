@@ -4,15 +4,22 @@
     </div> -->
     <div class="buttons">
 
-        <button mat-icon-button class="toggle-sidebar-folded" (click)="toggleSidebarOpened()">
-            <mat-icon style="height: 50px !important;width: 60px !important;" svgIcon="bpCollapsedMenuIcon" class="secondary-text">
+        <!-- <button mat-icon-button class="toggle-sidebar-folded" (click)="toggleSidebarOpened()">
+            <mat-icon style="height: 50px !important;width: 60px !important;" svgIcon="bpCollapsedMenuIcon"
+                class="secondary-text">
             </mat-icon>
-        </button>
+        </button> -->
+        <div class="toggle-sidebar-folded" (click)="toggleSidebarOpened()">
+            <img src="assets/images/foldedmenu.png">
+        </div>
+        <div class="toggle-sidebar-opened" (click)="toggleSidebarFolded()">
+            <img src="assets/images/menu.png">
+        </div>
 
-        <button mat-icon-button class="toggle-sidebar-opened" (click)="toggleSidebarFolded()">
+        <!-- <button mat-icon-button class="toggle-sidebar-opened" (click)="toggleSidebarFolded()">
             <mat-icon style="height: 50px !important;width: 100px !important;" svgIcon="bpOpenedMenuIcon" class="secondary-text">
             </mat-icon>
-        </button>
+        </button> -->
 
     </div>
 
