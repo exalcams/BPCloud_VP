@@ -15,7 +15,8 @@ fuse-sidebar {
                             // display: none;
                             .toggle-sidebar-folded {
                                 display: inline;
-                                margin-left: -20px;
+                                // margin-left: -20px;
+                                cursor: pointer;
                             }
                             .toggle-sidebar-opened {
                                 display: none;
@@ -145,6 +146,7 @@ navbar {
                 }
                 .toggle-sidebar-opened {
                     margin-left: 150px;
+                    cursor: pointer;
                 }
             }
         }

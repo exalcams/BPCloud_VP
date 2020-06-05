@@ -12,7 +12,7 @@
     <div fxFlex fxLayout>
       <div class="tile mx-20" fxFlex="17" fxLayout="column" fxLayoutAlign="start">
         <div fxLayoutAlign="start center" class="pt-8">
-          <span class="boldClass orangeBorderBottom pl-8"> Time In Full (OTIF)</span>
+          <span class="boldClass orangeBorderBottom pl-8"> Open orders</span>
         </div>
         <div fxFlex fxLayoutAlign="center" class="pt-8">
           <svg height="140" width="140" viewBox="0 0 140 140" class="progress__svg">
@@ -22,15 +22,15 @@
               [style.strokeDashoffset]="1-dashoffset1" cx="70" cy="70" [attr.r]="radius" stroke-width="10" />
             <circle r="49" cx="70" cy="70" stroke="#f3705a" stroke-width="2" fill="none" class="inner-circle" />
             <text text-anchor="middle" alignment-baseline="middle" transform="rotate(90,70,70)">
-              <tspan x="70" y="70" dy="0.18em" font-size="20">{{progressPercentage1}}%</tspan>
-              <tspan x="70" y="70" dy="1.82em" font-size="10" class="progressSubtitle">Effiency</tspan>
+              <tspan x="70" y="70" dy="0.18em" font-size="20">{{progressPercentage1}}</tspan>
+              <!-- <tspan x="70" y="70" dy="1.82em" font-size="10" class="progressSubtitle">Effiency</tspan> -->
             </text>
           </svg>
         </div>
       </div>
       <div class="tile mx-20" fxFlex="17" fxLayout="column" fxLayoutAlign="start">
         <div fxLayoutAlign="start center" class="pt-8">
-          <span class="boldClass orangeBorderBottom pl-8"> Quality Index</span>
+          <span class="boldClass orangeBorderBottom pl-8"> Credit Limit</span>
         </div>
         <div fxFlex fxLayoutAlign="center" class="pt-8">
           <svg height="140" width="140" viewBox="0 0 140 140" class="progress__svg">
@@ -40,7 +40,8 @@
               [style.strokeDashoffset]="1-dashoffset2" cx="70" cy="70" [attr.r]="radius" stroke-width="10" />
             <circle r="49" cx="70" cy="70" stroke="#f3705a" stroke-width="2" fill="none" class="inner-circle" />
             <text text-anchor="middle" alignment-baseline="middle" transform="rotate(90,70,70)">
-              <tspan x="70" y="70" dy="0.18em" font-size="20">{{progressPercentage2}}%</tspan>
+              <tspan x="70" y="70" dy="0.18em" font-size="20">{{progressPercentage2}}</tspan>
+              <tspan x="70" y="70" dy="1.82em" font-size="10" class="progressSubtitle">Receivable Amount</tspan>
             </text>
           </svg>
         </div>
@@ -62,7 +63,7 @@
         <div fxLayoutAlign="start" class="pt-8">
           <span class="boldClass orangeBorderBottom pl-8"> Delivery status </span>
         </div>
-        <div id="barChart" fxFlex fxLayoutAlign="start" class="pt-0 px-8">
+        <div *ngIf="barChartLabels.length" id="barChart" fxFlex fxLayoutAlign="start" class="pt-0 px-8">
           <canvas #barCanvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
             [legend]="barChartLegend" [chartType]="barChartType" [colors]="barColors">
           </canvas>

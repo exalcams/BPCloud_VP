@@ -116,3 +116,8 @@ export class BPCFactView extends CommonClass {
     BPCKRAs: BPCKRA[];
     BPCAIACTs: BPCAIACT[];
 }
+export class CustomerBarChartData {
+    BarChartLabels: string[];
+    PlannedData: string[];
+    ActualData: string[];
+}
