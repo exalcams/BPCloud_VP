@@ -19,7 +19,7 @@ export class CustomerService {
     }
     // Error Handler
     errorHandler(error: HttpErrorResponse): Observable<string> {
-        return throwError(error.error || error.message || 'Server Error');
+        return throwError(error.error instanceof Object ? error.error.Message ? error.error.Message : error.error : error.error || error.message || 'Server Error');
     }
 
     CreatePurchaseIndent(PurchaseIndent: BPCPIView): Observable<any> {
