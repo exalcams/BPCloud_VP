@@ -84,7 +84,23 @@
     background-color: #d87e39;
     opacity: 0.7;
   }
+  .boldClass {
+    font-weight: bold;
+  }
+  .orangeBorderBottom {
+    border-bottom: 2px solid #efb577;
+  }
   .Btn1 {
+    border-color: #efb577;
+    background-color: #efb577;
+    color: white;
+    border-radius: 5px;
+    width: 200px !important;
+    height: 45px;
+    // position: fixed !important;
+    // bottom: 50px !important;
+  }
+  .Btn2 {
     border-color: #efb577;
     background-color: #efb577;
     color: white;
