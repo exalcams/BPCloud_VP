@@ -125,6 +125,13 @@
     @extend .vertical-line;
     background-color: #34ad65;
   }
+    .Rectangle-721 {
+    // height: 115px;
+    // border-radius: 7px;
+    border: solid 1px #e0e0e0;
+    background-color: #ffffff;
+    border-left: solid 8px #f4cc62;
+  }
   .orange-timeline {
     // @extend .hor-timeline;
     @extend .vertical-line;
@@ -149,9 +156,12 @@
   }
   .borderRightClass {
     border-right: 1px solid #dce1e9;
+    margin-top: -10% !important;
   }
   .timeline-content {
     background-color: #dcdcdc !important;
+    // border: 1px solid #dcdcdc;
+    // border-radius: 5px;
     // border:1px solid gray;
     input {
       background-color: #dcdcdc;
