@@ -588,28 +588,36 @@
                         <th mat-header-cell *matHeaderCellDef> Order Qty </th>
                         <td mat-cell class="QtyClass" *matCellDef="let element; let index = index"
                           [formGroupName]="index">
-                          <input matInput formControlName="OrderedQty"> </td>
+                          <!-- <input matInput formControlName="OrderedQty">  -->
+                          {{ASNItemFormGroup.get('ASNItems')?.controls[index]?.get('OrderedQty')?.value}}
+                        </td>
                       </ng-container>
 
                       <ng-container matColumnDef="GRQty">
                         <th mat-header-cell *matHeaderCellDef> GR Qty </th>
                         <td mat-cell class="QtyClass" *matCellDef="let element; let index = index"
                           [formGroupName]="index">
-                          <input matInput formControlName="GRQty"> </td>
+                          <!-- <input matInput formControlName="GRQty">  -->
+                          {{ASNItemFormGroup.get('ASNItems')?.controls[index]?.get('GRQty')?.value}}
+                        </td>
                       </ng-container>
 
                       <ng-container matColumnDef="PipelineQty">
                         <th mat-header-cell *matHeaderCellDef> Pipeline Qty</th>
                         <td mat-cell class="QtyClass" *matCellDef="let element; let index = index"
                           [formGroupName]="index">
-                          <input matInput formControlName="PipelineQty"> </td>
+                          <!-- <input matInput formControlName="PipelineQty">  -->
+                          {{ASNItemFormGroup.get('ASNItems')?.controls[index]?.get('PipelineQty')?.value}}
+                        </td>
                       </ng-container>
 
                       <ng-container matColumnDef="OpenQty">
                         <th mat-header-cell *matHeaderCellDef> Open Qty</th>
                         <td mat-cell class="QtyClass" *matCellDef="let element; let index = index"
                           [formGroupName]="index">
-                          <input matInput formControlName="OpenQty"> </td>
+                          <!-- <input matInput formControlName="OpenQty">  -->
+                          {{ASNItemFormGroup.get('ASNItems')?.controls[index]?.get('OpenQty')?.value}}
+                        </td>
                       </ng-container>
 
                       <ng-container matColumnDef="ASNQty">
@@ -722,13 +730,11 @@
                       &&InvoiceDetailsFormGroup.get('InvoiceNumber').hasError('pattern')">
                         Please enter valid Invoice Number
                       </mat-error>
-                      <mat-error
-                      *ngIf="InvoiceDetailsFormGroup.get('InvoiceNumber').touched && !InvoiceDetailsFormGroup.get('InvoiceNumber').hasError('required')
+                      <mat-error *ngIf="InvoiceDetailsFormGroup.get('InvoiceNumber').touched && !InvoiceDetailsFormGroup.get('InvoiceNumber').hasError('required')
                     &&(InvoiceDetailsFormGroup.get('InvoiceNumber').hasError('minlength'))">
-                    Minimum allowed character is 10
-                    </mat-error>
-                      <mat-error
-                        *ngIf="InvoiceDetailsFormGroup.get('InvoiceNumber').touched && !InvoiceDetailsFormGroup.get('InvoiceNumber').hasError('required')
+                        Minimum allowed character is 10
+                      </mat-error>
+                      <mat-error *ngIf="InvoiceDetailsFormGroup.get('InvoiceNumber').touched && !InvoiceDetailsFormGroup.get('InvoiceNumber').hasError('required')
                       &&(InvoiceDetailsFormGroup.get('InvoiceNumber').hasError('maxlength'))">
                         Maximum allowed character is 16
                       </mat-error>

@@ -165,7 +165,7 @@ export class ASNComponent implements OnInit {
             VessleNumber: ['', Validators.required],
             AWBNumber: ['', Validators.required],
             AWBDate: [new Date(), Validators.required],
-            NetWeight: ['', [ Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
+            NetWeight: ['', [Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
             NetWeightUOM: ['KG', Validators.required],
             GrossWeight: ['', [Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
             GrossWeightUOM: ['KG', Validators.required],
@@ -611,14 +611,18 @@ export class ASNComponent implements OnInit {
             GRQty: [poItem.CompletedQty],
             PipelineQty: [poItem.TransitQty],
             OpenQty: [poItem.OpenQty],
-            ASNQty: [poItem.OpenQty, [Validators.required, Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,3})?$')]],
+            ASNQty: [poItem.OpenQty],
             UOM: [poItem.UOM],
             Batch: [''],
             ManufactureDate: [''],
             ExpiryDate: [''],
         });
         row.disable();
-        row.get('ASNQty').enable();
+        if (poItem.OpenQty && poItem.OpenQty > 0) {
+            row.get('ASNQty').setValidators([Validators.required, Validators.max(poItem.OpenQty), Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,3})?$')]);
+            row.get('ASNQty').updateValueAndValidity();
+            row.get('ASNQty').enable();
+        }
         row.get('Batch').enable();
         row.get('ManufactureDate').enable();
         row.get('ExpiryDate').enable();
@@ -644,7 +648,7 @@ export class ASNComponent implements OnInit {
             ExpiryDate: [asnItem.ExpiryDate],
         });
         row.disable();
-        row.get('ASNQty').enable();
+        // row.get('ASNQty').enable();
         row.get('Batch').enable();
         row.get('ManufactureDate').enable();
         row.get('ExpiryDate').enable();
@@ -753,6 +757,16 @@ export class ASNComponent implements OnInit {
         });
     }
 
+    CheckForNonZeroOpenQty(): boolean {
+        let NonZero = false;
+        this.SelectedASNView.ASNItems.forEach(x => {
+            if (x.OpenQty > 0) {
+                NonZero = true;
+            }
+        });
+        return NonZero;
+    }
+
     GetInvoiceDetailValues(): void {
         this.SelectedASNHeader.InvoiceNumber = this.SelectedASNView.InvoiceNumber = this.InvoiceDetailsFormGroup.get('InvoiceNumber').value;
         const invDate = this.InvoiceDetailsFormGroup.get('InvoiceDate').value;
@@ -780,10 +794,15 @@ export class ASNComponent implements OnInit {
                     if (this.InvoiceDetailsFormGroup.valid) {
                         this.GetASNValues();
                         this.GetASNItemValues();
-                        this.GetInvoiceDetailValues();
-                        this.GetDocumentCenterValues();
-                        this.SelectedASNView.IsSubmitted = false;
-                        this.SetActionToOpenConfirmation('Save');
+                        if (this.CheckForNonZeroOpenQty()) {
+                            this.GetInvoiceDetailValues();
+                            this.GetDocumentCenterValues();
+                            this.SelectedASNView.IsSubmitted = false;
+                            this.SetActionToOpenConfirmation('Save');
+                        } else {
+                            this.notificationSnackBarComponent.openSnackBar('There is no Open Qty', SnackBarStatus.danger);
+                        }
+
                     } else {
                         this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
                     }
@@ -804,10 +823,14 @@ export class ASNComponent implements OnInit {
                     if (this.InvoiceDetailsFormGroup.valid) {
                         this.GetASNValues();
                         this.GetASNItemValues();
-                        this.GetInvoiceDetailValues();
-                        this.GetDocumentCenterValues();
-                        this.SelectedASNView.IsSubmitted = true;
-                        this.SetActionToOpenConfirmation('Submit');
+                        if (this.CheckForNonZeroOpenQty()) {
+                            this.GetInvoiceDetailValues();
+                            this.GetDocumentCenterValues();
+                            this.SelectedASNView.IsSubmitted = true;
+                            this.SetActionToOpenConfirmation('Submit');
+                        } else {
+                            this.notificationSnackBarComponent.openSnackBar('There is no Open Qty', SnackBarStatus.danger);
+                        }
                     } else {
                         this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
                     }

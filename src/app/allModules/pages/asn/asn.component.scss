@@ -820,4 +820,9 @@
     color: #f44336;
     font-size: 12px;
   }
+  .mat-input-element:disabled {
+    color: gray !important;
+    background: whitesmoke !important;
+    cursor: not-allowed !important;
+  }
 }
