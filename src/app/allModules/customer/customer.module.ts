@@ -62,6 +62,7 @@ import { CustomerPolookupComponent } from './customer-polookup/customer-polookup
 import { PurchaseIndentComponent } from './purchase-indent/purchase-indent.component';
 import { ReturnComponent } from './return/return.component';
 import { AttachmentDialogComponent } from '../pages/attachment-dialog/attachment-dialog.component';
+import { PODComponent } from './pod/pod.component';
 
 const routes = [
     {
@@ -87,6 +88,10 @@ const routes = [
     {
         path: 'return',
         component: ReturnComponent
+    },
+    {
+        path: 'pod',
+        component: PODComponent
     },
     {
         path: '**',
@@ -150,8 +155,8 @@ const routes = [
         ChartsModule
     ],
     declarations: [CustomerDashboardComponent, CustomerFactComponent,
-        CustomerOrderfulfilmentComponent, CustomerPolookupComponent, 
-        PurchaseIndentComponent, ReturnComponent],
+        CustomerOrderfulfilmentComponent, CustomerPolookupComponent,
+        PurchaseIndentComponent, ReturnComponent, PODComponent],
     providers: [
         DecimalPipe
     ],
