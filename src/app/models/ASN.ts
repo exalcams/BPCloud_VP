@@ -176,3 +176,4 @@ export class BPCDocumentCenterMaster extends CommonClass {
     ForwardMail: string;
 }
 
+

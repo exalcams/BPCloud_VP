@@ -1,5 +1,5 @@
 @import "src/@fuse/scss/fuse";
-#purind {
+#poddetail {
   background-color: white;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   h1,
@@ -295,6 +295,12 @@
     cursor: pointer !important;
     color: #74a2f9;
   }
+  .addIcon {
+    height: 26px;
+    margin-top: 25px;
+    padding-left: 8px;
+    cursor: pointer !important;
+  }
   .cardHeader {
     background-color: #fffdf9;
     height: 45px;
@@ -323,7 +329,7 @@
   }
   .addIcon {
     height: 20px;
-    margin-top: 24px;
+    margin-top: 16px;
     padding-left: 4px;
     cursor: pointer !important;
   }
@@ -345,7 +351,7 @@
   }
   .removeIcon {
     height: 20px;
-    padding-left: 16px;
+    padding-right: 16px;
     cursor: pointer !important;
   }
   .mat-input-element:disabled {
@@ -529,9 +535,6 @@
   }
   .topLeftBorderRadius {
     border-top-left-radius: 20px;
-  }
-  .borderleft {
-    border-left: 1px solid #cccccc;
   }
   .ticketTile {
     background-color: white;
@@ -819,5 +822,10 @@
   .AttError {
     color: #f44336;
     font-size: 12px;
+  }
+  .mat-input-element:disabled {
+    color: gray !important;
+    background: whitesmoke !important;
+    cursor: not-allowed !important;
   }
 }

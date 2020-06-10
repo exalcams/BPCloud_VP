@@ -223,6 +223,34 @@ export class LoginComponent implements OnInit {
         }
       );
     }
+    if (this.MenuItems.indexOf('Fact') >= 0) {
+      this.children.push(
+        {
+          id: 'fact',
+          title: 'My details',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          icon: 'detailsIcon',
+          isSvgIcon: true,
+          // icon: 'dashboard',
+          url: '/fact',
+        }
+      );
+    }
+    if (this.MenuItems.indexOf('CustomerFact') >= 0) {
+      this.children.push(
+        {
+          id: 'fact',
+          title: 'My details',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          icon: 'detailsIcon',
+          isSvgIcon: true,
+          // icon: 'dashboard',
+          url: '/customer/fact',
+        }
+      );
+    }
     if (this.MenuItems.indexOf('OrderFulFilmentCenter') >= 0) {
       this.children.push(
         {
@@ -230,7 +258,7 @@ export class LoginComponent implements OnInit {
           title: 'Order Fulfilment Center',
           translate: 'NAV.SAMPLE.TITLE',
           type: 'item',
-          icon: 'detailsIcon',
+          icon: 'orderfulfilmentIcon',
           isSvgIcon: true,
           // icon: 'dashboard',
           url: '/pages/orderfulfilmentCenter',
@@ -244,7 +272,7 @@ export class LoginComponent implements OnInit {
           title: 'Order Fulfilment Center',
           translate: 'NAV.SAMPLE.TITLE',
           type: 'item',
-          icon: 'detailsIcon',
+          icon: 'orderfulfilmentIcon',
           isSvgIcon: true,
           // icon: 'dashboard',
           url: '/customer/orderfulfilment',
@@ -301,41 +329,14 @@ export class LoginComponent implements OnInit {
           title: 'Payment',
           translate: 'NAV.SAMPLE.TITLE',
           type: 'item',
-          icon: 'paymentIcon',
+          icon: 'paymentmethodIcon',
           isSvgIcon: true,
           // icon: 'dashboard',
           url: '/pages/payment',
         }
       );
     }
-    if (this.MenuItems.indexOf('Fact') >= 0) {
-      this.children.push(
-        {
-          id: 'fact',
-          title: 'My details',
-          translate: 'NAV.SAMPLE.TITLE',
-          type: 'item',
-          icon: 'home',
-          isSvgIcon: false,
-          // icon: 'dashboard',
-          url: '/fact',
-        }
-      );
-    }
-    if (this.MenuItems.indexOf('CustomerFact') >= 0) {
-      this.children.push(
-        {
-          id: 'fact',
-          title: 'My details',
-          translate: 'NAV.SAMPLE.TITLE',
-          type: 'item',
-          icon: 'home',
-          isSvgIcon: false,
-          // icon: 'dashboard',
-          url: '/customer/fact',
-        }
-      );
-    }
+  
     if (this.MenuItems.indexOf('PurchaseIndent') >= 0) {
       this.children.push(
         {
@@ -361,6 +362,20 @@ export class LoginComponent implements OnInit {
           isSvgIcon: false,
           // icon: 'dashboard',
           url: '/customer/return',
+        }
+      );
+    }
+    if (this.MenuItems.indexOf('POD') >= 0) {
+      this.children.push(
+        {
+          id: 'pod',
+          title: 'POD',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          icon: 'podIcon',
+          isSvgIcon: true,
+          // icon: 'dashboard',
+          url: '/customer/pod',
         }
       );
     }
@@ -487,7 +502,7 @@ export class LoginComponent implements OnInit {
         title: 'Master',
         // translate: 'NAV.DASHBOARDS',
         type: 'collapsable',
-        icon: 'viewListIcon',
+        icon: 'menuwithdotsIcon',
         isSvgIcon: true,
         // icon: 'view_list',
         children: this.subChildren
