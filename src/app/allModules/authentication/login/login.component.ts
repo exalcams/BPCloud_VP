@@ -344,8 +344,8 @@ export class LoginComponent implements OnInit {
           title: 'Purchase Indent',
           translate: 'NAV.SAMPLE.TITLE',
           type: 'item',
-          icon: 'article',
-          isSvgIcon: false,
+          icon: 'lookupIcon',
+          isSvgIcon: true,
           // icon: 'dashboard',
           url: '/customer/purchaseindent',
         }
@@ -358,8 +358,8 @@ export class LoginComponent implements OnInit {
           title: 'Return',
           translate: 'NAV.SAMPLE.TITLE',
           type: 'item',
-          icon: 'style',
-          isSvgIcon: false,
+          icon: 'returnIcon',
+          isSvgIcon: true,
           // icon: 'dashboard',
           url: '/customer/return',
         }

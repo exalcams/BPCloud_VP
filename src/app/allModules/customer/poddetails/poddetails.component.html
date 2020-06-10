@@ -152,7 +152,7 @@
             <form autocomplete="off" class="abnormal" name="form" novalidate [formGroup]="PODItemFormGroup">
               <div style="overflow-x:auto;">
                 <table
-                  *ngIf="(POItems && POItems.length)|| (SelectedPODView?.PODItems && SelectedPODView?.PODItems?.length)"
+                  *ngIf="(SelectedPODView?.PODItems && SelectedPODView?.PODItems?.length)"
                   class="table" mat-table [dataSource]="PODItemDataSource" formArrayName="PODItems">
 
                   <ng-container matColumnDef="Item">
