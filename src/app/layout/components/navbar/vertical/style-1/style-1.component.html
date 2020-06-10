@@ -35,7 +35,7 @@
 
 </div>
 <div class="navbar-down" [ngClass]="fuseConfig.layout.navbar.secondaryBackground">
-    <div fxLayout fxLayoutAlign="center" class="mx-8">
+    <!-- <div fxLayout fxLayoutAlign="center" class="mx-8">
         <div fxFlex fxLayoutAlign="center">
             <img style="height: 14px" src="assets/images/dashboard/man-user.png">
             <div class="buttons">
@@ -43,9 +43,12 @@
                     {{CurrentLoggedInUser | removeLeadingZero}}</div>
             </div>
         </div>
-    </div>
+    </div> -->
     <mat-divider class="borderTop my-8"></mat-divider>
     <div fxLayout fxLayoutAlign="center" class="mb-8">
         <img src="assets/images/dashboard/power.png" (click)="logOutClick()" class="powerClass px-16">
+    </div>
+    <div fxLayout fxLayoutAlign="center" class="mb-8">
+        <span (click)="logOutClick()" class="powerClass px-16 log-text">Logout</span>
     </div>
 </div>

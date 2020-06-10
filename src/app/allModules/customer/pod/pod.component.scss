@@ -1,5 +1,5 @@
 @import "src/@fuse/scss/fuse";
-#chat {
+#pod {
   background-color: white;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   h1,
@@ -161,14 +161,17 @@
     text-align: left;
     color: #3e3e3e;
   }
-  .SaveBtn {
+  .SubmitBtn {
     background-color: #efb577;
     color: white;
-    margin-bottom: 8px;
+  }
+  .SaveBtn {
+    background-color: white;
+    color: #efb577;
   }
   .DeleteBtn {
     background-color: white;
-    color: #efb577;
+    color: #e03b3b;
   }
   .Rectangle-721 {
     // height: 115px;
@@ -824,5 +827,9 @@
     color: gray !important;
     background: whitesmoke !important;
     cursor: not-allowed !important;
+  }
+  .cursorPointer {
+    color: #0000ee;
+    cursor: pointer;
   }
 }

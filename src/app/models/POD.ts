@@ -63,3 +63,8 @@ export class BPCPODView extends CommonClass
     Status: string;
     PODItems: BPCPODItem[];
 }
+export class BPCReasonMaster extends CommonClass {
+    ID: number;
+    ReasonCode: string;
+    ReasonText: string;
+}

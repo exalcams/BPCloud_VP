@@ -63,6 +63,7 @@ import { PurchaseIndentComponent } from './purchase-indent/purchase-indent.compo
 import { ReturnComponent } from './return/return.component';
 import { AttachmentDialogComponent } from '../pages/attachment-dialog/attachment-dialog.component';
 import { PODComponent } from './pod/pod.component';
+import { PODDetailsComponent } from './poddetails/poddetails.component';
 
 const routes = [
     {
@@ -92,6 +93,10 @@ const routes = [
     {
         path: 'pod',
         component: PODComponent
+    },
+    {
+        path: 'poddetails',
+        component: PODDetailsComponent
     },
     {
         path: '**',
@@ -156,7 +161,7 @@ const routes = [
     ],
     declarations: [CustomerDashboardComponent, CustomerFactComponent,
         CustomerOrderfulfilmentComponent, CustomerPolookupComponent,
-        PurchaseIndentComponent, ReturnComponent, PODComponent],
+        PurchaseIndentComponent, ReturnComponent, PODComponent, PODDetailsComponent],
     providers: [
         DecimalPipe
     ],
