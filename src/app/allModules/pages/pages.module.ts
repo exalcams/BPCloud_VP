@@ -64,6 +64,7 @@ import { ResourceComponent } from './resource/resource.component';
 import { SupportdeskComponent } from './supportdesk/supportdesk.component';
 import { SupportTicketComponent } from './support-ticket/support-ticket.component';
 import { SupportChatComponent } from './support-chat/support-chat.component';
+import { DataMigrationComponent } from './data-migration/data-migration.component';
 // import 'chart.piecelabel.js';
 
 const routes = [
@@ -106,6 +107,10 @@ const routes = [
     {
         path: "supportchat",
         component: SupportChatComponent,
+    },
+    {
+        path: "datamigration",
+        component: DataMigrationComponent,
     },
     {
         path: "**",
@@ -191,7 +196,8 @@ const routes = [
         ResourceComponent,
         SupportdeskComponent,
         SupportTicketComponent,
-        SupportChatComponent
+        SupportChatComponent,
+        DataMigrationComponent
     ],
     providers: [DecimalPipe],
     entryComponents: [],

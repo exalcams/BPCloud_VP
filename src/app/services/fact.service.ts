@@ -113,4 +113,26 @@ export class FactService {
       })
       .pipe(catchError(this.errorHandler));
   }
+
+  CreateFactBanks(Banks: BPCFactBank[]): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/CreateBanks`,
+      Banks,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  CreateFacts(Facts: BPCFact[]): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/CreateFacts`,
+      Facts,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
 }
