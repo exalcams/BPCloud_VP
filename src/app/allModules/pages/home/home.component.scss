@@ -11,6 +11,12 @@
         padding: 0px;
         margin: 0px;
     }
+    .progressBarPostion {
+        position: absolute !important;
+        top: 350px;
+        z-index: 1;
+        left: 55%;
+      }
     .outer {
         border-bottom: 1px solid rgba(255, 85, 0, 0.1);
         position: relative;

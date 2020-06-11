@@ -407,6 +407,21 @@ export class LoginComponent implements OnInit {
         }
       );
     }
+
+        if (this.MenuItems.indexOf('DataMigration') >= 0) {
+      this.children.push(
+        {
+          id: 'datamigration',
+          title: 'Data Migration',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          icon: 'receiptIcon',
+          isSvgIcon: true,
+          // icon: 'receipt',
+          url: '/pages/datamigration',
+        }
+      );
+    }
     // if (this.MenuItems.indexOf('InvoiceDetails') >= 0) {
     //   this.children.push(
     //     {
