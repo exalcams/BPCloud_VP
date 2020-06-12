@@ -84,6 +84,19 @@ export class BPCAIACT extends CommonClass {
     Date: Date | string | null;
     Time: string;
 }
+
+export class BPCCertificate extends CommonClass {
+    ID: number;
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
+    CertificateType: string;
+    CertificateName: string;
+    Validity: Date | string | null;
+    Mandatory: string;
+    Attachment: string;
+}
 export class BPCFactView extends CommonClass {
     ID: number;
     Client: string;

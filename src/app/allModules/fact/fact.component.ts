@@ -13,7 +13,7 @@ import { CBPLocation } from 'app/models/vendor-master';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { Guid } from 'guid-typescript';
-import { BPCFact, BPCFactView, BPCFactContactPerson, BPCKRA, BPCFactBank, BPCAIACT } from 'app/models/fact';
+import { BPCFact, BPCFactView, BPCFactContactPerson, BPCKRA, BPCFactBank, BPCAIACT, BPCCertificate } from 'app/models/fact';
 
 @Component({
   selector: 'app-fact',
@@ -37,6 +37,7 @@ export class FactComponent implements OnInit {
   bankDetailsFormGroup: FormGroup;
   ContactPersonFormGroup: FormGroup;
   AIACTFormGroup: FormGroup;
+  CertificateFormGroup: FormGroup;
   searchText = '';
   AllFacts: BPCFact[] = [];
   selectID: string;
@@ -46,6 +47,7 @@ export class FactComponent implements OnInit {
   BanksByPartnerID: BPCFactBank[] = [];
   ContactPersonsByPartnerID: BPCFactContactPerson[] = [];
   AIACTsByPartnerID: BPCAIACT[] = [];
+  CertificatesByPartnerID: BPCCertificate[] = [];
   KRADisplayedColumns: string[] = [
     'KRA',
     'KRAText',
@@ -77,10 +79,18 @@ export class FactComponent implements OnInit {
     'ActionText',
     // 'Action'
   ];
+  CertificateDisplayedColumns: string[] = [
+    'CertificateType',
+    'CertificateName',
+    'Validity',
+    'Attachment',
+    // 'Action'
+  ];
   KRADataSource = new MatTableDataSource<BPCKRA>();
   bankDetailsDataSource = new MatTableDataSource<BPCFactBank>();
   ContactPersonDataSource = new MatTableDataSource<BPCFactContactPerson>();
   AIACTDataSource = new MatTableDataSource<BPCAIACT>();
+  CertificateDataSource = new MatTableDataSource<BPCCertificate>();
   selection = new SelectionModel<any>(true, []);
   @ViewChild('iDNumber') iDNumber: ElementRef;
   @ViewChild('EvalDate') EvalDate: ElementRef;
@@ -215,6 +225,15 @@ export class FactComponent implements OnInit {
     });
   }
 
+  InitializeCertificateFormGroup(): void {
+    this.CertificateFormGroup = this._formBuilder.group({
+      CertificateType: ['', Validators.required],
+      CertificateName: ['', Validators.required],
+      Validity: ['', Validators.required],
+      Attachment: ['', Validators.required],
+    });
+  }
+
   ResetControl(): void {
     this.SelectedBPCFact = new BPCFact();
     this.SelectedBPCFactView = new BPCFactView();
@@ -262,6 +281,12 @@ export class FactComponent implements OnInit {
     });
   }
 
+  ClearCertificateFormGroup(): void {
+    this.CertificateFormGroup.reset();
+    Object.keys(this.CertificateFormGroup.controls).forEach(key => {
+      this.CertificateFormGroup.get(key).markAsUntouched();
+    });
+  }
   ClearKRADataSource(): void {
     this.KRAsByPartnerID = [];
     this.KRADataSource = new MatTableDataSource(this.KRAsByPartnerID);
@@ -370,6 +395,7 @@ export class FactComponent implements OnInit {
     this.GetBanksByPartnerID();
     this.GetContactPersonsByPartnerID();
     this.GetAIACTsByPartnerID();
+    this.GetCertificatesByPartnerID();
   }
 
   GetKRAsByPartnerID(): void {
@@ -436,6 +462,21 @@ export class FactComponent implements OnInit {
     );
   }
 
+  GetCertificatesByPartnerID(): void {
+    this.IsProgressBarVisibile = true;
+    this._FactService.GetCertificatesByPartnerID(this.SelectedBPCFact.PatnerID).subscribe(
+      (data) => {
+        this.IsProgressBarVisibile = false;
+        this.CertificatesByPartnerID = data as BPCCertificate[];
+        this.CertificateDataSource = new MatTableDataSource(this.CertificatesByPartnerID);
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+        // this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+      }
+    );
+  }
 
   AddKRAToTable(): void {
     if (this.KRAFormGroup.valid) {

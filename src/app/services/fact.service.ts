@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { AuthService } from './auth.service';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { BPCFactContactPerson, BPCFactBank, BPCKRA, BPCAIACT, BPCFactView, BPCFact } from 'app/models/fact';
+import { BPCFactContactPerson, BPCFactBank, BPCKRA, BPCAIACT, BPCFactView, BPCFact, BPCCertificate } from 'app/models/fact';
 
 @Injectable({
   providedIn: 'root'
@@ -91,7 +91,10 @@ export class FactService {
     return this._httpClient.get<BPCAIACT[]>(`${this.baseAddress}factapi/Fact/GetAIACTsByPartnerID?PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));
   }
-
+  GetCertificatesByPartnerID(PartnerID: string): Observable<BPCCertificate[] | string> {
+    return this._httpClient.get<BPCCertificate[]>(`${this.baseAddress}factapi/Fact/GetCertificatesByPartnerID?PartnerID=${PartnerID}`)
+      .pipe(catchError(this.errorHandler));
+  }
   AcceptAIACT(AIACT: BPCAIACT): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/AcceptAIACT`,
       AIACT,
