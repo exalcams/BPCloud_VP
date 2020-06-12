@@ -60,6 +60,10 @@ const appRoutes: Routes = [
         loadChildren: './allModules/customer/customer.module#CustomerModule'
     },
     {
+        path: 'subcon',
+        loadChildren: './allModules/subcon/subcon.module#SubconModule'
+    },
+    {
         path: '**',
         redirectTo: 'auth/login'
     }
