@@ -74,11 +74,11 @@
               </div>
             </div>
             <div fxFlex class="px-24 mt-4">
-              <form autocomplete="off" fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="start" fxFlex="1 0 auto"
+              <form autocomplete="off" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="10px" fxFlex="1 0 auto"
                 name="form" novalidate [formGroup]="FLIPFormGroup">
-                <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="30px">
-                  <div fxFlex="33">
-                    <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="50px">
+                  <div fxFlex="33.33">
+                    <mat-form-field style="width: 100%;">
                       <input matInput placeholder="Invoice No" formControlName="InvoiceNumber">
                       <mat-error
                         *ngIf="FLIPFormGroup.get('InvoiceNumber').touched && FLIPFormGroup.get('InvoiceNumber').hasError('required')">
@@ -86,8 +86,8 @@
                       </mat-error>
                     </mat-form-field>
                   </div>
-                  <div fxFlex="33">
-                    <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                  <div fxFlex="33.33">
+                    <mat-form-field style="width: 100%;">
                       <input matInput placeholder="Date" [matDatepicker]="picker1" formControlName="InvoiceDate">
                       <mat-datepicker-toggle matSuffix [for]="picker1">
                         <img matDatepickerToggleIcon class="calendarImg" src="assets/images/calendar.png">
@@ -99,9 +99,9 @@
                       </mat-error>
                     </mat-form-field>
                   </div>
-                  <div fxFlex="33">
+                  <div fxFlex="33.33" fxLayoutGap="30px">
                     <div fxFlex="65">
-                      <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                      <mat-form-field style="width: 100%;">
                         <input matInput placeholder="Invoice Amount" formControlName="InvoiceAmount"
                           (keydown)="numberOnly($event)">
                         <mat-error
@@ -115,8 +115,8 @@
                       </mat-form-field>
                     </div>
                     <div fxFlex="35">
-                      <mat-form-field class="pl-8 pr-24" style="width: 100%;">
-                        <mat-select (selectionChange)="invoiceCurrencySelected($event)" placeholder="Currency"
+                      <mat-form-field style="width: 100%;">
+                        <mat-select (selectionChange)="invoiceCurrencySelected($event)" placeholder="Cur"
                           formControlName="InvoiceCurrency">
                           <mat-option *ngFor="let currency of AllCurrencies" [value]="currency">
                             {{currency}}
@@ -130,9 +130,9 @@
                     </div>
                   </div>
                 </div>
-                <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="30px">
-                  <div fxFlex="33">
-                    <mat-form-field class="pl-8 pr-24" style="width: 100%;">
+                <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="50px">
+                  <div fxFlex="33.33">
+                    <mat-form-field style="width: 100%;">
                       <mat-select placeholder="Invoice Type" (selectionChange)="invoiceTypeSelected($event)"
                         formControlName="InvoiceType">
                         <mat-option *ngFor="let invoiceType of AllInvoiceTypes" [value]="invoiceType">{{invoiceType}}
@@ -144,36 +144,31 @@
                       </mat-error>
                     </mat-form-field>
                   </div>
-                  <div fxFlex="33">
-                    <div>
-                      <span>Invoice Attachment</span>
-                    </div>
-                    <div fxLayout>
-                      <div fxFlex="100" fxLayout class="Rectangle">
-                        <div class="Rectangle-106 m-8">
-                          <img class="m-8" style="height: 10px;" src="assets/images/imageIcon.png">
-                        </div>
-                        <div fxFlex class="m-8" fxLayout="column">
-                          <div fxFlex style="font-size: 10px;">{{fileToUpload?.name}}</div>
-                          <div fxFlex style="font-size: 10px;">{{fileToUpload?.size}}</div>
-                        </div>
-                      </div>
-                      <div fxLayout="column" style="margin-left: 10px;width: 40% !important;">
-                        <div fxFlex fxLayout="column">
-                          <div fxFlex style="font-size: 10px;margin-top: -16px;color: #3380d7;font-weight: 600;
-                        cursor: pointer !important;">
-                            <span class="addAttachmentClass" (click)="fileInput1.click()"> + add Attachment </span>
-                            <input hidden type="file"
-                              accept="image/x-png,image/gif,image/jpeg,image/jpg,application/pdf" #fileInput1 id="file"
-                              (change)="handleFileInput($event)" />
-                          </div>
-                        </div>
-                      </div>
+                  <div fxFlex="33.33" fxLayout="row" fxLayoutAlign="start center">
+                    <img class="addBlueIcon" src="assets/images/addBlue.png" (click)="fileInput1.click()">
+                    <span class="attachClass" (click)="fileInput1.click()">
+                      Add Attachment
+                    </span>
+                    <input hidden type="file" #fileInput1 id="file" (change)="handleFileInput($event)"
+                      accept="image/x-png,image/gif,image/jpeg,image/jpg,application/pdf" />
+                    <div fxFlex class="m-8" fxLayout="column" *ngIf="fileToUpload">
+                      <div fxFlex style="font-size: 10px; color: #1e8bed;
+                      cursor: pointer;">{{fileToUpload?.name}}</div>
+                      <div fxFlex style="font-size: 10px;">{{fileToUpload?.size}} KB</div>
                     </div>
                   </div>
-                  <div fxFlex="33">
-                    <mat-radio-group formControlName="IsInvoiceOrCertified">
-                      <mat-radio-button value="1" style="margin-left: 10px;">Invoice</mat-radio-button>
+                  <!-- <div fxFlex="40">
+                    <div fxFlex *ngIf="!invAttach?.AttachmentName"
+                      (click)="GetInvoiceAttachment(invoiceAttachment?.name,invoiceAttachment)" class="pdfLinkClass pl-8">
+                      {{invoiceAttachment?.name}}</div>
+                    <div fxFlex *ngIf="invAttach?.AttachmentName"
+                      (click)="GetInvoiceAttachment(invAttach?.AttachmentName)" class="pdfLinkClass pl-8">
+                      {{invAttach?.AttachmentName}}
+                    </div>
+                  </div> -->
+                  <div fxFlex="33.33" fxLayoutAlign="start center">
+                    <mat-radio-group style="width: 100%;" formControlName="IsInvoiceOrCertified">
+                      <mat-radio-button value="1">Invoice</mat-radio-button>
                       <mat-radio-button value="2" style="margin-left: 10px;">Certified</mat-radio-button>
                       <mat-error
                         *ngIf="FLIPFormGroup.get('IsInvoiceOrCertified').touched && FLIPFormGroup.get('IsInvoiceOrCertified').hasError('required')">
@@ -189,10 +184,10 @@
                 <span class="title"><strong>Other Cost</strong></span>
               </div>
               <div fxFlex>
-                <form autocomplete="off" fxLayout="row" fxLayoutAlign="start" fxLayoutGap="20px" fxFlex="1 0 auto"
+                <form autocomplete="off" fxLayout="row" fxLayoutAlign="start" fxLayoutGap="50px" fxFlex="1 0 auto"
                   name="form" novalidate [formGroup]="FLIPCostFormGroup">
                   <div fxFlex="32">
-                    <mat-form-field class="pl-8 pr-12 mat-formClass" style="width: 100%;">
+                    <mat-form-field style="width: 100%;">
                       <input matInput placeholder="Invoice Type" formControlName="ExpenceType">
                       <mat-error
                         *ngIf="FLIPCostFormGroup.get('ExpenceType').touched && FLIPCostFormGroup.get('ExpenceType').hasError('required')">
@@ -201,7 +196,7 @@
                     </mat-form-field>
                   </div>
                   <div fxFlex="32">
-                    <mat-form-field class="pl-8 pr-24 mat-formClass" style="width: 100%;">
+                    <mat-form-field style="width: 100%;">
                       <input matInput placeholder="Amount" formControlName="Amount">
                       <mat-error
                         *ngIf="FLIPCostFormGroup.get('Amount').touched && FLIPCostFormGroup.get('Amount').hasError('required')">
@@ -210,7 +205,7 @@
                     </mat-form-field>
                   </div>
                   <div fxFlex="32">
-                    <mat-form-field class="pl-8 pr-12 mat-formClass" style="width: 100%;">
+                    <mat-form-field style="width: 100%;">
                       <input matInput placeholder="Remarks" formControlName="Remarks">
                       <mat-error
                         *ngIf="FLIPCostFormGroup.get('Remarks').touched && FLIPCostFormGroup.get('Remarks').hasError('required')">

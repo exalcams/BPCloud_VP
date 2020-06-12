@@ -3,7 +3,11 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { AuthService } from './auth.service';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { BPCFactContactPerson, BPCFactBank, BPCKRA, BPCAIACT, BPCFactView, BPCFact, BPCCertificate } from 'app/models/fact';
+<<<<<<< HEAD
+import { BPCFactContactPerson, BPCFactBank, BPCKRA, BPCAIACT, BPCFactView, BPCFact, BPCCertificate, BPCFactXLSX, BPCFactBankXLSX } from 'app/models/fact';
+=======
+import { BPCFactContactPerson, BPCFactBank, BPCKRA, BPCAIACT, BPCFactView, BPCFact, BPCFactBankXLSX, BPCFactXLSX } from 'app/models/fact';
+>>>>>>> data-migration changes
 
 @Injectable({
   providedIn: 'root'
@@ -116,26 +120,27 @@ export class FactService {
       })
       .pipe(catchError(this.errorHandler));
   }
-
-  CreateFactBanks(Banks: BPCFactBank[]): Observable<any> {
-    return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/CreateBanks`,
-      Banks,
-      {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json'
-        })
-      })
-      .pipe(catchError(this.errorHandler));
-  }
-
-  CreateFacts(Facts: BPCFact[]): Observable<any> {
+  
+  CreateFacts(Facts: BPCFactXLSX[]): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/CreateFacts`,
       Facts,
-      {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json'
-        })
-      })
-      .pipe(catchError(this.errorHandler));
+      // {
+      //   headers: new HttpHeaders({
+      //     'Content-Type': 'application/json'
+      //   })
+      // }
+    ).pipe(catchError(this.errorHandler));
   }
+
+  CreateFactBanks(Banks: BPCFactBankXLSX[]): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/CreateBanks`,
+      Banks,
+      // {
+      //   headers: new HttpHeaders({
+      //     'Content-Type': 'application/json'
+      //   })
+      // }
+    ).pipe(catchError(this.errorHandler));
+  }
+
 }

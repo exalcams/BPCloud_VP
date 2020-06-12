@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { Observable, throwError } from 'rxjs';
 import { Guid } from 'guid-typescript';
 import { catchError } from 'rxjs/operators';
-import { BPCInvoice, BPCPayment } from 'app/models/ReportModel';
+import { BPCInvoice, BPCPayment, BPCInvoiceXLSX, BPCPaymentXLSX } from 'app/models/ReportModel';
 
 @Injectable({
   providedIn: 'root'
@@ -51,4 +51,29 @@ export class ReportService {
       (`${this.baseAddress}reportapi/PaymentReport/GetFilteredPayments?FromDate=${FromDate}&ToDate=${ToDate}`)
       .pipe(catchError(this.errorHandler));
   }
+
+  CreateInvoices(Invoices: BPCInvoiceXLSX[]): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}reportapi/InvoiceReport/CreateInvoices`,
+      Invoices,
+      // {
+      //   headers: new HttpHeaders({
+      //     'Content-Type': 'application/json'
+      //   })
+      // }
+    ).pipe(catchError(this.errorHandler));
+  }
+
+  
+  CreatePayments(Payments: BPCPaymentXLSX[]): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}reportapi/PaymentReport/CreatePayments`,
+      Payments,
+      // {
+      //   headers: new HttpHeaders({
+      //     'Content-Type': 'application/json'
+      //   })
+      // }
+    ).pipe(catchError(this.errorHandler));
+  }
+
+
 }

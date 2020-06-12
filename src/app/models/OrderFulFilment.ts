@@ -169,3 +169,60 @@ export class POScheduleLineView {
     DeliveryDate: Date | string | null;
     OrderedQty: number;
 }
+
+export class BPCOFHeaderXLSX {
+    Type: string;
+    Patnerid: string;
+    Docnumber: string;
+    Docdate: string;
+    Currency: string;
+    Status: string;
+    Refdocument: string;
+}
+
+export class BPCOFItemXLSX {
+    Partnerid: string;
+    Docnumber: string;
+    Itemnumber: string;
+    Materialnumber: string;
+    Materialtext: string;
+    UOM: string;
+    Orderqty: number;
+}
+
+export class BPCOFScheduleLineXLSX {
+    Partnerid: string;
+    Docnumber: string;
+    Itemnumber: string;
+    Sline: string;
+    Type: string;
+    Deldate: string;
+    Orderquantity: number;
+}
+
+export class BPCOFGRGIXLSX {
+    Partnerid: string;
+    Docnumber: string;
+    Type: string;
+    Item: string;
+    Material: string;
+    Materialtext: string;
+    Grgidoc: string;
+    Unit: string;
+    Grgiqty: number;
+}
+
+export class BPCOFQMXLSX {
+    Patnerid: string;
+    Type: string;
+    Material: string;
+    MaterialText: string;
+    Item: string;
+    Insplotno: string;
+    Unit: string;
+    Lotqty: number;
+    Rejqty: number;
+}
+
+
+

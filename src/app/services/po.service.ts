@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { AuthService } from './auth.service';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { BPCOFHeader, BPCOFItem } from 'app/models/OrderFulFilment';
+import { BPCOFHeader, BPCOFItem, BPCOFHeaderXLSX, BPCOFItemXLSX, BPCOFScheduleLineXLSX, BPCOFGRGIXLSX, BPCOFQMXLSX } from 'app/models/OrderFulFilment';
 
 @Injectable({
   providedIn: 'root'
@@ -40,4 +40,62 @@ export class POService {
     return this._httpClient.get<BPCOFItem[]>(`${this.baseAddress}poapi/PO/GetPOItemsByDocAndPartnerID?DocNumber=${DocNumber}&PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));
   }
+
+  // Data Migration
+
+  CreateOFHeaders(OFHeaders: BPCOFHeaderXLSX[]): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}poapi/PO/CreateOFHeaders`,
+      OFHeaders,
+      // {
+      //   headers: new HttpHeaders({
+      //     'Content-Type': 'application/json'
+      //   })
+      // }
+    ).pipe(catchError(this.errorHandler));
+  }
+
+  CreateOFItems(OFItems: BPCOFItemXLSX[]): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}poapi/PO/CreateOFItems`,
+      OFItems,
+      // {
+      //   headers: new HttpHeaders({
+      //     'Content-Type': 'application/json'
+      //   })
+      // }
+    ).pipe(catchError(this.errorHandler));
+  }
+
+  CreateOFScheduleLines(OFScheduleLines: BPCOFScheduleLineXLSX[]): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}poapi/PO/CreateOFScheduleLines`,
+      OFScheduleLines,
+      // {
+      //   headers: new HttpHeaders({
+      //     'Content-Type': 'application/json'
+      //   })
+      // }
+    ).pipe(catchError(this.errorHandler));
+  }
+
+  CreateOFGRGIs(OFGRGIs: BPCOFGRGIXLSX[]): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}poapi/PO/CreateOFGRGIs`,
+      OFGRGIs,
+      // {
+      //   headers: new HttpHeaders({
+      //     'Content-Type': 'application/json'
+      //   })
+      // }
+    ).pipe(catchError(this.errorHandler));
+  }
+
+  CreateOFQMs(OFQMs: BPCOFQMXLSX[]): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}poapi/PO/CreateOFQMs`,
+      OFQMs,
+      // {
+      //   headers: new HttpHeaders({
+      //     'Content-Type': 'application/json'
+      //   })
+      // }
+    ).pipe(catchError(this.errorHandler));
+  }
+
 }

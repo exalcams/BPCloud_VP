@@ -25,6 +25,7 @@ export class BPCInvoice extends CommonClass {
     PODDate: Date | string | null;
     PODConfirmedBy: string;
 }
+
 export class BPCInvoiceItem extends CommonClass
 {
     ID: number;
@@ -56,4 +57,26 @@ export class BPCPayment extends CommonClass {
     Currency: string;
     Remark: string;
     Attachment: string;
+}
+
+export class BPCInvoiceXLSX  {
+    Company: string;
+    Patnerid: string;
+    Fiscalyear: string;
+    Invno: string;
+    Paidamt: number;
+    Currency: string;
+    Dateofpayment: string;
+    Poddate: string;
+}
+
+export class BPCPaymentXLSX  {
+    Company: string;
+    Type: string;
+    Patnerid: string;
+    Fiscalyear: string;
+    Paydoc: string;
+    Date: string;
+    Amount: number;
+    Currency: string;
 }

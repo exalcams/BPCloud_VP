@@ -18,6 +18,7 @@ import { POFlipService } from 'app/services/po-flip.service';
 import { BPCOFHeader, BPCOFItem } from 'app/models/OrderFulFilment';
 import { POService } from 'app/services/po.service';
 import { BehaviorSubject } from 'rxjs';
+import { BPCInvoiceAttachment } from 'app/models/ASN';
 
 @Component({
   selector: 'app-po-flip',
@@ -833,47 +834,29 @@ export class PoFlipComponent implements OnInit {
     const numeric = Number(input);
     return numeric;
   }
-  // GetAttachment(fileName: string, file?: File): void {
-  //   if (file && file.size) {
-  //     const blob = new Blob([file], { type: file.type });
-  //     this.OpenAttachmentDialog(fileName, blob);
-  //   } else {
-  //     this.IsProgressBarVisibile = true;
-  //     this._pOFlipService.DowloandPOFlipImage(fileName).subscribe(
-  //       data => {
-  //         if (data) {
-  //           let fileType = 'image/jpg';
-  //           fileType = fileName.toLowerCase().includes('.jpg') ? 'image/jpg' :
-  //             fileName.toLowerCase().includes('.jpeg') ? 'image/jpeg' :
-  //               fileName.toLowerCase().includes('.png') ? 'image/png' :
-  //                 fileName.toLowerCase().includes('.gif') ? 'image/gif' : '';
-  //           const blob = new Blob([data], { type: fileType });
-  //           this.OpenAttachmentDialog(fileName, blob);
-  //         }
-  //         this.IsProgressBarVisibile = false;
-  //       },
-  //       error => {
-  //         console.error(error);
-  //         this.IsProgressBarVisibile = false;
-  //       }
-  //     );
-  //   }
-  // }
-  // OpenAttachmentDialog(FileName: string, blob: Blob): void {
-  //   const attachmentDetails: AttachmentDetails = {
-  //     FileName: FileName,
-  //     blob: blob
-  //   };
-  //   const dialogConfig: MatDialogConfig = {
-  //     data: attachmentDetails,
-  //     panelClass: 'attachment-dialog'
-  //   };
-  //   const dialogRef = this.dialog.open(AttachmentDialogComponent, dialogConfig);
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     if (result) {
-  //     }
-  //   });
-  // }
+//   handleFileInput1(evt): void {
+//     if (evt.target.files && evt.target.files.length > 0) {
+//         if (this.invoiceAttachment && this.invoiceAttachment.name) {
+//             this.notificationSnackBarComponent.openSnackBar('Maximum one attachment is allowed, old is attachment is replaced', SnackBarStatus.warning);
+//         }
+//         if (this.invAttach && this.invAttach.AttachmentName) {
+//             this.notificationSnackBarComponent.openSnackBar('Maximum one attachment is allowed, old is attachment is replaced', SnackBarStatus.warning);
+//         }
+//         this.invoiceAttachment = evt.target.files[0];
+//         this.invAttach = new BPCInvoiceAttachment();
+//     }
+// }
+//   GetInvoiceAttachmentByASN(): void {
+//     this._ASNService.GetInvoiceAttachmentByASN(this.SelectedASNHeader.ASNNumber, this.SelectedASNHeader.InvDocReferenceNo).subscribe(
+//         (data) => {
+//             this.invAttach = data as BPCInvoiceAttachment;
+//         },
+//         (err) => {
+//             console.error(err);
+//         }
+//     );
+// }
+  
 }
 
 
