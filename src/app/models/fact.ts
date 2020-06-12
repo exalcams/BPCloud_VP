@@ -134,3 +134,32 @@ export class CustomerBarChartData {
     PlannedData: string[];
     ActualData: string[];
 }
+
+export class BPCFactXLSX {
+    ID: number;
+    Client: string;
+    Company: string;
+    Patnerid: string;
+    Legalname: string;
+    Type: string;
+    Postal: string;
+    Currency: string;
+    City: string;
+    District: string;
+    Accountgroup: string;
+    Phone1: string;
+    Phone2: string;
+    Tax1: string;
+    Tax2: string;
+    Outstandingamount: number;
+    Lastpayment: number;
+    Lastpaymentdate: string;
+}
+
+export class BPCFactBankXLSX {
+    Partnerid: string;
+    Accountnumber: string;
+    Accountname: string;
+    Bankid: string;
+    Bankname: string;
+}

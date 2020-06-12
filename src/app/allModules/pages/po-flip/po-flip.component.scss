@@ -314,9 +314,9 @@
   }
   .flipInfoCard {
     // @include mat-elevation(2);
-    min-height: 80px;
+    // min-height: 80px;
     /* padding: 10px !important; */
-    border-radius: 0px 9px 9px 0px;
+    // border-radius: 0px 9px 9px 0px;
     cursor: pointer !important;
     width: 100%;
     border: solid 2px #e0e0e0;
@@ -352,11 +352,28 @@
   .mat-input-element:disabled {
     color: black;
   }
-
-  // .mat-formClass {
-  //   width: 80% !important;
-  //   margin-left: 25px !important;
+  // .addIcon {
+  //   height: 20px;
+  //   margin-top: 16px;
+  //   padding-left: 4px;
+  //   cursor: pointer !important;
   // }
+  .addAttachmentClass {
+    margin-top: 25px;
+    color: #4784f7;
+    cursor: pointer !important;
+  }
+  .addBlueIcon {
+    @extend .addIcon;
+    margin-top: 0px;
+    height: 15px;
+  }
+  .attachClass {
+    // margin-top: 25px;
+    padding-left: 8px;
+    cursor: pointer !important;
+    color: #4784f7;
+  }
 
   body.theme-default .mat-form-field-appearance-legacy .mat-form-field-underline {
     background-color: rgba(0, 0, 0, 0.2) !important;
@@ -375,6 +392,10 @@
     right: 0px;
     margin-bottom: 0px;
     z-index: 100;
+  }
+  .pdfLinkClass {
+    color: #1e8bed;
+    cursor: pointer;
   }
   .cardActions {
     box-shadow: 0 -5px 10px 0 rgba(0, 0, 0, 0.16);
