@@ -155,3 +155,17 @@ export class OrderFulfilmentDetails {
     gRNDetails: GRNDetails[];
     qADetails: QADetails[];
 }
+export class POScheduleLineView {
+    ID: number;
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
+    DocNumber: string;
+    Item: string;
+    Material: string;
+    MaterialText: string;
+    SlLine: string;
+    DeliveryDate: Date | string | null;
+    OrderedQty: number;
+}
