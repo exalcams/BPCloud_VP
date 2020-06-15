@@ -470,25 +470,28 @@ export class DashboardComponent implements OnInit {
             this.poFormGroup.get(key).markAsDirty();
         });
     }
-    PurchaseOrder(po: string) {
+    PurchaseOrder(po: string): void {
         // alert(po);
         this._router.navigate(['/pages/polookup'], { queryParams: { id: po } });
     }
-    Acknowledgement(po: string) {
+    Acknowledgement(po: string): void {
         // alert(po);
         this._router.navigate(['/pages/polookup'], { queryParams: { id: po } });
     }
-    POFlip(po: string) {
+    POFlip(po: string): void {
         this._router.navigate(['/pages/poflip'], { queryParams: { id: po } });
     }
     Checked(po: string): void {
         this._router.navigate(['/pages/polookup'], { queryParams: { id: po } });
     }
-    AdvanceShipment(po: string) {
+    AdvanceShipment(po: string): void {
         // alert(po);
         this._router.navigate(['/pages/asn'], { queryParams: { id: po } });
     }
-    NextProcess(nextProcess: string, po: string) {
+    GotoSubcon(po: string): void {
+        this._router.navigate(['/subcon'], { queryParams: { id: po } });
+    }
+    NextProcess(nextProcess: string, po: string): void {
         if (nextProcess === 'ACK') {
             // this.nextProcess = 'ACK';
             this._router.navigate(['/pages/polookup'], { queryParams: { id: po } });

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { Observable, throwError } from 'rxjs';
-import { POScheduleLineView } from 'app/models/OrderFulFilment';
+import { POScheduleLineView, BPCOFSubcon, SubconItems } from 'app/models/OrderFulFilment';
 import { catchError } from 'rxjs/operators';
 
 @Injectable({
@@ -24,6 +24,38 @@ export class SubconService {
   GetPOSLByDocAndPartnerID(DocNumber: string, PartnerID: string): Observable<POScheduleLineView[] | string> {
     return this._httpClient.get<POScheduleLineView[]>
       (`${this.baseAddress}poapi/PO/GetPOSLByDocAndPartnerID?DocNumber=${DocNumber}&PartnerID=${PartnerID}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  CreateSubcon(subcons: SubconItems): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}poapi/Subcon/CreateSubcon`,
+      subcons,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+  DeleteSubcon(subcon: BPCOFSubcon): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}poapi/Subcon/DeleteSubcon`,
+      subcon,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+  GetSubconByDocAndPartnerID(DocNumber: string, PartnerID: string): Observable<BPCOFSubcon[] | string> {
+    return this._httpClient.get<BPCOFSubcon[]>
+      (`${this.baseAddress}poapi/Subcon/GetSubconByDocAndPartnerID?DocNumber=${DocNumber}&PartnerID=${PartnerID}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetSubconBySLAndPartnerID(DocNumber: string, Item: string, SlLine: string, PartnerID: string): Observable<BPCOFSubcon[] | string> {
+    return this._httpClient.get<BPCOFSubcon[]>
+      (`${this.baseAddress}poapi/Subcon/GetSubconBySLAndPartnerID?DocNumber=${DocNumber}&Item=${Item}&SlLine=${SlLine}&PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));
   }
 }

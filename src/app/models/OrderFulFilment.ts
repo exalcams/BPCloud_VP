@@ -170,6 +170,27 @@ export class POScheduleLineView {
     OrderedQty: number;
 }
 
+export class BPCOFSubcon extends CommonClass {
+    ID: number;
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
+    DocNumber: string;
+    Item: string;
+    SlLine: string;
+    Date: Date | string | null;
+    OrderedQty: number;
+    Batch: string;
+    Remarks: string;
+    Status: string;
+}
+export class SubconItems {
+    items: BPCOFSubcon[];
+    constructor() {
+        this.items = [];
+    }
+}
 export class BPCOFHeaderXLSX {
     Type: string;
     Patnerid: string;
