@@ -6,10 +6,10 @@
         <h3 style="margin: 0px;padding-left: 10px;"><b>Order Fulfilment</b></h3>
       </div>
       <div fxFlex align="end">
-        <span><img src="../../../../assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
+        <span><img src="assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
       </div>
     </div>
-    <div fxFlex fxLayout >
+    <div fxFlex fxLayout>
       <div class="tile mx-20" fxFlex="17" fxLayout="column" fxLayoutAlign="start">
         <div fxLayoutAlign="start center" class="pt-8">
           <span class="boldClass orangeBorderBottom pl-8"> Time In Full (OTIF)</span>
@@ -263,6 +263,7 @@
                 <mat-option value="POLookup" (click)="PurchaseOrder(element.PO)">PO Lookup</mat-option>
                 <mat-option value="ASN" (click)="AdvanceShipment(element.PO)">ASN</mat-option>
                 <mat-option value="POFlip" (click)="POFlip(element.PO)">PO Flip</mat-option>
+                <mat-option value="Subcon" (click)="GotoSubcon(element.PO)">Subcon</mat-option>
               </mat-select>
             </mat-form-field>
             <!-- <div>

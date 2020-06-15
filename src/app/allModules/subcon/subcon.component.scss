@@ -316,6 +316,10 @@
     margin-left: 20px;
     cursor: pointer !important;
   }
+  .titleClass {
+    @extend .boldClass;
+    font-size: 18px;
+  }
   .subTitle {
     @extend .semiBoldClass;
     font-size: 12px;
@@ -323,7 +327,7 @@
   }
   .addIcon {
     height: 20px;
-    margin-top: 24px;
+    margin-top: 32px;
     padding-left: 4px;
     cursor: pointer !important;
   }
@@ -516,6 +520,9 @@
       height: 36px;
     }
     cursor: pointer;
+  }
+  .grayBorderBottom {
+    border-bottom: 1px solid #cccccc;
   }
   .redBorderBottom {
     border-bottom: 2px solid #f3705a;
@@ -819,5 +826,9 @@
   .AttError {
     color: #f44336;
     font-size: 12px;
+  }
+  .QtyCard {
+    border: 1px solid #cccccc;
+    border-radius: 10px;
   }
 }

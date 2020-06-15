@@ -379,6 +379,20 @@ export class LoginComponent implements OnInit {
         }
       );
     }
+    // if (this.MenuItems.indexOf('Subcon') >= 0) {
+    //   this.children.push(
+    //     {
+    //       id: 'subcon',
+    //       title: 'Subcon',
+    //       translate: 'NAV.SAMPLE.TITLE',
+    //       type: 'item',
+    //       icon: 'podIcon',
+    //       isSvgIcon: true,
+    //       // icon: 'dashboard',
+    //       url: '/subcon',
+    //     }
+    //   );
+    // }
     if (this.MenuItems.indexOf('Resource') >= 0) {
       this.children.push(
         {

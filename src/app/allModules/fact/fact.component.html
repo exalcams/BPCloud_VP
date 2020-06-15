@@ -558,11 +558,11 @@
             </div>
 
             <div fxFlex fxLayout="column" class="mt-24" *ngIf="AIACTsByPartnerID?.length">
-              <div style="margin-left: 7px">
+              <!-- <div style="margin-left: 7px">
                 <div class="SectionTitle">
                   <strong>Activity Table</strong>
                 </div>
-              </div>
+              </div> -->
               <div class="mt-8">
                 <!-- <form autocomplete="off" fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto" name="form" novalidate
                   [formGroup]="AIACTFormGroup">
@@ -618,7 +618,7 @@
                 </form> -->
               </div>
               <div style="margin-left: 8px;margin-top: 10px;">
-                <table *ngIf="AIACTsByPartnerID?.length" class="table" mat-table [dataSource]="AIACTDataSource" matSort>
+                <!-- <table *ngIf="AIACTsByPartnerID?.length" class="table" mat-table [dataSource]="AIACTDataSource" matSort>
 
                   <ng-container matColumnDef="Activity">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;"> Activity </th>
@@ -641,18 +641,10 @@
                     <td mat-cell *matCellDef="let element" style="width: 25%;"> {{element.Text}} </td>
                   </ng-container>
 
-                  <!-- <ng-container matColumnDef="Action">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 5%;"> </th>
-                    <td mat-cell *matCellDef="let element" style="width: 5%;text-align: center;">
-                      <img class="removeIcon" src="assets/images/remove-button.png"
-                        (click)="RemoveAIACTFromTable(element)">
-                    </td>
-                  </ng-container> -->
-
                   <tr mat-header-row *matHeaderRowDef="AIACTDisplayedColumns;sticky: true"></tr>
                   <tr mat-row *matRowDef="let row; columns: AIACTDisplayedColumns;">
                   </tr>
-                </table>
+                </table> -->
                 <!-- <div flex *ngIf="AIACTsByPartnerID?.length">
                   <mat-paginator [pageSizeOptions]="[10, 20, 30, 50, 75, 100]" showFirstLastButtons>
                   </mat-paginator>

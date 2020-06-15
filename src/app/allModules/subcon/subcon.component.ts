@@ -1,10 +1,9 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ViewEncapsulation } from '@angular/core';
 import { AuthenticationDetails, UserWithRole } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
-import { BPCPIHeader, BPCPIView, BPCPIItem, BPCProd } from 'app/models/customer';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
-import { BPCOFHeader, BPCOFItem, POScheduleLineView } from 'app/models/OrderFulFilment';
+import { BPCOFHeader, BPCOFItem, POScheduleLineView, BPCOFSubcon, SubconItems } from 'app/models/OrderFulFilment';
 import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatDialog, MatDialogConfig } from '@angular/material';
 import { BPCInvoiceAttachment, BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster } from 'app/models/ASN';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -25,7 +24,8 @@ import { SubconService } from 'app/services/subcon.service';
 @Component({
   selector: 'app-subcon',
   templateUrl: './subcon.component.html',
-  styleUrls: ['./subcon.component.scss']
+  styleUrls: ['./subcon.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class SubconComponent implements OnInit {
 
@@ -38,8 +38,26 @@ export class SubconComponent implements OnInit {
   IsProgressBarVisibile: boolean;
   SelectedPO: BPCOFHeader;
   SelectedPONumber: string;
+  SelectedScheduleLineView: POScheduleLineView;
   POScheduleLines: POScheduleLineView[] = [];
+  SelectedSlLine = '';
+  SelectedItem = '';
   searchText = '';
+  AllSubconItems: BPCOFSubcon[] = [];
+  SubconItemFormGroup: FormGroup;
+  SubconItemDisplayedColumns: string[] = [
+    'Date',
+    'OrderedQty',
+    'Batch',
+    'Remarks',
+    'Status',
+    'Action'
+  ];
+  SubconItemDataSource: MatTableDataSource<BPCOFSubcon>;
+  @ViewChild(MatPaginator) SubconItemPaginator: MatPaginator;
+  @ViewChild(MatSort) SubconItemSort: MatSort;
+  ReadyToBeShippedQty: number;
+  IsDeleteRequired: boolean;
   constructor(
     private _fuseConfigService: FuseConfigService,
     private _masterService: MasterService,
@@ -59,7 +77,8 @@ export class SubconComponent implements OnInit {
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.IsProgressBarVisibile = false;
     this.SelectedPO = new BPCOFHeader();
-
+    this.ReadyToBeShippedQty = 0;
+    this.IsDeleteRequired = false;
   }
 
   ngOnInit(): void {
@@ -82,6 +101,10 @@ export class SubconComponent implements OnInit {
     this._route.queryParams.subscribe(params => {
       this.SelectedPONumber = params['id'];
     });
+    if (!this.SelectedPONumber) {
+      this._router.navigate(['/auth/login']);
+    }
+    this.InitializeSubconItemFormGroup();
     this.GetPOByDocAndPartnerID();
   }
 
@@ -91,7 +114,9 @@ export class SubconComponent implements OnInit {
 
   }
 
-
+  ResetSubconItemFormGroup(): void {
+    this.ResetFormGroup(this.SubconItemFormGroup);
+  }
 
   ResetFormGroup(formGroup: FormGroup): void {
     formGroup.reset();
@@ -107,15 +132,23 @@ export class SubconComponent implements OnInit {
   }
 
 
-
+  InitializeSubconItemFormGroup(): void {
+    this.SubconItemFormGroup = this._formBuilder.group({
+      Date: ['', Validators.required],
+      OrderedQty: ['', [Validators.required, Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,2})?$')]],
+      Batch: ['', Validators.required],
+      Remarks: ['', Validators.required],
+      Status: ['', Validators.required],
+    });
+  }
 
 
   GetPOByDocAndPartnerID(): void {
     this._POService.GetPOByDocAndPartnerID(this.SelectedPONumber, this.currentUserName).subscribe(
       (data) => {
         this.SelectedPO = data as BPCOFHeader;
-        if (this.SelectedPO) {
-          this.LoadSelectedPO(this.SelectedPO);
+        if (this.SelectedPO && this.SelectedPO.DocNumber) {
+          this.GetPOSLByDocAndPartnerID();
         }
       },
       (err) => {
@@ -124,19 +157,41 @@ export class SubconComponent implements OnInit {
     );
   }
 
-  LoadSelectedPO(po: BPCOFHeader): void {
-    // this.SelectedPurchaseIndentHeader = seletedPurchaseIndent;
-    // this.SelectedPurchaseIndentView.PINumber = this.SelectedPurchaseIndentHeader.PINumber;
-    // this.SelectedPurchaseIndentNumber = this.SelectedPurchaseIndentHeader.PINumber;
-    // this.SetPurchaseIndentHeaderValues();
-    // this.GetPurchaseIndentItemsByPI();
-    this.GetPOSLByDocAndPartnerID();
-  }
 
   GetPOSLByDocAndPartnerID(): void {
     this._subConService.GetPOSLByDocAndPartnerID(this.SelectedPO.DocNumber, this.currentUserName).subscribe(
       (data) => {
         this.POScheduleLines = data as POScheduleLineView[];
+        if (this.POScheduleLines && this.POScheduleLines.length && this.POScheduleLines.length > 0) {
+          this.LoadSelectedSL(this.POScheduleLines[0]);
+        }
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+  LoadSelectedSL(ScheduleLineView: POScheduleLineView): void {
+    this.SelectedSlLine = ScheduleLineView.SlLine;
+    this.SelectedItem = ScheduleLineView.Item;
+    this.SelectedScheduleLineView = ScheduleLineView;
+    this.GetSubconBySLAndPartnerID();
+  }
+
+  GetSubconBySLAndPartnerID(): void {
+    this._subConService.GetSubconBySLAndPartnerID(this.SelectedPO.DocNumber, this.SelectedItem, this.SelectedSlLine, this.currentUserName).subscribe(
+      (data) => {
+        this.ReadyToBeShippedQty = 0;
+        this.AllSubconItems = data as BPCOFSubcon[];
+        this.SubconItemDataSource = new MatTableDataSource(this.AllSubconItems);
+        if (this.AllSubconItems && this.AllSubconItems.length && this.AllSubconItems.length > 0) {
+          this.IsDeleteRequired = true;
+          this.AllSubconItems.forEach(x => {
+            this.ReadyToBeShippedQty += + x.OrderedQty;
+          });
+        } else {
+          this.IsDeleteRequired = false;
+        }
 
       },
       (err) => {
@@ -145,6 +200,56 @@ export class SubconComponent implements OnInit {
     );
   }
 
+  AddSubconItemToTable(): void {
+    if (this.SubconItemFormGroup.valid) {
+      const SubItem = new BPCOFSubcon();
+      SubItem.Client = this.SelectedScheduleLineView.Client;
+      SubItem.Company = this.SelectedScheduleLineView.Company;
+      SubItem.Type = this.SelectedScheduleLineView.Type;
+      SubItem.PatnerID = this.SelectedScheduleLineView.PatnerID;
+      SubItem.DocNumber = this.SelectedScheduleLineView.DocNumber;
+      SubItem.Item = this.SelectedScheduleLineView.Item;
+      SubItem.SlLine = this.SelectedScheduleLineView.SlLine;
+      SubItem.Date = this.SubconItemFormGroup.get('Date').value;
+      SubItem.OrderedQty = this.SubconItemFormGroup.get('OrderedQty').value;
+      SubItem.Batch = this.SubconItemFormGroup.get('Batch').value;
+      SubItem.Remarks = this.SubconItemFormGroup.get('Remarks').value;
+      SubItem.Status = this.SubconItemFormGroup.get('Status').value;
+      if (!this.AllSubconItems || !this.AllSubconItems.length) {
+        this.AllSubconItems = [];
+      }
+      this.AllSubconItems.push(SubItem);
+      this.SubconItemDataSource = new MatTableDataSource(this.AllSubconItems);
+      this.ReadyToBeShippedQty = 0;
+      this.AllSubconItems.forEach(x => {
+        this.ReadyToBeShippedQty += +x.OrderedQty;
+      });
+      this.ResetSubconItemFormGroup();
+    } else {
+      this.ShowValidationErrors(this.SubconItemFormGroup);
+    }
+  }
+
+  RemoveSubconItemFromTable(doc: BPCOFSubcon): void {
+    const index: number = this.AllSubconItems.indexOf(doc);
+    if (index > -1) {
+      this.AllSubconItems.splice(index, 1);
+    }
+    this.SubconItemDataSource = new MatTableDataSource(this.AllSubconItems);
+    this.ReadyToBeShippedQty = 0;
+    this.AllSubconItems.forEach(x => {
+      this.ReadyToBeShippedQty += +x.OrderedQty;
+    });
+  }
+  DeleteClicked(): void {
+    this.SetActionToOpenConfirmation('Delete');
+  }
+  SaveClicked(): void {
+    this.SetActionToOpenConfirmation('Save');
+  }
+  SubmitClicked(): void {
+    this.SetActionToOpenConfirmation('Submit');
+  }
   SetActionToOpenConfirmation(Actiontype: string): void {
     // if (this.SelectedPurchaseIndentHeader.PurchaseIndentNumber) {
     //     const Catagory = 'PurchaseIndent';
@@ -153,7 +258,7 @@ export class SubconComponent implements OnInit {
     //     const Catagory = 'PurchaseIndent';
     //     this.OpenConfirmationDialog(Actiontype, Catagory);
     // }
-    const Catagory = 'PurchaseIndent';
+    const Catagory = 'Subcon';
     this.OpenConfirmationDialog(Actiontype, Catagory);
   }
 
@@ -170,21 +275,19 @@ export class SubconComponent implements OnInit {
       result => {
         if (result) {
           if (Actiontype === 'Save' || Actiontype === 'Submit') {
-
+            this.CreateSubcon(Actiontype);
+          } else if (Actiontype === 'Delete') {
+            this.DeleteSubcon();
           }
         }
       });
   }
-
-
 
   showErrorNotificationSnackBar(err: any): void {
     console.error(err);
     this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
     this.IsProgressBarVisibile = false;
   }
-
-
 
   ShowValidationErrors(formGroup: FormGroup): void {
     Object.keys(formGroup.controls).forEach(key => {
@@ -212,9 +315,7 @@ export class SubconComponent implements OnInit {
         });
       }
     });
-
   }
-
 
   OpenAttachmentDialog(FileName: string, blob: Blob): void {
     const attachmentDetails: AttachmentDetails = {
@@ -231,8 +332,36 @@ export class SubconComponent implements OnInit {
       }
     });
   }
-
-
+  CreateSubcon(Actiontype: string): void {
+    const subconItems: SubconItems = new SubconItems();
+    this.AllSubconItems.forEach(x => {
+      subconItems.items.push(x);
+    });
+    this._subConService.CreateSubcon(subconItems).subscribe(
+      (data) => {
+        this.ResetControl();
+        this.notificationSnackBarComponent.openSnackBar(`Subcon ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
+        this.IsProgressBarVisibile = false;
+        this.GetPOSLByDocAndPartnerID();
+      },
+      (err) => {
+        this.showErrorNotificationSnackBar(err);
+      }
+    );
+  }
+  DeleteSubcon(): void {
+    this._subConService.DeleteSubcon(this.AllSubconItems[0]).subscribe(
+      (data) => {
+        this.ResetControl();
+        this.notificationSnackBarComponent.openSnackBar(`Subcon deleted successfully`, SnackBarStatus.success);
+        this.IsProgressBarVisibile = false;
+        this.GetPOSLByDocAndPartnerID();
+      },
+      (err) => {
+        this.showErrorNotificationSnackBar(err);
+      }
+    );
+  }
   getStatusColor(StatusFor: string): string {
     switch (StatusFor) {
       case 'ASN':
