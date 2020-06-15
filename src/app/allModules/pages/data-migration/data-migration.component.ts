@@ -12,11 +12,11 @@ import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notific
 import { DataMigrationService } from 'app/services/data-migration.service';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import * as XLSX from 'xlsx';
-import { BPCFactBank, BPCFact, BPCFactBankXLSX, BPCFactXLSX } from 'app/models/fact';
 import { FactService } from 'app/services/fact.service';
-import { BPCOFHeaderXLSX, BPCOFItemXLSX, BPCOFScheduleLineXLSX, BPCOFGRGIXLSX, BPCOFQMXLSX } from 'app/models/OrderFulFilment';
 import { POService } from 'app/services/po.service';
 import { ReportService } from 'app/services/report.service';
+import { BPCFactBankXLSX, BPCFactXLSX } from 'app/models/fact';
+import { BPCOFHeaderXLSX, BPCOFItemXLSX, BPCOFScheduleLineXLSX, BPCOFGRGIXLSX, BPCOFQMXLSX } from 'app/models/OrderFulFilment';
 import { BPCInvoiceXLSX, BPCPaymentXLSX } from 'app/models/ReportModel';
 @Component({
   selector: "app-data-migration",
@@ -32,6 +32,16 @@ export class DataMigrationComponent implements OnInit {
   MenuItems: string[];
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
+  IsProgressBarVisibile1: boolean;
+  IsProgressBarVisibile2: boolean;
+  IsProgressBarVisibile3: boolean;
+  IsProgressBarVisibile4: boolean;
+  IsProgressBarVisibile5: boolean;
+  IsProgressBarVisibile6: boolean;
+  IsProgressBarVisibile7: boolean;
+  IsProgressBarVisibile8: boolean;
+  IsProgressBarVisibile9: boolean;
+
   arrayBuffer: any;
   fileToUpload: File;
   fileToUploadList: File[] = [];
@@ -59,6 +69,15 @@ export class DataMigrationComponent implements OnInit {
     private dialog: MatDialog,
   ) {
     this.IsProgressBarVisibile = false;
+    this.IsProgressBarVisibile1 = false;
+    this.IsProgressBarVisibile2 = false;
+    this.IsProgressBarVisibile3 = false;
+    this.IsProgressBarVisibile4 = false;
+    this.IsProgressBarVisibile5 = false;
+    this.IsProgressBarVisibile6 = false;
+    this.IsProgressBarVisibile7 = false;
+    this.IsProgressBarVisibile8 = false;
+    this.IsProgressBarVisibile9 = false;
   }
 
   ngOnInit(): void {
@@ -76,8 +95,6 @@ export class DataMigrationComponent implements OnInit {
     } else {
       this._router.navigate(['/auth/login']);
     }
-    // this.InitializeSearchFormGroup();
-    // this.GetAllPayments();
   }
 
   UploadDataMigrationClicked(): void {
@@ -89,7 +106,6 @@ export class DataMigrationComponent implements OnInit {
   }
 
   UploadDataMigrationAttachment(Actiontype: string): void {
-    this.IsProgressBarVisibile = true;
     if (this.fileToUploadList && this.fileToUploadList.length > 0) {
       if (this.BPCFactXLSXs && this.BPCFactXLSXs.length > 0) {
         this.UpdateFacts();
@@ -119,8 +135,6 @@ export class DataMigrationComponent implements OnInit {
         this.UpdatePayments();
       }
 
-
-      this.IsProgressBarVisibile = false;
       this.ResetControl();
       // this._dataMigrationService.UploadDataMigrationAttachment(this.currentUserID.toString(), this.fileToUploadList).subscribe(
       //   (dat) => {
@@ -135,117 +149,115 @@ export class DataMigrationComponent implements OnInit {
   }
 
   UpdateFacts(): void {
-    // this.IsProgressBarVisibile = true;
+    this.IsProgressBarVisibile = true;
     if (this.BPCFactXLSXs) {
       this._factService.CreateFacts(this.BPCFactXLSXs).subscribe((data) => {
-        // this.IsProgressBarVisibile = false;
+        this.IsProgressBarVisibile = false;
       },
         (err) => {
-          // this.IsProgressBarVisibile = false;
+          this.IsProgressBarVisibile = false;
           console.error(err);
         });
     }
   }
 
   UpdateBanks(): void {
-    // this.IsProgressBarVisibile = true;
+    this.IsProgressBarVisibile1 = true;
     if (this.BPCFactBankXLSXs) {
       this._factService.CreateFactBanks(this.BPCFactBankXLSXs).subscribe((data) => {
-        // this.IsProgressBarVisibile = false;
+        this.IsProgressBarVisibile1 = false;
       },
         (err) => {
-          // this.IsProgressBarVisibile = false;
+          this.IsProgressBarVisibile1 = false;
         });
     }
   }
 
   UpdateOFHeaders(): void {
-    // this.IsProgressBarVisibile = true;
+    this.IsProgressBarVisibile2 = true;
     if (this.BPCOFHeaderXLSXs) {
       this._poService.CreateOFHeaders(this.BPCOFHeaderXLSXs).subscribe((data) => {
-        // this.IsProgressBarVisibile = false;
+        this.IsProgressBarVisibile2 = false;
       },
         (err) => {
-          // this.IsProgressBarVisibile = false;
+          this.IsProgressBarVisibile2 = false;
         });
     }
   }
 
   UpdateOFItems(): void {
-    // this.IsProgressBarVisibile = true;
+    this.IsProgressBarVisibile3 = true;
     if (this.BPCOFItemXLSXs) {
       this._poService.CreateOFItems(this.BPCOFItemXLSXs).subscribe((data) => {
-        // this.IsProgressBarVisibile = false;
+        this.IsProgressBarVisibile3 = false;
       },
         (err) => {
-          // this.IsProgressBarVisibile = false;
+          this.IsProgressBarVisibile3 = false;
         });
     }
   }
 
   UpdateOFScheduleLines(): void {
-    // this.IsProgressBarVisibile = true;
+    this.IsProgressBarVisibile4 = true;
     if (this.BPCOFScheduleLineXLSXs) {
       this._poService.CreateOFScheduleLines(this.BPCOFScheduleLineXLSXs).subscribe((data) => {
-        // this.IsProgressBarVisibile = false;
+        this.IsProgressBarVisibile4 = false;
       },
         (err) => {
-          // this.IsProgressBarVisibile = false;
+          this.IsProgressBarVisibile4 = false;
         });
     }
   }
 
   UpdateOFGRGIs(): void {
-    // this.IsProgressBarVisibile = true;
+    this.IsProgressBarVisibile5 = true;
     if (this.BPCOFGRGIXLSXs) {
       this._poService.CreateOFGRGIs(this.BPCOFGRGIXLSXs).subscribe((data) => {
-        // this.IsProgressBarVisibile = false;
+        this.IsProgressBarVisibile5 = false;
       },
         (err) => {
-          // this.IsProgressBarVisibile = false;
+          this.IsProgressBarVisibile5 = false;
         });
     }
   }
 
   UpdateOFQMs(): void {
-    // this.IsProgressBarVisibile = true;
+    this.IsProgressBarVisibile6 = true;
     if (this.BPCOFQMXLSXs) {
       this._poService.CreateOFQMs(this.BPCOFQMXLSXs).subscribe((data) => {
-        // this.IsProgressBarVisibile = false;
+        this.IsProgressBarVisibile6 = false;
       },
         (err) => {
-          // this.IsProgressBarVisibile = false;
+          this.IsProgressBarVisibile6 = false;
         });
     }
   }
 
   UpdateInvoices(): void {
-    // this.IsProgressBarVisibile = true;
+    this.IsProgressBarVisibile7 = true;
     if (this.BPCInvoiceXLSXs) {
       this._reportService.CreateInvoices(this.BPCInvoiceXLSXs).subscribe((data) => {
-        // this.IsProgressBarVisibile = false;
+        this.IsProgressBarVisibile7 = false;
       },
         (err) => {
-          // this.IsProgressBarVisibile = false;
+          this.IsProgressBarVisibile7 = false;
         });
     }
   }
 
   UpdatePayments(): void {
-    // this.IsProgressBarVisibile = true;
+    this.IsProgressBarVisibile8 = true;
     if (this.BPCPaymentXLSXs) {
       this._reportService.CreatePayments(this.BPCPaymentXLSXs).subscribe((data) => {
-        // this.IsProgressBarVisibile = false;
+        this.IsProgressBarVisibile8 = false;
       },
         (err) => {
-          // this.IsProgressBarVisibile = false;
+          this.IsProgressBarVisibile8 = false;
         });
     }
   }
 
   ResetControl(): void {
-    this.fileToUpload = null;
-    this.fileToUploadList = [];
     this.BPCFactXLSXs = [];
     this.BPCFactBankXLSXs = [];
     this.BPCOFHeaderXLSXs = [];
@@ -253,6 +265,14 @@ export class DataMigrationComponent implements OnInit {
     this.BPCOFScheduleLineXLSXs = [];
     this.BPCOFQMXLSXs = [];
     this.BPCOFGRGIXLSXs = [];
+    this.BPCInvoiceXLSXs = [];
+    this.BPCPaymentXLSXs = [];
+    this.ResetAttachments();
+  }
+
+  ResetAttachments(): void {
+    this.fileToUpload = null;
+    this.fileToUploadList = [];
   }
 
   SetActionToOpenConfirmation(Actiontype: string): void {
@@ -279,14 +299,8 @@ export class DataMigrationComponent implements OnInit {
       });
   }
 
-  handleFileInput(evt): void {
-    if (evt.target.files && evt.target.files.length > 0) {
-      this.fileToUpload = evt.target.files[0];
-      // this.fileToUploadList.push(this.fileToUpload);
-    }
-  }
-
-  handleFileInput1(event): void {
+  onSelectFile(event): void {
+    this.ResetControl();
     this.fileToUpload = event.target.files[0];
     const fileReader = new FileReader();
     fileReader.readAsArrayBuffer(this.fileToUpload);
@@ -343,65 +357,6 @@ export class DataMigrationComponent implements OnInit {
       // console.log(this.fileToUploadList);
     };
   }
-
-  CreateModelsFromXLSX(): void {
-    if (this.fileToUpload && this.fileToUpload.size > 0) {
-      const fileReader = new FileReader();
-      fileReader.readAsArrayBuffer(this.fileToUpload);
-      fileReader.onload = (e) => {
-        this.arrayBuffer = fileReader.result;
-        const data = new Uint8Array(this.arrayBuffer);
-        const arr = new Array();
-        for (let i = 0; i !== data.length; ++i) { arr[i] = String.fromCharCode(data[i]); }
-        const bstr = arr.join("");
-        const workbook = XLSX.read(bstr, { type: "binary" });
-        workbook.SheetNames.forEach(element => {
-          if (element.toLowerCase() === 'bpc_fact') {
-            const worksheet1 = workbook.Sheets[element];
-            this.BPCFactXLSXs = XLSX.utils.sheet_to_json(worksheet1, { raw: true }) as BPCFactXLSX[];
-          }
-          else if (element.toLowerCase() === 'bpc_fact_bank') {
-            const worksheet1 = workbook.Sheets[element];
-            this.BPCFactBankXLSXs = XLSX.utils.sheet_to_json(worksheet1, { raw: true }) as BPCFactBankXLSX[];
-          }
-        });
-        // const first_sheet_name = workbook.SheetNames[0];
-        // const worksheet = workbook.Sheets[first_sheet_name];
-        // console.log(XLSX.utils.sheet_to_json(worksheet, { raw: true }));
-        // const arraylist = XLSX.utils.sheet_to_json(worksheet, { raw: true });
-        // this.fileToUploadList = [];
-        // console.log(this.fileToUploadList);
-      };
-    }
-  }
-
-  // AddFactBank(bPCFactBankXLSXs: BPCFactBankXLSX[]): void {
-  //   console.log(bPCFactBankXLSXs);
-  //   bPCFactBankXLSXs.forEach(element => {
-  //     const bPCFactBank = new BPCFactBank();
-  //     bPCFactBank.PatnerID = element.Partnerid.toString();
-  //     bPCFactBank.BankName = element.Bankname.toString();
-  //     bPCFactBank.BankID = element.Bankid.toString();
-  //     bPCFactBank.AccountNumber = element.Accountnumber.toString();
-  //     bPCFactBank.AccountName = element.Accountname.toString();
-  //     this.BPCFactBanks.push(bPCFactBank);
-  //   });
-  //   console.log(this.BPCFactBanks);
-  // }
-
-  // AddFactBank(bankArrayList: any): void {
-  //   for (let i = 0; i < bankArrayList.length; i++) {
-  //     const bPCFactBank = new BPCFactBank();
-  //     const obj = bankArrayList[i];
-  //     bPCFactBank.PatnerID = obj.Partnerid;
-  //     bPCFactBank.BankName = obj.Bankname;
-  //     bPCFactBank.BankID = obj.Bankid;
-  //     bPCFactBank.AccountNumber = obj.Accountnumber;
-  //     bPCFactBank.AccountName = obj.Accountname;
-  //     this.BPCFactBanks.push(bPCFactBank);
-  //   }
-  //   console.log(this.BPCFactBanks);
-  // }
 
   showErrorNotificationSnackBar(err: any): void {
     console.error(err);

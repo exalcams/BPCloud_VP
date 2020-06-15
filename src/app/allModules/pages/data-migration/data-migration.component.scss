@@ -154,12 +154,13 @@
     .addBlueIcon {
         @extend .addIcon;
         margin-top: 0px;
-        height: 15px;
+        height: 22px;
     }
     .attachClass {
         // margin-top: 25px;
         padding-left: 8px;
         cursor: pointer !important;
         color: #4784f7;
+        font-size: 22px;
     }
 }

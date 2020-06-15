@@ -22,12 +22,12 @@
     <div class="content">
       <div fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto">
         <div fxLayout="row" fxFlex="100%" fxLayoutAlign="stretch">
-          <div fxFlex="60%" fxLayout="row" fxLayoutAlign="start center">
+          <div fxFlex="40%" fxLayout="row" fxLayoutAlign="start center">
             <img class="addBlueIcon" src="assets/images/addBlue.png" (click)="fileInput1.click()">
             <span class="attachClass" (click)="fileInput1.click()">
-              Browse XLSX
+              Browse
             </span>
-            <input hidden type="file" #fileInput1 id="file" (change)="handleFileInput1($event)"
+            <input hidden type="file" #fileInput1 id="file" (change)="onSelectFile($event)"
               accept=".csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
             <div fxFlex class="m-8" fxLayout="column" *ngIf="fileToUpload">
               <div fxFlex style="font-size: 10px; color: #1e8bed;
@@ -35,19 +35,27 @@
               <div fxFlex style="font-size: 10px;">{{fileToUpload?.size}} KB</div>
             </div>
           </div>
-          <div fxFlex="40%" class="ml-44 mt-8" fxlayoutAlign="start center">
+          <div fxFlex="60%" fxAlign="end">
             <button mat-raised-button class="SaveBtn" (click)="UploadDataMigrationClicked()">Upload</button>
           </div>
         </div>
       </div>
     </div>
+
     <div fxFlex class="content mt-8">
       <div fxLayout="row" fxFlex="100%" fxLayoutAlign="stretch">
       </div>
     </div>
-    <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
+
+    <mat-progress-spinner *ngIf="IsProgressBarVisibile || IsProgressBarVisibile1 || IsProgressBarVisibile2 || IsProgressBarVisibile3 ||
+    IsProgressBarVisibile4 || IsProgressBarVisibile5 || IsProgressBarVisibile6 ||
+    IsProgressBarVisibile7 || IsProgressBarVisibile8 || IsProgressBarVisibile9" class="progressBarPostion"
+      color="accent" mode="indeterminate">
     </mat-progress-spinner>
-    <div id="overlay" *ngIf="IsProgressBarVisibile">
+    <div id="overlay"
+      *ngIf="IsProgressBarVisibile || IsProgressBarVisibile1 || IsProgressBarVisibile2 || IsProgressBarVisibile3 || IsProgressBarVisibile4
+     || IsProgressBarVisibile5 || IsProgressBarVisibile6 || IsProgressBarVisibile7 || IsProgressBarVisibile8 || IsProgressBarVisibile9">
     </div>
+
   </div>
 </div>
