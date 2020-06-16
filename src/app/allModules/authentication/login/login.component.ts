@@ -212,7 +212,7 @@ export class LoginComponent implements OnInit {
     if (this.MenuItems.indexOf('CustomerDashboard') >= 0) {
       this.children.push(
         {
-          id: 'dashboard',
+          id: 'custdashboard',
           title: 'Dashboard',
           translate: 'NAV.SAMPLE.TITLE',
           type: 'item',
@@ -240,7 +240,7 @@ export class LoginComponent implements OnInit {
     if (this.MenuItems.indexOf('CustomerFact') >= 0) {
       this.children.push(
         {
-          id: 'fact',
+          id: 'custfact',
           title: 'My details',
           translate: 'NAV.SAMPLE.TITLE',
           type: 'item',
@@ -268,7 +268,7 @@ export class LoginComponent implements OnInit {
     if (this.MenuItems.indexOf('CustomerOrderFulFilmentCenter') >= 0) {
       this.children.push(
         {
-          id: 'orderfulfilmentCenter',
+          id: 'custorderfulfilmentCenter',
           title: 'Order Fulfilment Center',
           translate: 'NAV.SAMPLE.TITLE',
           type: 'item',
@@ -358,8 +358,8 @@ export class LoginComponent implements OnInit {
           title: 'Return',
           translate: 'NAV.SAMPLE.TITLE',
           type: 'item',
-          icon: 'returnIcon',
-          isSvgIcon: true,
+          icon: 'assignment_return',
+          // isSvgIcon: true,
           // icon: 'dashboard',
           url: '/customer/return',
         }

@@ -354,7 +354,8 @@
     padding-right: 16px;
     cursor: pointer !important;
   }
-  .mat-input-element:disabled {
+  .mat-input-element:disabled,
+  .mat-select-disabled {
     color: rgba(0, 0, 0, 0.87) !important;
     // background: whitesmoke !important;
     // cursor: not-allowed !important;
@@ -823,7 +824,8 @@
     color: #f44336;
     font-size: 12px;
   }
-  .mat-input-element:disabled {
+  .mat-input-element:disabled,
+  .mat-select-disabled {
     color: gray !important;
     background: whitesmoke !important;
     cursor: not-allowed !important;

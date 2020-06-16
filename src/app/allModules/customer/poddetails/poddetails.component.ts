@@ -362,7 +362,7 @@ export class PODDetailsComponent implements OnInit {
     this.PODFormGroup.get('Amount').patchValue(this.SelectedPODHeader.Amount);
     this.PODFormGroup.get('Currency').patchValue(this.SelectedPODHeader.Currency);
     this.PODFormGroup.get('Status').patchValue(this.SelectedPODHeader.Status);
-    this.PODFormGroup.get('Status').disable();
+    this.PODFormGroup.disable();
   }
 
 
