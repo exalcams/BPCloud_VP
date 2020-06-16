@@ -35,6 +35,8 @@ export class SupportTicketComponent implements OnInit {
   fileToUploadList: File[] = [];
   SupportTicket = new SupportHeader();
   supportticket: SupportHeader;
+  dateOfCreation: Date;
+  dateOfCreationDay: string;
 
   notificationSnackBarComponent: NotificationSnackBarComponent;
   constructor(
@@ -47,7 +49,10 @@ export class SupportTicketComponent implements OnInit {
   ) {
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.authenticationDetails = new AuthenticationDetails();
-    this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
+    this.dateOfCreation = new Date();
+  }
+
+  ngOnInit(): void {
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
@@ -65,24 +70,18 @@ export class SupportTicketComponent implements OnInit {
     } else {
       this._router.navigate(['/auth/login']);
     }
+
+    this.InitializeSupportFormGroup();
+    this.GetSupportMasters();
+  }
+  InitializeSupportFormGroup(): void {
     this.SupportFormGroup = this._formBuilder.group({
       ReasonCode: ['', Validators.required],
+      DocumentReferenceNo: ['', Validators.required],
       InvoiceAttachment: [''],
       Remarks: ['', Validators.required]
     });
   }
-
-
-  ngOnInit() {
-    this.GetSupportMasters();
-  }
-  // InitializeSupportFormGroup(): void {
-  //   this.SupportFormGroup = this._formBuilder.group({
-  //     ReasonCode: ['', Validators.required],
-  //     InvoiceAttachment: [''],
-  //     Remarks: ['', Validators.required]
-  //   });
-  // }
   AddInvoiceAttachment(): void {
 
     this._supportdeskService.AddInvoiceAttachment(this.supportticket.SupportID, this.currentUserID.toString(), this.invoiceAttachment).subscribe(
@@ -127,7 +126,8 @@ export class SupportTicketComponent implements OnInit {
           if (result) {
             this.IsProgressBarVisibile = true;
             this.SupportTicket.ReasionCode = this.SupportFormGroup.get('ReasonCode').value;
-            this.SupportTicket.ReasionRemarks = this.SupportFormGroup.get('Remarks').value;
+            this.SupportTicket.ReasionRemarks = this.SupportFormGroup.get('Remarks').value;           
+            this.SupportTicket.DocumentReferenceNo = this.SupportFormGroup.get('DocumentReferenceNo').value;
             this.SupportTicket.PatnerID = this.PartnerID;
             this._supportdeskService.CreateSupportTicket(this.SupportTicket).subscribe(
               (data) => {
@@ -136,20 +136,20 @@ export class SupportTicketComponent implements OnInit {
                 // if (this.invoiceAttachment) {
                 //   this.AddInvoiceAttachment();
                 // } else {
-                  if (this.fileToUploadList && this.fileToUploadList.length) {
-                    this.AddDocumentCenterAttachment();
-                    this.IsProgressBarVisibile = false;
-                    this.notificationSnackBarComponent.openSnackBar('Ticket Create successfully', SnackBarStatus.success);
-                    this._router.navigate(['/pages/supportdesk']);
-                  } else {
-                    // this.ResetControl();
-                    // this.notificationSnackBarComponent.openSnackBar(`ASN ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
-                    this.IsProgressBarVisibile = false;
-                    // this.GetASNBasedOnCondition();
-                  }
+                if (this.fileToUploadList && this.fileToUploadList.length) {
+                  this.AddDocumentCenterAttachment();
+                  this.IsProgressBarVisibile = false;
+                  this.notificationSnackBarComponent.openSnackBar('Ticket Create successfully', SnackBarStatus.success);
+                  this._router.navigate(['/pages/supportdesk']);
+                } else {
+                  // this.ResetControl();
+                  // this.notificationSnackBarComponent.openSnackBar(`ASN ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
+                  this.IsProgressBarVisibile = false;
+                  // this.GetASNBasedOnCondition();
+                }
                 // }
                 // this._router.navigate(['/pages/orderfulfilmentCenter']);
-               
+
               },
               (err) => {
                 this.IsProgressBarVisibile = false;
@@ -165,7 +165,7 @@ export class SupportTicketComponent implements OnInit {
     this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
     this.IsProgressBarVisibile = false;
   }
-  GetSupportMasters() {
+  GetSupportMasters(): void {
     this.IsProgressBarVisibile = true;
     this._supportdeskService
       .GetSupportMasters(this.PartnerID)
