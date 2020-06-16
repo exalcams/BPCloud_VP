@@ -19,7 +19,7 @@ export class BPCSupportAttachment {
     ContentType: string;
     ContentLength: number;
     SupportID: string;
-    AttachmentFile:any;
+    AttachmentFile: any;
 }
 export class SupportHeader {
     SupportID: string;
@@ -32,6 +32,8 @@ export class SupportHeader {
     Assignto: string;
     Status: string;
     ReasionRemarks: string;
+    DocumentReferenceNo: string;
+    Reason: string;
 }
 export class SupportItem {
     ID: number;
@@ -42,7 +44,7 @@ export class SupportItem {
     PatnerID: string;
     Status: string;
     Remarks: string;
-    CreatedBy:string;
+    CreatedBy: string;
 }
 export class SupportChartDetails {
     supportHeader: SupportHeader;

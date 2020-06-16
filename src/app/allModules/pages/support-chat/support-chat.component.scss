@@ -128,9 +128,9 @@
     .Rectangle-721 {
     // height: 115px;
     // border-radius: 7px;
-    border: solid 1px #e0e0e0;
+    border: solid 2px #e0e0e0;
     background-color: #ffffff;
-    border-left: solid 8px #f4cc62;
+    border-left: solid 8px #3380d7;
   }
   .orange-timeline {
     // @extend .hor-timeline;
@@ -192,5 +192,18 @@
   ::ng-deep .mat-input-element:disabled {
     color: #808080 !important;
   }
+  .addIcon {
+    height: 20px;
+    margin-top: 16px;
+    padding-left: 4px;
+    cursor: pointer !important;
+  }
+  .textAreaIcon {
+    @extend .addIcon;
+    height: 12px;
+    margin-top: 4px;
+    padding-right: 2px;
+  }
+
 
 }

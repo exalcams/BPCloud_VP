@@ -4,7 +4,7 @@
       <div class="outer" fxLayout>
         <div class="bg"></div>
         <div>
-          <h3 style="margin: 0px;padding-left: 10px;"><b>Support Chart</b></h3>
+          <h3 style="margin: 0px;padding-left: 10px;"><b>Helpdesk</b></h3>
         </div>
         <div fxFlex align="end">
           <span><img src="../../../../assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
@@ -14,42 +14,46 @@
     <div style="padding: 5px;">
       <div fxFlex fxLayout class="px-12 mt-4">
         <div fxFlex class="Rectangle-721">
-          <div fxFlex="70">
+          <div fxFlex="70" style="padding: 10px;">
             <div fxFlex>
-              <div style="margin-left: 2%;" class="mt-12" fxLayout="row" fxLayoutAlign="start">
+              <div fxLayout="row" fxLayoutAlign="start">
                 <div fxFlex="50" class=" p-4">
-                  Support Ticket ID : <span
-                    style="font-weight: bold;font-size: 18px;">{{SupportHeader.SupportID}}</span>
+                  Support Ticket ID: <span
+                    style="font-weight: bold;font-size: 18px;">#{{SupportHeader.SupportID}}</span>
                 </div>
                 <div fxFlex="50" class=" p-4">
-                  Created on : <span
+                  Created On: <span
                     style="font-weight: bold;font-size: 18px;">{{SupportHeader.Date |  date : 'dd/MM/yyyy'}}</span>
                 </div>
               </div>
-              <div style="margin-left: 2%;" class="mt-12" fxLayout="row" fxLayoutAlign="start">
+              <div fxLayout="row" fxLayoutAlign="start">
                 <div fxFlex="50" class=" p-4">
-                  Assignto : <span style="font-weight: bold;font-size: 18px;">{{SupportHeader.Assignto}}</span>
+                  Assigned To: <span style="font-weight: bold;font-size: 18px;">{{SupportHeader.Assignto}}</span>
                 </div>
                 <div fxFlex="50" class=" p-4">
-                  Reason Code : <span style="font-weight: bold;font-size: 18px;">{{SupportHeader.ReasionCode}}</span>
+                  Reason Code: <span style="font-weight: bold;font-size: 18px;">{{SupportHeader.ReasionCode}}</span>
                 </div>
               </div>
-              <div style="margin-left: 2%;" class="mt-12" fxLayout="row" fxLayoutAlign="start">
+              <!-- <div style="margin-left: 2%;" class="mt-12" fxLayout="row" fxLayoutAlign="start">
                 <div fxFlex="50" class=" p-4">
                   Status : <span style="font-weight: bold;font-size: 18px;">{{SupportHeader.Status}}</span>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
           <div style="border-left: 1px solid #e0e0e0;"></div>
-          <div fxFlex="30">
-            <div style="margin-left: 2%;" class="mt-12" fxLayout="row" fxLayoutAlign="start">
+          <div fxFlex="30" style="padding: 10px;">
+            <div fxLayout="row" fxLayoutAlign="start">
               <div fxFlex="50" class=" p-4">
-                <span style="border-bottom: 2px solid #e0e0e0;">Attchments :</span>
+                <span style="border-bottom: 2px solid #e0e0e0;">Attachments:</span>
                 <div *ngFor="let file1 of SupportAttachments">
                   <div fxFlex (click)="GetInvoiceAttachment(file1?.AttachmentName,file1.AttachmentFile)"
                     class="pdfLinkClass pl-8">
-                    <span style="font-size: 15px;color: #3380d7;">{{file1?.AttachmentName}}</span></div>
+                    <img class="textAreaIcon" src="assets/images/attachmentNew (1).png"
+                      (click)="GetInvoiceAttachment(file1?.AttachmentName,file1.AttachmentFile)">
+                    <span
+                      style="font-size: 12px;color: #3380d7;cursor: pointer !important;">{{file1?.AttachmentName}}</span>
+                  </div>
                   <!-- <div fxFlex (click)="GetInvoiceAttachment(file1?.name)" class="pdfLinkClass pl-8">
                   <span style="font-weight: bold;font-size: 20px;">{{file1?.size}}</span>
                 </div> -->
@@ -60,7 +64,7 @@
         </div>
       </div>
     </div>
-    <div style="padding: 5px;" class="mt-12" fxFlex fxLayout>
+    <div style="padding: 5px;" class="px-12 mt-12" fxFlex fxLayout>
       <div fxFlex align="center">
         <div style="margin-left: 30%;" class="mt-12" fxLayout="row" fxLayoutAlign="start">
           <div style="border-left: 1px solid;opacity: 0.1;margin-top: -5%;"></div>

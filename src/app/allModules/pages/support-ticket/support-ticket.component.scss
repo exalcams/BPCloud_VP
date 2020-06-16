@@ -107,6 +107,11 @@
     margin-top: 0px;
     height: 15px;
   }
+    .textAreaIcon {
+    @extend .addIcon;
+    margin-top: 0px;
+    height: 20px;
+  }
   .attachClass {
     // margin-top: 25px;
     padding-left: 8px;
