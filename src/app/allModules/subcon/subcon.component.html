@@ -3,7 +3,7 @@
     <div class="outer" fxLayout>
       <div class="bg"></div>
       <div>
-        <h3 style="margin: 0px;padding-left: 10px;"><b>Purchase Indent</b></h3>
+        <h3 style="margin: 0px;padding-left: 10px;"><b>Subcon</b></h3>
       </div>
       <div fxFlex align="end">
         <span><img src="assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
@@ -51,26 +51,29 @@
         <div class="borderRight1"></div>
       </div> -->
       <mat-card fxFlex="100" class="side-bar p-0">
-        <div fxLayout class="p-0 pt-8">
-          <div fxFlex fxLayout="column" class="px-12 mt-4">
-            <div fxFlex="30" fxLayout="row" class="my-12">
-              <div fxFlex="50" class="px-12">
-                PO No : <span class="boldClass">#{{SelectedPO?.DocNumber}}</span>
-              </div>
-              <div fxFlex="50" class="px-12">
-                Currency :  <span class="boldClass">{{SelectedPO?.Currency}}</span>
-              </div>
+        <div fxLayout class="p-0" fxLayoutAlign="start center">
+          <div fxFlex="20" fxLayout="column" class="px-12 my-24">
+            <div>
+              PO No : <span class="boldClass">#{{SelectedPO?.DocNumber}}</span>
             </div>
-            <div fxFlex="1 1 auto" fxLayout="row">
-              <div fxFlex="50" class="px-12">
-                PO Date : <span class="boldClass">{{SelectedPO?.DocDate | date : 'dd/MM/yyyy'}}</span>
+            <div class="mt-12">
+              PO Date : <span class="boldClass">{{SelectedPO?.DocDate | date : 'dd/MM/yyyy'}}</span>
+            </div>
+          </div>
+          <!-- <div fxFlex="1" class="borderleft my-24">
+
+          </div> -->
+          <div fxFlex="20" fxLayoutAlign="end center" class="borderleft px-32 my-24">
+            <div fxLayout="column" >
+              <div style="text-align: right;">
+                Currency : <span class="boldClass">{{SelectedPO?.Currency}}</span>
               </div>
-              <div fxFlex="50" class="px-12">
+              <div class="mt-12" style="text-align: right;">
                 Version : <span class="boldClass">{{SelectedPO?.DocVersion}}</span>
               </div>
             </div>
           </div>
-          <div fxFlex class="borderleft mb-40 pt-12" *ngIf="SelectedPO">
+          <div fxFlex="auto" class="borderleft pb-40 pt-12" *ngIf="SelectedPO">
             <div fxLayout class="mx-40">
               <div fxFlex="30">ACK</div>
               <div fxFlex="30">ASN</div>
@@ -82,7 +85,7 @@
                 <div class="round" [style.border-color]="SelectedPO.Status==='Open'?'#efb577':'#34ad65'"></div>
                 <div style="width: 10px;margin-left: -1px;"
                   [class]="SelectedPO.Status==='Open'?'orange-timeline':'green-timeline'"></div>
-                <div [class]="Status==='Open'?'white-timeline':'green-timeline'" fxFlex></div>
+                <div [class]="SelectedPO.Status==='Open'?'white-timeline':'green-timeline'" fxFlex></div>
               </div>
               <div fxFlex="30" fxLayout>
                 <div style="width: 10px;margin-right: -1px;" [class]="getTimeline('ASN')"></div>
@@ -128,14 +131,14 @@
               <div *ngFor="let usr of POScheduleLines | filter: searchText">
                 <div>
                   <div class="mx-8 mb-8 mt-0 p-8 leftCard" (click)="LoadSelectedSL(usr)"
-                    [style.border-left-color]="(SelectedSlLine===usr.SlLine && SelectedItem===usr.Item)?'#efb577':'#cccccc'">
-                    <div fxLayout class="pb-4" fxLayoutAlign="space-between center">
+                    [class.highlightCard]="SelectedSlLine===usr.SlLine && SelectedItem===usr.Item">
+                    <div fxLayout class="py-4" fxLayoutAlign="space-between center">
                       <div fxFlex><strong>{{usr.MaterialText}}</strong></div>
                       <div fxFlex align="end">#{{usr.Material}}</div>
                     </div>
-                    <div fxLayout class="pb-4" fxLayoutAlign="space-between center">
+                    <div fxLayout class="py-4" fxLayoutAlign="space-between center">
                       <div fxFlex>
-                        <mat-icon class="mr-4">av_timer</mat-icon>
+                        <img class="pendingImg" src="assets/images/pending.png">
                         <span> {{usr.DeliveryDate | date:'dd/MM/yyyy'}}</span>
                       </div>
                       <div fxFlex align="end">Qty: {{usr.OrderedQty}}</div>
@@ -151,27 +154,36 @@
           </div>
           <mat-card fxFlex="77" class="side-bar p-0">
             <div *ngIf="SelectedScheduleLineView" class="sidenav-content" fxFlex fxLayout="column">
-              <div fxLayout fxLayoutAlign="space-between center" class="p-20 grayBorderBottom">
+              <div fxLayout fxLayoutAlign="space-between center" class="p-20 titleBorder">
                 <div fxFlex class="titleClass">
                   {{SelectedScheduleLineView?.MaterialText}} (#{{SelectedScheduleLineView?.Material}})
                 </div>
-                <div fxFlex fxLayout class="boldClass" align="end">
+                <div fxFlex fxLayout align="end">
                   <div fxFlex>
-                    <mat-icon class="mr-4">av_timer</mat-icon>
-                    <span> {{SelectedScheduleLineView?.DeliveryDate | date:'dd/MM/yyyy'}}</span>
+                    <!-- <mat-icon class="mr-4">av_timer</mat-icon> -->
+                    <img class="pendingImg" src="assets/images/pending.png">
+                    <span class="boldClass"> {{SelectedScheduleLineView?.DeliveryDate | date:'dd/MM/yyyy'}}</span>
                   </div>
-                  <div fxFlex align="end">Qty: {{SelectedScheduleLineView?.OrderedQty}}</div>
+                  <div fxFlex align="end">Qty: <span class="boldClass">{{SelectedScheduleLineView?.OrderedQty}}</span></div>
                 </div>
               </div>
               <div fxLayout fxLayoutAlign="center" class="p-20 QtyCard mx-20 mt-16">
-                <div fxFlex>
-                  Produced : <span class="boldClass">{{SelectedScheduleLineView?.OrderedQty}}</span>
+                <div fxFlex="30" fxLayout fxLayoutAlign="start center">
+                  Produced : <span class="boldClass ml-20">{{SelectedScheduleLineView?.OrderedQty}}</span>
+                  <div class="ml-40">
+                    <img class="doubleArrowClass" src="assets/images/doubleArrow.png" />
+                  </div>
                 </div>
-                <div fxFlex>
-                  Shipped : <span class="boldClass">0</span>
+
+                <div fxFlex="30" fxLayout fxLayoutAlign="start center">
+                  Shipped : <span class="boldClass ml-20">0</span>
+                  <div class="ml-40">
+                    <img class="doubleArrowClass" src="assets/images/doubleArrow.png" />
+                  </div>
                 </div>
-                <div fxFlex>
-                  Ready to be Shipped : <span class="boldClass">{{ReadyToBeShippedQty}}</span>
+              
+                <div fxFlex="40" fxLayoutAlign="start center">
+                  Ready to be Shipped : <span class="boldClass ml-20">{{ReadyToBeShippedQty}}</span>
                 </div>
               </div>
               <div class="px-12 mt-20">
@@ -304,7 +316,8 @@
 
 
             </div>
-            <mat-card-actions *ngIf="SelectedScheduleLineView && AllSubconItems?.length" class="m-0 pl-12 pr-16 cardActions">
+            <mat-card-actions *ngIf="SelectedScheduleLineView && AllSubconItems?.length"
+              class="m-0 pl-12 pr-16 cardActions">
               <div fxLayout fxLayoutAlign="space-between center">
                 <div fxFlex *ngIf="IsDeleteRequired">
                   <button mat-stroked-button class="DeleteBtn mr-4 mb-4" (click)="DeleteClicked()">Delete</button>
