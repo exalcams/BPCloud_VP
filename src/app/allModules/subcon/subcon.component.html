@@ -3,7 +3,7 @@
     <div class="outer" fxLayout>
       <div class="bg"></div>
       <div>
-        <h3 style="margin: 0px;padding-left: 10px;"><b>Subcon</b></h3>
+        <h3 style="margin: 0px;padding-left: 10px;"><b>Production Logbook</b></h3>
       </div>
       <div fxFlex align="end">
         <span><img src="assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
@@ -51,7 +51,7 @@
         <div class="borderRight1"></div>
       </div> -->
       <mat-card fxFlex="100" class="side-bar p-0">
-        <div fxLayout class="p-0" fxLayoutAlign="start center">
+        <div fxLayout class="p-0 grayBorderBottom" fxLayoutAlign="start center">
           <div fxFlex="20" fxLayout="column" class="px-12 my-24">
             <div>
               PO No : <span class="boldClass">#{{SelectedPO?.DocNumber}}</span>
@@ -240,7 +240,7 @@
 
                     <div fxFlex="15">
                       <mat-form-field class="px-12" style="width: 100%;">
-                        <mat-select formControlName="Status">
+                        <mat-select placeholder="Status" formControlName="Status">
                           <mat-option value="Packed">Packed</mat-option>
                           <mat-option value="Shipped">Shipped</mat-option>
                         </mat-select>

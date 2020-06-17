@@ -22,6 +22,7 @@ import { NotificationDialogComponent } from './notifications/notification-dialog
 import { WINDOW_PROVIDERS } from './window.providers';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { AttachmentDialogComponent } from './allModules/pages/attachment-dialog/attachment-dialog.component';
+import { PaymentModule } from './allModules/payment/payment.module';
 // import { CustomerModule } from './allModules/customer/customer.module';
 // import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
@@ -62,6 +63,10 @@ const appRoutes: Routes = [
     {
         path: 'subcon',
         loadChildren: './allModules/subcon/subcon.module#SubconModule'
+    },
+    {
+        path: 'payment',
+        loadChildren: './allModules/payment/payment.module#PaymentModule'
     },
     {
         path: '**',
@@ -105,6 +110,7 @@ const appRoutes: Routes = [
 
         // App modules
         LayoutModule,
+        PaymentModule
     ],
     providers: [
         DatePipe,
