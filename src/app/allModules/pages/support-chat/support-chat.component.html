@@ -1,189 +1,162 @@
-<div id="support" class="page-layout carded" fusePerfectScrollbar>
-  <div class="center" fxLayout="column" fxLayoutGap="10px">
-    <div>
-      <div class="outer" fxLayout>
-        <div class="bg"></div>
-        <div>
-          <h3 style="margin: 0px;padding-left: 10px;"><b>Helpdesk</b></h3>
-        </div>
-        <div fxFlex align="end">
-          <span><img src="../../../../assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
-        </div>
+<div id="supportchat" class="page-layout carded fullwidth">
+  <div class="center">
+    <div class="outer" fxLayout>
+      <div class="bg"></div>
+      <div>
+        <h3 style="margin: 0px;padding-left: 10px;"><b>Helpdesk</b></h3>
+      </div>
+      <div fxFlex align="end">
+        <span><img src="assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
       </div>
     </div>
-    <div style="padding: 5px;">
-      <div fxFlex fxLayout class="px-12 mt-4">
-        <div fxFlex class="Rectangle-721">
-          <div fxFlex="70" style="padding: 10px;">
-            <div fxFlex>
-              <div fxLayout="row" fxLayoutAlign="start">
-                <div fxFlex="50" class=" p-4">
-                  Support Ticket ID: <span
-                    style="font-weight: bold;font-size: 18px;">#{{SupportHeader.SupportID}}</span>
-                </div>
-                <div fxFlex="50" class=" p-4">
-                  Created On: <span
-                    style="font-weight: bold;font-size: 18px;">{{SupportHeader.Date |  date : 'dd/MM/yyyy'}}</span>
-                </div>
-              </div>
-              <div fxLayout="row" fxLayoutAlign="start">
-                <div fxFlex="50" class=" p-4">
-                  Assigned To: <span style="font-weight: bold;font-size: 18px;">{{SupportHeader.Assignto}}</span>
-                </div>
-                <div fxFlex="50" class=" p-4">
-                  Reason Code: <span style="font-weight: bold;font-size: 18px;">{{SupportHeader.ReasionCode}}</span>
-                </div>
-              </div>
-              <!-- <div style="margin-left: 2%;" class="mt-12" fxLayout="row" fxLayoutAlign="start">
-                <div fxFlex="50" class=" p-4">
-                  Status : <span style="font-weight: bold;font-size: 18px;">{{SupportHeader.Status}}</span>
-                </div>
-              </div> -->
-            </div>
-          </div>
-          <div style="border-left: 1px solid #e0e0e0;"></div>
-          <div fxFlex="30" style="padding: 10px;">
-            <div fxLayout="row" fxLayoutAlign="start">
-              <div fxFlex="50" class=" p-4">
-                <span style="border-bottom: 2px solid #e0e0e0;">Attachments:</span>
-                <div *ngFor="let file1 of SupportAttachments">
-                  <div fxFlex (click)="GetInvoiceAttachment(file1?.AttachmentName,file1.AttachmentFile)"
-                    class="pdfLinkClass pl-8">
-                    <img class="textAreaIcon" src="assets/images/attachmentNew (1).png"
-                      (click)="GetInvoiceAttachment(file1?.AttachmentName,file1.AttachmentFile)">
-                    <span
-                      style="font-size: 12px;color: #3380d7;cursor: pointer !important;">{{file1?.AttachmentName}}</span>
-                  </div>
-                  <!-- <div fxFlex (click)="GetInvoiceAttachment(file1?.name)" class="pdfLinkClass pl-8">
-                  <span style="font-weight: bold;font-size: 20px;">{{file1?.size}}</span>
-                </div> -->
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div style="padding: 5px;" class="px-12 mt-12" fxFlex fxLayout>
-      <div fxFlex align="center">
-        <div style="margin-left: 30%;" class="mt-12" fxLayout="row" fxLayoutAlign="start">
-          <div style="border-left: 1px solid;opacity: 0.1;margin-top: -5%;"></div>
-          <div fxFlex="15" style="margin-left: 2%">
-            <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="30px">
-              <div fxFlex="50" fxLayoutAlign="end" style="margin-left: 15px;;" fxLayout>Open</div>
-              <div fxFlex="50" fxLayout>
-                <div class="round" [style.border-color]="Status==='Open'?'#efb577':'#34ad65'"></div>
-                <div style="height: 20px;" [class]="Status==='Open'?'orange-timeline':'green-timeline'"></div>
-                <div style="margin-top: 39px;margin-left: -10px;"
-                  [class]="Status==='Open'?'white-timeline':'green-timeline'"></div>
-                <!-- <div style="width: 10px;margin-left: -1px;"
-              [class]="Status==='Open'?'orange-timeline':'green-timeline'"></div>
-            <div [class]="Status==='Open'?'white-timeline':'green-timeline'" fxFlex></div> -->
-              </div>
-            </div>
-            <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="30px">
-              <div fxFlex="50" fxLayoutAlign="end" style="margin-left: 15px;;" fxLayout>Pending</div>
-              <div fxFlex="50" fxLayout>
-                <!-- <div style="width: 10px;margin-right: -1px;" [class]="getTimeline('Pending')"></div> -->
-                <div style="height: 20px;margin-top: -15px;margin-left: 5px;" [class]="getTimeline('Pending')"></div>
-                <div class="round" style="margin-left: -15px;" [style.border-color]="getStatusColor('Pending')"></div>
-                <!-- <div style="height: 20px;" [class]="Status==='Pending'?'orange-timeline':'green-timeline'"></div> -->
-                <!-- <div style="margin-top: 39px;margin-left: -10px;" [class]="Status==='Pending'?'white-timeline':'green-timeline'"></div> -->
-                <div [class]="getTimeline('Pending')"></div>
-                <div style="margin-top: 39px;margin-left: -10px;" [class]="getRestTimeline('Pending')"></div>
-                <!-- <div style="width: 10px;margin-left: -1px;" [class]="getTimeline('Pending')"></div>
-              <div [class]="getRestTimeline('Pending')" fxFlex></div> -->
-              </div>
-            </div>
-            <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="30px">
-              <div fxFlex="50" fxLayoutAlign="end" style="margin-left: 15px;;" fxLayout>Closed</div>
-              <div fxFlex="50" fxLayout>
-                <!-- <div  [class]="getTimeline('Closed')"></div> -->
-                <div class="round" [style.border-color]="getStatusColor('Closed')"></div>
-              </div>
-            </div>
-          </div>
-          <div fxFlex="50">
-            <div style="height: 65vh" class="m-4 borderRightClass side-bar">
-              <div class="sidenav-content" style="margin-right: 15%;margin-top: 9%;" fusePerfectScrollbar fxFlex>
-                <div fxLayout fxLayoutAlign="center" class="m-4"
-                  *ngFor="let ven of SupportItem;let i=index;let last = last">
-                  <div fxFlex="8" fxLayout="column" fxLayoutAlign="start center">
-                    <!-- <div class="round1" [style.background-color]="last?'#2ecc71':'white'"></div> -->
-                    <!-- <div fxFlex class="vertical-line"></div> -->
-                  </div>
-                  <div fxFlex fxLayout class="mb-8">
-                    <!-- <div fxFlex fxLayoutAlign="center" class="arrow-left"></div> -->
-                    <div fxFlex fxLayoutAlign="center" class="arrow-left"><i class="arrow left"></i></div>
-                    <i class="arrow left"></i>
-                    <div fxFlex="95" fxLayout fxLayoutAlign="center" class="p-12 timeline-content">
-                      <div fxFlex="10">
-                        <mat-icon>account_circle</mat-icon>
+    <div fxLayout class="content-card1">
+      <div fxFlex class="side-bar p-0">
+        <div class="sidenav-content" fxFlex fxLayout="column">
+          <div fxFlex fxLayout="column" class="p-0 pt-8">
+            <div fxLayout class="px-32 mt-4">
+              <div fxFlex class="Rectangle-721">
+                <div fxFlex="70" style="padding: 10px;">
+                  <div fxFlex>
+                    <div fxLayout="row" fxLayoutAlign="start">
+                      <div fxFlex="50" class=" p-4">
+                        Support Ticket ID: <span
+                          style="font-weight: bold;font-size: 18px;">#{{SupportHeader.SupportID}}</span>
                       </div>
-                      <div fxFlex="90" class="pl-4" fxLayout="column">
-                        <div fxFlex class="mt-4">
-                          <div>{{ven.Remarks}}</div>
+                      <div fxFlex="50" class=" p-4">
+                        Created On: <span
+                          style="font-weight: bold;font-size: 18px;">{{SupportHeader.Date |  date : 'dd/MM/yyyy'}}</span>
+                      </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="start">
+                      <div fxFlex="50" class=" p-4">
+                        Assigned To: <span style="font-weight: bold;font-size: 18px;">{{SupportHeader.Assignto}}</span>
+                      </div>
+                      <div fxFlex="50" class=" p-4">
+                        Reason Code: <span
+                          style="font-weight: bold;font-size: 18px;">{{SupportHeader.ReasionCode}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div style="border-left: 1px solid #e0e0e0;"></div>
+                <div fxFlex="30" style="padding: 10px;">
+                  <div fxLayout="row" fxLayoutAlign="start">
+                    <div fxFlex="100" class=" p-4">
+                      <span style="border-bottom: 2px solid #e0e0e0;">Attachments:</span>
+                      <div *ngFor="let file1 of SupportAttachments">
+                        <div fxFlex (click)="GetInvoiceAttachment(file1?.AttachmentName,file1.AttachmentFile)"
+                          class="pdfLinkClass pl-8">
+                          <img class="attachmentIcon" src="assets/images/attachmentNew (1).png"
+                            (click)="GetInvoiceAttachment(file1?.AttachmentName,file1.AttachmentFile)">
+                          <span
+                            style="font-size: 12px;color: #3380d7;cursor: pointer !important;">{{file1?.AttachmentName}}</span>
                         </div>
-                      </div>
-                      <!-- <div fxFlex>
-                        <div>{{CurrentDate | date}}</div>
+                        <!-- <div fxFlex (click)="GetInvoiceAttachment(file1?.name)" class="pdfLinkClass pl-8">
+                        <span style="font-weight: bold;font-size: 20px;">{{file1?.size}}</span>
                       </div> -->
-                    </div>
-                  </div>
-                </div>
-                <div fxLayout fxLayoutAlign="center" class="m-4">
-                  <div fxFlex="8" fxLayoutAlign="start start">
-                    <div class="ml-4">
-                      <!-- <div class="round"></div> -->
-                    </div>
-                  </div>
-                  <div fxFlex fxLayout class="mb-8">
-                    <div fxFlex fxLayoutAlign="center" class="arrow-left"></div>
-                    <div fxFlex="95" fxLayout fxLayoutAlign="center" class="p-12 timeline-content">
-                      <div fxFlex="10">
-                        <mat-icon>account_circle</mat-icon>
                       </div>
-                      <div fxFlex="90" class="pl-4" fxLayout="column">
-                        <div fxFlex class="mt-8">
-                          <form name="form" class="normal" [formGroup]="SupportTicketResponseFormGroup">
-                            <!-- <mat-form-field> -->
-                            <input matInput placeholder="Reply here.." formControlName="Comments">
-                            <mat-error *ngIf="SupportTicketResponseFormGroup.get('Comments').touched && 
-                            SupportTicketResponseFormGroup.get('Comments').hasError('required')">
-                              Comment is required.
-                            </mat-error>
-                            <!-- </mat-form-field> -->
-                          </form>
-                        </div>
-                      </div>
-                      <!-- <div fxFlex>
-                  <div>{{CurrentDate | date}}</div>
-                </div> -->
                     </div>
                   </div>
-                </div>
-                <div fxLayout fxLayoutAlign="space-between center" class="m-8">
-
-                  <div fxFlex align="end">
-                    <button style="border: 1px solid #f6b570;color: #f6b570;" (click)="ValidateSupportTicketResponse()"
-                      class="ml-8" mat-raised-button>
-                      Reply
-                    </button>
-                  </div>
-                  <!-- <div fxFlex align="end" *ngIf="CurrentUserRole === 'Vendor' && SupportHeader.Status!=='Closed'">
-                  <button (click)="CloseTicket()" [ngClass]="BGClassName?.layout?.toolbar?.background" class="ml-8"
-                    mat-raised-button>
-                    Close ticket
-                  </button>
-                </div> -->
-                  <!-- <div fxFlex align="end" >
-                  <button (click)="ReOpenCloseTicket()" [ngClass]="BGClassName?.layout?.toolbar?.background"
-                    class="ml-8" mat-raised-button>
-                    Reopen
-                  </button>
-              </div> -->
                 </div>
               </div>
+            </div>
+            <!-- *ngFor="let ven of SupportItem;let i=index;let last = last" -->
+            <div fxFlex fxLayout="row" fxLayoutGap="5px" class="px-32 mt-12"
+              *ngFor="let ven of SupportItem;let i=index;let first = first;let last = last">
+
+              <div fxFlex="20" fxLayout="column">
+                <div fxFlex>
+                  <div fxLayout="row" class="left-open-container"
+                    [style.border-color]="ven.Status==='Closed'?'#4FAB6D':ven.Status==='Open'?'#efb577':''"
+                    style="margin-top: 51px">
+                    <div fxFlex="10">
+                      <div [style.background-color]="ven.Status==='Closed'?'#4FAB6D':ven.Status==='Open'?'#efb577':''"
+                        style="text-orientation: upright; writing-mode: vertical-rl ; 
+                      color: white; font-size: 12px;border-radius: 4px 0px 0px 4px;
+                      padding: 2px;">
+                        {{ven.Status |uppercase}}</div>
+                    </div>
+                    <div fxFlex="75" fxLayout="column" fxLayoutAlign="space-evenly end" style="padding: 10px;">
+                      <div fxFlex>
+                        <span> {{ven.PatnerID}}</span>
+                      </div>
+                      <div fxFlex>
+                        <span>{{ven.CreatedOn | date:'dd/MM/yyyy'}}</span>
+                      </div>
+                    </div>
+                    <div fxFlex="15" fxLayout fxLayoutAlign="center center">
+                      <mat-icon>account_circle</mat-icon>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div fxFlex="5">
+                <!-- [style.padding-top]="first?'51px':''" -->
+                <div fxLayout="column" fxLayoutAlign="space-around center" style="padding-top: 51px;">
+                  <div class="round"
+                    [style.border-color]="ven.Status==='Closed'?'#4FAB6D':ven.Status==='Open'?'#efb577':''">
+                  </div>
+                  <div *ngIf="!last"
+                    [class]="ven.Status==='Closed'?'green-timeline':ven.Status==='Open'?'orange-timeline':''"></div>
+                  <!-- <div class="round" *ngIf="!last" [style.border-color]="ven.Status==='Closed'?'#4FAB6D':ven.Status==='Open'?'#efb577':''">
+                  </div> -->
+                </div>
+              </div>
+              <div fxFlex="75" fxLayout="row">
+                <div *ngIf="ven.Status==='Open'" fxFlex>
+                  <form name="form" class="normal" [formGroup]="SupportTicketResponseFormGroup">
+                    <div fxFlex fxLayout="column" class="comment-container-arrow">
+                      <div fxFlex>
+                        <mat-form-field style="width: 100% !important;" class="example-full-width">
+                          <textarea matInput style="height: 50px !important;" formControlName="Comments"
+                            placeholder="Enter your comment here......"></textarea>
+                        </mat-form-field>
+                        <mat-error
+                          *ngIf="SupportTicketResponseFormGroup.get('Comments').touched && SupportTicketResponseFormGroup.get('Comments').hasError('required')">
+                          Comments is required
+                        </mat-error>
+                      </div>
+                      <div fxFlex fxLayout="row" style="padding: 0px 10px 10px 10px ">
+                        <div fxLayout="row" fxLayoutAlign="start">
+                          <img class="textAreaIcon" style="padding-left: 20px;"
+                            src="assets/images/attachmentNew (1).png" (click)="fileInput1.click()">
+                          <input hidden type="file" accept="image/x-png,image/gif,image/jpeg,image/jpg,application/pdf"
+                            #fileInput1 id="file" (change)="HandleFileInput($event)" />
+                        </div>
+                        <div fxFlex>
+                          <div fxLayoutAlign="end">
+                            <button mat-stroked-button class="mark-as-resolved mr-12"
+                              (click)="MarkAsResolvedClicked()">Mark as
+                              resolved</button>
+                            <img class="textAreaIcon" style="padding-right: 20px;" src="assets/images/send.png"
+                              (click)="SendResponseClicked()">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div *ngIf="ven.Status==='Closed'" fxFlex>
+                  <div fxFlex fxLayout="column" style="height: 138px;" class="comment-container-arrow">
+                    <div fxFlex="100" class=" p-4">
+                      <span style="border-bottom: 2px solid #e0e0e0;">{{ven.Remarks}}</span>
+                      <div *ngFor="let file1 of SupportAttachments">
+                        <div fxFlex (click)="GetInvoiceAttachment(file1?.AttachmentName,file1.AttachmentFile)"
+                          class="pdfLinkClass pl-8">
+                          <img class="attachmentIcon" src="assets/images/attachmentNew (1).png"
+                            (click)="GetInvoiceAttachment(file1?.AttachmentName,file1.AttachmentFile)">
+                          <span
+                            style="font-size: 12px;color: #3380d7;cursor: pointer !important;">{{file1?.AttachmentName}}</span>
+                        </div>
+                        <!-- <div fxFlex (click)="GetInvoiceAttachment(file1?.name)" class="pdfLinkClass pl-8">
+                        <span style="font-weight: bold;font-size: 20px;">{{file1?.size}}</span>
+                      </div> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>

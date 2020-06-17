@@ -35,9 +35,10 @@ export class SupportChatComponent implements OnInit {
   IsProgressBarVisibile: boolean;
   fileToUpload: File;
   fileToUploadList: File[] = [];
-  // dialog: any;
+  dialog: any;
   SupportTicketResponseFormGroup: FormGroup;
   Status: string;
+  TicketResolved: boolean;
   notificationSnackBarComponent: NotificationSnackBarComponent;
   constructor(
     private route: ActivatedRoute,
@@ -47,7 +48,10 @@ export class SupportChatComponent implements OnInit {
     private _dialog: MatDialog,
     private _formBuilder: FormBuilder
   ) {
+    this.TicketResolved = false;
+  }
 
+  ngOnInit(): void {
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
@@ -68,30 +72,55 @@ export class SupportChatComponent implements OnInit {
 
     this.route.queryParams.subscribe(params => {
       this.SupportID = params['SupportID'];
-      this._supportdeskService.GetSupportChartDetails(this.SupportID, this.PartnerID).subscribe(
-        data => {
-          if (data) {
-            this.SupportChartDetails = data as SupportChartDetails;
-            this.SupportHeader = this.SupportChartDetails.supportHeader;
-            this.Status = this.SupportHeader.Status;
-            this.SupportItem = this.SupportChartDetails.supportItem;
-            this.SupportAttachments = this.SupportChartDetails.supportAttachments;
-            console.log(this.SupportItem);
-            // console.log(this.SupportChartDetails);
-          }
-        },
-        err => {
-          console.error(err);
-        }
-      );
     });
+    this.GetSupportChartDetails();
+    this.InitializeSupportTicketResponseFormGroup();
+  }
+
+  InitializeSupportTicketResponseFormGroup(): void {
     this.SupportTicketResponseFormGroup = this._formBuilder.group({
       Comments: ['', Validators.required],
     });
   }
 
-  ngOnInit() {
+  GetSupportChartDetails(): void {
+    this.IsProgressBarVisibile = true;
+    this._supportdeskService.GetSupportChartDetails(this.SupportID, this.PartnerID).subscribe(
+      data => {
+        if (data) {
+          this.SupportChartDetails = data as SupportChartDetails;
+          this.SupportHeader = this.SupportChartDetails.supportHeader;
+          this.Status = this.SupportHeader.Status;
+          this.SupportItem = this.SupportChartDetails.supportItem;
+          this.SupportAttachments = this.SupportChartDetails.supportAttachments;
+          console.log(this.SupportItem);
+          this.IsProgressBarVisibile = false;
+          // console.log(this.SupportChartDetails);
+        }
+      },
+      err => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+      }
+    );
   }
+
+  GetSupportItem(): void {
+    // this.IsProgressBarVisibile = true;
+    this._supportdeskService
+      .GetSupportItems(this.SupportID, this.PartnerID)
+      .subscribe((data) => {
+        if (data) {
+          this.SupportItem = <SupportItem[]>data;
+        }
+        this.IsProgressBarVisibile = false;
+      },
+        (err) => {
+          console.error(err);
+          this.IsProgressBarVisibile = false;
+        });
+  }
+
   GetInvoiceAttachment(fileName: string, file?: File): void {
     if (file && file.size) {
       const blob = new Blob([file], { type: file.type });
@@ -120,6 +149,7 @@ export class SupportChatComponent implements OnInit {
       );
     }
   }
+
   OpenAttachmentDialog(FileName: string, blob: Blob): void {
     const attachmentDetails: AttachmentDetails = {
       FileName: FileName,
@@ -135,49 +165,35 @@ export class SupportChatComponent implements OnInit {
       }
     });
   }
-  getStatusColor(StatusFor: string): string {
-    // alert(this.Status);
-    switch (StatusFor) {
-      case 'Pending':
-        return this.Status === 'Open' ? 'gray' : this.Status === 'Pending' ? '#efb577' : '#34ad65';
-      case 'Closed':
-        return this.Status === 'Open' ? 'gray' : this.Status === 'Pending' ? 'gray' : this.Status === 'Closed' ? '#34ad65' : this.Status === 'Pending' ? '#efb577' : '#34ad65';
-      default:
-        return '';
-    }
-  }
-  getTimeline(StatusFor: string): string {
-    switch (StatusFor) {
-      case 'Pending':
-        return this.Status === 'Open' ? 'white-timeline' : this.Status === 'Pending' ? 'orange-timeline' : 'green-timeline';
-      case 'Closed':
-        return this.Status === 'Open' ? 'white-timeline' : this.Status === 'Pending' ? 'white-timeline' : this.Status === 'Closed' ? 'orange-timeline' : 'green-timeline';
-      default:
-        return '';
-    }
-  }
 
-  getRestTimeline(StatusFor: string): string {
-    switch (StatusFor) {
-      case 'Pending':
-        return this.Status === 'Open' ? 'white-timeline' : this.Status === 'Pending' ? 'white-timeline' : 'green-timeline';
-      case 'Closed':
-        return this.Status === 'Open' ? 'white-timeline' : this.Status === 'Pending' ? 'white-timeline' : this.Status === 'Closed' ? 'white-timeline' : 'green-timeline';
-      default:
-        return '';
-    }
-  }
-
-
-  ValidateSupportTicketResponse(): void {
+  SendResponseClicked(): void {
     if (this.SupportTicketResponseFormGroup.valid) {
       const Actiontype = 'Reply';
-      const Catagory = 'Support ticket';
+      const Catagory = 'Support Ticket';
       this.OpenConfirmationDialog(Actiontype, Catagory);
     } else {
       this.ShowValidationErrors(this.SupportTicketResponseFormGroup);
     }
   }
+
+  MarkAsResolvedClicked(): void {
+    if (this.SupportTicketResponseFormGroup.valid) {
+      const Actiontype = 'Reply';
+      const Catagory = 'Support Ticket';
+      this.OpenConfirmationDialog(Actiontype, Catagory);
+    } else {
+      this.ShowValidationErrors(this.SupportTicketResponseFormGroup);
+    }
+  }
+
+  HandleFileInput(evt): void {
+    if (evt.target.files && evt.target.files.length > 0) {
+      this.fileToUpload = evt.target.files[0];
+      this.fileToUploadList.push(this.fileToUpload);
+      console.log(this.fileToUploadList);
+    }
+  }
+
   OpenConfirmationDialog(Actiontype: string, Catagory: string): void {
     const dialogConfig: MatDialogConfig = {
       data: {
@@ -199,6 +215,7 @@ export class SupportChatComponent implements OnInit {
         }
       });
   }
+
   CreateSupportTicketResponse(): void {
     this.IsProgressBarVisibile = true;
     const supportTicketResponse: SupportItem = new SupportItem();
@@ -221,29 +238,16 @@ export class SupportChatComponent implements OnInit {
       }
     );
   }
+
   ResetForm(): void {
     this.ResetSupportTicketResponseForm();
   }
+
   ResetSupportTicketResponseForm(): void {
     this.SupportTicketResponseFormGroup.reset();
     Object.keys(this.SupportTicketResponseFormGroup.controls).forEach(key => {
       this.SupportTicketResponseFormGroup.get(key).markAsUntouched();
     });
-  }
-  GetSupportItem() {
-    // this.IsProgressBarVisibile = true;
-    this._supportdeskService
-      .GetSupportItems(this.SupportID, this.PartnerID)
-      .subscribe((data) => {
-        if (data) {
-          this.SupportItem = <SupportItem[]>data;
-        }
-        this.IsProgressBarVisibile = false;
-      },
-        (err) => {
-          console.error(err);
-          this.IsProgressBarVisibile = false;
-        });
   }
 
   ShowValidationErrors(formGroup: FormGroup): void {
@@ -254,5 +258,39 @@ export class SupportChatComponent implements OnInit {
       formGroup.get(key).markAsTouched();
       formGroup.get(key).markAsDirty();
     });
+  }
+
+  getStatusColor(StatusFor: string): string {
+    // alert(this.Status);
+    switch (StatusFor) {
+      case 'Pending':
+        return this.Status === 'Open' ? 'gray' : this.Status === 'Pending' ? '#efb577' : '#34ad65';
+      case 'Closed':
+        return this.Status === 'Open' ? 'gray' : this.Status === 'Pending' ? 'gray' : this.Status === 'Closed' ? '#34ad65' : this.Status === 'Pending' ? '#efb577' : '#34ad65';
+      default:
+        return '';
+    }
+  }
+
+  getTimeline(StatusFor: string): string {
+    switch (StatusFor) {
+      case 'Pending':
+        return this.Status === 'Open' ? 'white-timeline' : this.Status === 'Pending' ? 'orange-timeline' : 'green-timeline';
+      case 'Closed':
+        return this.Status === 'Open' ? 'white-timeline' : this.Status === 'Pending' ? 'white-timeline' : this.Status === 'Closed' ? 'orange-timeline' : 'green-timeline';
+      default:
+        return '';
+    }
+  }
+
+  getRestTimeline(StatusFor: string): string {
+    switch (StatusFor) {
+      case 'Pending':
+        return this.Status === 'Open' ? 'white-timeline' : this.Status === 'Pending' ? 'white-timeline' : 'green-timeline';
+      case 'Closed':
+        return this.Status === 'Open' ? 'white-timeline' : this.Status === 'Pending' ? 'white-timeline' : this.Status === 'Closed' ? 'white-timeline' : 'green-timeline';
+      default:
+        return '';
+    }
   }
 }
