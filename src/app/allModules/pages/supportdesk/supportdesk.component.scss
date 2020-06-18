@@ -1,7 +1,6 @@
 @import "src/@fuse/scss/fuse";
 
 #supportdesk {
-
   .progressBarPostion {
     position: absolute !important;
     top: 350px;
@@ -16,7 +15,7 @@
   @mixin TableBorderRight($color) {
     border-right: 1px solid $color;
   }
-  
+
   .outer {
     border-bottom: 1px solid rgba(255, 85, 0, 0.1);
     position: relative;
@@ -107,11 +106,17 @@
     position: fixed !important;
     bottom: 50px !important;
   }
+  
   .rightFlexHr {
     margin: 0px;
     width: 12%;
     height: 3px;
     background-color: #efb577;
     border: none;
-}
+  }
+
+  .float-add-button {
+    position: fixed;
+    bottom: 80px !important;
+  }
 }
