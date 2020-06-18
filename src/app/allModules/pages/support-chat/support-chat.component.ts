@@ -30,7 +30,7 @@ export class SupportChatComponent implements OnInit {
   SupportID: string;
   SupportChartDetails: SupportChartDetails = new SupportChartDetails();
   SupportHeader: SupportHeader = new SupportHeader();
-  SupportItem: SupportItem[] = [];
+  SupportItems: SupportItem[] = [];
   SupportAttachments: BPCSupportAttachment[] = [];
   IsProgressBarVisibile: boolean;
   fileToUpload: File;
@@ -91,9 +91,10 @@ export class SupportChatComponent implements OnInit {
           this.SupportChartDetails = data as SupportChartDetails;
           this.SupportHeader = this.SupportChartDetails.supportHeader;
           this.Status = this.SupportHeader.Status;
-          this.SupportItem = this.SupportChartDetails.supportItem;
+          this.SupportItems = this.SupportChartDetails.supportItem;
           this.SupportAttachments = this.SupportChartDetails.supportAttachments;
-          console.log(this.SupportItem);
+          // this.SupportItemAttachments= this.SupportChartDetails.supportItemAttachments;
+          console.log(this.SupportItems);
           this.IsProgressBarVisibile = false;
           // console.log(this.SupportChartDetails);
         }
@@ -105,13 +106,13 @@ export class SupportChatComponent implements OnInit {
     );
   }
 
-  GetSupportItem(): void {
+  GetSupportItems(): void {
     // this.IsProgressBarVisibile = true;
     this._supportdeskService
       .GetSupportItems(this.SupportID, this.PartnerID)
       .subscribe((data) => {
         if (data) {
-          this.SupportItem = <SupportItem[]>data;
+          this.SupportItems = <SupportItem[]>data;
         }
         this.IsProgressBarVisibile = false;
       },
@@ -186,6 +187,14 @@ export class SupportChatComponent implements OnInit {
     }
   }
 
+  AddCommentClicked(): void {
+    const supportItem = new SupportItem();
+    supportItem.PatnerID = this.PartnerID;
+    supportItem.Status = "Open";
+    supportItem.CreatedOn = new Date();
+    this.SupportItems.push(supportItem);
+  }
+
   HandleFileInput(evt): void {
     if (evt.target.files && evt.target.files.length > 0) {
       this.fileToUpload = evt.target.files[0];
@@ -227,7 +236,7 @@ export class SupportChatComponent implements OnInit {
       () => {
         this.IsProgressBarVisibile = false;
         // this.notificationSnackBarComponent.openSnackBar('Support Ticket Response details updated successfully', SnackBarStatus.success);
-        this.GetSupportItem();
+        this.GetSupportItems();
         this.ResetForm();
         // this.IsProgressBarVisibile = false;
       },

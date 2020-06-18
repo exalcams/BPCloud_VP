@@ -104,10 +104,17 @@
           style=" cursor: pointer;" [class.highlight]="row === selectedPORow"></tr>
       </table>
       <!-- <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator> -->
-      <div fxFlex fxLayout="column" class="mx-20 my-12">
+      <!-- <div fxFlex fxLayout="column" class="mx-20 my-12">
         <div fxLayoutAlign="end">
           <button class="Btn2" mat-fab (click)="CreateTicket()">
             <mat-icon class="s-16">add</mat-icon>
+          </button>
+        </div>
+      </div> -->
+      <div fxLayout>
+        <div fxFlex fxLayoutAlign="end">
+          <button class="float-add-button" mat-fab style="background-color: #f6b570" (click)="CreateTicket()">
+            <mat-icon style="color: white;">add</mat-icon>
           </button>
         </div>
       </div>

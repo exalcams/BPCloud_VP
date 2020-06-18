@@ -45,6 +45,7 @@ export class SupportItem {
     Status: string;
     Remarks: string;
     CreatedBy: string;
+    CreatedOn: Date;
 }
 export class SupportChartDetails {
     supportHeader: SupportHeader;
