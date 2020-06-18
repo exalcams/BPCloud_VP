@@ -1,0 +1,75 @@
+<div id="payment" class="page-layout carded" fusePerfectScrollbar>
+  <div class="center" fxLayout="column" fxLayoutGap="10px">
+    <div class="outer" fxLayout>
+      <div class="bg"></div>
+      <div>
+        <h3 style="margin: 0px;padding-left: 10px;"><b>Payments</b></h3>
+      </div>
+      <div fxFlex align="end">
+        <span><img src="assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
+      </div>
+    </div>
+    <div class="px-20 py-20">
+
+      <table class="table" mat-table [dataSource]="tableDataSource" matSort>
+
+        <ng-container matColumnDef="PaymentDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+          <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
+            <div fxLayout>
+              <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
+              <div fxFlex class="pl-8">{{element.PaymentDate | date :'dd/MM/yyyy'}} </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="PaymentType">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Cheque/Transfer </th>
+          <td mat-cell *matCellDef="let element">
+            {{element.PaymentType}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="PaidAmount">
+          <th mat-header-cell *matHeaderCellDef>Paid Amount </th>
+          <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
+            {{element.PaidAmount}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="BankName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> TDS Category </th>
+          <td mat-cell *matCellDef="let element">
+            {{element.BankName }}
+          </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="BankAccount">
+          <th mat-header-cell *matHeaderCellDef>Bank Account </th>
+          <td mat-cell *matCellDef="let element;let i= index;">
+            {{element.BankAccount}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="CIDoc">
+          <th mat-header-cell *matHeaderCellDef>CI Doc </th>
+          <td mat-cell *matCellDef="let element;let i= index;">
+            {{element.CIDoc}}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="tableDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: tableDisplayedColumns;">
+        </tr>
+      </table>
+      <div>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+      </div>
+    </div>
+
+    <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
+    </mat-progress-spinner>
+    <div id="overlay" *ngIf="IsProgressBarVisibile"></div>
+  </div>
+</div>

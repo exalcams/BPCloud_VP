@@ -10,27 +10,17 @@
       </div>
     </div>
     <div fxFlex fxLayout *ngIf="!isExpanded" [@animate]="{value:'*',params:{x:'100%'}}">
-      <div class="tile mx-20" fxFlex="25">
-        <div fxLayout fxLayoutAlign="start center" class="pt-8">
-          <span class="boldClass orangeBorderBottom pl-8 headerMargin"> Opening / Closing Balance</span>
-          <div fxFlex fxLayoutAlign="end center" class="pt-8 pr-12">
-            <img src="assets/images/money.png" />
-          </div>
+      <div class="tile mx-20" fxFlex="30" fxLayout="column" fxLayoutAlign="start">
+        <div fxLayoutAlign="start" class="pt-8">
+          <span class="boldClass orangeBorderBottom pl-8"> Payment </span>
         </div>
-        <div fxLayout fxLayoutAlign="center" class="pt-8 mb-20">
-          <div fxFlex fxLayout="column" fxLayoutAlign="center">
-            <div fxFlex fxLayoutAlign="center" class="pt-20 boldClass">1,98,563</div>
-            <div fxFlex fxLayoutAlign="center" class="py-20">Opening Balance</div>
-          </div>
-          <div fxFlex fxLayoutAlign="center" class="tableLeftBorder">
-            <div fxFlex fxLayout="column" fxLayoutAlign="center">
-              <div fxFlex fxLayoutAlign="center" class="pt-20 boldClass">43,84,968</div>
-              <div fxFlex fxLayoutAlign="center" class="py-20">Closing Balance</div>
-            </div>
-          </div>
+        <div *ngIf="barChartLabels.length" id="barChart" fxFlex fxLayoutAlign="start" class="pt-0 px-8">
+          <canvas #barCanvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
+            [legend]="barChartLegend" [chartType]="barChartType" [colors]="barColors">
+          </canvas>
         </div>
       </div>
-      <div class="tile mx-20" fxFlex="25" fxLayout="column" fxLayoutAlign="start">
+      <div class="tile mx-20" fxFlex="20" fxLayout="column" fxLayoutAlign="start">
         <div fxLayoutAlign="start center" class="pt-8">
           <span class="boldClass orangeBorderBottom pl-8"> Payment Aging </span>
         </div>
@@ -167,7 +157,7 @@
         </tr>
       </table>
       <div>
-        <mat-paginator [pageSizeOptions]="[500]"></mat-paginator>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
       </div>
     </div>
 

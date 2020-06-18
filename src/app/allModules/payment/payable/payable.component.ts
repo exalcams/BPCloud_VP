@@ -5,7 +5,6 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { fuseAnimations } from '@fuse/animations';
 import { ChartType } from 'chart.js';
 
-
 @Component({
   selector: 'app-payable',
   templateUrl: './payable.component.html',
@@ -35,6 +34,93 @@ export class PayableComponent implements OnInit {
   @ViewChild(MatMenuTrigger) matMenuTrigger: MatMenuTrigger;
   @ViewChild(MatSort) tableSort: MatSort;
 
+  // Bar chart
+  public barChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    legend: {
+      // position: 'top',
+      // align: 'end',
+      // labels: {
+      //   fontSize: 10,
+      //   usePointStyle: true
+      // }
+      display: false
+    },
+    // // We use these empty structures as placeholders for dynamic theming.
+    scales: {
+      yAxes: [{
+        barPercentage: 0.4,
+        // categoryPercentage: -0.5,
+        gridLines: {
+          display: false,
+          drawBorder: false
+        },
+        // ticks: {
+        //   display: false
+        // }
+      }],
+      xAxes: [{
+        ticks: {
+          stepSize: 20000,
+          beginAtZero: true,
+        },
+        gridLines: {
+          display: false
+        },
+        // labels: {
+        //   x: 25,
+        //   y: -25,
+        //   align: 'left'
+        // }
+      }],
+    },
+    plugins: {
+      // datalabels: {
+      //   display: true,
+      //   anchor: 'end',
+      //   align: 'end',
+      // }
+      labels: {
+        // tslint:disable-next-line:typedef
+        render: function (args) {
+          return args.value + '%';
+        },
+        fontColor: '#000',
+        position: 'outside',
+        // overlap: true,
+        // outsidePadding: 4
+        // textMargin: 4
+      }
+    },
+    animation: {
+      onComplete: function (): void {
+        const chartInstance = this.chart,
+          ctx = chartInstance.ctx;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        this.data.datasets.forEach((dataset: any, i: any) => {
+          const meta = chartInstance.controller.getDatasetMeta(i);
+          meta.data.forEach((bar: any, index: any) => {
+            const data = dataset.data[index];
+            ctx.fillText(data, bar._model.x + 20, bar._model.y + 5);
+            // const label = bar._model.label;
+            // const xOffset = 40;
+            // const yOffset = bar._model.y - 10;
+            // ctx.fillText(label, xOffset, yOffset);
+          });
+        });
+      }
+    }
+  };
+  public barChartLabels: any[] = ['Total payment', 'Advance', 'Overdue'];
+  public barChartType: ChartType = 'horizontalBar';
+  public barChartLegend = true;
+  public barChartData: any[] = [
+    { data: [88945, 55231, 67983], label: 'Payments' }
+  ];
+  public barColors: any[] = [{ backgroundColor: '#1b69d0' }];
+  // doughnutChart
   public doughnutChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -59,14 +145,17 @@ export class PayableComponent implements OnInit {
           return args.value + '%';
         },
         fontColor: '#000',
-        position: 'outside'
+        position: 'outside',
+        // overlap: true,
+        // outsidePadding: 4
+        // textMargin: 4
       }
     }
   };
   public doughnutChartType: ChartType = 'doughnut';
   public doughnutChartLabels: any[] = ['0 - 30', '31 - 60', '61 - 90', '91 - above'];
   public doughnutChartData: any[] = [
-      [40, 20, 30, 10]
+    [40, 20, 30, 10]
   ];
   public colors: any[] = [{ backgroundColor: ['#716391', '#9ae9d9', '#fbe300', '#f66861'] }];
 

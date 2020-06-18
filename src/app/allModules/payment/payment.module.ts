@@ -17,10 +17,17 @@ import { NgxDonutChartModule } from 'ngx-doughnut-chart';
 import { ChartsModule } from "ng2-charts";
 import "chartjs-plugin-labels";
 import "chartjs-plugin-annotation";
+// import 'chartjs-plugin-datalabels';
 import { FuseSharedModule } from '@fuse/shared.module';
 import { FuseSidebarModule, FuseCountdownModule, FuseHighlightModule, FuseMaterialColorPickerModule, FuseWidgetModule } from '@fuse/components';
 import { FormsModule } from '@angular/forms';
+import { PaymentsComponent } from './payments/payments.component';
+import { TDSComponent } from './tds/tds.component';
 const routes: Routes = [
+  {
+    path: 'payments',
+    component: PaymentsComponent
+  },
   {
     path: 'accountStatement',
     component: AccountStatementComponent
@@ -28,10 +35,14 @@ const routes: Routes = [
   {
     path: 'payable',
     component: PayableComponent
+  },
+  {
+    path: 'tds',
+    component: TDSComponent
   }
 ];
 @NgModule({
-  declarations: [AccountStatementComponent, PayableComponent],
+  declarations: [AccountStatementComponent, PayableComponent, PaymentsComponent, TDSComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

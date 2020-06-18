@@ -32,6 +32,7 @@ export class LoginComponent implements OnInit {
   children: FuseNavigation[] = [];
   subChildren: FuseNavigation[] = [];
   reportSubChildren: FuseNavigation[] = [];
+  paymentSubChildren: FuseNavigation[] = [];
   private _unsubscribeAll: Subject<any>;
   message = 'Snack Bar opened.';
   actionButtonLabel = 'Retry';
@@ -322,21 +323,21 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.MenuItems.indexOf('Payment') >= 0) {
-      this.children.push(
-        {
-          id: 'payment',
-          title: 'Payment',
-          translate: 'NAV.SAMPLE.TITLE',
-          type: 'item',
-          icon: 'paymentmethodIcon',
-          isSvgIcon: true,
-          // icon: 'dashboard',
-          url: '/pages/payment',
-        }
-      );
-    }
-  
+    // if (this.MenuItems.indexOf('Payment') >= 0) {
+    //   this.children.push(
+    //     {
+    //       id: 'payment',
+    //       title: 'Payment',
+    //       translate: 'NAV.SAMPLE.TITLE',
+    //       type: 'item',
+    //       icon: 'paymentmethodIcon',
+    //       isSvgIcon: true,
+    //       // icon: 'dashboard',
+    //       url: '/pages/payment',
+    //     }
+    //   );
+    // }
+
     if (this.MenuItems.indexOf('PurchaseIndent') >= 0) {
       this.children.push(
         {
@@ -422,7 +423,7 @@ export class LoginComponent implements OnInit {
       );
     }
 
-        if (this.MenuItems.indexOf('DataMigration') >= 0) {
+    if (this.MenuItems.indexOf('DataMigration') >= 0) {
       this.children.push(
         {
           id: 'datamigration',
@@ -494,6 +495,62 @@ export class LoginComponent implements OnInit {
     //     }
     //   );
     // }
+
+    if (this.MenuItems.indexOf('Payments') >= 0) {
+      this.paymentSubChildren.push(
+        {
+          id: 'payments',
+          title: 'Payments',
+          type: 'item',
+          url: '/payment/payments'
+        },
+      );
+    }
+    if (this.MenuItems.indexOf('Payable') >= 0) {
+      this.paymentSubChildren.push(
+        {
+          id: 'payable',
+          title: 'Payable',
+          type: 'item',
+          url: '/payment/payable'
+        },
+      );
+    }
+    if (this.MenuItems.indexOf('AccountStatement') >= 0) {
+      this.paymentSubChildren.push(
+        {
+          id: 'accountStatement',
+          title: 'Account Statement',
+          type: 'item',
+          url: '/payment/accountStatement'
+        }
+      );
+    }
+    if (this.MenuItems.indexOf('TDS') >= 0) {
+      this.paymentSubChildren.push(
+        {
+          id: 'tds',
+          title: 'TDS',
+          type: 'item',
+          url: '/payment/tds'
+        },
+      );
+    }
+    if (this.MenuItems.indexOf('Payments') >= 0 || this.MenuItems.indexOf('Payable') >= 0 ||
+      this.MenuItems.indexOf('AccountStatement') >= 0 || this.MenuItems.indexOf('TDS') >= 0) {
+      this.children.push({
+        id: 'master',
+        title: 'Payment',
+        // translate: 'NAV.DASHBOARDS',
+        type: 'collapsable',
+        icon: 'paymentmethodIcon',
+        isSvgIcon: true,
+        // icon: 'view_list',
+        children: this.paymentSubChildren
+      }
+      );
+    }
+
     if (this.MenuItems.indexOf('App') >= 0) {
       this.subChildren.push(
         {
