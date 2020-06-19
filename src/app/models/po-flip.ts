@@ -1,10 +1,4 @@
-export class CommonClass {
-    IsActive: boolean;
-    CreatedOn: Date;
-    CreatedBy: string;
-    ModifiedOn?: Date;
-    ModifiedBy: string;
-}
+import { CommonClass } from './common';
 export class BPCFLIPHeader extends CommonClass {
     ID: number;
     FLIPID: string;

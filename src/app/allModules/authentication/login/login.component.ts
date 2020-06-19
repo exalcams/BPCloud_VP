@@ -495,15 +495,14 @@ export class LoginComponent implements OnInit {
     //     }
     //   );
     // }
-
-    if (this.MenuItems.indexOf('Payments') >= 0) {
+    if (this.MenuItems.indexOf('AccountStatement') >= 0) {
       this.paymentSubChildren.push(
         {
-          id: 'payments',
-          title: 'Payments',
+          id: 'accountStatement',
+          title: 'Account Statement',
           type: 'item',
-          url: '/payment/payments'
-        },
+          url: '/payment/accountStatement'
+        }
       );
     }
     if (this.MenuItems.indexOf('Payable') >= 0) {
@@ -516,14 +515,14 @@ export class LoginComponent implements OnInit {
         },
       );
     }
-    if (this.MenuItems.indexOf('AccountStatement') >= 0) {
+    if (this.MenuItems.indexOf('Payments') >= 0) {
       this.paymentSubChildren.push(
         {
-          id: 'accountStatement',
-          title: 'Account Statement',
+          id: 'payments',
+          title: 'Payments',
           type: 'item',
-          url: '/payment/accountStatement'
-        }
+          url: '/payment/payments'
+        },
       );
     }
     if (this.MenuItems.indexOf('TDS') >= 0) {

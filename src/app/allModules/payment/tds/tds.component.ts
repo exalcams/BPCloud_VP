@@ -1,6 +1,13 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
-import { MatTableDataSource, MatPaginator, MatMenuTrigger, MatSort } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatMenuTrigger, MatSort, MatSnackBar, MatDialog } from '@angular/material';
+import { AuthenticationDetails } from 'app/models/master';
+import { Guid } from 'guid-typescript';
+import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
+import { Router } from '@angular/router';
+import { BPCPayTDS } from 'app/models/Payment.model';
+import { PaymentService } from 'app/services/payment.service';
+import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 
 @Component({
   selector: 'app-tds',
@@ -10,6 +17,14 @@ import { MatTableDataSource, MatPaginator, MatMenuTrigger, MatSort } from '@angu
   animations: fuseAnimations,
 })
 export class TDSComponent implements OnInit {
+  authenticationDetails: AuthenticationDetails;
+  currentUserID: Guid;
+  currentUserName: string;
+  currentUserRole: string;
+  MenuItems: string[];
+  notificationSnackBarComponent: NotificationSnackBarComponent;
+  IsProgressBarVisibile: boolean;
+  TDSes: BPCPayTDS[] = [];
   tableDisplayedColumns: string[] = [
     'CompanyCode',
     'Document',
@@ -20,55 +35,58 @@ export class TDSComponent implements OnInit {
     'Currency',
     'FinancialYear'
   ];
-  tableDataSource: MatTableDataSource<Test2>;
+  tableDataSource: MatTableDataSource<BPCPayTDS>;
   @ViewChild(MatPaginator) tablePaginator: MatPaginator;
   @ViewChild(MatMenuTrigger) matMenuTrigger: MatMenuTrigger;
   @ViewChild(MatSort) tableSort: MatSort;
 
-  constructor() { }
+  constructor(
+    private _router: Router,
+    public snackBar: MatSnackBar,
+    private dialog: MatDialog,
+    private paymentService: PaymentService,
+  ) {
+    this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
+    this.authenticationDetails = new AuthenticationDetails();
+    this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
+    this.IsProgressBarVisibile = false;
+  }
 
   ngOnInit(): void {
-    this.GetTestData();
+    // Retrive authorizationData
+    const retrievedObject = localStorage.getItem('authorizationData');
+    if (retrievedObject) {
+      this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+      this.currentUserID = this.authenticationDetails.UserID;
+      this.currentUserName = this.authenticationDetails.UserName;
+      this.currentUserRole = this.authenticationDetails.UserRole;
+      this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
+      if (this.MenuItems.indexOf('TDS') < 0) {
+        this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
+        );
+        this._router.navigate(['/auth/login']);
+      }
+
+    } else {
+      this._router.navigate(['/auth/login']);
+    }
+    this.GetTDSByPatnerID();
   }
-  GetTestData(): void {
-    const TestDatas: Test2[] = [
-      {
-        CompanyCode: '#545667', Document: 'Invoice.pdf', PostingDate: new Date(), BaseAmount: 675478,
-        TDSCategory: 'Interest earned', TDSAmount: 6500, Currency: 'INR', FinancialYear: '2020-2021'
+  GetTDSByPatnerID(): void {
+    this.IsProgressBarVisibile = true;
+    this.paymentService.GetTDSByPartnerID(this.currentUserName).subscribe(
+      (data) => {
+        this.TDSes = data as BPCPayTDS[];
+        this.tableDataSource = new MatTableDataSource(this.TDSes);
+        this.tableDataSource.paginator = this.tablePaginator;
+        this.tableDataSource.sort = this.tableSort;
+        this.IsProgressBarVisibile = false;
       },
-      {
-        CompanyCode: '#545667', Document: 'Invoice.pdf', PostingDate: new Date(), BaseAmount: 675478,
-        TDSCategory: 'Interest earned', TDSAmount: 6500, Currency: 'INR', FinancialYear: '2020-2021'
-      },
-      {
-        CompanyCode: '#545667', Document: 'Invoice.pdf', PostingDate: new Date(), BaseAmount: 675478,
-        TDSCategory: 'Interest earned', TDSAmount: 6500, Currency: 'INR', FinancialYear: '2020-2021'
-      },
-      {
-        CompanyCode: '#545667', Document: 'Invoice.pdf', PostingDate: new Date(), BaseAmount: 675478,
-        TDSCategory: 'Interest earned', TDSAmount: 6500, Currency: 'INR', FinancialYear: '2020-2021'
-      },
-      {
-        CompanyCode: '#545667', Document: 'Invoice.pdf', PostingDate: new Date(), BaseAmount: 675478,
-        TDSCategory: 'Interest earned', TDSAmount: 6500, Currency: 'INR', FinancialYear: '2020-2021'
-      },
-      {
-        CompanyCode: '#545667', Document: 'Invoice.pdf', PostingDate: new Date(), BaseAmount: 675478,
-        TDSCategory: 'Interest earned', TDSAmount: 6500, Currency: 'INR', FinancialYear: '2020-2021'
-      },
-    ];
-    this.tableDataSource = new MatTableDataSource(TestDatas);
-    this.tableDataSource.paginator = this.tablePaginator;
-    this.tableDataSource.sort = this.tableSort;
+      (err) => {
+        this.IsProgressBarVisibile = false;
+        console.error(err);
+      }
+    );
   }
 }
-export class Test2 {
-  CompanyCode: string;
-  Document: string;
-  PostingDate: Date;
-  BaseAmount: number;
-  TDSCategory: string;
-  TDSAmount: number;
-  Currency: string;
-  FinancialYear: string;
-}
+

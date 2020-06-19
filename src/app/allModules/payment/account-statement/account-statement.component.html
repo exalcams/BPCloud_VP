@@ -9,7 +9,8 @@
         <span><img src="assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
       </div>
     </div>
-    <div fxFlex fxLayout *ngIf="!isExpanded" [@animate]="{value:'*',params:{x:'100%'}}">
+    <!-- <div fxFlex fxLayout *ngIf="!isExpanded" [@animate]="{value:'*',params:{x:'100%'}}"> -->
+    <div fxFlex fxLayout *ngIf="!isExpanded" @expandCollapse>
       <div class="tile mx-20" fxFlex="25">
         <div fxLayout fxLayoutAlign="start center" class="pt-8">
           <span class="boldClass orangeBorderBottom pl-8 headerMargin"> Opening / Closing Balance</span>
@@ -55,7 +56,7 @@
           <div fxLayout="row" fxLayoutAlign="start center">
             <mat-form-field appearance="outline" fxFlex>
               <mat-icon class="mr-12" matPrefix>search</mat-icon>
-              <input matInput placeholder="Invoice Number" formControlName="InvoiceNumber">
+              <input matInput placeholder="Document" formControlName="DocumentID">
             </mat-form-field>
           </div>
           <div fxLayout="row" fxLayoutAlign="start center" class="mb-12">
@@ -112,34 +113,34 @@
       </div>
 
       <table class="table" mat-table [dataSource]="tableDataSource" matSort>
-        <ng-container matColumnDef="Document">
+        <ng-container matColumnDef="DocumentID">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Document </th>
           <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
             <div fxLayout>
               <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
               <div fxFlex class="pl-8">
-               <span class="pdfLinkClass"> {{element.Document}} </span>
+                <span class="pdfLinkClass"> {{element.DocumentID}} </span>
               </div>
             </div>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="DocumentDate">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> DocumentDate </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Document Date </th>
           <td mat-cell *matCellDef="let element">
             {{element.DocumentDate | date :'dd/MM/yyyy'}} </td>
         </ng-container>
 
         <ng-container matColumnDef="PostingDate">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Posting Date </th>
           <td mat-cell *matCellDef="let element"> {{element.PostingDate | date :'dd/MM/yyyy'}}
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="Reference">
+        <ng-container matColumnDef="RefID">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Reference </th>
           <td mat-cell *matCellDef="let element">
-            {{element.Reference}}
+            {{element.RefID}}
           </td>
         </ng-container>
 
@@ -156,11 +157,11 @@
             {{element.CreditAmount}}
           </td>
         </ng-container>
-        
-        <ng-container matColumnDef="LineItemText">
+
+        <ng-container matColumnDef="ItemText">
           <th mat-header-cell *matHeaderCellDef>Line Item Text </th>
           <td mat-cell *matCellDef="let element;let i= index;">
-            {{element.LineItemText}}
+            {{element.ItemText}}
           </td>
         </ng-container>
 
