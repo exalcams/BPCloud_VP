@@ -30,11 +30,11 @@
                     </div>
                     <div fxLayout="row" fxLayoutAlign="start">
                       <div fxFlex="50" class=" p-4">
-                        Assigned To: <span style="font-weight: bold;font-size: 18px;">{{SupportHeader.Assignto}}</span>
+                        Assigned To: <span style="font-weight: bold;font-size: 18px;">{{SupportHeader.AssignTo}}</span>
                       </div>
                       <div fxFlex="50" class=" p-4">
                         Reason Code: <span
-                          style="font-weight: bold;font-size: 18px;">{{SupportHeader.ReasionCode}}</span>
+                          style="font-weight: bold;font-size: 18px;">{{SupportHeader.ReasonCode}}</span>
                       </div>
                     </div>
                   </div>
@@ -64,7 +64,7 @@
             </div>
 
             <div fxFlex fxLayout="row" fxLayoutGap="5px" class="px-32 mt-12 mb-12"
-              *ngFor="let supportItem of SupportItems;let i=index;let first = first;let last = last">
+              *ngFor="let supportItem of SupportLogs;let i=index;let first = first;let last = last">
 
               <div fxFlex="20" fxLayout="column">
                 <div fxFlex>

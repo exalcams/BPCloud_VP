@@ -11,17 +11,17 @@
     </div>
     <div style="padding: 30px;">
       <form autocomplete="off" class="normal" fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="start" name="form"
-        novalidate [formGroup]="SupportFormGroup">
+        novalidate [formGroup]="SupportTicketFormGroup">
 
         <div fxFlex fxLayout="row" fxLayoutGap="100px">
           <div fxFlex="50">
             <mat-form-field class="pr-12" style="width: 100%;">
               <mat-select placeholder="Reason Select" formControlName="ReasonCode">
-                <mat-option *ngFor="let reason of supportMaster" [value]="reason.ReasionCode">{{reason.ReasionText}}
+                <mat-option *ngFor="let supportMaster of SupportMasters" [value]="supportMaster.ReasonCode">{{supportMaster.ReasonText}}
                 </mat-option>
               </mat-select>
               <mat-error
-                *ngIf="SupportFormGroup.get('ReasonCode').touched && SupportFormGroup.get('ReasonCode').hasError('required')">
+                *ngIf="SupportTicketFormGroup.get('ReasonCode').touched && SupportTicketFormGroup.get('ReasonCode').hasError('required')">
                 Reason is required
               </mat-error>
             </mat-form-field>
@@ -41,9 +41,9 @@
         <div fxFlex fxLayout="row">
           <div fxFlex="50">
             <mat-form-field class="pr-64" style="width: 100%;">
-              <input matInput placeholder="Document Reference No." formControlName="DocumentReferenceNo">
+              <input matInput placeholder="Document Reference No." formControlName="DocumentRefNo">
               <mat-error
-                *ngIf="SupportFormGroup.get('DocumentReferenceNo').touched && SupportFormGroup.get('DocumentReferenceNo').hasError('required')">
+                *ngIf="SupportTicketFormGroup.get('DocumentRefNo').touched && SupportTicketFormGroup.get('DocumentRefNo').hasError('required')">
                 Document Reference No. is required
               </mat-error>
             </mat-form-field>
@@ -58,7 +58,7 @@
                 placeholder="Remark......"></textarea>
             </mat-form-field>
             <mat-error
-              *ngIf="SupportFormGroup.get('Remarks').touched && SupportFormGroup.get('Remarks').hasError('required')">
+              *ngIf="SupportTicketFormGroup.get('Remarks').touched && SupportTicketFormGroup.get('Remarks').hasError('required')">
               Remarks is required
             </mat-error>
           </div>

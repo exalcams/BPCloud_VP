@@ -10,7 +10,7 @@
           <span><img src="../../../../assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
         </div>
       </div>
-      <div fxLayout *ngIf="!supportTickets">
+      <div fxLayout *ngIf="SupportHeaders?.length===0">
         <div fxFlex>
           <div fxFlex="30" style="margin-left: 5%;margin-top: 5%;">
             <div fxLayout="row" fxLayoutAlign="start">
@@ -27,7 +27,7 @@
             </div>
             <div fxLayout="row" fxLayoutAlign="start">
               <div fxLayoutAlign="start" style="margin-top: 10%;">
-                <button mat-button class="Btn1" style="width: 140%;" (click)="CreateTicket()">Connect with Us !
+                <button mat-button class="Btn1" style="width: 140%;" (click)="AddSupportTicketClicked()">Connect with Us !
                 </button>
               </div>
             </div>
@@ -48,26 +48,26 @@
         </div> -->
       </div>
     </div>
-    <div style="padding: 30px;" *ngIf="supportTickets?.length" class="content" fxLayout="column">
+    <div style="padding: 30px;" *ngIf="SupportHeaders?.length" class="content" fxLayout="column">
       <!-- <div fxFlex>
         <span style="font-size: 15px;" class="boldClass orangeBorderBottom pl-8">Raised Tickets</span>
         <h2><strong>Raised Tickets</strong></h2>
         <hr class="rightFlexHr">
       </div> -->
-      <table style="width: 100% !important;" class="table" mat-table [dataSource]="supportDataSource" matSort>
-        <ng-container matColumnDef="ReasionCode">
+      <table style="width: 100% !important;" class="table" mat-table [dataSource]="SupportDataSource" matSort>
+        <ng-container matColumnDef="ReasonCode">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Reason </th>
           <td mat-cell  *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
             <div fxLayout>
               <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
-              <div fxFlex class="pl-4">{{element.ReasionCode}} </div>
+              <div fxFlex class="pl-4">{{element.ReasonCode}} </div>
             </div>
           </td>
         </ng-container>
 
-        <!-- <ng-container matColumnDef="ReasionCode">
+        <!-- <ng-container matColumnDef="ReasonCode">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Reason</th>
-          <td mat-cell style="text-align: right;" *matCellDef="let element"> {{element.ReasionCode}} </td>
+          <td mat-cell style="text-align: right;" *matCellDef="let element"> {{element.ReasonCode}} </td>
         </ng-container> -->
 
         <ng-container matColumnDef="Date">
@@ -89,35 +89,39 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="Assignto">
+        <ng-container matColumnDef="AssignTo">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Assigned To</th>
-          <td mat-cell *matCellDef="let element" > {{element.Assignto}} </td>
+          <td mat-cell *matCellDef="let element" > {{element.AssignTo}} </td>
         </ng-container>
 
-        <!-- <tr mat-header-row *matHeaderRowDef="supportDisplayedColumns;sticky: true"></tr>
-          <tr mat-row *matRowDef="let row; columns: supportDisplayedColumns;let even=even" matRipple
+        <!-- <tr mat-header-row *matHeaderRowDef="SupportDisplayedColumns;sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: SupportDisplayedColumns;let even=even" matRipple
             style=" cursor: pointer;">
           </tr> -->
         <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
-          *matHeaderRowDef="supportDisplayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: supportDisplayedColumns;" (click)="Checked(row)"
-          style=" cursor: pointer;" [class.highlight]="row === selectedPORow"></tr>
+          *matHeaderRowDef="SupportDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: SupportDisplayedColumns;" (click)="OnSupportHeaderRowClicked(row)"
+          style=" cursor: pointer;" [class.highlight]="row === SelectedSupportHeader"></tr>
       </table>
       <!-- <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator> -->
       <!-- <div fxFlex fxLayout="column" class="mx-20 my-12">
         <div fxLayoutAlign="end">
-          <button class="Btn2" mat-fab (click)="CreateTicket()">
+          <button class="Btn2" mat-fab (click)="AddSupportTicketClicked()">
             <mat-icon class="s-16">add</mat-icon>
           </button>
         </div>
       </div> -->
       <div fxLayout>
         <div fxFlex fxLayoutAlign="end">
-          <button class="float-add-button" mat-fab style="background-color: #f6b570" (click)="CreateTicket()">
+          <button class="float-add-button" mat-fab style="background-color: #f6b570" (click)="AddSupportTicketClicked()">
             <mat-icon style="color: white;">add</mat-icon>
           </button>
         </div>
       </div>
+    </div>
+    <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
+    </mat-progress-spinner>
+    <div id="overlay" *ngIf="IsProgressBarVisibile">
     </div>
   </div>
 </div>

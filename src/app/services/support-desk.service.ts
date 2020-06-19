@@ -3,12 +3,13 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { SupportHeader, SupportItem } from 'app/models/Support';
+import { SupportHeader, SupportLog, SupportHeaderView } from 'app/models/support-desk';
+import { UserWithRole } from 'app/models/master';
 
 @Injectable({
     providedIn: 'root'
 })
-export class SupportdeskService {
+export class SupportDeskService {
     baseAddress: string;
     NotificationEvent: Subject<any>;
 
@@ -27,26 +28,32 @@ export class SupportdeskService {
         this.baseAddress = _authService.baseAddress;
         this.NotificationEvent = new Subject();
     }
+
     errorHandler(error: HttpErrorResponse): Observable<string> {
         return throwError(error.error || error.message || 'Server Error');
     }
+
     GetSupportMasters(PartnerID: any): Observable<any | string> {
         return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportMasters?PartnerID=${PartnerID}`)
             .pipe(catchError(this.errorHandler));
     }
+
     GetSupportTickets(PartnerID: any): Observable<any | string> {
         return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportTickets?PartnerID=${PartnerID}`)
             .pipe(catchError(this.errorHandler));
     }
-    GetSupportItems(SupportID: any, PartnerID: any): Observable<any | string> {
-        return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportItems?SupportID=${SupportID}&PartnerID=${PartnerID}`)
+
+    GetSupportLogs(SupportID: any, PartnerID: any): Observable<any | string> {
+        return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportLogs?SupportID=${SupportID}&PartnerID=${PartnerID}`)
             .pipe(catchError(this.errorHandler));
     }
-    GetSupportChartDetails(SupportID: any, PartnerID: any): Observable<any | string> {
-        return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportChartDetails?SupportID=${SupportID}&PartnerID=${PartnerID}`)
+
+    GetSupportDetails(SupportID: any, PartnerID: any): Observable<any | string> {
+        return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportDetails?SupportID=${SupportID}&PartnerID=${PartnerID}`)
             .pipe(catchError(this.errorHandler));
     }
-    AddDocumentCenterAttachment(SupportID: string, CreatedBy: string, selectedFiles: File[]): Observable<any> {
+
+    AddSupportAttachment(SupportID: string, CreatedBy: string, selectedFiles: File[]): Observable<any> {
         const formData: FormData = new FormData();
         if (selectedFiles && selectedFiles.length) {
             selectedFiles.forEach(x => {
@@ -56,7 +63,7 @@ export class SupportdeskService {
         formData.append('SupportID', SupportID);
         formData.append('CreatedBy', CreatedBy.toString());
 
-        return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/AddDocumentCenterAttachment`,
+        return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/AddSupportAttachment`,
             formData,
             // {
             //   headers: new HttpHeaders({
@@ -65,6 +72,7 @@ export class SupportdeskService {
             // }
         ).pipe(catchError(this.errorHandler));
     }
+
     AddInvoiceAttachment(SupportID: string, CreatedBy: string, selectedFile: File): Observable<any> {
         const formData: FormData = new FormData();
         if (selectedFile) {
@@ -83,9 +91,10 @@ export class SupportdeskService {
         ).pipe(catchError(this.errorHandler));
 
     }
-    CreateSupportTicket(supportHeader: SupportHeader): Observable<any> {
+
+    CreateSupportTicket(supportHeader: SupportHeaderView): Observable<any> {
         return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/CreateSupportTicket`,
-        supportHeader,
+            supportHeader,
             {
                 headers: new HttpHeaders({
                     'Content-Type': 'application/json'
@@ -93,6 +102,7 @@ export class SupportdeskService {
             })
             .pipe(catchError(this.errorHandler));
     }
+
     DowloandInvoiceAttachment(AttachmentName: string, SupportID: string): Observable<Blob | string> {
         return this._httpClient.get(`${this.baseAddress}supportapi/SupportDesk/DowloandInvoiceAttachment?AttachmentName=${AttachmentName}&ASNNumber=${SupportID}`, {
             responseType: 'blob',
@@ -100,21 +110,24 @@ export class SupportdeskService {
         })
             .pipe(catchError(this.errorHandler));
     }
-    DowloandDocumentCenterAttachment(AttachmentName: string, SupportID: string): Observable<Blob | string> {
-        return this._httpClient.get(`${this.baseAddress}supportapi/SupportDesk/DowloandDocumentCenterAttachment?AttachmentName=${AttachmentName}&ASNNumber=${SupportID}`, {
+
+    DownloadSupportAttachment(AttachmentName: string, SupportID: string): Observable<Blob | string> {
+        return this._httpClient.get(`${this.baseAddress}supportapi/SupportDesk/DownloadSupportAttachment?AttachmentName=${AttachmentName}&SupportID=${SupportID}`, {
             responseType: 'blob',
             headers: new HttpHeaders().append('Content-Type', 'application/json')
         })
             .pipe(catchError(this.errorHandler));
     }
-    CreateSupportTicketResponse(supportTicketResponse: SupportItem): Observable<any> {
+
+    CreateSupportTicketResponse(supportTicketResponse: SupportLog): Observable<any> {
         return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/CreateSupportItem`,
-          supportTicketResponse,
-          {
-            headers: new HttpHeaders({
-              'Content-Type': 'application/json'
+            supportTicketResponse,
+            {
+                headers: new HttpHeaders({
+                    'Content-Type': 'application/json'
+                })
             })
-          })
-          .pipe(catchError(this.errorHandler));
-      }
+            .pipe(catchError(this.errorHandler));
+    }
+
 }

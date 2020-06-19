@@ -5,8 +5,8 @@ import { fuseAnimations } from '@fuse/animations';
 import { AuthenticationDetails } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { FormBuilder, NgForm, FormGroup, Validators } from '@angular/forms';
-import { SupportdeskService } from 'app/services/supportdesk.service';
-import { SupportChartDetails, SupportHeader, SupportItem, BPCSupportAttachment } from 'app/models/Support';
+import { SupportDeskService } from 'app/services/support-desk.service';
+import { SupportDetails, SupportHeader, SupportLog, BPCSupportAttachment } from 'app/models/support-desk';
 import { MatDialogConfig, MatDialog, MatSnackBar } from '@angular/material';
 import { AttachmentDetails } from 'app/models/task';
 import { AttachmentDialogComponent } from '../attachment-dialog/attachment-dialog.component';
@@ -28,9 +28,9 @@ export class SupportChatComponent implements OnInit {
   currentUserRole: string;
   PartnerID: string;
   SupportID: string;
-  SupportChartDetails: SupportChartDetails = new SupportChartDetails();
+  SupportDetails: SupportDetails = new SupportDetails();
   SupportHeader: SupportHeader = new SupportHeader();
-  SupportItems: SupportItem[] = [];
+  SupportLogs: SupportLog[] = [];
   SupportAttachments: BPCSupportAttachment[] = [];
   IsProgressBarVisibile: boolean;
   fileToUpload: File;
@@ -42,7 +42,7 @@ export class SupportChatComponent implements OnInit {
   notificationSnackBarComponent: NotificationSnackBarComponent;
   constructor(
     private route: ActivatedRoute,
-    public _supportdeskService: SupportdeskService,
+    public _supportDeskService: SupportDeskService,
     private _router: Router,
     public snackBar: MatSnackBar,
     private _dialog: MatDialog,
@@ -73,7 +73,7 @@ export class SupportChatComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.SupportID = params['SupportID'];
     });
-    this.GetSupportChartDetails();
+    this.GetSupportDetails();
     this.InitializeSupportTicketResponseFormGroup();
   }
 
@@ -83,20 +83,17 @@ export class SupportChatComponent implements OnInit {
     });
   }
 
-  GetSupportChartDetails(): void {
+  GetSupportDetails(): void {
     this.IsProgressBarVisibile = true;
-    this._supportdeskService.GetSupportChartDetails(this.SupportID, this.PartnerID).subscribe(
+    this._supportDeskService.GetSupportDetails(this.SupportID, this.PartnerID).subscribe(
       data => {
         if (data) {
-          this.SupportChartDetails = data as SupportChartDetails;
-          this.SupportHeader = this.SupportChartDetails.supportHeader;
+          this.SupportDetails = data as SupportDetails;
+          this.SupportHeader = this.SupportDetails.supportHeader;
           this.Status = this.SupportHeader.Status;
-          this.SupportItems = this.SupportChartDetails.supportItem;
-          this.SupportAttachments = this.SupportChartDetails.supportAttachments;
-          // this.SupportItemAttachments= this.SupportChartDetails.supportItemAttachments;
-          console.log(this.SupportItems);
+          this.SupportLogs = this.SupportDetails.supportLogs;
+          this.SupportAttachments = this.SupportDetails.supportAttachments;
           this.IsProgressBarVisibile = false;
-          // console.log(this.SupportChartDetails);
         }
       },
       err => {
@@ -106,13 +103,13 @@ export class SupportChatComponent implements OnInit {
     );
   }
 
-  GetSupportItems(): void {
+  GetSupportLogs(): void {
     // this.IsProgressBarVisibile = true;
-    this._supportdeskService
-      .GetSupportItems(this.SupportID, this.PartnerID)
+    this._supportDeskService
+      .GetSupportLogs(this.SupportID, this.PartnerID)
       .subscribe((data) => {
         if (data) {
-          this.SupportItems = <SupportItem[]>data;
+          this.SupportLogs = <SupportLog[]>data;
         }
         this.IsProgressBarVisibile = false;
       },
@@ -129,7 +126,7 @@ export class SupportChatComponent implements OnInit {
     }
     else {
       this.IsProgressBarVisibile = true;
-      this._supportdeskService.DowloandInvoiceAttachment(fileName, this.SupportID).subscribe(
+      this._supportDeskService.DowloandInvoiceAttachment(fileName, this.SupportID).subscribe(
         data => {
           if (data) {
             let fileType = 'image/jpg';
@@ -188,11 +185,11 @@ export class SupportChatComponent implements OnInit {
   }
 
   AddCommentClicked(): void {
-    const supportItem = new SupportItem();
+    const supportItem = new SupportLog();
     supportItem.PatnerID = this.PartnerID;
     supportItem.Status = "Open";
     supportItem.CreatedOn = new Date();
-    this.SupportItems.push(supportItem);
+    this.SupportLogs.push(supportItem);
   }
 
   HandleFileInput(evt): void {
@@ -227,16 +224,16 @@ export class SupportChatComponent implements OnInit {
 
   CreateSupportTicketResponse(): void {
     this.IsProgressBarVisibile = true;
-    const supportTicketResponse: SupportItem = new SupportItem();
+    const supportTicketResponse: SupportLog = new SupportLog();
     supportTicketResponse.SupportID = this.SupportID;
     supportTicketResponse.PatnerID = this.PartnerID;
     supportTicketResponse.Remarks = this.SupportTicketResponseFormGroup.get('Comments').value;
     supportTicketResponse.CreatedBy = this.PartnerID;
-    this._supportdeskService.CreateSupportTicketResponse(supportTicketResponse).subscribe(
+    this._supportDeskService.CreateSupportTicketResponse(supportTicketResponse).subscribe(
       () => {
         this.IsProgressBarVisibile = false;
         // this.notificationSnackBarComponent.openSnackBar('Support Ticket Response details updated successfully', SnackBarStatus.success);
-        this.GetSupportItems();
+        this.GetSupportLogs();
         this.ResetForm();
         // this.IsProgressBarVisibile = false;
       },
