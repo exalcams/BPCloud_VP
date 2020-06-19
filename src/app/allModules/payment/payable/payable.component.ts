@@ -1,9 +1,18 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { MatTableDataSource, MatPaginator, MatMenuTrigger, MatSort } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatMenuTrigger, MatSort, MatSnackBar, MatDialog } from '@angular/material';
 import { PO } from 'app/models/Dashboard';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { fuseAnimations } from '@fuse/animations';
 import { ChartType } from 'chart.js';
+import { AuthenticationDetails } from 'app/models/master';
+import { Guid } from 'guid-typescript';
+import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
+import { Router } from '@angular/router';
+import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
+import { BPCPayPayable } from 'app/models/Payment.model';
+import { PaymentService } from 'app/services/payment.service';
+import { DatePipe } from '@angular/common';
+import { ExcelService } from 'app/services/excel.service';
 
 @Component({
   selector: 'app-payable',
@@ -13,14 +22,21 @@ import { ChartType } from 'chart.js';
   animations: fuseAnimations,
 })
 export class PayableComponent implements OnInit {
-
+  authenticationDetails: AuthenticationDetails;
+  currentUserID: Guid;
+  currentUserName: string;
+  currentUserRole: string;
+  MenuItems: string[];
+  notificationSnackBarComponent: NotificationSnackBarComponent;
+  IsProgressBarVisibile: boolean;
+  Payables: BPCPayPayable[] = [];
   SearchFormGroup: FormGroup;
   isDateError: boolean;
   searchText: string;
   SelectValue: string;
   isExpanded: boolean;
   tableDisplayedColumns: string[] = [
-    'Vendor',
+    // 'Vendor',
     'Invoice',
     'InvoiceBooking',
     'InvoiceDate',
@@ -29,7 +45,7 @@ export class PayableComponent implements OnInit {
     'Amount',
     'Balance'
   ];
-  tableDataSource: MatTableDataSource<Test1>;
+  tableDataSource: MatTableDataSource<BPCPayPayable>;
   @ViewChild(MatPaginator) tablePaginator: MatPaginator;
   @ViewChild(MatMenuTrigger) matMenuTrigger: MatMenuTrigger;
   @ViewChild(MatSort) tableSort: MatSort;
@@ -160,7 +176,19 @@ export class PayableComponent implements OnInit {
   public colors: any[] = [{ backgroundColor: ['#716391', '#9ae9d9', '#fbe300', '#f66861'] }];
 
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private _router: Router,
+    public snackBar: MatSnackBar,
+    private dialog: MatDialog,
+    private paymentService: PaymentService,
+    private _datePipe: DatePipe,
+    private _excelService: ExcelService,
+  ) {
+    this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
+    this.authenticationDetails = new AuthenticationDetails();
+    this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
+    this.IsProgressBarVisibile = false;
     this.isDateError = false;
     this.searchText = '';
     this.SelectValue = 'All';
@@ -168,29 +196,59 @@ export class PayableComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Retrive authorizationData
+    const retrievedObject = localStorage.getItem('authorizationData');
+    if (retrievedObject) {
+      this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+      this.currentUserID = this.authenticationDetails.UserID;
+      this.currentUserName = this.authenticationDetails.UserName;
+      this.currentUserRole = this.authenticationDetails.UserRole;
+      this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
+      if (this.MenuItems.indexOf('Payable') < 0) {
+        this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
+        );
+        this._router.navigate(['/auth/login']);
+      }
+    } else {
+      this._router.navigate(['/auth/login']);
+    }
     this.InitializeSearchForm();
-    this.GetTestData();
+    this.GetPayableByPatnerID();
   }
 
   InitializeSearchForm(): void {
     this.SearchFormGroup = this.formBuilder.group({
-      InvoiceNumber: [''],
+      Invoice: [''],
       FromDate: [''],
       ToDate: ['']
     });
   }
-  GetTestData(): void {
-    const TestDatas: Test1[] = [
-      { Vendor: 'ACC Cements', Invoice: '#1234', InvoiceBooking: 'Booking done', InvoiceDate: new Date(), DueDate: new Date(), AdvAmount: 6500, Amount: 96500, Balance: 78000 },
-      { Vendor: 'ACC Cements', Invoice: '#1234', InvoiceBooking: 'Booking done', InvoiceDate: new Date(), DueDate: new Date(), AdvAmount: 6500, Amount: 96500, Balance: 78000 },
-      { Vendor: 'ACC Cements', Invoice: '#1234', InvoiceBooking: 'Booking done', InvoiceDate: new Date(), DueDate: new Date(), AdvAmount: 6500, Amount: 96500, Balance: 78000 },
-      { Vendor: 'ACC Cements', Invoice: '#1234', InvoiceBooking: 'Booking done', InvoiceDate: new Date(), DueDate: new Date(), AdvAmount: 6500, Amount: 96500, Balance: 78000 },
-      { Vendor: 'ACC Cements', Invoice: '#1234', InvoiceBooking: 'Booking done', InvoiceDate: new Date(), DueDate: new Date(), AdvAmount: 6500, Amount: 96500, Balance: 78000 },
-      { Vendor: 'ACC Cements', Invoice: '#1234', InvoiceBooking: 'Booking done', InvoiceDate: new Date(), DueDate: new Date(), AdvAmount: 6500, Amount: 96500, Balance: 78000 },
-    ];
-    this.tableDataSource = new MatTableDataSource(TestDatas);
-    this.tableDataSource.paginator = this.tablePaginator;
-    this.tableDataSource.sort = this.tableSort;
+  ResetControl(): void {
+    this.Payables = [];
+    this.ResetFormGroup(this.SearchFormGroup);
+  }
+  ResetFormGroup(formGroup: FormGroup): void {
+    formGroup.reset();
+    Object.keys(formGroup.controls).forEach(key => {
+      formGroup.get(key).enable();
+      formGroup.get(key).markAsUntouched();
+    });
+  }
+  GetPayableByPatnerID(): void {
+    this.IsProgressBarVisibile = true;
+    this.paymentService.GetPayableByPartnerID(this.currentUserName).subscribe(
+      (data) => {
+        this.Payables = data as BPCPayPayable[];
+        this.tableDataSource = new MatTableDataSource(this.Payables);
+        this.tableDataSource.paginator = this.tablePaginator;
+        this.tableDataSource.sort = this.tableSort;
+        this.IsProgressBarVisibile = false;
+      },
+      (err) => {
+        this.IsProgressBarVisibile = false;
+        console.error(err);
+      }
+    );
   }
   DateSelected(): void {
     const FROMDATEVAL = this.SearchFormGroup.get('FromDate').value as Date;
@@ -202,10 +260,86 @@ export class PayableComponent implements OnInit {
     }
   }
   SearchClicked(): void {
+    if (this.SearchFormGroup.valid) {
+      if (!this.isDateError) {
+        const FrDate = this.SearchFormGroup.get('FromDate').value;
+        let FromDate = '';
+        if (FrDate) {
+          FromDate = this._datePipe.transform(FrDate, 'yyyy-MM-dd');
+        }
+        const TDate = this.SearchFormGroup.get('ToDate').value;
+        let ToDate = '';
+        if (TDate) {
+          ToDate = this._datePipe.transform(TDate, 'yyyy-MM-dd');
+        }
+        const Invoice = this.SearchFormGroup.get('Invoice').value;
+        this.IsProgressBarVisibile = true;
+        this.paymentService.FilterPayableByPartnerID(this.currentUserName, Invoice, FromDate, ToDate).subscribe(
+          (data) => {
+            this.Payables = data as BPCPayPayable[];
+            this.tableDataSource = new MatTableDataSource(this.Payables);
+            this.tableDataSource.paginator = this.tablePaginator;
+            this.tableDataSource.sort = this.tableSort;
+            this.IsProgressBarVisibile = false;
+          },
+          (err) => {
+            console.error(err);
+            this.IsProgressBarVisibile = false;
+          }
+        );
+      }
+    } else {
+      this.ShowValidationErrors(this.SearchFormGroup);
+    }
+  }
+  ShowValidationErrors(formGroup: FormGroup): void {
+    Object.keys(formGroup.controls).forEach(key => {
+      if (!formGroup.get(key).valid) {
+        console.log(key);
+      }
+      formGroup.get(key).markAsTouched();
+      formGroup.get(key).markAsDirty();
+      if (formGroup.get(key) instanceof FormArray) {
+        const FormArrayControls = formGroup.get(key) as FormArray;
+        Object.keys(FormArrayControls.controls).forEach(key1 => {
+          if (FormArrayControls.get(key1) instanceof FormGroup) {
+            const FormGroupControls = FormArrayControls.get(key1) as FormGroup;
+            Object.keys(FormGroupControls.controls).forEach(key2 => {
+              FormGroupControls.get(key2).markAsTouched();
+              FormGroupControls.get(key2).markAsDirty();
+              if (!FormGroupControls.get(key2).valid) {
+                console.log(key2);
+              }
+            });
+          } else {
+            FormArrayControls.get(key1).markAsTouched();
+            FormArrayControls.get(key1).markAsDirty();
+          }
+        });
+      }
+    });
 
   }
   exportAsXLSX(): void {
-
+    const currentPageIndex = this.tableDataSource.paginator.pageIndex;
+    const PageSize = this.tableDataSource.paginator.pageSize;
+    const startIndex = currentPageIndex * PageSize;
+    const endIndex = startIndex + PageSize;
+    const itemsShowed = this.Payables.slice(startIndex, endIndex);
+    const itemsShowedd = [];
+    itemsShowed.forEach(x => {
+      const item = {
+        'Invoice': x.Invoice,
+        'Invoice Booking': x.InvoiceBooking,
+        'Invoice Date': x.InvoiceDate ? this._datePipe.transform(x.InvoiceDate, 'dd-MM-yyyy') : '',
+        'Due Date': x.DueDate,
+        'Adv Amount': x.AdvAmount,
+        'Amount': x.Amount,
+        'Balance': x.Balance,
+      };
+      itemsShowedd.push(item);
+    });
+    this._excelService.exportAsExcelFile(itemsShowedd, 'payable');
   }
   expandClicked(): void {
     this.isExpanded = !this.isExpanded;

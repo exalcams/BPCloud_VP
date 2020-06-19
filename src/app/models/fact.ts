@@ -1,11 +1,4 @@
-export class CommonClass {
-    IsActive: boolean;
-    CreatedOn: Date;
-    CreatedBy: string;
-    ModifiedOn?: Date;
-    ModifiedBy: string;
-}
-
+import { CommonClass } from './common';
 export class BPCFact extends CommonClass {
     ID: number;
     Client: string;

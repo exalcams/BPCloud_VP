@@ -1,11 +1,4 @@
-export class CommonClass {
-    IsActive: boolean;
-    CreatedOn: Date;
-    CreatedBy: string;
-    ModifiedOn: Date | string | null;
-    ModifiedBy: string;
-}
-
+import { CommonClass } from './common';
 export class BPCASNHeader extends CommonClass {
     ID: number;
     Client: string;

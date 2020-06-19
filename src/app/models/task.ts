@@ -1,12 +1,6 @@
 import { Guid } from 'guid-typescript';
 
-export class CommonClass {
-    IsActive: boolean;
-    CreatedOn: Date;
-    CreatedBy: string;
-    ModifiedOn?: Date;
-    ModifiedBy: string;
-}
+import { CommonClass } from './common';
 
 export class Task extends CommonClass {
     TaskID: number;
