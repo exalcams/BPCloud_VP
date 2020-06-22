@@ -119,15 +119,46 @@ export class SupportDeskService {
             .pipe(catchError(this.errorHandler));
     }
 
-    CreateSupportTicketResponse(supportTicketResponse: SupportLog): Observable<any> {
-        return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/CreateSupportItem`,
-            supportTicketResponse,
+    CreateSupportLog(supportLog: SupportLog): Observable<any> {
+        return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/CreateSupportLog`,
+            supportLog,
             {
                 headers: new HttpHeaders({
                     'Content-Type': 'application/json'
                 })
             })
             .pipe(catchError(this.errorHandler));
+    }
+
+    UpdateSupportLog(supportLog: SupportLog): Observable<any> {
+        return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/UpdateSupportLog`,
+            supportLog,
+            {
+                headers: new HttpHeaders({
+                    'Content-Type': 'application/json'
+                })
+            })
+            .pipe(catchError(this.errorHandler));
+    }
+
+    AddSupportLogAttachment(SupportID: string, CreatedBy: string, selectedFiles: File[]): Observable<any> {
+        const formData: FormData = new FormData();
+        if (selectedFiles && selectedFiles.length) {
+            selectedFiles.forEach(x => {
+                formData.append(x.name, x, x.name);
+            });
+        }
+        formData.append('SupportID', SupportID);
+        formData.append('CreatedBy', CreatedBy.toString());
+
+        return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/AddSupportAttachment`,
+            formData,
+            // {
+            //   headers: new HttpHeaders({
+            //     'Content-Type': 'application/json'
+            //   })
+            // }
+        ).pipe(catchError(this.errorHandler));
     }
 
 }

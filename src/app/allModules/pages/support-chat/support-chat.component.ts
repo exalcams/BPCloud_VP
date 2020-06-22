@@ -31,12 +31,13 @@ export class SupportChatComponent implements OnInit {
   SupportDetails: SupportDetails = new SupportDetails();
   SupportHeader: SupportHeader = new SupportHeader();
   SupportLogs: SupportLog[] = [];
+  SupportLog: SupportLog;
   SupportAttachments: BPCSupportAttachment[] = [];
   IsProgressBarVisibile: boolean;
   fileToUpload: File;
   fileToUploadList: File[] = [];
   dialog: any;
-  SupportTicketResponseFormGroup: FormGroup;
+  SupportLogFormGroup: FormGroup;
   Status: string;
   TicketResolved: boolean;
   notificationSnackBarComponent: NotificationSnackBarComponent;
@@ -49,6 +50,8 @@ export class SupportChatComponent implements OnInit {
     private _formBuilder: FormBuilder
   ) {
     this.TicketResolved = false;
+    this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
+    this.SupportLog = new SupportLog();
   }
 
   ngOnInit(): void {
@@ -74,13 +77,27 @@ export class SupportChatComponent implements OnInit {
       this.SupportID = params['SupportID'];
     });
     this.GetSupportDetails();
-    this.InitializeSupportTicketResponseFormGroup();
+    this.InitializeSupportLogFormGroup();
   }
 
-  InitializeSupportTicketResponseFormGroup(): void {
-    this.SupportTicketResponseFormGroup = this._formBuilder.group({
+  InitializeSupportLogFormGroup(): void {
+    this.SupportLogFormGroup = this._formBuilder.group({
       Comments: ['', Validators.required],
     });
+  }
+
+  ClearSupportLogForm(): void {
+    this.SupportLogFormGroup.reset();
+    Object.keys(this.SupportLogFormGroup.controls).forEach(key => {
+      this.SupportLogFormGroup.get(key).markAsUntouched();
+    });
+  }
+
+  ResetControl(): void {
+    this.fileToUpload = null;
+    this.fileToUploadList = [];
+    this.ClearSupportLogForm();
+    this.SupportLog = null;
   }
 
   GetSupportDetails(): void {
@@ -119,14 +136,14 @@ export class SupportChatComponent implements OnInit {
         });
   }
 
-  GetInvoiceAttachment(fileName: string, file?: File): void {
+  GetSupportAttachment(fileName: string, file?: File): void {
     if (file && file.size) {
       const blob = new Blob([file], { type: file.type });
       this.OpenAttachmentDialog(fileName, blob);
     }
     else {
       this.IsProgressBarVisibile = true;
-      this._supportDeskService.DowloandInvoiceAttachment(fileName, this.SupportID).subscribe(
+      this._supportDeskService.DownloadSupportAttachment(fileName, this.SupportID).subscribe(
         data => {
           if (data) {
             let fileType = 'image/jpg';
@@ -148,6 +165,126 @@ export class SupportChatComponent implements OnInit {
     }
   }
 
+  SendResponseClicked(): void {
+    if (this.SupportLogFormGroup.valid) {
+      const Actiontype = 'Reply';
+      const Catagory = 'Support Ticket';
+      this.OpenConfirmationDialog(Actiontype, Catagory);
+    } else {
+      this.ShowFormValidationErrors(this.SupportLogFormGroup);
+    }
+  }
+
+  MarkAsResolvedClicked(): void {
+    if (this.SupportLogFormGroup.valid) {
+      const Actiontype = 'Mark As Resolved';
+      const Catagory = 'Support Ticket';
+      this.OpenConfirmationDialog(Actiontype, Catagory);
+    } else {
+      this.ShowFormValidationErrors(this.SupportLogFormGroup);
+    }
+  }
+
+  AddCommentClicked(): void {
+    const supportLog = new SupportLog();
+    supportLog.PatnerID = this.PartnerID;
+    supportLog.Status = "Open";
+    supportLog.CreatedOn = new Date();
+    this.SupportLogs.push(supportLog);
+  }
+
+  OnFileClicked(evt): void {
+    if (evt.target.files && evt.target.files.length > 0) {
+      this.fileToUpload = evt.target.files[0];
+      this.fileToUploadList.push(this.fileToUpload);
+      console.log(this.fileToUploadList);
+    }
+  }
+
+  GetSupportLog(): void {
+    this.SupportLog.SupportID = this.SupportID;
+    this.SupportLog.PatnerID = this.PartnerID;
+    this.SupportLog.Remarks = this.SupportLogFormGroup.get('Comments').value;
+    this.SupportLog.CreatedBy = this.PartnerID;
+  }
+
+  CreateSupportLog(): void {
+    this.IsProgressBarVisibile = true;
+    this.GetSupportLog();
+    this._supportDeskService.CreateSupportLog(this.SupportLog).subscribe(
+      (data) => {
+        this.SupportLog = (data as SupportLog);
+        if (this.fileToUploadList && this.fileToUploadList.length) {
+          this.AddSupportLogAttachment();
+        } else {
+          this.ResetControl();
+          this.notificationSnackBarComponent.openSnackBar(`Support Log created successfully`, SnackBarStatus.success);
+          this.IsProgressBarVisibile = false;
+          this.GetSupportLogs();
+        }
+      },
+      (err) => {
+        this.ShowErrorNotificationSnackBar(err);
+      }
+    );
+  }
+
+  UpdateSupportLog(): void {
+    this.IsProgressBarVisibile = true;
+    this.GetSupportLog();
+    this._supportDeskService.UpdateSupportLog(this.SupportLog).subscribe(
+      (data) => {
+        this.SupportLog = (data as SupportLog);
+        if (this.fileToUploadList && this.fileToUploadList.length) {
+          this.AddSupportLogAttachment();
+        } else {
+          this.ResetControl();
+          this.notificationSnackBarComponent.openSnackBar(`Support Log updated successfully`, SnackBarStatus.success);
+          this.IsProgressBarVisibile = false;
+          this.GetSupportLogs();
+        }
+      },
+      (err) => {
+        this.ShowErrorNotificationSnackBar(err);
+      }
+    );
+  }
+
+  AddSupportLogAttachment(): void {
+    this._supportDeskService.AddSupportLogAttachment(this.SupportLog.ID.toString(), this.currentUserID.toString(), this.fileToUploadList).subscribe(
+      (dat) => {
+        this.notificationSnackBarComponent.openSnackBar('Support Log created successfully', SnackBarStatus.success);
+        this.IsProgressBarVisibile = false;
+        this.ResetControl();
+      },
+      (err) => {
+        this.ShowErrorNotificationSnackBar(err);
+      }
+    );
+  }
+
+  OpenConfirmationDialog(Actiontype: string, Catagory: string): void {
+    const dialogConfig: MatDialogConfig = {
+      data: {
+        Actiontype: Actiontype,
+        Catagory: Catagory
+      },
+      panelClass: 'confirmation-dialog'
+    };
+    const dialogRef = this._dialog.open(NotificationDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      result => {
+        if (result) {
+          if (Actiontype === 'Reply') {
+            this.CreateSupportLog();
+          }
+          else if (Actiontype === 'Mark As Resolved') {
+            this.UpdateSupportLog();
+          }
+        }
+      });
+  }
+
   OpenAttachmentDialog(FileName: string, blob: Blob): void {
     const attachmentDetails: AttachmentDetails = {
       FileName: FileName,
@@ -164,99 +301,7 @@ export class SupportChatComponent implements OnInit {
     });
   }
 
-  SendResponseClicked(): void {
-    if (this.SupportTicketResponseFormGroup.valid) {
-      const Actiontype = 'Reply';
-      const Catagory = 'Support Ticket';
-      this.OpenConfirmationDialog(Actiontype, Catagory);
-    } else {
-      this.ShowValidationErrors(this.SupportTicketResponseFormGroup);
-    }
-  }
-
-  MarkAsResolvedClicked(): void {
-    if (this.SupportTicketResponseFormGroup.valid) {
-      const Actiontype = 'Reply';
-      const Catagory = 'Support Ticket';
-      this.OpenConfirmationDialog(Actiontype, Catagory);
-    } else {
-      this.ShowValidationErrors(this.SupportTicketResponseFormGroup);
-    }
-  }
-
-  AddCommentClicked(): void {
-    const supportItem = new SupportLog();
-    supportItem.PatnerID = this.PartnerID;
-    supportItem.Status = "Open";
-    supportItem.CreatedOn = new Date();
-    this.SupportLogs.push(supportItem);
-  }
-
-  HandleFileInput(evt): void {
-    if (evt.target.files && evt.target.files.length > 0) {
-      this.fileToUpload = evt.target.files[0];
-      this.fileToUploadList.push(this.fileToUpload);
-      console.log(this.fileToUploadList);
-    }
-  }
-
-  OpenConfirmationDialog(Actiontype: string, Catagory: string): void {
-    const dialogConfig: MatDialogConfig = {
-      data: {
-        Actiontype: Actiontype,
-        Catagory: Catagory
-      },
-      panelClass: 'confirmation-dialog'
-    };
-    const dialogRef = this._dialog.open(NotificationDialogComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe(
-      result => {
-        if (result) {
-          if (Actiontype === 'Reply') {
-            this.CreateSupportTicketResponse();
-          }
-          // else if (Actiontype === 'Create') {
-          //   this.CreateSupportTicket();
-          // }
-        }
-      });
-  }
-
-  CreateSupportTicketResponse(): void {
-    this.IsProgressBarVisibile = true;
-    const supportTicketResponse: SupportLog = new SupportLog();
-    supportTicketResponse.SupportID = this.SupportID;
-    supportTicketResponse.PatnerID = this.PartnerID;
-    supportTicketResponse.Remarks = this.SupportTicketResponseFormGroup.get('Comments').value;
-    supportTicketResponse.CreatedBy = this.PartnerID;
-    this._supportDeskService.CreateSupportTicketResponse(supportTicketResponse).subscribe(
-      () => {
-        this.IsProgressBarVisibile = false;
-        // this.notificationSnackBarComponent.openSnackBar('Support Ticket Response details updated successfully', SnackBarStatus.success);
-        this.GetSupportLogs();
-        this.ResetForm();
-        // this.IsProgressBarVisibile = false;
-      },
-      (err) => {
-        console.error(err);
-        this.IsProgressBarVisibile = false;
-        // this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-      }
-    );
-  }
-
-  ResetForm(): void {
-    this.ResetSupportTicketResponseForm();
-  }
-
-  ResetSupportTicketResponseForm(): void {
-    this.SupportTicketResponseFormGroup.reset();
-    Object.keys(this.SupportTicketResponseFormGroup.controls).forEach(key => {
-      this.SupportTicketResponseFormGroup.get(key).markAsUntouched();
-    });
-  }
-
-  ShowValidationErrors(formGroup: FormGroup): void {
+  ShowFormValidationErrors(formGroup: FormGroup): void {
     Object.keys(formGroup.controls).forEach(key => {
       if (!formGroup.get(key).valid) {
         console.log(key);
@@ -264,6 +309,12 @@ export class SupportChatComponent implements OnInit {
       formGroup.get(key).markAsTouched();
       formGroup.get(key).markAsDirty();
     });
+  }
+
+  ShowErrorNotificationSnackBar(err: any): void {
+    console.error(err);
+    this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+    this.IsProgressBarVisibile = false;
   }
 
   getStatusColor(StatusFor: string): string {
