@@ -116,7 +116,7 @@ export class SupportDeskComponent implements OnInit {
   }
 
   AddSupportTicketClicked(): void {
-    this._router.navigate(['/pages/createTicket']);
+    this._router.navigate(['/pages/supportticket']);
   }
 
   OnSupportHeaderRowClicked(row: any): void {

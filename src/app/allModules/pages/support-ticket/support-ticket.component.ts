@@ -204,22 +204,6 @@ export class SupportTicketComponent implements OnInit {
     );
   }
 
-  AddInvoiceAttachment(): void {
-
-    this._supportDeskService.AddInvoiceAttachment(this.SupportHeader.SupportID, this.currentUserID.toString(), this.invoiceAttachment).subscribe(
-      (dat) => {
-        if (this.fileToUploadList && this.fileToUploadList.length) {
-          this.AddSupportAttachment();
-        } else {
-          // this.notificationSnackBarComponent.openSnackBar(`ASN ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
-          this.IsProgressBarVisibile = false;
-        }
-      },
-      (err) => {
-        this.ShowErrorNotificationSnackBar(err);
-      });
-  }
-
   AddSupportAttachment(): void {
     this._supportDeskService.AddSupportAttachment(this.SupportHeader.SupportID, this.currentUserID.toString(), this.fileToUploadList).subscribe(
       (dat) => {
@@ -302,39 +286,5 @@ export class SupportTicketComponent implements OnInit {
     });
   }
 
-  handleFileInput1(evt): void {
-    if (evt.target.files && evt.target.files.length > 0) {
-      // if (this.invoiceAttachment && this.invoiceAttachment.name) {
-      //   this.notificationSnackBarComponent.openSnackBar('Maximum one attachment is allowed, old is attachment is replaced', SnackBarStatus.warning);
-      // }
-      // if (this.invAttach && this.invAttach.AttachmentName) {
-      //   this.notificationSnackBarComponent.openSnackBar('Maximum one attachment is allowed, old is attachment is replaced', SnackBarStatus.warning);
-      // }
-      this.invoiceAttachment = evt.target.files[0];
-      this.fileToUploadList.push(this.invoiceAttachment);
-      // this.invAttach = new BPCInvoiceAttachment();
-    }
-    // if (evt.target.files && evt.target.files.length > 0) {
-    //   this.fileToUpload = evt.target.files[0];
-    //   this.fileToUploadList.push(this.fileToUpload);
-    // }
-  }
 
-  // handleFileInput(evt): void {
-  //   if (evt.target.files && evt.target.files.length > 0) {
-  //     const fil = evt.target.files[0] as File;
-  //     if (fil.type.includes(this.selectedDocCenterMaster.Extension)) {
-  //       const fileSize = this.math.round(fil.size / 1024);
-  //       if (fileSize <= this.selectedDocCenterMaster.SizeInKB) {
-  //         this.fileToUpload = fil;
-  //         // this.fileToUploadList.push(this.fileToUpload);
-  //         // this.DocumentCenterFormGroup.get('Filename').patchValue(this.fileToUpload.name);
-  //       } else {
-  //         this.notificationSnackBarComponent.openSnackBar(`Maximum allowed file size is ${this.selectedDocCenterMaster.SizeInKB} KB only`, SnackBarStatus.danger);
-  //       }
-  //     } else {
-  //       this.notificationSnackBarComponent.openSnackBar(`Please select only ${this.selectedDocCenterMaster.Extension} file`, SnackBarStatus.danger);
-  //     }
-  //   }
-  // }
 }
