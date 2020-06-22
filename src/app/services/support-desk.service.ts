@@ -33,18 +33,10 @@ export class SupportDeskService {
         return throwError(error.error || error.message || 'Server Error');
     }
 
+    // Support Masters
+    
     GetSupportMasters(PartnerID: any): Observable<any | string> {
         return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportMasters?PartnerID=${PartnerID}`)
-            .pipe(catchError(this.errorHandler));
-    }
-
-    GetSupportTickets(PartnerID: any): Observable<any | string> {
-        return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportTickets?PartnerID=${PartnerID}`)
-            .pipe(catchError(this.errorHandler));
-    }
-
-    GetSupportLogs(SupportID: any, PartnerID: any): Observable<any | string> {
-        return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportLogs?SupportID=${SupportID}&PartnerID=${PartnerID}`)
             .pipe(catchError(this.errorHandler));
     }
 
@@ -52,6 +44,55 @@ export class SupportDeskService {
         return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportDetails?SupportID=${SupportID}&PartnerID=${PartnerID}`)
             .pipe(catchError(this.errorHandler));
     }
+
+    // Support Tickets
+
+    GetSupportTickets(PartnerID: any): Observable<any | string> {
+        return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportTickets?PartnerID=${PartnerID}`)
+            .pipe(catchError(this.errorHandler));
+    }
+
+    CreateSupportTicket(supportHeader: SupportHeaderView): Observable<any> {
+        return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/CreateSupportTicket`,
+            supportHeader,
+            {
+                headers: new HttpHeaders({
+                    'Content-Type': 'application/json'
+                })
+            })
+            .pipe(catchError(this.errorHandler));
+    }
+
+    // Support Logs
+
+    GetSupportLogs(SupportID: any, PartnerID: any): Observable<any | string> {
+        return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportLogs?SupportID=${SupportID}&PartnerID=${PartnerID}`)
+            .pipe(catchError(this.errorHandler));
+    }
+
+    CreateSupportLog(supportLog: SupportLog): Observable<any> {
+        return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/CreateSupportLog`,
+            supportLog,
+            {
+                headers: new HttpHeaders({
+                    'Content-Type': 'application/json'
+                })
+            })
+            .pipe(catchError(this.errorHandler));
+    }
+
+    UpdateSupportLog(supportLog: SupportLog): Observable<any> {
+        return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/UpdateSupportLog`,
+            supportLog,
+            {
+                headers: new HttpHeaders({
+                    'Content-Type': 'application/json'
+                })
+            })
+            .pipe(catchError(this.errorHandler));
+    }
+
+    // Support Attachments
 
     AddSupportAttachment(SupportID: string, CreatedBy: string, selectedFiles: File[]): Observable<any> {
         const formData: FormData = new FormData();
@@ -73,15 +114,17 @@ export class SupportDeskService {
         ).pipe(catchError(this.errorHandler));
     }
 
-    AddInvoiceAttachment(SupportID: string, CreatedBy: string, selectedFile: File): Observable<any> {
+    AddSupportLogAttachment(SupportID: string, CreatedBy: string, selectedFiles: File[]): Observable<any> {
         const formData: FormData = new FormData();
-        if (selectedFile) {
-            formData.append(selectedFile.name, selectedFile, selectedFile.name);
+        if (selectedFiles && selectedFiles.length) {
+            selectedFiles.forEach(x => {
+                formData.append(x.name, x, x.name);
+            });
         }
         formData.append('SupportID', SupportID);
         formData.append('CreatedBy', CreatedBy.toString());
 
-        return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/AddInvoiceAttachment`,
+        return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/AddSupportAttachment`,
             formData,
             // {
             //   headers: new HttpHeaders({
@@ -89,26 +132,6 @@ export class SupportDeskService {
             //   })
             // }
         ).pipe(catchError(this.errorHandler));
-
-    }
-
-    CreateSupportTicket(supportHeader: SupportHeaderView): Observable<any> {
-        return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/CreateSupportTicket`,
-            supportHeader,
-            {
-                headers: new HttpHeaders({
-                    'Content-Type': 'application/json'
-                })
-            })
-            .pipe(catchError(this.errorHandler));
-    }
-
-    DowloandInvoiceAttachment(AttachmentName: string, SupportID: string): Observable<Blob | string> {
-        return this._httpClient.get(`${this.baseAddress}supportapi/SupportDesk/DowloandInvoiceAttachment?AttachmentName=${AttachmentName}&ASNNumber=${SupportID}`, {
-            responseType: 'blob',
-            headers: new HttpHeaders().append('Content-Type', 'application/json')
-        })
-            .pipe(catchError(this.errorHandler));
     }
 
     DownloadSupportAttachment(AttachmentName: string, SupportID: string): Observable<Blob | string> {
@@ -116,17 +139,6 @@ export class SupportDeskService {
             responseType: 'blob',
             headers: new HttpHeaders().append('Content-Type', 'application/json')
         })
-            .pipe(catchError(this.errorHandler));
-    }
-
-    CreateSupportTicketResponse(supportTicketResponse: SupportLog): Observable<any> {
-        return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/CreateSupportItem`,
-            supportTicketResponse,
-            {
-                headers: new HttpHeaders({
-                    'Content-Type': 'application/json'
-                })
-            })
             .pipe(catchError(this.errorHandler));
     }
 

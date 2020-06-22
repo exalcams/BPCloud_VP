@@ -102,7 +102,7 @@ const routes = [
         component: SupportDeskComponent,
     },
     {
-        path: "createTicket",
+        path: "supportticket",
         component: SupportTicketComponent,
     },
     {

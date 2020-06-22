@@ -37,6 +37,7 @@ export class SupportDeskComponent implements OnInit {
   @ViewChild(MatPaginator) SupportPaginator: MatPaginator;
   @ViewChild(MatSort) SupportSort: MatSort;
   AllSupportMasters: SupportMaster[] = [];
+  IsSupportHeader: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -45,6 +46,7 @@ export class SupportDeskComponent implements OnInit {
     private formBuilder: FormBuilder,
   ) {
     this.PartnerID = '';
+    this.IsSupportHeader = false;
   }
 
   ngOnInit(): void {
@@ -64,6 +66,7 @@ export class SupportDeskComponent implements OnInit {
       this._router.navigate(['/auth/login']);
     }
     this.GetAllSupportMasters();
+
     this.GetAllSupportTickets();
   }
 
@@ -74,10 +77,12 @@ export class SupportDeskComponent implements OnInit {
       .subscribe((data) => {
         if (data) {
           this.SupportHeaders = <SupportHeader[]>data;
+          if (this.SupportHeaders && this.SupportHeaders.length === 0) {
+            this.IsSupportHeader = true;
+          }
           this.SupportHeaders.forEach(element => {
             element.Reason = this.GetReasonByReasonCode(element.ReasonCode);
           });
-          console.log(this.SupportHeaders);
           this.SupportDataSource = new MatTableDataSource(this.SupportHeaders);
           this.SupportDataSource.paginator = this.SupportPaginator;
           this.SupportDataSource.sort = this.SupportSort;
@@ -97,7 +102,6 @@ export class SupportDeskComponent implements OnInit {
       .subscribe((data) => {
         if (data) {
           this.AllSupportMasters = <SupportMaster[]>data;
-          console.log(this.AllSupportMasters);
         }
         this.IsProgressBarVisibile = false;
       },
@@ -116,7 +120,7 @@ export class SupportDeskComponent implements OnInit {
   }
 
   AddSupportTicketClicked(): void {
-    this._router.navigate(['/pages/createTicket']);
+    this._router.navigate(['/pages/supportticket']);
   }
 
   OnSupportHeaderRowClicked(row: any): void {
