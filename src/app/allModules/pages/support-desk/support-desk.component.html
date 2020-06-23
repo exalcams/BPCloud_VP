@@ -114,7 +114,7 @@
       </div> -->
       <div fxLayout>
         <div fxFlex fxLayoutAlign="end">
-          <button *ngIf="SupportHeaders?.PatnerID===this.authenticationDetails.UserName" class="float-add-button"
+          <button *ngIf="SupportHeaders[0]?.PatnerID===this.authenticationDetails.UserName" class="float-add-button"
             mat-fab style="background-color: #f6b570" (click)="AddSupportTicketClicked()">
             <mat-icon style="color: white;">add</mat-icon>
           </button>
