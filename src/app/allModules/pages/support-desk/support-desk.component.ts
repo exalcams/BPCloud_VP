@@ -28,7 +28,7 @@ export class SupportDeskComponent implements OnInit {
   SupportHeaders: SupportHeader[] = [];
   SelectedSupportHeader: SupportHeader = new SupportHeader();
   SupportDisplayedColumns: string[] = [
-    'ReasonCode',
+    'Reason',
     'Date',
     'Status',
     'AssignTo',
@@ -80,9 +80,6 @@ export class SupportDeskComponent implements OnInit {
           if (this.SupportHeaders && this.SupportHeaders.length === 0) {
             this.IsSupportHeader = true;
           }
-          this.SupportHeaders.forEach(element => {
-            element.Reason = this.GetReasonByReasonCode(element.ReasonCode);
-          });
           this.SupportDataSource = new MatTableDataSource(this.SupportHeaders);
           this.SupportDataSource.paginator = this.SupportPaginator;
           this.SupportDataSource.sort = this.SupportSort;
@@ -109,14 +106,6 @@ export class SupportDeskComponent implements OnInit {
           console.error(err);
           this.IsProgressBarVisibile = false;
         });
-  }
-
-  GetReasonByReasonCode(reasonCode: string): any {
-    this.AllSupportMasters.forEach(element => {
-      if (element.ReasonCode.toLowerCase() === reasonCode.toLowerCase()) {
-        return element.ReasonText.toString();
-      }
-    });
   }
 
   AddSupportTicketClicked(): void {
