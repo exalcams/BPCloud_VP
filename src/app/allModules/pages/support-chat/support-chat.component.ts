@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DashboardService } from 'app/services/dashboard.service';
 import { fuseAnimations } from '@fuse/animations';
-import { AuthenticationDetails } from 'app/models/master';
+import { AuthenticationDetails, UserWithRole } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { FormBuilder, NgForm, FormGroup, Validators } from '@angular/forms';
 import { SupportDeskService } from 'app/services/support-desk.service';
@@ -13,6 +13,7 @@ import { AttachmentDialogComponent } from '../attachment-dialog/attachment-dialo
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
+import { MasterService } from 'app/services/master.service';
 
 @Component({
   selector: 'app-support-chat',
@@ -26,12 +27,14 @@ export class SupportChatComponent implements OnInit {
   authenticationDetails: AuthenticationDetails;
   currentUserID: Guid;
   currentUserRole: string;
+  Users: UserWithRole[] = [];
   PartnerID: string;
   SupportID: string;
   SupportDetails: SupportDetails = new SupportDetails();
   SupportHeader: SupportHeader = new SupportHeader();
   SupportLogs: SupportLog[] = [];
   SupportLog: SupportLog;
+  SupportLogView: SupportLog;
   SupportAttachments: BPCSupportAttachment[] = [];
   IsProgressBarVisibile: boolean;
   fileToUpload: File;
@@ -44,6 +47,7 @@ export class SupportChatComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     public _supportDeskService: SupportDeskService,
+    private _masterService: MasterService,
     private _router: Router,
     public snackBar: MatSnackBar,
     private _dialog: MatDialog,
@@ -52,6 +56,7 @@ export class SupportChatComponent implements OnInit {
     this.TicketResolved = false;
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.SupportLog = new SupportLog();
+    this.SupportLogView = new SupportLog();
   }
 
   ngOnInit(): void {
@@ -76,6 +81,7 @@ export class SupportChatComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.SupportID = params['SupportID'];
     });
+    this.GetUsers();
     this.GetSupportDetails();
     this.InitializeSupportLogFormGroup();
   }
@@ -98,6 +104,7 @@ export class SupportChatComponent implements OnInit {
     this.fileToUploadList = [];
     this.ClearSupportLogForm();
     this.SupportLog = null;
+    this.SupportLogView = null;
   }
 
   GetSupportDetails(): void {
@@ -165,6 +172,21 @@ export class SupportChatComponent implements OnInit {
     }
   }
 
+  GetUsers(): void {
+    this.IsProgressBarVisibile = true;
+    this._masterService.GetAllUsers().subscribe(
+      (data) => {
+        this.IsProgressBarVisibile = false;
+        this.Users = <UserWithRole[]>data;
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+      }
+    );
+  }
+
   SendResponseClicked(): void {
     if (this.SupportLogFormGroup.valid) {
       const Actiontype = 'Reply';
@@ -203,16 +225,19 @@ export class SupportChatComponent implements OnInit {
   }
 
   GetSupportLog(): void {
-    this.SupportLog.SupportID = this.SupportID;
-    this.SupportLog.PatnerID = this.PartnerID;
-    this.SupportLog.Remarks = this.SupportLogFormGroup.get('Comments').value;
-    this.SupportLog.CreatedBy = this.PartnerID;
+    this.SupportLog.SupportID = this.SupportLogView.SupportID = this.SupportID;
+    this.SupportLog.PatnerID = this.SupportLogView.PatnerID = this.PartnerID;
+    this.SupportLog.Remarks = this.SupportLogView.Remarks = this.SupportLogFormGroup.get('Comments').value;
+    this.SupportLog.CreatedBy = this.SupportLogView.CreatedBy = this.PartnerID;
+    let user = new UserWithRole();
+    user = this.Users.find(x => x.UserName.toLowerCase() === this.SupportHeader.PatnerID.toLowerCase());
+    this.SupportLog.PatnerEmail = this.SupportLogView.PatnerEmail = user.Email;
   }
 
   CreateSupportLog(): void {
     this.IsProgressBarVisibile = true;
     this.GetSupportLog();
-    this._supportDeskService.CreateSupportLog(this.SupportLog).subscribe(
+    this._supportDeskService.CreateSupportLog(this.SupportLogView).subscribe(
       (data) => {
         this.SupportLog = (data as SupportLog);
         if (this.fileToUploadList && this.fileToUploadList.length) {
@@ -233,7 +258,7 @@ export class SupportChatComponent implements OnInit {
   UpdateSupportLog(): void {
     this.IsProgressBarVisibile = true;
     this.GetSupportLog();
-    this._supportDeskService.UpdateSupportLog(this.SupportLog).subscribe(
+    this._supportDeskService.UpdateSupportLog(this.SupportLogView).subscribe(
       (data) => {
         this.SupportLog = (data as SupportLog);
         if (this.fileToUploadList && this.fileToUploadList.length) {
