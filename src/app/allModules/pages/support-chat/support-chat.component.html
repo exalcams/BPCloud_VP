@@ -77,7 +77,7 @@
                         style="text-orientation: upright; writing-mode: vertical-rl ; 
                       color: white; font-size: 10px;border-radius: 4px 0px 0px 4px;
                       padding: 2px;">
-                        {{supportLog.Status | uppercase}}</div>
+                        {{SupportHeader.Status | uppercase}}</div>
                     </div>
                     <div fxFlex="75" fxLayout="column" fxLayoutAlign="space-evenly end" style="padding: 10px;">
                       <div fxFlex>
@@ -127,7 +127,8 @@
                           <input hidden type="file" accept="image/x-png,image/gif,image/jpeg,image/jpg,application/pdf"
                             #fileInput1 id="file" (change)="OnFileClicked($event)" />
                         </div>
-                        <div fxFlex (click)="GetSupportAttachment(fileToUpload?.name,fileToUpload)" class="pdfLinkClass pl-8">
+                        <div fxFlex (click)="GetSupportAttachment(fileToUpload?.name,fileToUpload)"
+                          class="pdfLinkClass pl-8">
                           <span style="font-weight: bold;font-size: 10px;">{{fileToUpload?.name}}</span>
                         </div>
                         <div fxFlex>
