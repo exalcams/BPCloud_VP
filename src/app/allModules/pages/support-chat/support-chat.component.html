@@ -127,7 +127,8 @@
                           <input hidden type="file" accept="image/x-png,image/gif,image/jpeg,image/jpg,application/pdf"
                             #fileInput1 id="file" (change)="OnFileClicked($event)" />
                         </div>
-                        <div fxFlex (click)="GetSupportAttachment(fileToUpload?.name,fileToUpload)" class="pdfLinkClass pl-8">
+                        <div fxFlex (click)="GetSupportAttachment(fileToUpload?.name,fileToUpload)"
+                          class="pdfLinkClass pl-8">
                           <span style="font-weight: bold;font-size: 10px;">{{fileToUpload?.name}}</span>
                         </div>
                         <div fxFlex>

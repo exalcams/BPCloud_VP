@@ -126,9 +126,13 @@ export class LoginComponent implements OnInit {
     // }
     if (data.UserRole === 'Customer') {
       this._router.navigate(['customer/dashboard']);
+    }
+    else if (data.UserRole === 'Administrator') {
+      this._router.navigate(['pages/datamigration']);
     } else {
       this._router.navigate(['pages/dashboard']);
     }
+
   }
 
   OpenChangePasswordDialog(data: AuthenticationDetails): void {
@@ -408,6 +412,20 @@ export class LoginComponent implements OnInit {
         }
       );
     }
+    if (this.MenuItems.indexOf('DataMigration') >= 0) {
+      this.children.push(
+        {
+          id: 'datamigration',
+          title: 'Data Migration',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          icon: 'receiptIcon',
+          isSvgIcon: true,
+          // icon: 'receipt',
+          url: '/pages/datamigration',
+        }
+      );
+    }
     if (this.MenuItems.indexOf('SupportDesk') >= 0) {
       this.children.push(
         {
@@ -423,20 +441,6 @@ export class LoginComponent implements OnInit {
       );
     }
 
-    if (this.MenuItems.indexOf('DataMigration') >= 0) {
-      this.children.push(
-        {
-          id: 'datamigration',
-          title: 'Data Migration',
-          translate: 'NAV.SAMPLE.TITLE',
-          type: 'item',
-          icon: 'receiptIcon',
-          isSvgIcon: true,
-          // icon: 'receipt',
-          url: '/pages/datamigration',
-        }
-      );
-    }
     // if (this.MenuItems.indexOf('InvoiceDetails') >= 0) {
     //   this.children.push(
     //     {

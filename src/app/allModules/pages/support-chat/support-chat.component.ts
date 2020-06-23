@@ -189,6 +189,7 @@ export class SupportChatComponent implements OnInit {
     const supportLog = new SupportLog();
     supportLog.PatnerID = this.PartnerID;
     supportLog.Status = "Open";
+    supportLog.IsResolved = false;
     supportLog.CreatedOn = new Date();
     this.SupportLogs.push(supportLog);
   }

@@ -13,6 +13,7 @@ export class SupportHeader {
     ReasonRemarks: string;
     DocumentRefNo: string;
     Reason: string;
+    IsResolved: boolean;
 }
 export class SupportLog {
     ID: number;
@@ -25,6 +26,7 @@ export class SupportLog {
     Remarks: string;
     CreatedBy: string;
     CreatedOn: Date;
+    IsResolved: boolean;
 }
 export class SupportDetails {
     supportHeader: SupportHeader;
@@ -67,6 +69,7 @@ export class SupportHeaderView {
     ReasonRemarks: string;
     DocumentRefNo: string;
     Reason: string;
+    IsResolved: boolean;
     Users: UserWithRole[];
 }
 
