@@ -68,9 +68,8 @@
 
               <div fxFlex="20" fxLayout="column">
                 <div fxFlex>
-                  <div fxLayout="row" class="left-open-container"
-                    [style.border-color]="supportLog.Status==='Closed'?'#4FAB6D':supportLog.Status==='Open'?'#efb577':''"
-                    style="margin-top: 51px">
+                  <div fxLayout="row" class="left-open-container" [style.margin-top]="first?'20px':'-51px'"
+                    [style.border-color]="supportLog.Status==='Closed'?'#4FAB6D':supportLog.Status==='Open'?'#efb577':''">
                     <div fxFlex="10">
                       <div
                         [style.background-color]="supportLog.Status==='Closed'?'#4FAB6D':supportLog.Status==='Open'?'#efb577':''"
@@ -95,8 +94,11 @@
               </div>
               <div fxFlex="5">
                 <!-- [style.padding-top]="first?'51px':''" -->
-                <div fxLayout="column" fxLayoutAlign="space-around center" style="padding-top: 51px;">
-                  <div class="round"
+                <div fxLayout="column" fxLayoutAlign="space-around center" [style.margin-top]="first?'51px':''">
+                  <!-- <div *ngIf="!first" style="margin-top: -42px;"
+                    [class]="supportLog.Status==='Closed'?'green-timeline':supportLog.Status==='Open'?'orange-timeline':''">
+                  </div> -->
+                  <div  class="round" [style.margin-top]="first?'':'-20px'"
                     [style.border-color]="supportLog.Status==='Closed'?'#4FAB6D':supportLog.Status==='Open'?'#efb577':''">
                   </div>
                   <div *ngIf="!last"
@@ -107,7 +109,7 @@
                 </div>
               </div>
               <div fxFlex="75" fxLayout="row">
-                <div *ngIf="supportLog.Status==='Open'" fxFlex>
+                <div *ngIf="supportLog.Status==='Open'" [style.margin-top]="first?'':'-71px'" fxFlex>
                   <form name="form" class="normal" [formGroup]="SupportLogFormGroup">
                     <div fxFlex fxLayout="column" class="comment-container-arrow">
                       <div fxFlex>
@@ -144,7 +146,7 @@
                     </div>
                   </form>
                 </div>
-                <div *ngIf="supportLog.Status==='Closed'" fxFlex>
+                <div *ngIf="supportLog.Status==='Closed'" [style.margin-top]="first?'':'-71px'" fxFlex>
                   <div fxFlex fxLayout="column" style="height: 138px;" class="comment-container-arrow">
                     <div fxFlex="100" class="p-4">
                       <div class="pb-12"> <span class="pl-12 pb-12">{{supportLog.Remarks}}</span></div>
