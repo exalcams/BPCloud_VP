@@ -14,6 +14,7 @@ import { MenuAppComponent } from './menu-app/menu-app.component';
 import { RoleComponent } from './role/role.component';
 import { UserComponent } from './user/user.component';
 import { ReasonComponent } from './reason/reason.component';
+import { SupportDeskMasterComponent } from './support-desk-master/support-desk-master.component';
 
 const menuRoutes: Routes = [
     {
@@ -32,6 +33,10 @@ const menuRoutes: Routes = [
         path: 'reason',
         component: ReasonComponent,
     },
+    {
+        path: 'supportdesk',
+        component: SupportDeskMasterComponent
+    }
 ];
 @NgModule({
     declarations: [
@@ -39,6 +44,7 @@ const menuRoutes: Routes = [
         RoleComponent,
         MenuAppComponent,
         ReasonComponent,
+        SupportDeskMasterComponent
     ],
     imports: [
         MatButtonModule,

@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { SupportHeader, SupportLog, SupportHeaderView } from 'app/models/support-desk';
+import { SupportHeader, SupportLog, SupportHeaderView, SupportMaster, SupportMasterView } from 'app/models/support-desk';
 import { UserWithRole } from 'app/models/master';
 
 @Injectable({
@@ -37,6 +37,39 @@ export class SupportDeskService {
     
     GetSupportMasters(PartnerID: any): Observable<any | string> {
         return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportMasters?PartnerID=${PartnerID}`)
+            .pipe(catchError(this.errorHandler));
+    }
+
+    CreateSupportMaster(supportMaster: SupportMasterView): Observable<any> {
+        return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/CreateSupportMaster`,
+            supportMaster,
+            {
+                headers: new HttpHeaders({
+                    'Content-Type': 'application/json'
+                })
+            })
+            .pipe(catchError(this.errorHandler));
+    }
+
+    UpdateSupportMaster(supportMaster: SupportMasterView): Observable<any> {
+        return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/UpdateSupportMaster`,
+            supportMaster,
+            {
+                headers: new HttpHeaders({
+                    'Content-Type': 'application/json'
+                })
+            })
+            .pipe(catchError(this.errorHandler));
+    }
+
+    DeleteSupportMaster(supportMaster: SupportMasterView): Observable<any> {
+        return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/DeleteSupportMaster`,
+            supportMaster,
+            {
+                headers: new HttpHeaders({
+                    'Content-Type': 'application/json'
+                })
+            })
             .pipe(catchError(this.errorHandler));
     }
 
