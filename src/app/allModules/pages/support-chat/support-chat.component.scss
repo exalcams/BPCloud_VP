@@ -306,6 +306,12 @@
     border-color: #efb577;
   }
 
+  .red-timeline {
+    @extend .vertical-line;
+    border-color: #EF8377;
+  }
+   
+
   // .roundCommon {
   //   height: 20px;
   //   width: 20px;
