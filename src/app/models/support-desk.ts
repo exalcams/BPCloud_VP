@@ -87,4 +87,19 @@ export class SupportLogView {
     IsResolved: boolean;
     PatnerEmail: string;
 }
+export class SupportMasterView {
+    ID: number;
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
+    Plant: string;
+    App: string;
+    ReasonCode: string;
+    ReasonText: string;
+    Person1: string;
+    Person2: string;
+    Person3: string;
+
+}
 

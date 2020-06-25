@@ -69,14 +69,14 @@
               <div fxFlex="20" fxLayout="column">
                 <div fxFlex>
                   <div fxLayout="row" class="left-open-container" [style.margin-top]="first?'20px':'-51px'"
-                    [style.border-color]="supportLog.Status==='Closed'?'#4FAB6D':supportLog.Status==='Open'?'#efb577':''">
+                    [style.border-color]="supportLog.Status==='Closed'?'#4FAB6D':supportLog.Status==='Pending'?' #EF8377':
+                    supportLog.Status==='Open'?'#efb577':''">
                     <div fxFlex="10">
-                      <div
-                        [style.background-color]="supportLog.Status==='Closed'?'#4FAB6D':supportLog.Status==='Open'?'#efb577':''"
-                        style="text-orientation: upright; writing-mode: vertical-rl ; 
+                      <div [style.background-color]="supportLog.Status==='Closed'?'#4FAB6D':supportLog.Status==='Pending'?' #EF8377'
+                        :supportLog.Status==='Open'?'#efb577':''" style="text-orientation: upright; writing-mode: vertical-rl ; 
                       color: white; font-size: 10px;border-radius: 4px 0px 0px 4px;
                       padding: 2px;">
-                        {{SupportHeader.Status | uppercase}}</div>
+                        {{supportLog.Status | uppercase}}</div>
                     </div>
                     <div fxFlex="75" fxLayout="column" fxLayoutAlign="space-evenly end" style="padding: 10px;">
                       <div fxFlex>
@@ -98,13 +98,15 @@
                   <!-- <div *ngIf="!first" style="margin-top: -42px;"
                     [class]="supportLog.Status==='Closed'?'green-timeline':supportLog.Status==='Open'?'orange-timeline':''">
                   </div> -->
-                  <div  class="round" [style.margin-top]="first?'':'-20px'"
-                    [style.border-color]="supportLog.Status==='Closed'?'#4FAB6D':supportLog.Status==='Open'?'#efb577':''">
+                  <div class="round" [style.margin-top]="first?'':'-20px'" [style.border-color]="supportLog.Status==='Closed'?'#4FAB6D':supportLog.Status==='Pending'?' #EF8377'
+                    :supportLog.Status==='Open'?'#efb577':''">
                   </div>
                   <div *ngIf="!last"
-                    [class]="supportLog.Status==='Closed'?'green-timeline':supportLog.Status==='Open'?'orange-timeline':''">
+                    [class]="supportLog.Status==='Closed'?'green-timeline':supportLog.Status==='Pending'?'red-timeline'
+                    :supportLog.Status==='Open'?'orange-timeline':''">
                   </div>
-                  <!-- <div class="round" *ngIf="!last" [style.border-color]="supportLog.Status==='Closed'?'#4FAB6D':supportLog.Status==='Open'?'#efb577':''">
+                  <!-- <div class="round" *ngIf="!last" [style.border-color]="supportLog.Status==='Closed'?'#4FAB6D':supportLog.Status==='Pending'?'#EF8377':
+                    supportLog.Status==='Open'?'#efb577':''">
                   </div> -->
                 </div>
               </div>
@@ -145,6 +147,26 @@
                       </div>
                     </div>
                   </form>
+                </div>
+                <div *ngIf="supportLog.Status==='Pending'" [style.margin-top]="first?'':'-71px'" fxFlex>
+                  <div fxFlex fxLayout="column" style="height: 138px;" class="comment-container-arrow">
+                    <div fxFlex="100" class="p-4">
+                      <div class="pb-12"> <span class="pl-12 pb-12">{{supportLog.Remarks}}</span></div>
+                      <div *ngFor="let supportAttachment of SupportAttachments">
+                        <div *ngIf="supportAttachment?.AttachmentID===supportLog?.ID" fxFlex
+                          (click)="GetSupportAttachment(supportAttachment?.AttachmentName,supportAttachment.AttachmentFile)"
+                          class="pdfLinkClass pl-8">
+                          <img class="attachmentIcon" src="assets/images/attachmentNew (1).png"
+                            (click)="GetSupportAttachment(supportAttachment?.AttachmentName,supportAttachment.AttachmentFile)">
+                          <span
+                            style="font-size: 12px;color: #3380d7;cursor: pointer !important;">{{supportAttachment?.AttachmentName}}</span>
+                        </div>
+                        <!-- <div fxFlex (click)="GetSupportAttachment(supportAttachment?.name)" class="pdfLinkClass pl-8">
+                        <span style="font-weight: bold;font-size: 20px;">{{supportAttachment?.size}}</span>
+                      </div> -->
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div *ngIf="supportLog.Status==='Closed'" [style.margin-top]="first?'':'-71px'" fxFlex>
                   <div fxFlex fxLayout="column" style="height: 138px;" class="comment-container-arrow">
