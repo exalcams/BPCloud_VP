@@ -57,6 +57,7 @@ export class SubconComponent implements OnInit {
   @ViewChild(MatPaginator) SubconItemPaginator: MatPaginator;
   @ViewChild(MatSort) SubconItemSort: MatSort;
   ReadyToBeShippedQty: number;
+  ProducedQty: number;
   IsDeleteRequired: boolean;
   constructor(
     private _fuseConfigService: FuseConfigService,
@@ -78,6 +79,7 @@ export class SubconComponent implements OnInit {
     this.IsProgressBarVisibile = false;
     this.SelectedPO = new BPCOFHeader();
     this.ReadyToBeShippedQty = 0;
+    this.ProducedQty = 0;
     this.IsDeleteRequired = false;
   }
 
@@ -182,12 +184,14 @@ export class SubconComponent implements OnInit {
     this._subConService.GetSubconBySLAndPartnerID(this.SelectedPO.DocNumber, this.SelectedItem, this.SelectedSlLine, this.currentUserName).subscribe(
       (data) => {
         this.ReadyToBeShippedQty = 0;
+        this.ProducedQty = 0;
         this.AllSubconItems = data as BPCOFSubcon[];
         this.SubconItemDataSource = new MatTableDataSource(this.AllSubconItems);
         if (this.AllSubconItems && this.AllSubconItems.length && this.AllSubconItems.length > 0) {
           this.IsDeleteRequired = true;
           this.AllSubconItems.forEach(x => {
             this.ReadyToBeShippedQty += + x.OrderedQty;
+            this.ProducedQty += +x.OrderedQty;
           });
         } else {
           this.IsDeleteRequired = false;
@@ -221,8 +225,10 @@ export class SubconComponent implements OnInit {
       this.AllSubconItems.push(SubItem);
       this.SubconItemDataSource = new MatTableDataSource(this.AllSubconItems);
       this.ReadyToBeShippedQty = 0;
+      this.ProducedQty = 0;
       this.AllSubconItems.forEach(x => {
         this.ReadyToBeShippedQty += +x.OrderedQty;
+        this.ProducedQty += +x.OrderedQty;
       });
       this.ResetSubconItemFormGroup();
     } else {
@@ -237,8 +243,10 @@ export class SubconComponent implements OnInit {
     }
     this.SubconItemDataSource = new MatTableDataSource(this.AllSubconItems);
     this.ReadyToBeShippedQty = 0;
+    this.ProducedQty = 0;
     this.AllSubconItems.forEach(x => {
       this.ReadyToBeShippedQty += +x.OrderedQty;
+      this.ProducedQty += +x.OrderedQty;
     });
   }
   DeleteClicked(): void {

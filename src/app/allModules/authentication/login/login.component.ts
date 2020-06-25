@@ -529,6 +529,17 @@ export class LoginComponent implements OnInit {
         },
       );
     }
+    if (this.MenuItems.indexOf('Payment') >= 0) {
+      this.paymentSubChildren.push(
+        {
+          id: 'payment',
+          title: 'Payment',
+          type: 'item',
+          url: '/pages/payment'
+        },
+      );
+    }
+    
     if (this.MenuItems.indexOf('TDS') >= 0) {
       this.paymentSubChildren.push(
         {
