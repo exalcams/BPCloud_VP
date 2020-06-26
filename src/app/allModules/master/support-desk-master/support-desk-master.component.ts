@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef } from '@an
 import { fuseAnimations } from '@fuse/animations';
 import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatDialog, MatDialogConfig } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
-import { AuthenticationDetails, UserWithRole } from 'app/models/master';
+import { AuthenticationDetails, UserWithRole, RoleWithApp } from 'app/models/master';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { FormBuilder, FormGroup, Validators, FormArray, AbstractControl } from '@angular/forms';
 import { MasterService } from 'app/services/master.service';
@@ -34,14 +34,15 @@ export class SupportDeskMasterComponent implements OnInit {
     searchText = '';
     IsProgressBarVisibile: boolean;
     MenuItems: string[];
-    AllUserWithRoles: UserWithRole[] = [];
-    AllSupportMasters: SupportMaster[] = [];
+    UserWithRoles: UserWithRole[] = [];
+    Roles: RoleWithApp[] = [];
+    SupportMasters: SupportMaster[] = [];
     SupportMasterFormGroup: FormGroup;
     SelectedSupportMaster: SupportMaster;
     SelectedID: number;
     SelectedSupportMasterView: SupportMasterView;
-    AllSupportDeskUsers: UserWithRole[] = [];
-    AllReasons: Reason[] = [];
+    SupportDeskUsers: UserWithRole[] = [];
+    Reasons: Reason[] = [];
 
     constructor(
         private _masterService: MasterService,
@@ -57,9 +58,13 @@ export class SupportDeskMasterComponent implements OnInit {
         this.SelectedSupportMaster = new SupportMaster();
         this.SelectedSupportMasterView = new SupportMasterView();
         this.SelectedID = null;
-        this.AllReasons = [{
+        this.Reasons = [{
             'ReasonCode': '1234',
             'ReasonText': 'Test1'
+        },
+        {
+            'ReasonCode': '1235',
+            'ReasonText': 'Test2'
         }];
     }
 
@@ -82,16 +87,18 @@ export class SupportDeskMasterComponent implements OnInit {
             this._router.navigate(['/auth/login']);
         }
         this.InitializeSupportMasterFormGroup();
-        this.GetAllSupportMasters();
+        this.GetSupportMasters();
+        this.GetSupportDeskUsersByRoleName();
     }
 
     InitializeSupportMasterFormGroup(): void {
         this.SupportMasterFormGroup = this._formBuilder.group({
-            Plant: ['', Validators.required],
-            App: ['', Validators.required],
-            // ExpDateReq: [new Date(), Validators.required],
+            ReasonCode: ['', Validators.required],
+            ReasonText: ['', Validators.required],
+            Client: ['', Validators.required],
+            PatnerID: ['', Validators.required],
             Person1: ['', Validators.required],
-            ReasonCode: [''],
+            Person2: ['', Validators.required]
         });
     }
 
@@ -114,12 +121,40 @@ export class SupportDeskMasterComponent implements OnInit {
         });
     }
 
-    GetAllSupportMasters(): void {
-        this._supportDeskService.GetSupportMasters(this.authenticationDetails.UserName).subscribe(
+    GetSupportDeskUsersByRoleName(): void {
+        this.IsProgressBarVisibile = true;
+        this._masterService.GetSupportDeskUsersByRoleName('HelpDeskAdmin').subscribe(
             (data) => {
-                this.AllSupportMasters = data as SupportMaster[];
-                if (this.AllSupportMasters && this.AllSupportMasters.length) {
-                    this.LoadSelectedSupportMaster(this.AllSupportMasters[0]);
+                this.IsProgressBarVisibile = false;
+                this.SupportDeskUsers = <UserWithRole[]>data;
+            },
+            (err) => {
+                console.error(err);
+                this.IsProgressBarVisibile = false;
+            }
+        );
+    }
+
+    GetSupportMasters(): void {
+        this._supportDeskService.GetSupportMasters().subscribe(
+            (data) => {
+                this.SupportMasters = data as SupportMaster[];
+                if (this.SupportMasters && this.SupportMasters.length) {
+                    this.LoadSelectedSupportMaster(this.SupportMasters[0]);
+                }
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
+
+    GetSupportMastersByPartnerID(): void {
+        this._supportDeskService.GetSupportMastersByPartnerID(this.authenticationDetails.UserName).subscribe(
+            (data) => {
+                this.SupportMasters = data as SupportMaster[];
+                if (this.SupportMasters && this.SupportMasters.length) {
+                    this.LoadSelectedSupportMaster(this.SupportMasters[0]);
                 }
             },
             (err) => {
@@ -137,18 +172,20 @@ export class SupportDeskMasterComponent implements OnInit {
 
     SetSupportMasterValues(): void {
         this.SupportMasterFormGroup.get('ReasonCode').patchValue(this.SelectedSupportMaster.ReasonCode);
-        this.SupportMasterFormGroup.get('Plant').patchValue(this.SelectedSupportMaster.Plant);
-        this.SupportMasterFormGroup.get('App').patchValue(this.SelectedSupportMaster.App);
-        // this.SupportMasterFormGroup.get('ExpDateReq').patchValue(this.SelectedSupportMaster.ExpDateReq);
+        this.SupportMasterFormGroup.get('ReasonText').patchValue(this.SelectedSupportMaster.ReasonText);
+        this.SupportMasterFormGroup.get('Client').patchValue(this.SelectedSupportMaster.Client);
+        this.SupportMasterFormGroup.get('PatnerID').patchValue(this.SelectedSupportMaster.PatnerID);
         this.SupportMasterFormGroup.get('Person1').patchValue(this.SelectedSupportMaster.Person1);
+        this.SupportMasterFormGroup.get('Person2').patchValue(this.SelectedSupportMaster.Person2);
     }
 
     GetSupportMasterValues(): void {
         this.SelectedSupportMaster.ReasonCode = this.SelectedSupportMasterView.ReasonCode = this.SupportMasterFormGroup.get('ReasonCode').value;
-        this.SelectedSupportMaster.Plant = this.SelectedSupportMasterView.Plant = this.SupportMasterFormGroup.get('Plant').value;
-        this.SelectedSupportMaster.App = this.SelectedSupportMasterView.App = this.SupportMasterFormGroup.get('App').value;
-        // this.SelectedSupportMaster.ExpDateReq = this.SelectedSupportMasterView.ExpDateReq = this.SupportMasterFormGroup.get('ExpDateReq').value;
+        this.SelectedSupportMaster.ReasonText = this.SelectedSupportMasterView.ReasonText = this.SupportMasterFormGroup.get('ReasonText').value;
+        this.SelectedSupportMaster.Client = this.SelectedSupportMasterView.Client = this.SupportMasterFormGroup.get('Client').value;
+        this.SelectedSupportMaster.PatnerID = this.SelectedSupportMasterView.PatnerID = this.SupportMasterFormGroup.get('PatnerID').value;
         this.SelectedSupportMaster.Person1 = this.SelectedSupportMasterView.Person1 = this.SupportMasterFormGroup.get('Person1').value;
+        this.SelectedSupportMaster.Person2 = this.SelectedSupportMasterView.Person2 = this.SupportMasterFormGroup.get('Person2').value;
     }
 
     SaveClicked(): void {
@@ -210,13 +247,14 @@ export class SupportDeskMasterComponent implements OnInit {
 
     CreateSupportMaster(Actiontype: string): void {
         this.IsProgressBarVisibile = true;
+        this.SelectedSupportMasterView.CreatedBy = this.authenticationDetails.UserName;
         this._supportDeskService.CreateSupportMaster(this.SelectedSupportMasterView).subscribe(
             (data) => {
                 // this.SelectedSupportMaster.ID = (data as SupportMaster).ID;
                 this.ResetControl();
                 this.notificationSnackBarComponent.openSnackBar(`SupportMaster ${Actiontype === 'Update' ? 'updated' : 'saved'} successfully`, SnackBarStatus.success);
                 this.IsProgressBarVisibile = false;
-                this.GetAllSupportMasters();
+                this.GetSupportMasters();
             },
             (err) => {
                 this.showErrorNotificationSnackBar(err);
@@ -226,13 +264,14 @@ export class SupportDeskMasterComponent implements OnInit {
 
     UpdateSupportMaster(Actiontype: string): void {
         this.IsProgressBarVisibile = true;
+        this.SelectedSupportMasterView.ModifiedBy = this.authenticationDetails.UserName;
         this._supportDeskService.UpdateSupportMaster(this.SelectedSupportMasterView).subscribe(
             (data) => {
                 // this.SelectedSupportMaster.ID = (data as SupportMaster).ID;
                 this.ResetControl();
                 this.notificationSnackBarComponent.openSnackBar(`SupportMaster ${Actiontype === 'Update' ? 'updated' : 'saved'} successfully`, SnackBarStatus.success);
                 this.IsProgressBarVisibile = false;
-                this.GetAllSupportMasters();
+                this.GetSupportMasters();
             },
             (err) => {
                 console.error(err);
@@ -250,7 +289,7 @@ export class SupportDeskMasterComponent implements OnInit {
                 this.ResetControl();
                 this.notificationSnackBarComponent.openSnackBar('SupportMaster deleted successfully', SnackBarStatus.success);
                 this.IsProgressBarVisibile = false;
-                this.GetAllSupportMasters();
+                this.GetSupportMasters();
             },
             (err) => {
                 console.error(err);
@@ -260,11 +299,15 @@ export class SupportDeskMasterComponent implements OnInit {
         );
     }
 
-    DeveloperSelected(): void {
+    Developer1Selected(event): void {
 
     }
 
-    ReasonSelected(): void {
+    Developer2Selected(event): void {
+
+    }
+
+    ReasonSelected(event): void {
 
     }
 

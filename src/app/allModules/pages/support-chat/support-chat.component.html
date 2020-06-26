@@ -45,7 +45,7 @@
                     <div fxFlex="100" class=" p-4">
                       <span style="border-bottom: 2px solid #e0e0e0;">Attachments:</span>
                       <div *ngFor="let supportAttachment of SupportAttachments">
-                        <div fxFlex *ngIf="supportAttachment?.AttachmentID===SupportHeader.SupportID"
+                        <div fxFlex *ngIf="supportAttachment?.SupportID===SupportHeader.SupportID"
                           (click)="GetSupportAttachment(supportAttachment?.AttachmentName,supportAttachment.AttachmentFile)"
                           class="pdfLinkClass pl-8">
                           <img class="attachmentIcon" src="assets/images/attachmentNew (1).png"
@@ -153,7 +153,7 @@
                     <div fxFlex="100" class="p-4">
                       <div class="pb-12"> <span class="pl-12 pb-12">{{supportLog.Remarks}}</span></div>
                       <div *ngFor="let supportAttachment of SupportAttachments">
-                        <div *ngIf="supportAttachment?.AttachmentID===supportLog?.ID" fxFlex
+                        <div *ngIf="supportAttachment?.SupportID===supportLog.ID" fxFlex
                           (click)="GetSupportAttachment(supportAttachment?.AttachmentName,supportAttachment.AttachmentFile)"
                           class="pdfLinkClass pl-8">
                           <img class="attachmentIcon" src="assets/images/attachmentNew (1).png"
@@ -173,7 +173,7 @@
                     <div fxFlex="100" class="p-4">
                       <div class="pb-12"> <span class="pl-12 pb-12">{{supportLog.Remarks}}</span></div>
                       <div *ngFor="let supportAttachment of SupportAttachments">
-                        <div *ngIf="supportAttachment?.AttachmentID===supportLog?.ID" fxFlex
+                        <div *ngIf="supportAttachment?.SupportID===supportLog.ID" fxFlex
                           (click)="GetSupportAttachment(supportAttachment?.AttachmentName,supportAttachment.AttachmentFile)"
                           class="pdfLinkClass pl-8">
                           <img class="attachmentIcon" src="assets/images/attachmentNew (1).png"

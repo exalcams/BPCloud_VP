@@ -1,6 +1,7 @@
 import { UserWithRole } from './master';
+import { CommonClass } from './common';
 
-export class SupportHeader {
+export class SupportHeader extends CommonClass {
     SupportID: string;
     Client: string;
     Company: string;
@@ -15,7 +16,7 @@ export class SupportHeader {
     Reason: string;
     IsResolved: boolean;
 }
-export class SupportLog {
+export class SupportLog extends CommonClass {
     ID: number;
     SupportID: string;
     Client: string;
@@ -24,17 +25,15 @@ export class SupportLog {
     PatnerID: string;
     Status: string;
     Remarks: string;
-    CreatedBy: string;
-    CreatedOn: Date;
     IsResolved: boolean;
     PatnerEmail: string;
 }
-export class SupportDetails {
+export class SupportDetails extends CommonClass {
     supportHeader: SupportHeader;
     supportLogs: SupportLog[];
     supportAttachments: BPCSupportAttachment[];
 }
-export class SupportMaster {
+export class SupportMaster extends CommonClass {
     ID: number;
     Client: string;
     Company: string;
@@ -57,7 +56,7 @@ export class BPCSupportAttachment {
     SupportID: string;
     AttachmentFile: any;
 }
-export class SupportHeaderView {
+export class SupportHeaderView extends CommonClass {
     SupportID: string;
     Client: string;
     Company: string;
@@ -73,7 +72,7 @@ export class SupportHeaderView {
     IsResolved: boolean;
     Users: UserWithRole[];
 }
-export class SupportLogView {
+export class SupportLogView extends CommonClass {
     ID: number;
     SupportID: string;
     Client: string;
@@ -82,12 +81,10 @@ export class SupportLogView {
     PatnerID: string;
     Status: string;
     Remarks: string;
-    CreatedBy: string;
-    CreatedOn: Date;
     IsResolved: boolean;
     PatnerEmail: string;
 }
-export class SupportMasterView {
+export class SupportMasterView extends CommonClass {
     ID: number;
     Client: string;
     Company: string;
@@ -100,6 +97,5 @@ export class SupportMasterView {
     Person1: string;
     Person2: string;
     Person3: string;
-
 }
 

@@ -245,4 +245,9 @@ export class MasterService {
       .pipe(catchError(this.errorHandler));
   }
 
+  GetSupportDeskUsersByRoleName(RoleName: string): Observable<UserWithRole[] | string> {
+    return this._httpClient.get<UserWithRole[]>(`${this.baseAddress}authenticationapi/Master/GetSupportDeskUsersByRoleName?RoleName=${RoleName}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
 }

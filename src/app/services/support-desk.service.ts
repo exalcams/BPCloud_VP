@@ -33,10 +33,15 @@ export class SupportDeskService {
         return throwError(error.error || error.message || 'Server Error');
     }
 
-    // Support Masters
-    
-    GetSupportMasters(PartnerID: any): Observable<any | string> {
-        return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportMasters?PartnerID=${PartnerID}`)
+    // Support Masters  
+
+    GetSupportMasters(): Observable<any | string> {
+        return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportMasters`)
+            .pipe(catchError(this.errorHandler));
+    }
+
+    GetSupportMastersByPartnerID(PartnerID: any): Observable<any | string> {
+        return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportMastersByPartnerID?PartnerID=${PartnerID}`)
             .pipe(catchError(this.errorHandler));
     }
 
@@ -73,15 +78,15 @@ export class SupportDeskService {
             .pipe(catchError(this.errorHandler));
     }
 
-    GetSupportDetails(SupportID: any, PartnerID: any): Observable<any | string> {
-        return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportDetails?SupportID=${SupportID}&PartnerID=${PartnerID}`)
+    GetSupportDetailsByPartnerAndSupportID(SupportID: any, PartnerID: any): Observable<any | string> {
+        return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportDetailsByPartnerAndSupportID?SupportID=${SupportID}&PartnerID=${PartnerID}`)
             .pipe(catchError(this.errorHandler));
     }
 
     // Support Tickets
 
-    GetSupportTickets(PartnerID: any): Observable<any | string> {
-        return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportTickets?PartnerID=${PartnerID}`)
+    GetSupportTicketsByPartnerID(PartnerID: any): Observable<any | string> {
+        return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportTicketsByPartnerID?PartnerID=${PartnerID}`)
             .pipe(catchError(this.errorHandler));
     }
 
@@ -98,8 +103,8 @@ export class SupportDeskService {
 
     // Support Logs
 
-    GetSupportLogs(SupportID: any, PartnerID: any): Observable<any | string> {
-        return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportLogs?SupportID=${SupportID}&PartnerID=${PartnerID}`)
+    GetSupportLogsByPartnerAndSupportID(SupportID: any, PartnerID: any): Observable<any | string> {
+        return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportLogsByPartnerAndSupportID?SupportID=${SupportID}&PartnerID=${PartnerID}`)
             .pipe(catchError(this.errorHandler));
     }
 

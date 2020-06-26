@@ -34,7 +34,7 @@ const menuRoutes: Routes = [
         component: ReasonComponent,
     },
     {
-        path: 'supportdesk',
+        path: 'supportmaster',
         component: SupportDeskMasterComponent
     }
 ];
