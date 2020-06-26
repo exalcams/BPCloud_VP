@@ -529,17 +529,6 @@ export class LoginComponent implements OnInit {
         },
       );
     }
-    if (this.MenuItems.indexOf('Payment') >= 0) {
-      this.paymentSubChildren.push(
-        {
-          id: 'payment',
-          title: 'Payment',
-          type: 'item',
-          url: '/pages/payment'
-        },
-      );
-    }
-    
     if (this.MenuItems.indexOf('TDS') >= 0) {
       this.paymentSubChildren.push(
         {
@@ -550,11 +539,21 @@ export class LoginComponent implements OnInit {
         },
       );
     }
+    if (this.MenuItems.indexOf('Payment') >= 0) {
+      this.paymentSubChildren.push(
+        {
+          id: 'payment',
+          title: 'Status report',
+          type: 'item',
+          url: '/pages/payment'
+        },
+      );
+    }
     if (this.MenuItems.indexOf('Payments') >= 0 || this.MenuItems.indexOf('Payable') >= 0 ||
       this.MenuItems.indexOf('AccountStatement') >= 0 || this.MenuItems.indexOf('TDS') >= 0) {
       this.children.push({
         id: 'master',
-        title: 'Payment',
+        title: 'Financial',
         // translate: 'NAV.DASHBOARDS',
         type: 'collapsable',
         icon: 'paymentmethodIcon',
