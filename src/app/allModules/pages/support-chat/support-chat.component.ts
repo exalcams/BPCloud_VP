@@ -33,8 +33,8 @@ export class SupportChatComponent implements OnInit {
   SupportDetails: SupportDetails = new SupportDetails();
   SupportHeader: SupportHeader = new SupportHeader();
   SupportLogs: SupportLog[] = [];
-  SupportLog: SupportLog;
-  SupportLogView: SupportLog;
+  SelectedSupportLog: SupportLog;
+  SelectedSupportLogView: SupportLog;
   SupportAttachments: BPCSupportAttachment[] = [];
   IsProgressBarVisibile: boolean;
   fileToUpload: File;
@@ -55,8 +55,8 @@ export class SupportChatComponent implements OnInit {
   ) {
     this.TicketResolved = false;
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
-    this.SupportLog = new SupportLog();
-    this.SupportLogView = new SupportLog();
+    this.SelectedSupportLog = new SupportLog();
+    this.SelectedSupportLogView = new SupportLog();
   }
 
   ngOnInit(): void {
@@ -82,7 +82,7 @@ export class SupportChatComponent implements OnInit {
       this.SupportID = params['SupportID'];
     });
     this.GetUsers();
-    this.GetSupportDetails();
+    this.GetSupportDetailsByPartnerAndSupportID();
     this.InitializeSupportLogFormGroup();
   }
 
@@ -103,13 +103,13 @@ export class SupportChatComponent implements OnInit {
     this.fileToUpload = null;
     this.fileToUploadList = [];
     this.ClearSupportLogForm();
-    this.SupportLog = null;
-    this.SupportLogView = null;
+    this.SelectedSupportLog = new SupportLog();
+    this.SelectedSupportLogView = new SupportLog();
   }
 
-  GetSupportDetails(): void {
+  GetSupportDetailsByPartnerAndSupportID(): void {
     this.IsProgressBarVisibile = true;
-    this._supportDeskService.GetSupportDetails(this.SupportID, this.PartnerID).subscribe(
+    this._supportDeskService.GetSupportDetailsByPartnerAndSupportID(this.SupportID, this.PartnerID).subscribe(
       data => {
         if (data) {
           this.SupportDetails = data as SupportDetails;
@@ -127,10 +127,10 @@ export class SupportChatComponent implements OnInit {
     );
   }
 
-  GetSupportLogs(): void {
+  GetSupportLogsByPartnerAndSupportID(): void {
     // this.IsProgressBarVisibile = true;
     this._supportDeskService
-      .GetSupportLogs(this.SupportID, this.PartnerID)
+      .GetSupportLogsByPartnerAndSupportID(this.SupportID, this.PartnerID)
       .subscribe((data) => {
         if (data) {
           this.SupportLogs = <SupportLog[]>data;
@@ -182,7 +182,6 @@ export class SupportChatComponent implements OnInit {
       (err) => {
         console.error(err);
         this.IsProgressBarVisibile = false;
-        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
       }
     );
   }
@@ -224,29 +223,29 @@ export class SupportChatComponent implements OnInit {
     }
   }
 
-  GetSupportLog(): void {
-    this.SupportLog.SupportID = this.SupportLogView.SupportID = this.SupportID;
-    this.SupportLog.PatnerID = this.SupportLogView.PatnerID = this.PartnerID;
-    this.SupportLog.Remarks = this.SupportLogView.Remarks = this.SupportLogFormGroup.get('Comments').value;
-    this.SupportLog.CreatedBy = this.SupportLogView.CreatedBy = this.PartnerID;
+  GetSupportLogValues(): void {
+    this.SelectedSupportLog.SupportID = this.SelectedSupportLogView.SupportID = this.SupportID;
+    this.SelectedSupportLog.PatnerID = this.SelectedSupportLogView.PatnerID = this.PartnerID;
+    this.SelectedSupportLog.Remarks = this.SelectedSupportLogView.Remarks = this.SupportLogFormGroup.get('Comments').value;
+    this.SelectedSupportLog.CreatedBy = this.SelectedSupportLogView.CreatedBy = this.authenticationDetails.UserName;
     let user = new UserWithRole();
     user = this.Users.find(x => x.UserName.toLowerCase() === this.SupportHeader.PatnerID.toLowerCase());
-    this.SupportLog.PatnerEmail = this.SupportLogView.PatnerEmail = user.Email;
+    this.SelectedSupportLog.PatnerEmail = this.SelectedSupportLogView.PatnerEmail = user.Email;
   }
 
   CreateSupportLog(): void {
     this.IsProgressBarVisibile = true;
-    this.GetSupportLog();
-    this._supportDeskService.CreateSupportLog(this.SupportLogView).subscribe(
+    this.GetSupportLogValues();
+    this._supportDeskService.CreateSupportLog(this.SelectedSupportLogView).subscribe(
       (data) => {
-        this.SupportLog = (data as SupportLog);
+        this.SelectedSupportLog = (data as SupportLog);
         if (this.fileToUploadList && this.fileToUploadList.length) {
           this.AddSupportLogAttachment();
         } else {
           this.ResetControl();
           this.notificationSnackBarComponent.openSnackBar(`Support Log created successfully`, SnackBarStatus.success);
           this.IsProgressBarVisibile = false;
-          this.GetSupportLogs();
+          this.GetSupportLogsByPartnerAndSupportID();
         }
       },
       (err) => {
@@ -257,17 +256,17 @@ export class SupportChatComponent implements OnInit {
 
   UpdateSupportLog(): void {
     this.IsProgressBarVisibile = true;
-    this.GetSupportLog();
-    this._supportDeskService.UpdateSupportLog(this.SupportLogView).subscribe(
+    this.GetSupportLogValues();
+    this._supportDeskService.UpdateSupportLog(this.SelectedSupportLogView).subscribe(
       (data) => {
-        this.SupportLog = (data as SupportLog);
+        this.SelectedSupportLog = (data as SupportLog);
         if (this.fileToUploadList && this.fileToUploadList.length) {
           this.AddSupportLogAttachment();
         } else {
           this.ResetControl();
           this.notificationSnackBarComponent.openSnackBar(`Support Log updated successfully`, SnackBarStatus.success);
           this.IsProgressBarVisibile = false;
-          this.GetSupportLogs();
+          this.GetSupportLogsByPartnerAndSupportID();
         }
       },
       (err) => {
@@ -277,7 +276,7 @@ export class SupportChatComponent implements OnInit {
   }
 
   AddSupportLogAttachment(): void {
-    this._supportDeskService.AddSupportLogAttachment(this.SupportLog.ID.toString(), this.currentUserID.toString(), this.fileToUploadList).subscribe(
+    this._supportDeskService.AddSupportLogAttachment(this.SelectedSupportLog.ID.toString(), this.currentUserID.toString(), this.fileToUploadList).subscribe(
       (dat) => {
         this.notificationSnackBarComponent.openSnackBar('Support Log created successfully', SnackBarStatus.success);
         this.IsProgressBarVisibile = false;

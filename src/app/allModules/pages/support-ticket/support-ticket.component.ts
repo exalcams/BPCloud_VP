@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { BPCInvoiceAttachment, BPCDocumentCenterMaster } from 'app/models/ASN';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { Guid } from 'guid-typescript';
 import { AuthenticationDetails, UserWithRole } from 'app/models/master';
@@ -27,11 +26,8 @@ export class SupportTicketComponent implements OnInit {
   Users: UserWithRole[] = [];
   FilteredUsers: UserWithRole[] = [];
   PartnerID: string;
-  invAttach: BPCInvoiceAttachment;
-  selectedDocCenterMaster: BPCDocumentCenterMaster;
   fileToUpload: File;
   fileToUploadList: File[] = [];
-  invoiceAttachment: File;
   math = Math;
   IsProgressBarVisibile: boolean;
   SupportTicketFormGroup: FormGroup;
@@ -40,7 +36,6 @@ export class SupportTicketComponent implements OnInit {
   SupportMasters: SupportMaster[] = [];
   SupportHeader: SupportHeader;
   dateOfCreation: Date;
-  dateOfCreationDay: string;
   notificationSnackBarComponent: NotificationSnackBarComponent;
   constructor(
     private _route: ActivatedRoute,
@@ -78,7 +73,7 @@ export class SupportTicketComponent implements OnInit {
     }
 
     this.InitializeSupportTicketFormGroup();
-    this.GetSupportMasters();
+    this.GetSupportMastersByPartnerID();
     this.GetUsers();
   }
 
@@ -86,7 +81,6 @@ export class SupportTicketComponent implements OnInit {
     this.SupportTicketFormGroup = this._formBuilder.group({
       ReasonCode: ['', Validators.required],
       DocumentRefNo: ['', Validators.required],
-      InvoiceAttachment: [''],
       Remarks: ['', Validators.required]
     });
   }
@@ -106,10 +100,10 @@ export class SupportTicketComponent implements OnInit {
     this.ClearSupportTicketForm();
   }
 
-  GetSupportMasters(): void {
+  GetSupportMastersByPartnerID(): void {
     this.IsProgressBarVisibile = true;
     this._supportDeskService
-      .GetSupportMasters(this.PartnerID)
+      .GetSupportMastersByPartnerID(this.PartnerID)
       .subscribe((data) => {
         if (data) {
           this.SupportMasters = <SupportMaster[]>data;

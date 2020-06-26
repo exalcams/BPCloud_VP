@@ -129,7 +129,11 @@ export class LoginComponent implements OnInit {
     }
     else if (data.UserRole === 'Administrator') {
       this._router.navigate(['pages/datamigration']);
-    } else {
+    }
+    else if (data.UserRole === 'HelpDeskAdmin') {
+      this._router.navigate(['pages/supportdesk']);
+    }
+     else {
       this._router.navigate(['pages/dashboard']);
     }
 
@@ -594,8 +598,18 @@ export class LoginComponent implements OnInit {
         }
       );
     }
+    if (this.MenuItems.indexOf('SupportDeskMaster') >= 0) {
+      this.subChildren.push(
+        {
+          id: 'supportmaster',
+          title: 'Support',
+          type: 'item',
+          url: '/master/supportmaster'
+        }
+      );
+    }
     if (this.MenuItems.indexOf('App') >= 0 || this.MenuItems.indexOf('Role') >= 0 ||
-      this.MenuItems.indexOf('User') >= 0) {
+      this.MenuItems.indexOf('User') >= 0 || this.MenuItems.indexOf('SupportDeskMaster') >= 0) {
       this.children.push({
         id: 'master',
         title: 'Master',

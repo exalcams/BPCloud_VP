@@ -36,7 +36,7 @@ export class SupportDeskComponent implements OnInit {
   SupportDataSource: MatTableDataSource<SupportHeader>;
   @ViewChild(MatPaginator) SupportPaginator: MatPaginator;
   @ViewChild(MatSort) SupportSort: MatSort;
-  AllSupportMasters: SupportMaster[] = [];
+  SupportMasters: SupportMaster[] = [];
   IsSupportHeader: boolean;
 
   constructor(
@@ -65,15 +65,14 @@ export class SupportDeskComponent implements OnInit {
     } else {
       this._router.navigate(['/auth/login']);
     }
-    this.GetAllSupportMasters();
-
-    this.GetAllSupportTickets();
+    this.GetSupportMastersByPartnerID();
+    this.GetSupportTicketsByPartnerID();
   }
 
-  GetAllSupportTickets(): void {
+  GetSupportTicketsByPartnerID(): void {
     this.IsProgressBarVisibile = true;
     this._supportdeskService
-      .GetSupportTickets(this.authenticationDetails.UserName)
+      .GetSupportTicketsByPartnerID(this.authenticationDetails.UserName)
       .subscribe((data) => {
         if (data) {
           this.SupportHeaders = <SupportHeader[]>data;
@@ -92,13 +91,13 @@ export class SupportDeskComponent implements OnInit {
         });
   }
 
-  GetAllSupportMasters(): void {
+  GetSupportMastersByPartnerID(): void {
     this.IsProgressBarVisibile = true;
     this._supportdeskService
-      .GetSupportMasters(this.authenticationDetails.UserName)
+      .GetSupportMastersByPartnerID(this.authenticationDetails.UserName)
       .subscribe((data) => {
         if (data) {
-          this.AllSupportMasters = <SupportMaster[]>data;
+          this.SupportMasters = <SupportMaster[]>data;
         }
         this.IsProgressBarVisibile = false;
       },

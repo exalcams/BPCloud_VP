@@ -3,7 +3,7 @@
     <div class="outer" fxLayout>
       <div class="bg"></div>
       <div>
-        <h3 style="margin: 0px;padding-left: 10px;"><b>Support Master</b></h3>
+        <h3 style="margin: 0px;padding-left: 10px;"><b>Support</b></h3>
       </div>
       <div fxFlex align="end">
         <span><img src="assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
@@ -24,7 +24,7 @@
           </mat-toolbar>
         </div>
         <div class="sidenav-content" fusePerfectScrollbar fxFlex>
-          <div *ngFor="let supportMaster of AllSupportMasters | filter: searchText">
+          <div *ngFor="let supportMaster of SupportMasters | filter: searchText">
             <div>
               <div class="mx-8 mb-8 mt-0 p-8 leftCard" (click)="LoadSelectedSupportMaster(supportMaster)"
                 [style.border-left-color]="SelectedID==supportMaster.ID?'#efb577':'#cccccc'">
@@ -33,18 +33,18 @@
                   <div fxFlex align="end">{{supportMaster.CreatedOn | date :'dd/MM/yyyy'}}</div>
                 </div>
                 <div fxLayout class="pb-4" fxLayoutAlign="space-between center">
-                  <div fxFlex><strong>SupportMaster Name : </strong>{{supportMaster.Plant}}</div>
+                  <div fxFlex><strong>Partner ID : </strong>{{supportMaster.PatnerID}}</div>
                 </div>
                 <!-- <div fxLayout class="pb-4" fxLayoutAlign="space-between center">
-                  <div fxFlex><strong>AWB : </strong>{{supportMaster.App}}</div>
+                  <div fxFlex><strong>AWB : </strong>{{supportMaster.PatnerID}}</div>
                 </div>
                 <div fxLayout class="pb-4" fxLayoutAlign="space-between center">
-                  <div fxFlex>{{supportMaster.Plant}}</div>
+                  <div fxFlex>{{supportMaster.Client}}</div>
                 </div> -->
               </div>
             </div>
           </div>
-          <div *ngIf="(AllSupportMasters | filter: searchText)?.length === 0" class="no-results-message">
+          <div *ngIf="(SupportMasters | filter: searchText)?.length === 0" class="no-results-message">
             <span class="pl-12"> No results..</span>
           </div>
         </div>
@@ -61,9 +61,29 @@
 
                   <div fxFlex="50">
                     <mat-form-field class="pl-8 pr-12" style="width: 100%;">
+                      <input matInput placeholder="Reason Code" formControlName="ReasonCode">
+                      <mat-error
+                        *ngIf="SupportMasterFormGroup.get('ReasonCode').touched && SupportMasterFormGroup.get('ReasonCode').hasError('required')">
+                        Reason Code is required
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+
+                  <div fxFlex="50">
+                    <mat-form-field class="pl-8 pr-12" style="width: 100%;">
+                      <input matInput placeholder="Reason Text" formControlName="ReasonText">
+                      <mat-error
+                        *ngIf="SupportMasterFormGroup.get('ReasonText').touched && SupportMasterFormGroup.get('ReasonText').hasError('required')">
+                        Reason Text is required
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+
+                  <!-- <div fxFlex="50">
+                    <mat-form-field class="pl-8 pr-12" style="width: 100%;">
                       <mat-select (selectionChange)="ReasonSelected($event)" placeholder="Reason"
                         formControlName="ReasonCode">
-                        <mat-option *ngFor="let reason of AllReasons" [value]="reason.ReasonCode">
+                        <mat-option *ngFor="let reason of Reasons" [value]="reason.ReasonCode">
                           {{reason.ReasonText}}
                         </mat-option>
                       </mat-select>
@@ -72,41 +92,63 @@
                         Reason is required
                       </mat-error>
                     </mat-form-field>
-                  </div>
+                  </div> -->
 
-                  <div fxFlex="50">
-                    <mat-form-field class="pl-8 pr-12" style="width: 100%;">
-                      <input matInput placeholder="Plant" formControlName="Plant">
-                      <mat-error
-                        *ngIf="SupportMasterFormGroup.get('Plant').touched && SupportMasterFormGroup.get('Plant').hasError('required')">
-                        Plant is required
-                      </mat-error>
-                    </mat-form-field>
-                  </div>
                 </div>
 
                 <div fxFlex fxLayout="row" fxLayoutGap="40px">
 
                   <div fxFlex="50">
                     <mat-form-field class="pl-8 pr-12" style="width: 100%;">
-                      <input matInput placeholder="App" formControlName="App">
+                      <input matInput placeholder="Client" formControlName="Client">
                       <mat-error
-                        *ngIf="SupportMasterFormGroup.get('App').touched && SupportMasterFormGroup.get('App').hasError('required')">
-                        App is required
+                        *ngIf="SupportMasterFormGroup.get('Client').touched && SupportMasterFormGroup.get('Client').hasError('required')">
+                        Client is required
                       </mat-error>
                     </mat-form-field>
                   </div>
 
                   <div fxFlex="50">
                     <mat-form-field class="pl-8 pr-12" style="width: 100%;">
-                      <mat-select (selectionChange)="DeveloperSelected($event)" placeholder="Developer"
+                      <input matInput placeholder="Patner ID" formControlName="PatnerID">
+                      <mat-error
+                        *ngIf="SupportMasterFormGroup.get('PatnerID').touched && SupportMasterFormGroup.get('PatnerID').hasError('required')">
+                        Patner ID is required
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+
+
+                </div>
+
+                <div fxFlex fxLayout="row" fxLayoutGap="40px">
+
+                  <div fxFlex="50">
+                    <mat-form-field class="pl-8 pr-12" style="width: 100%;">
+                      <mat-select (selectionChange)="Developer1Selected($event)" placeholder="Developer 1"
                         formControlName="Person1">
-                        <mat-option *ngFor="let supportDeskUser of AllSupportDeskUsers" [value]="supportDeskUser.UserName">
+                        <mat-option *ngFor="let supportDeskUser of SupportDeskUsers" [value]="supportDeskUser.UserName">
                           {{supportDeskUser.UserName}}
                         </mat-option>
                       </mat-select>
                       <mat-error
                         *ngIf="SupportMasterFormGroup.get('Person1').touched && SupportMasterFormGroup.get('Person1').hasError('required')">
+                        Developer is required
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+
+                  
+                  <div fxFlex="50">
+                    <mat-form-field class="pl-8 pr-12" style="width: 100%;">
+                      <mat-select (selectionChange)="Developer2Selected($event)" placeholder="Developer 2"
+                        formControlName="Person2">
+                        <mat-option *ngFor="let supportDeskUser of SupportDeskUsers" [value]="supportDeskUser.UserName">
+                          {{supportDeskUser.UserName}}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error
+                        *ngIf="SupportMasterFormGroup.get('Person2').touched && SupportMasterFormGroup.get('Person2').hasError('required')">
                         Developer is required
                       </mat-error>
                     </mat-form-field>
