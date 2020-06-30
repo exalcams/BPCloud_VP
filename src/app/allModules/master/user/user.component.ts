@@ -18,15 +18,15 @@ import { NotificationDialogComponent } from 'app/notifications/notification-dial
   animations: fuseAnimations
 })
 export class UserComponent implements OnInit {
-  MenuItems: string[];
   AllUsers: UserWithRole[] = [];
-  SelectedUser: UserWithRole;
+  AllRoles: RoleWithApp[] = [];
+  selectedUser: UserWithRole;
+  menuItems: string[];
   authenticationDetails: AuthenticationDetails;
   notificationSnackBarComponent: NotificationSnackBarComponent;
-  IsProgressBarVisibile: boolean;
+  isProgressBarVisibile: boolean;
   selectID: Guid;
   userMainFormGroup: FormGroup;
-  AllRoles: RoleWithApp[] = [];
   searchText = '';
   constructor(
     private _masterService: MasterService,
@@ -34,10 +34,10 @@ export class UserComponent implements OnInit {
     public snackBar: MatSnackBar,
     private dialog: MatDialog,
     private _formBuilder: FormBuilder) {
-    this.SelectedUser = new UserWithRole();
+    this.selectedUser = new UserWithRole();
     this.authenticationDetails = new AuthenticationDetails();
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
-    this.IsProgressBarVisibile = true;
+    this.isProgressBarVisibile = true;
   }
 
   ngOnInit(): void {
@@ -45,8 +45,8 @@ export class UserComponent implements OnInit {
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
-      this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
-      if (this.MenuItems.indexOf('User') < 0) {
+      this.menuItems = this.authenticationDetails.MenuItemNames.split(',');
+      if (this.menuItems.indexOf('User') < 0) {
         this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
         this._router.navigate(['/auth/login']);
       }
@@ -56,7 +56,7 @@ export class UserComponent implements OnInit {
         roleID: ['', Validators.required],
         email: ['', [Validators.required, Validators.email]],
         contactNumber: ['', [Validators.required, Validators.pattern]],
-        // plant: ['', Validators.required],
+        displayName: ['', Validators.required],
         profile: ['']
       });
       this.GetAllRoles();
@@ -66,8 +66,9 @@ export class UserComponent implements OnInit {
     }
 
   }
+
   ResetControl(): void {
-    this.SelectedUser = new UserWithRole();
+    this.selectedUser = new UserWithRole();
     this.selectID = Guid.createEmpty();
     this.userMainFormGroup.reset();
     Object.keys(this.userMainFormGroup.controls).forEach(key => {
@@ -75,6 +76,7 @@ export class UserComponent implements OnInit {
     });
     // this.fileToUpload = null;
   }
+  
   GetAllRoles(): void {
     this._masterService.GetAllRoles().subscribe(
       (data) => {
@@ -88,10 +90,10 @@ export class UserComponent implements OnInit {
   }
 
   GetAllUsers(): void {
-    this.IsProgressBarVisibile = true;
+    this.isProgressBarVisibile = true;
     this._masterService.GetAllUsers().subscribe(
       (data) => {
-        this.IsProgressBarVisibile = false;
+        this.isProgressBarVisibile = false;
         this.AllUsers = <UserWithRole[]>data;
         if (this.AllUsers && this.AllUsers.length) {
           this.loadSelectedUser(this.AllUsers[0]);
@@ -99,7 +101,7 @@ export class UserComponent implements OnInit {
       },
       (err) => {
         console.error(err);
-        this.IsProgressBarVisibile = false;
+        this.isProgressBarVisibile = false;
         this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
       }
     );
@@ -107,16 +109,16 @@ export class UserComponent implements OnInit {
 
   loadSelectedUser(selectedUser: UserWithRole): void {
     this.selectID = selectedUser.UserID;
-    this.SelectedUser = selectedUser;
+    this.selectedUser = selectedUser;
     this.SetUserValues();
   }
 
   SetUserValues(): void {
-    this.userMainFormGroup.get('userName').patchValue(this.SelectedUser.UserName);
-    // this.userMainFormGroup.get('plant').patchValue(this.SelectedUser.Plant);
-    this.userMainFormGroup.get('roleID').patchValue(this.SelectedUser.RoleID);
-    this.userMainFormGroup.get('email').patchValue(this.SelectedUser.Email);
-    this.userMainFormGroup.get('contactNumber').patchValue(this.SelectedUser.ContactNumber);
+    this.userMainFormGroup.get('userName').patchValue(this.selectedUser.UserName);
+    this.userMainFormGroup.get('displayName').patchValue(this.selectedUser.DisplayName);
+    this.userMainFormGroup.get('roleID').patchValue(this.selectedUser.RoleID);
+    this.userMainFormGroup.get('email').patchValue(this.selectedUser.Email);
+    this.userMainFormGroup.get('contactNumber').patchValue(this.selectedUser.ContactNumber);
   }
 
   OpenConfirmationDialog(Actiontype: string, Catagory: string): void {
@@ -143,29 +145,29 @@ export class UserComponent implements OnInit {
   }
 
   GetUserValues(): void {
-    this.SelectedUser.UserName = this.userMainFormGroup.get('userName').value;
-    // this.SelectedUser.Plant = this.userMainFormGroup.get('plant').value;
-    this.SelectedUser.RoleID = <Guid>this.userMainFormGroup.get('roleID').value;
-    this.SelectedUser.Email = this.userMainFormGroup.get('email').value;
-    this.SelectedUser.ContactNumber = this.userMainFormGroup.get('contactNumber').value;
+    this.selectedUser.UserName = this.userMainFormGroup.get('userName').value;
+    this.selectedUser.DisplayName = this.userMainFormGroup.get('displayName').value;
+    this.selectedUser.RoleID = <Guid>this.userMainFormGroup.get('roleID').value;
+    this.selectedUser.Email = this.userMainFormGroup.get('email').value;
+    this.selectedUser.ContactNumber = this.userMainFormGroup.get('contactNumber').value;
   }
 
   CreateUser(): void {
     this.GetUserValues();
-    this.SelectedUser.CreatedBy = this.authenticationDetails.UserID.toString();
-    this.IsProgressBarVisibile = true;
-    this._masterService.CreateUser(this.SelectedUser).subscribe(
+    this.selectedUser.CreatedBy = this.authenticationDetails.UserID.toString();
+    this.isProgressBarVisibile = true;
+    this._masterService.CreateUser(this.selectedUser).subscribe(
       (data) => {
         // console.log(data);
         this.ResetControl();
         this.notificationSnackBarComponent.openSnackBar('User created successfully', SnackBarStatus.success);
-        this.IsProgressBarVisibile = false;
+        this.isProgressBarVisibile = false;
         this.GetAllUsers();
       },
       (err) => {
         console.error(err);
         this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-        this.IsProgressBarVisibile = false;
+        this.isProgressBarVisibile = false;
       }
     );
 
@@ -173,40 +175,40 @@ export class UserComponent implements OnInit {
 
   UpdateUser(): void {
     this.GetUserValues();
-    this.SelectedUser.ModifiedBy = this.authenticationDetails.UserID.toString();
-    this.IsProgressBarVisibile = true;
-    this._masterService.UpdateUser(this.SelectedUser).subscribe(
+    this.selectedUser.ModifiedBy = this.authenticationDetails.UserID.toString();
+    this.isProgressBarVisibile = true;
+    this._masterService.UpdateUser(this.selectedUser).subscribe(
       (data) => {
         // console.log(data);
         this.ResetControl();
         this.notificationSnackBarComponent.openSnackBar('User updated successfully', SnackBarStatus.success);
-        this.IsProgressBarVisibile = false;
+        this.isProgressBarVisibile = false;
         this.GetAllUsers();
       },
       (err) => {
         console.error(err);
         this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-        this.IsProgressBarVisibile = false;
+        this.isProgressBarVisibile = false;
       }
     );
   }
 
   DeleteUser(): void {
     this.GetUserValues();
-    this.SelectedUser.ModifiedBy = this.authenticationDetails.UserID.toString();
-    this.IsProgressBarVisibile = true;
-    this._masterService.DeleteUser(this.SelectedUser).subscribe(
+    this.selectedUser.ModifiedBy = this.authenticationDetails.UserID.toString();
+    this.isProgressBarVisibile = true;
+    this._masterService.DeleteUser(this.selectedUser).subscribe(
       (data) => {
         // console.log(data);
         this.ResetControl();
         this.notificationSnackBarComponent.openSnackBar('User deleted successfully', SnackBarStatus.success);
-        this.IsProgressBarVisibile = false;
+        this.isProgressBarVisibile = false;
         this.GetAllUsers();
       },
       (err) => {
         console.error(err);
         this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-        this.IsProgressBarVisibile = false;
+        this.isProgressBarVisibile = false;
       }
     );
   }
@@ -222,7 +224,7 @@ export class UserComponent implements OnInit {
   SaveClicked(): void {
     if (this.userMainFormGroup.valid) {
       // const file: File = this.fileToUpload;
-      if (this.SelectedUser.UserID) {
+      if (this.selectedUser.UserID) {
         const Actiontype = 'Update';
         const Catagory = 'User';
         this.OpenConfirmationDialog(Actiontype, Catagory);
@@ -238,7 +240,7 @@ export class UserComponent implements OnInit {
 
   DeleteClicked(): void {
     if (this.userMainFormGroup.valid) {
-      if (this.SelectedUser.UserID) {
+      if (this.selectedUser.UserID) {
         const Actiontype = 'Delete';
         const Catagory = 'User';
         this.OpenConfirmationDialog(Actiontype, Catagory);

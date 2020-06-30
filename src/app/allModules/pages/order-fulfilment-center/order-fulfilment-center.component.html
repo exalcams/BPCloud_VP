@@ -1,4 +1,4 @@
-<div id="dashboard" class="page-layout carded" fusePerfectScrollbar>
+<div id="order-fulfilment-center" class="page-layout carded" fusePerfectScrollbar>
   <div class="center" fxLayout="column" fxLayoutGap="10px">
     <div class="outer" fxLayout>
       <div class="bg"></div>
@@ -12,7 +12,7 @@
     <div fxFlex fxLayout>
       <div class="tile mx-20" fxFlex="17" fxLayout="column" fxLayoutAlign="start">
         <div fxLayoutAlign="start center" class="pt-8">
-          <span class="boldClass orangeBorderBottom pl-8"> Time In Full (OTIF)</span>
+          <span class="boldClass orangeBorderBottom pl-8">On Time In Full (OTIF)</span>
         </div>
         <div fxFlex fxLayoutAlign="center" class="pt-8">
           <svg height="140" width="140" viewBox="0 0 140 140" class="progress__svg">
@@ -47,7 +47,7 @@
       </div>
       <div class="tile mx-20" fxFlex="25" fxLayout="column" fxLayoutAlign="start">
         <div fxLayoutAlign="start center" class="pt-8">
-          <span class="boldClass orangeBorderBottom pl-8"> Fulfilment </span>
+          <span class="boldClass orangeBorderBottom pl-8">Fulfilment </span>
         </div>
         <div id="doughnutChart" fxFlex fxLayoutAlign="start" class="pt-8 pl-8 pr-4">
           <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType"
@@ -71,35 +71,25 @@
     </div>
     <div class="sidenav-content px-24 mt-4" fxFlex>
       <form class="formGroupStyle" autocomplete="off" fxFlex name="form" [formGroup]="poFormGroup" novalidate>
-        <div FxLayout="row" class="formRowStyle" fxLayout.xs="column">
+        <div fxLayout="row" class="formRowStyle" fxLayout.xs="column">
           <div fxFlex="21%">
             <mat-form-field>
               <input matInput placeholder="From date" [matDatepicker]="picker1" formControlName="FromDate"
                 (dateChange)="DateSelected()">
-              <!-- <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle> -->
               <mat-datepicker-toggle matSuffix [for]="picker1">
                 <img matDatepickerToggleIcon class="calendarImg" src="assets/images/calendar.png">
               </mat-datepicker-toggle>
               <mat-datepicker #picker1></mat-datepicker>
-              <!-- <mat-error
-                *ngIf="poFormGroup.get('FromDate').touched && poFormGroup.get('FromDate').hasError('required')">
-                From date is required
-              </mat-error> -->
             </mat-form-field>
           </div>
           <div fxFlex="21%">
             <mat-form-field>
               <input matInput placeholder="To Date" [matDatepicker]="picker2" formControlName="ToDate"
                 (dateChange)="DateSelected()">
-              <!-- <mat-datepicker-toggle matSuffix [for]="picker2"> </mat-datepicker-toggle> -->
               <mat-datepicker-toggle matSuffix [for]="picker2">
                 <img matDatepickerToggleIcon class="calendarImg" src="assets/images/calendar.png">
               </mat-datepicker-toggle>
               <mat-datepicker #picker2 color="primary"></mat-datepicker>
-              <!-- <mat-error
-                *ngIf="poFormGroup.get('ToDate').touched && poFormGroup.get('ToDate').hasError('required')">
-                To date is required
-              </mat-error> -->
             </mat-form-field>
             <div *ngIf="isDateError" style="color:#f44336;font-size: 12px;margin-top: -16px">
               To date should not be less than from date
@@ -113,28 +103,21 @@
                   <span>{{doc1.Name}}</span>
                 </mat-option>
               </mat-select>
-              <!-- <mat-error
-                *ngIf="poFormGroup.get('Status').touched && poFormGroup.get('Status').hasError('required')">
-                Status is required
-              </mat-error> -->
             </mat-form-field>
-            <!-- <mat-form-field appearance="outline" style="width: 120px;">
-              <mat-select formControlName="Status" required>
-              <mat-label>Action</mat-label>
-                <mat-option value="All">All</mat-option>
-                <mat-option value="Open" >Open</mat-option>
-                <mat-option value="ACK">ACK</mat-option>
-                <mat-option value="ASN">ASN</mat-option>
-              </mat-select>
-              <mat-error
-              *ngIf="poFormGroup.get('Status').touched && poFormGroup.get('Status').hasError('required')">
-              Status is required
-          </mat-error>
-            </mat-form-field> -->
           </div>
-          <div fxFlex="64%">
-            <button class="mt-4" style="background-color: #efb577;color: white;"
-              mat-raised-button (click)="GetAllPOBasedOnDate()">Search</button>
+          <div fxFlex="19%">
+            <mat-form-field>
+              <mat-select style="width:180px" placeholder="PO Type" formControlName="Status">
+                <mat-option>None</mat-option>
+                <mat-option *ngFor="let poType of PoTypes" [value]="poType.Value">
+                  <span>{{poType.Name}}</span>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div fxFlex="45%">
+            <button class="mt-4" style="background-color: #efb577;color: white;" mat-raised-button
+              (click)="GetAllPOBasedOnDate()">Search</button>
           </div>
         </div>
       </form>

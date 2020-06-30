@@ -13,13 +13,13 @@ import { Guid } from 'guid-typescript';
 import { AuthenticationDetails } from 'app/models/master';
 
 @Component({
-    selector: 'app-order-fulfilment',
-    templateUrl: './order-fulfilment.component.html',
-    styleUrls: ['./order-fulfilment.component.scss'],
+    selector: 'app-po-factsheet',
+    templateUrl: './po-factsheet.component.html',
+    styleUrls: ['./po-factsheet.component.scss'],
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations
 })
-export class OrderFulfilmentComponent implements OnInit {
+export class PoFactsheetComponent implements OnInit {
 
 
     public tab1: boolean;
@@ -109,7 +109,16 @@ export class OrderFulfilmentComponent implements OnInit {
         private datepipe: DatePipe,
         private dialog: MatDialog,
     ) {
+        this.tab1 = true;
+        this.tab2 = false;
+        this.tab3 = false;
+        this.tab4 = false;
+        this.tab5 = false;
+        this.tab6 = false;
+        // this.tabCount = 1;
+    }
 
+    ngOnInit(): void {
         const retrievedObject = localStorage.getItem('authorizationData');
         if (retrievedObject) {
             this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
@@ -130,12 +139,12 @@ export class OrderFulfilmentComponent implements OnInit {
 
         this.route.queryParams.subscribe(params => {
             this.PO = params['id'];
-            this._dashboardService.GetOrderFulfilmentDetails(this.PO,this.PartnerID).subscribe(
+            this._dashboardService.GetOrderFulfilmentDetails(this.PO, this.PartnerID).subscribe(
                 data => {
                     if (data) {
                         this.OrderFulfilmentDetails = <OrderFulfilmentDetails>data;
                         // console.log(this.OrderFulfilmentDetails);
-                        this.Status = this.OrderFulfilmentDetails.Status
+                        this.Status = this.OrderFulfilmentDetails.Status;
                         this.asn = this.OrderFulfilmentDetails.aSNDetails;
                         this.items = this.OrderFulfilmentDetails.itemDetails;
                         this.grn = this.OrderFulfilmentDetails.gRNDetails;
@@ -177,19 +186,10 @@ export class OrderFulfilmentComponent implements OnInit {
         this.ACKFormGroup = this.formBuilder.group({
             Proposeddeliverydate: ['', Validators.required]
         });
-        this.tab1 = true;
-        this.tab2 = false;
-        this.tab3 = false;
-        this.tab4 = false;
-        this.tab5 = false;
-        this.tab6 = false;
-        // this.tabCount = 1;
-    }
-
-    ngOnInit() {
         this.tabCount = 1;
         this.InitializePOItemFormGroup();
     }
+
     tabone(): void {
         this.tab1 = true;
         this.tab2 = false;
@@ -201,6 +201,7 @@ export class OrderFulfilmentComponent implements OnInit {
         this.tabCount = 1;
         // this.ResetControl();
     }
+
     tabtwo(): void {
         this.tab1 = false;
         this.tab2 = true;
@@ -212,6 +213,7 @@ export class OrderFulfilmentComponent implements OnInit {
         this.tabCount = 2;
         // this.ResetControl();
     }
+
     tabthree(): void {
         this.tab1 = false;
         this.tab2 = false;
@@ -223,6 +225,7 @@ export class OrderFulfilmentComponent implements OnInit {
         this.tabCount = 3;
         // this.ResetControl();
     }
+
     tabfour(): void {
         this.tab1 = false;
         this.tab2 = false;
@@ -234,6 +237,7 @@ export class OrderFulfilmentComponent implements OnInit {
         this.tabCount = 4;
         // this.ResetControl();
     }
+
     tabfive(): void {
         this.tab1 = false;
         this.tab2 = false;
@@ -245,6 +249,7 @@ export class OrderFulfilmentComponent implements OnInit {
         // this.getallqa();
         // this.ResetControl();
     }
+
     tabsix(): void {
         this.tab1 = false;
         this.tab2 = false;
@@ -257,7 +262,7 @@ export class OrderFulfilmentComponent implements OnInit {
         // this.ResetControl();
     }
 
-    AdvanceShipment(po: string) {
+    AdvanceShipment(po: string): void {
         // alert(po);
         this._router.navigate(['/pages/asn'], { queryParams: { id: po } });
     }
@@ -267,6 +272,7 @@ export class OrderFulfilmentComponent implements OnInit {
             POItems: this.POItemFormArray
         });
     }
+
     GetPOItemValues(): void {
         this.OrderFulfilmentDetails.itemDetails = [];
         const poItemFormArray = this.ACKFormGroup.get('POItems') as FormArray;
@@ -286,6 +292,7 @@ export class OrderFulfilmentComponent implements OnInit {
             console.log(this.OrderFulfilmentDetails.itemDetails);
         });
     }
+
     InsertPOItemsFormGroup(poItem: ItemDetails): void {
         const row = this.formBuilder.group({
             Item: [poItem.Item],
@@ -304,7 +311,8 @@ export class OrderFulfilmentComponent implements OnInit {
         this.itemDataSource.next(this.POItemFormArray.controls);
         // return row;
     }
-    YesClicked() {
+
+    YesClicked(): void {
         if (this.ACKFormGroup.valid) {
             this.GetPOItemValues();
             const dialogConfig: MatDialogConfig = {
@@ -351,15 +359,19 @@ export class OrderFulfilmentComponent implements OnInit {
             // );
         }
     }
+
     getallItem(): void {
         // this.itemDataSource = new MatTableDataSource(this.items);
     }
+
     getallasn(): void {
         this.asnDataSource = new MatTableDataSource(this.asn);
     }
+
     getallgrn(): void {
         this.grnDataSource = new MatTableDataSource(this.grn);
     }
+
     getallqa(): void {
         this.qaDataSource = new MatTableDataSource(this.qa);
     }
@@ -377,6 +389,7 @@ export class OrderFulfilmentComponent implements OnInit {
                 return '';
         }
     }
+
     getTimeline(StatusFor: string): string {
         switch (StatusFor) {
             case 'ASN':

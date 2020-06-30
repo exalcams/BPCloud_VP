@@ -18,28 +18,28 @@ import { NotificationDialogComponent } from 'app/notifications/notification-dial
   animations: fuseAnimations
 })
 export class RoleComponent implements OnInit {
-  MenuItems: string[];
-  AllRoles: RoleWithApp[] = [];
-  SelectedRole: RoleWithApp;
+  menuItems: string[];
+  selectedRole: RoleWithApp;
   authenticationDetails: AuthenticationDetails;
   notificationSnackBarComponent: NotificationSnackBarComponent;
-  IsProgressBarVisibile: boolean;
+  isProgressBarVisibile: boolean;
   selectID: Guid;
+  searchText = '';
   roleMainFormGroup: FormGroup;
   AllMenuApps: MenuApp[] = [];
-  searchText = '';
+  AllRoles: RoleWithApp[] = [];
   AppIDListAllID: number;
-  
+
   constructor(
     private _masterService: MasterService,
     private _router: Router,
     public snackBar: MatSnackBar,
     private dialog: MatDialog,
     private _formBuilder: FormBuilder) {
-    this.SelectedRole = new RoleWithApp();
+    this.selectedRole = new RoleWithApp();
     this.authenticationDetails = new AuthenticationDetails();
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
-    this.IsProgressBarVisibile = true;
+    this.isProgressBarVisibile = true;
     this.AppIDListAllID = 0;
   }
 
@@ -48,8 +48,8 @@ export class RoleComponent implements OnInit {
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
-      this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
-      if (this.MenuItems.indexOf('User') < 0) {
+      this.menuItems = this.authenticationDetails.MenuItemNames.split(',');
+      if (this.menuItems.indexOf('User') < 0) {
         this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
         this._router.navigate(['/auth/login']);
       }
@@ -57,7 +57,7 @@ export class RoleComponent implements OnInit {
       this.roleMainFormGroup = this._formBuilder.group({
         roleName: ['', Validators.required],
         appIDList: [[], Validators.required]
-        // appIDList: [[], CustomValidators.SelectedRole('Administrator')]
+        // appIDList: [[], CustomValidators.selectedRole('Administrator')]
       });
       this.GetAllMenuApps();
       this.GetAllRoles();
@@ -66,8 +66,9 @@ export class RoleComponent implements OnInit {
     }
 
   }
+
   ResetControl(): void {
-    this.SelectedRole = new RoleWithApp();
+    this.selectedRole = new RoleWithApp();
     this.selectID = Guid.createEmpty();
     this.roleMainFormGroup.reset();
     Object.keys(this.roleMainFormGroup.controls).forEach(key => {
@@ -75,6 +76,7 @@ export class RoleComponent implements OnInit {
     });
     // this.fileToUpload = null;
   }
+  
   GetAllMenuApps(): void {
     this._masterService.GetAllMenuApp().subscribe(
       (data) => {
@@ -93,10 +95,10 @@ export class RoleComponent implements OnInit {
   }
 
   GetAllRoles(): void {
-    this.IsProgressBarVisibile = true;
+    this.isProgressBarVisibile = true;
     this._masterService.GetAllRoles().subscribe(
       (data) => {
-        this.IsProgressBarVisibile = false;
+        this.isProgressBarVisibile = false;
         this.AllRoles = <RoleWithApp[]>data;
         if (this.AllRoles && this.AllRoles.length) {
           this.loadSelectedRole(this.AllRoles[0]);
@@ -104,7 +106,7 @@ export class RoleComponent implements OnInit {
       },
       (err) => {
         console.error(err);
-        this.IsProgressBarVisibile = false;
+        this.isProgressBarVisibile = false;
         this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
       }
     );
@@ -121,15 +123,15 @@ export class RoleComponent implements OnInit {
     // console.log(this.roleMainFormGroup.get('appIDList').value);
   }
 
-  loadSelectedRole(SelectedRole: RoleWithApp): void {
-    this.selectID = SelectedRole.RoleID;
-    this.SelectedRole = SelectedRole;
+  loadSelectedRole(selectedRole: RoleWithApp): void {
+    this.selectID = selectedRole.RoleID;
+    this.selectedRole = selectedRole;
     this.SetRoleValues();
   }
 
   SetRoleValues(): void {
-    this.roleMainFormGroup.get('roleName').patchValue(this.SelectedRole.RoleName);
-    this.roleMainFormGroup.get('appIDList').patchValue(this.SelectedRole.AppIDList);
+    this.roleMainFormGroup.get('roleName').patchValue(this.selectedRole.RoleName);
+    this.roleMainFormGroup.get('appIDList').patchValue(this.selectedRole.AppIDList);
   }
 
   OpenConfirmationDialog(Actiontype: string, Catagory: string): void {
@@ -156,26 +158,26 @@ export class RoleComponent implements OnInit {
   }
 
   GetRoleValues(): void {
-    this.SelectedRole.RoleName = this.roleMainFormGroup.get('roleName').value;
-    this.SelectedRole.AppIDList = <number[]>this.roleMainFormGroup.get('appIDList').value;
+    this.selectedRole.RoleName = this.roleMainFormGroup.get('roleName').value;
+    this.selectedRole.AppIDList = <number[]>this.roleMainFormGroup.get('appIDList').value;
   }
 
   CreateRole(): void {
     this.GetRoleValues();
-    this.SelectedRole.CreatedBy = this.authenticationDetails.UserID.toString();
-    this.IsProgressBarVisibile = true;
-    this._masterService.CreateRole(this.SelectedRole).subscribe(
+    this.selectedRole.CreatedBy = this.authenticationDetails.UserID.toString();
+    this.isProgressBarVisibile = true;
+    this._masterService.CreateRole(this.selectedRole).subscribe(
       (data) => {
         // console.log(data);
         this.ResetControl();
         this.notificationSnackBarComponent.openSnackBar('Role created successfully', SnackBarStatus.success);
-        this.IsProgressBarVisibile = false;
+        this.isProgressBarVisibile = false;
         this.GetAllRoles();
       },
       (err) => {
         console.error(err);
         this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-        this.IsProgressBarVisibile = false;
+        this.isProgressBarVisibile = false;
       }
     );
 
@@ -183,40 +185,40 @@ export class RoleComponent implements OnInit {
 
   UpdateRole(): void {
     this.GetRoleValues();
-    this.SelectedRole.ModifiedBy = this.authenticationDetails.UserID.toString();
-    this.IsProgressBarVisibile = true;
-    this._masterService.UpdateRole(this.SelectedRole).subscribe(
+    this.selectedRole.ModifiedBy = this.authenticationDetails.UserID.toString();
+    this.isProgressBarVisibile = true;
+    this._masterService.UpdateRole(this.selectedRole).subscribe(
       (data) => {
         // console.log(data);
         this.ResetControl();
         this.notificationSnackBarComponent.openSnackBar('Role updated successfully', SnackBarStatus.success);
-        this.IsProgressBarVisibile = false;
+        this.isProgressBarVisibile = false;
         this.GetAllRoles();
       },
       (err) => {
         console.error(err);
         this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-        this.IsProgressBarVisibile = false;
+        this.isProgressBarVisibile = false;
       }
     );
   }
 
   DeleteRole(): void {
     this.GetRoleValues();
-    this.SelectedRole.ModifiedBy = this.authenticationDetails.UserID.toString();
-    this.IsProgressBarVisibile = true;
-    this._masterService.DeleteRole(this.SelectedRole).subscribe(
+    this.selectedRole.ModifiedBy = this.authenticationDetails.UserID.toString();
+    this.isProgressBarVisibile = true;
+    this._masterService.DeleteRole(this.selectedRole).subscribe(
       (data) => {
         // console.log(data);
         this.ResetControl();
         this.notificationSnackBarComponent.openSnackBar('Role deleted successfully', SnackBarStatus.success);
-        this.IsProgressBarVisibile = false;
+        this.isProgressBarVisibile = false;
         this.GetAllRoles();
       },
       (err) => {
         console.error(err);
         this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-        this.IsProgressBarVisibile = false;
+        this.isProgressBarVisibile = false;
       }
     );
   }
@@ -232,7 +234,7 @@ export class RoleComponent implements OnInit {
   SaveClicked(): void {
     if (this.roleMainFormGroup.valid) {
       // const file: File = this.fileToUpload;
-      if (this.SelectedRole.RoleID) {
+      if (this.selectedRole.RoleID) {
         const Actiontype = 'Update';
         const Catagory = 'Role';
         this.OpenConfirmationDialog(Actiontype, Catagory);
@@ -248,7 +250,7 @@ export class RoleComponent implements OnInit {
 
   DeleteClicked(): void {
     if (this.roleMainFormGroup.valid) {
-      if (this.SelectedRole.RoleID) {
+      if (this.selectedRole.RoleID) {
         const Actiontype = 'Delete';
         const Catagory = 'Role';
         this.OpenConfirmationDialog(Actiontype, Catagory);

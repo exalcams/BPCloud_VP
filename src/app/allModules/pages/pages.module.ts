@@ -49,7 +49,6 @@ import {
 } from "@fuse/components";
 import { FuseSharedModule } from "@fuse/shared.module";
 import { FormsModule } from "@angular/forms";
-import { DashboardComponent } from "./dashboard/dashboard.component";
 import { DecimalPipe } from "@angular/common";
 import { NgCircleProgressModule } from "ng-circle-progress";
 import { ChartsModule } from "ng2-charts";
@@ -58,20 +57,21 @@ import "chartjs-plugin-annotation";
 import { PoFlipComponent } from "./po-flip/po-flip.component";
 import { ASNComponent } from "./asn/asn.component";
 import { HomeComponent } from "./home/home.component";
-import { OrderFulfilmentComponent } from "./order-fulfilment/order-fulfilment.component";
 import { PaymentComponent } from "./payment/payment.component";
 import { ResourceComponent } from './resource/resource.component';
 import { SupportDeskComponent } from './support-desk/support-desk.component';
 import { SupportTicketComponent } from './support-ticket/support-ticket.component';
 import { SupportChatComponent } from './support-chat/support-chat.component';
 import { DataMigrationComponent } from './data-migration/data-migration.component';
+import { PoFactsheetComponent } from './po-factsheet/po-factsheet.component';
+import { OrderFulFilmentCenterComponent } from './order-fulfilment-center/order-fulfilment-center.component';
 
 // import 'chart.piecelabel.js';
 
 const routes = [
     {
         path: "orderfulfilmentCenter",
-        component: DashboardComponent,
+        component: OrderFulFilmentCenterComponent,
     },
     {
         path: "asn",
@@ -91,7 +91,7 @@ const routes = [
     },
     {
         path: "polookup",
-        component: OrderFulfilmentComponent,
+        component: PoFactsheetComponent,
     },
     {
         path: "resource", 
@@ -188,11 +188,11 @@ const routes = [
         }),
     ],
     declarations: [
-        DashboardComponent,
+        OrderFulFilmentCenterComponent,
         ASNComponent,
         PoFlipComponent,
         HomeComponent,
-        OrderFulfilmentComponent,
+        PoFactsheetComponent,
         PaymentComponent,
         ResourceComponent,
         SupportDeskComponent,

@@ -4,7 +4,7 @@
       <div class="bg"></div>
       <div>
         <h3 style="margin: 0px;padding-left: 10px;"><b>Welcome <span
-              style="color: #d87060;">{{CurrentUserName}}</span></b></h3>
+              style="color: #d87060;">{{currentDisplayName}}</span></b></h3>
       </div>
       <div fxFlex align="end">
         <span><img src="assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
@@ -35,11 +35,11 @@
                       <div fxLayout="row" fxLayoutGap="20px" style="padding:10px 10px 10px 10px">
                         <div fxFlex>
                           <h2 style="font-weight: 500;color:#fea320 ;">
-                            ₹{{SelectedBPCFact.OutstandingAmount}}</h2>
+                            ₹{{selectedFact.OutstandingAmount}}</h2>
                         </div>
                         <div fxFlex>
                           <h2 style="font-weight: 500;color:#29a747; padding-left: 25px;">
-                            ₹{{SelectedBPCFact.CreditBalance}}</h2>
+                            ₹{{selectedFact.CreditBalance}}</h2>
                         </div>
                       </div>
                     </div>
@@ -56,11 +56,11 @@
                     <tr>
                       <td>
                         <h2 style="padding:5px 0px 0px 10px;font-weight: 500;color:#fea320 ;">
-                          ₹{{SelectedBPCFact.OutstandingAmount}}</h2>
+                          ₹{{selectedFact.OutstandingAmount}}</h2>
                       </td>
                       <td style="text-align: left;">
                         <h2 style="padding:5px 10px 0px 10px;font-weight: 500;color:#29a747">
-                          ₹{{SelectedBPCFact.CreditBalance}}</h2>
+                          ₹{{selectedFact.CreditBalance}}</h2>
                       </td>
                     </tr>
                   </table> -->
@@ -76,7 +76,7 @@
                     </tr>
                     <tr>
                       <td>
-                        <h2 style="padding:5px 0px 0px 8px;font-weight:500;">₹{{SelectedBPCFact.LastPayment}}</h2>
+                        <h2 style="padding:5px 0px 0px 8px;font-weight:500;">₹{{selectedFact.LastPayment}}</h2>
                       </td>
                       <td style="text-align: right;">
                         <span>Payment on</span>
@@ -84,10 +84,10 @@
                     </tr>
                     <tr>
                       <td> <span style="padding-left: 8px;">Received for <span
-                            style="color:deepskyblue;">{{SelectedBPCFact.CreditAmount}}</span></span>
+                            style="color:deepskyblue;">{{selectedFact.CreditAmount}}</span></span>
                       </td>
                       <td style="text-align: right;">
-                        <span><b>{{SelectedBPCFact.LastPaymentDate | date :'dd/MM/yy'}}</b></span>
+                        <span><b>{{selectedFact.LastPaymentDate | date :'dd/MM/yy'}}</b></span>
                     </tr>
                   </table>
                 </div>
@@ -96,20 +96,20 @@
 
             <mat-card fxFlex="100%" style="padding: 10px;">
               <!-- <mat-card-content> -->
-              <h2 style="padding:0px 0px 5px 5px;"><strong>{{SelectedBPCFact.Company}}</strong></h2>
-              <h6 style="padding:5px 0px 5px 5px;">{{SelectedBPCFact.Email1}}</h6>
+              <h2 style="padding:0px 0px 5px 5px;"><strong>{{selectedFact.Company}}</strong></h2>
+              <h6 style="padding:5px 0px 5px 5px;">{{selectedFact.Email1}}</h6>
               <h5 style="padding:5px 0px 5px 5px;"> <span><img src="../../../../assets/images/phone-call.svg"> </span>
-                {{SelectedBPCFact.Phone1}}
+                {{selectedFact.Phone1}}
               </h5>
               <h5 style="padding:5px 0px 5px 5px;"> <span><img
                     src="../../../../assets/images/noun_mobile phone_117228.svg"> </span>
-                {{SelectedBPCFact.Phone2}}
+                {{selectedFact.Phone2}}
               </h5>
-              <h5 style="padding:5px 0px 5px 5px;">Vendor Type : <strong>{{SelectedBPCFact.Type}}</strong></h5>
+              <h5 style="padding:5px 0px 5px 5px;">Vendor Type : <strong>{{selectedFact.Type}}</strong></h5>
               <hr>
               <h6 style="padding:5px 0px 5px 5px;"><strong> GST Information</strong></h6>
               <h5 style="padding:5px 0px 5px 5px;">GST Treatment : <strong>Registered Business - Regular</strong></h5>
-              <h5 style="padding:5px 0px 5px 5px;">Business GSTIN : <strong>{{SelectedBPCFact.TaxID1}}</strong></h5>
+              <h5 style="padding:5px 0px 5px 5px;">Business GSTIN : <strong>{{selectedFact.TaxID1}}</strong></h5>
               <!-- </mat-card-content> -->
             </mat-card>
 
@@ -117,7 +117,7 @@
                 <mat-card-content>
                   <div fxFlex fxLayout>
                     <div fxFlex fxLayoutAlign="start center">
-                      <span class="viewMoreDetails">View more details/Change</span>
+                      <span class="view-more-details">View more details/Change</span>
                     </div>
                     <div fxFlex fxLayoutAlign="end center">
                       <span><img src="../../../../assets/images/ellipsis.png" style="height: 25px;width: 40px;"></span>
@@ -128,13 +128,24 @@
 
           </div>
         </div>
-        <mat-card-actions class="m-0 cardActions">
+        <mat-card-actions class="m-0 card-actions">
           <div fxFlex fxLayout>
             <div fxFlex="75" fxLayoutAlign="start center">
-              <span class="viewMoreDetails">View more details/Change</span>
+              <span class="view-more-details">View more details/Change</span>
             </div>
             <div fxFlex="25" fxLayoutAlign="end center">
-              <span><img src="../../../../assets/images/ellipsis.png" style="height: 25px;width: 40px;"></span>
+              <!-- <span><img src="../../../../assets/images/ellipsis.png" style="height: 25px;width: 40px;"></span> -->
+              <span>
+                <button mat-icon-button [matMenuTriggerFor]="menu1" aria-label="Example icon-button with a menu">
+                  <mat-icon style="font-size: 34px !important;">more_horiz</mat-icon>
+                </button>
+                <mat-menu #menu1="matMenu">
+                  <button mat-menu-item (click)="onFactSheetButtonClicked()">
+                    <mat-icon>dialpad</mat-icon>
+                    <span>Factsheet</span>
+                  </button>
+                </mat-menu>
+              </span>
             </div>
           </div>
         </mat-card-actions>
@@ -174,8 +185,31 @@
             <h2 style="font-weight: 500;margin: 0px;"><span style="margin:0px 5px 0px 0px;"><img style="width: 32px;
                 height: 32px; margin-top: 5px;" src="../../../../assets/images/bot.png"></span>
               Suggested Actions
-              <span><img src="../../../../assets/images/ellipsis.png"
-                  style="height: 25px;width: 40px;float: right;"></span>
+              <!-- <span>
+                <img src="../../../../assets/images/ellipsis.png"
+                  style="height: 25px;width: 40px;float: right;">
+              </span> -->
+              <span>
+                <button style="height: 25px;width: 40px;float: right;" mat-icon-button [matMenuTriggerFor]="menu"
+                  aria-label="Example icon-button with a menu">
+                  <mat-icon style="font-size: 34px !important;">more_horiz</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item (click)="onAcceptAllButtonClicked()">
+                    <mat-icon>dialpad</mat-icon>
+                    <span>Approve All</span>
+                  </button>
+                  <!-- <button mat-menu-item disabled>
+                    <mat-icon>voicemail</mat-icon>
+                    <span>Check voice mail</span>
+                  </button> -->
+                  <button mat-menu-item (click)="onClearAllButtonClicked()">
+                    <mat-icon>notifications_off</mat-icon>
+                    <span>Clear All</span>
+                  </button>
+                </mat-menu>
+              </span>
+
             </h2>
           </div>
           <hr class="rightFlexHr">
@@ -191,7 +225,7 @@
                       </h5>
                       <i
                         style="padding:5px 0px 5px 5px;font-size: smaller;">{{aIACTByPartnerID.Date | date:'dd/MM/yy'}},{{aIACTByPartnerID.Time}}</i>
-                      <button (click)="ActionTextClicked(aIACTByPartnerID)" mat-raised-button
+                      <button (click)="actionTextClicked(aIACTByPartnerID)" mat-raised-button
                         style="float:right;height:32px;background-color:#efb577;color: white; cursor: pointer;">{{aIACTByPartnerID.ActionText}}</button>
                     </mat-card-content>
                   </mat-card>
@@ -253,7 +287,7 @@
                       </h5>
                       <i
                         style="padding:5px 0px 5px 5px;font-size: smaller;">{{aIACTByPartnerID.Date | date:'dd/MM/yy'}},{{aIACTByPartnerID.Time}}</i>
-                      <!-- <button (click)="ActionTextClicked(aIACTByPartnerID)" mat-raised-button
+                      <!-- <button (click)="actionTextClicked(aIACTByPartnerID)" mat-raised-button
                         style="float:right;height:32px;background-color:#efb577;color: white; cursor: pointer;">{{aIACTByPartnerID.ActionText}}</button> -->
                     </mat-card-content>
                   </mat-card>
@@ -268,7 +302,7 @@
 
       <!-- <div fxFlex fxLayout class="theme-options-button">
           <div fxFlex="33%" fxLayoutAlign="start center" style="padding-left: 10px;">
-            <span class="viewMoreDetails">View more details/Change</span>
+            <span class="view-more-details">View more details/Change</span>
           </div>
           <div fxFlex="33%" fxLayoutAlign="start center">
           </div>
@@ -278,9 +312,9 @@
         </div> -->
       <!-- </div> -->
     </div>
-    <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
+    <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
     </mat-progress-spinner>
-    <div id="overlay" *ngIf="IsProgressBarVisibile">
+    <div id="overlay" *ngIf="isProgressBarVisibile">
     </div>
   </div>
 </div>
