@@ -133,7 +133,7 @@ export class LoginComponent implements OnInit {
     else if (data.UserRole === 'HelpDeskAdmin') {
       this._router.navigate(['pages/supportdesk']);
     }
-     else {
+    else {
       this._router.navigate(['pages/dashboard']);
     }
 
@@ -229,34 +229,6 @@ export class LoginComponent implements OnInit {
           isSvgIcon: true,
           // icon: 'dashboard',
           url: '/customer/dashboard',
-        }
-      );
-    }
-    if (this.MenuItems.indexOf('Fact') >= 0) {
-      this.children.push(
-        {
-          id: 'fact',
-          title: 'My details',
-          translate: 'NAV.SAMPLE.TITLE',
-          type: 'item',
-          icon: 'detailsIcon',
-          isSvgIcon: true,
-          // icon: 'dashboard',
-          url: '/fact',
-        }
-      );
-    }
-    if (this.MenuItems.indexOf('CustomerFact') >= 0) {
-      this.children.push(
-        {
-          id: 'custfact',
-          title: 'My details',
-          translate: 'NAV.SAMPLE.TITLE',
-          type: 'item',
-          icon: 'detailsIcon',
-          isSvgIcon: true,
-          // icon: 'dashboard',
-          url: '/customer/fact',
         }
       );
     }
@@ -441,6 +413,34 @@ export class LoginComponent implements OnInit {
           isSvgIcon: true,
           // icon: 'dashboard',
           url: '/pages/supportdesk',
+        }
+      );
+    }
+    if (this.MenuItems.indexOf('Fact') >= 0) {
+      this.children.push(
+        {
+          id: 'fact',
+          title: 'My details',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          icon: 'detailsIcon',
+          isSvgIcon: true,
+          // icon: 'dashboard',
+          url: '/fact',
+        }
+      );
+    }
+    if (this.MenuItems.indexOf('CustomerFact') >= 0) {
+      this.children.push(
+        {
+          id: 'custfact',
+          title: 'My details',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          icon: 'detailsIcon',
+          isSvgIcon: true,
+          // icon: 'dashboard',
+          url: '/customer/fact',
         }
       );
     }

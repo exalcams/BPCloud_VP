@@ -58,13 +58,13 @@ import "chartjs-plugin-annotation";
 import { PoFlipComponent } from "./po-flip/po-flip.component";
 import { ASNComponent } from "./asn/asn.component";
 import { HomeComponent } from "./home/home.component";
-import { OrderFulfilmentComponent } from "./order-fulfilment/order-fulfilment.component";
 import { PaymentComponent } from "./payment/payment.component";
 import { ResourceComponent } from './resource/resource.component';
 import { SupportDeskComponent } from './support-desk/support-desk.component';
 import { SupportTicketComponent } from './support-ticket/support-ticket.component';
 import { SupportChatComponent } from './support-chat/support-chat.component';
 import { DataMigrationComponent } from './data-migration/data-migration.component';
+import { PoFactsheetComponent } from './po-factsheet/po-factsheet.component';
 
 // import 'chart.piecelabel.js';
 
@@ -91,7 +91,7 @@ const routes = [
     },
     {
         path: "polookup",
-        component: OrderFulfilmentComponent,
+        component: PoFactsheetComponent,
     },
     {
         path: "resource", 
@@ -192,7 +192,7 @@ const routes = [
         ASNComponent,
         PoFlipComponent,
         HomeComponent,
-        OrderFulfilmentComponent,
+        PoFactsheetComponent,
         PaymentComponent,
         ResourceComponent,
         SupportDeskComponent,

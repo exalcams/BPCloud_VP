@@ -13,6 +13,7 @@ export class UserWithRole {
     CreatedBy: string;
     ModifiedOn?: Date;
     ModifiedBy: string;
+    DisplayName: string;
 }
 export class UserView {
     UserID: Guid;

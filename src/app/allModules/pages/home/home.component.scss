@@ -16,7 +16,7 @@
         top: 350px;
         z-index: 1;
         left: 55%;
-      }
+    }
     .outer {
         border-bottom: 1px solid rgba(255, 85, 0, 0.1);
         position: relative;
@@ -172,11 +172,11 @@
         border-style: none none none solid;
         border-left-width: 5px;
     }
-    .viewMoreDetails {
+    .view-more-details {
         font-weight: 600;
         color: #000000;
     }
-    #viewMoreDetailsCard {
+    #view-more-details-card {
         position: fixed;
         height: 50px;
         width: 390px;
@@ -227,8 +227,7 @@
         background-color: #e6e6e6;
         padding: 10px;
     }
-    .mat-tab-body-content{
-       flex-direction: column !important;
+    .mat-tab-body-content {
+        flex-direction: column !important;
     }
-
 }

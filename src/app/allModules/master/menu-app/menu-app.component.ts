@@ -18,25 +18,25 @@ import { NotificationDialogComponent } from 'app/notifications/notification-dial
   animations: fuseAnimations
 })
 export class MenuAppComponent implements OnInit {
-  MenuItems: string[];
-  AllMenuApps: MenuApp[] = [];
-  SelectedMenuApp: MenuApp;
+  menuItems: string[];
+  selectedMenuApp: MenuApp;
   authenticationDetails: AuthenticationDetails;
   notificationSnackBarComponent: NotificationSnackBarComponent;
-  IsProgressBarVisibile: boolean;
+  isProgressBarVisibile: boolean;
   selectID: number;
   menuAppMainFormGroup: FormGroup;
   searchText = '';
+  AllMenuApps: MenuApp[] = [];
   constructor(
     private _masterService: MasterService,
     private _router: Router,
     public snackBar: MatSnackBar,
     private dialog: MatDialog,
     private _formBuilder: FormBuilder) {
-    this.SelectedMenuApp = new MenuApp();
+    this.selectedMenuApp = new MenuApp();
     this.authenticationDetails = new AuthenticationDetails();
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
-    this.IsProgressBarVisibile = true;
+    this.isProgressBarVisibile = true;
   }
 
   ngOnInit(): void {
@@ -44,8 +44,8 @@ export class MenuAppComponent implements OnInit {
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
-      this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
-      // if (this.MenuItems.indexOf('User') < 0) {
+      this.menuItems = this.authenticationDetails.MenuItemNames.split(',');
+      // if (this.menuItems.indexOf('User') < 0) {
       //   this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
       //   this._router.navigate(['/auth/login']);
       // }
@@ -59,7 +59,7 @@ export class MenuAppComponent implements OnInit {
 
   }
   ResetControl(): void {
-    this.SelectedMenuApp = new MenuApp();
+    this.selectedMenuApp = new MenuApp();
     this.selectID = 0;
     this.menuAppMainFormGroup.reset();
     Object.keys(this.menuAppMainFormGroup.controls).forEach(key => {
@@ -68,10 +68,10 @@ export class MenuAppComponent implements OnInit {
     // this.fileToUpload = null;
   }
   GetAllMenuApps(): void {
-    this.IsProgressBarVisibile = true;
+    this.isProgressBarVisibile = true;
     this._masterService.GetAllMenuApp().subscribe(
       (data) => {
-        this.IsProgressBarVisibile = false;
+        this.isProgressBarVisibile = false;
         this.AllMenuApps = <MenuApp[]>data;
         if (this.AllMenuApps && this.AllMenuApps.length) {
           this.loadSelectedMenuApp(this.AllMenuApps[0]);
@@ -79,20 +79,20 @@ export class MenuAppComponent implements OnInit {
       },
       (err) => {
         console.error(err);
-        this.IsProgressBarVisibile = false;
+        this.isProgressBarVisibile = false;
         this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
       }
     );
   }
 
-  loadSelectedMenuApp(SelectedMenuApp: MenuApp): void {
-    this.selectID = SelectedMenuApp.AppID;
-    this.SelectedMenuApp = SelectedMenuApp;
+  loadSelectedMenuApp(selectedMenuApp: MenuApp): void {
+    this.selectID = selectedMenuApp.AppID;
+    this.selectedMenuApp = selectedMenuApp;
     this.SetMenuAppValues();
   }
 
   SetMenuAppValues(): void {
-    this.menuAppMainFormGroup.get('appName').patchValue(this.SelectedMenuApp.AppName);
+    this.menuAppMainFormGroup.get('appName').patchValue(this.selectedMenuApp.AppName);
   }
 
   OpenConfirmationDialog(Actiontype: string, Catagory: string): void {
@@ -119,25 +119,25 @@ export class MenuAppComponent implements OnInit {
   }
 
   GetMenuAppValues(): void {
-    this.SelectedMenuApp.AppName = this.menuAppMainFormGroup.get('appName').value;
+    this.selectedMenuApp.AppName = this.menuAppMainFormGroup.get('appName').value;
   }
 
   CreateMenuApp(): void {
     this.GetMenuAppValues();
-    this.SelectedMenuApp.CreatedBy = this.authenticationDetails.UserID.toString();
-    this.IsProgressBarVisibile = true;
-    this._masterService.CreateMenuApp(this.SelectedMenuApp).subscribe(
+    this.selectedMenuApp.CreatedBy = this.authenticationDetails.UserID.toString();
+    this.isProgressBarVisibile = true;
+    this._masterService.CreateMenuApp(this.selectedMenuApp).subscribe(
       (data) => {
         // console.log(data);
         this.ResetControl();
         this.notificationSnackBarComponent.openSnackBar('MenuApp created successfully', SnackBarStatus.success);
-        this.IsProgressBarVisibile = false;
+        this.isProgressBarVisibile = false;
         this.GetAllMenuApps();
       },
       (err) => {
         console.error(err);
         this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-        this.IsProgressBarVisibile = false;
+        this.isProgressBarVisibile = false;
       }
     );
 
@@ -145,40 +145,40 @@ export class MenuAppComponent implements OnInit {
 
   UpdateMenuApp(): void {
     this.GetMenuAppValues();
-    this.SelectedMenuApp.ModifiedBy = this.authenticationDetails.UserID.toString();
-    this.IsProgressBarVisibile = true;
-    this._masterService.UpdateMenuApp(this.SelectedMenuApp).subscribe(
+    this.selectedMenuApp.ModifiedBy = this.authenticationDetails.UserID.toString();
+    this.isProgressBarVisibile = true;
+    this._masterService.UpdateMenuApp(this.selectedMenuApp).subscribe(
       (data) => {
         // console.log(data);
         this.ResetControl();
         this.notificationSnackBarComponent.openSnackBar('MenuApp updated successfully', SnackBarStatus.success);
-        this.IsProgressBarVisibile = false;
+        this.isProgressBarVisibile = false;
         this.GetAllMenuApps();
       },
       (err) => {
         console.error(err);
         this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-        this.IsProgressBarVisibile = false;
+        this.isProgressBarVisibile = false;
       }
     );
   }
 
   DeleteMenuApp(): void {
     this.GetMenuAppValues();
-    this.SelectedMenuApp.ModifiedBy = this.authenticationDetails.UserID.toString();
-    this.IsProgressBarVisibile = true;
-    this._masterService.DeleteMenuApp(this.SelectedMenuApp).subscribe(
+    this.selectedMenuApp.ModifiedBy = this.authenticationDetails.UserID.toString();
+    this.isProgressBarVisibile = true;
+    this._masterService.DeleteMenuApp(this.selectedMenuApp).subscribe(
       (data) => {
         // console.log(data);
         this.ResetControl();
         this.notificationSnackBarComponent.openSnackBar('MenuApp deleted successfully', SnackBarStatus.success);
-        this.IsProgressBarVisibile = false;
+        this.isProgressBarVisibile = false;
         this.GetAllMenuApps();
       },
       (err) => {
         console.error(err);
         this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-        this.IsProgressBarVisibile = false;
+        this.isProgressBarVisibile = false;
       }
     );
   }
@@ -194,7 +194,7 @@ export class MenuAppComponent implements OnInit {
   SaveClicked(): void {
     if (this.menuAppMainFormGroup.valid) {
       // const file: File = this.fileToUpload;
-      if (this.SelectedMenuApp.AppID) {
+      if (this.selectedMenuApp.AppID) {
         const Actiontype = 'Update';
         const Catagory = 'MenuApp';
         this.OpenConfirmationDialog(Actiontype, Catagory);
@@ -210,7 +210,7 @@ export class MenuAppComponent implements OnInit {
 
   DeleteClicked(): void {
     if (this.menuAppMainFormGroup.valid) {
-      if (this.SelectedMenuApp.AppID) {
+      if (this.selectedMenuApp.AppID) {
         const Actiontype = 'Delete';
         const Catagory = 'MenuApp';
         this.OpenConfirmationDialog(Actiontype, Catagory);
