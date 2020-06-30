@@ -15,19 +15,19 @@ import { ShareParameterService } from 'app/services/share-parameters.service';
 import { ChartType } from 'chart.js';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { PO, POSearch, Status, DashboardGraphStatus, OTIFStatus, QualityStatus, FulfilmentStatus, Deliverystatus } from 'app/models/Dashboard';
+import { PO, POSearch, Status, DashboardGraphStatus, OTIFStatus, QualityStatus, FulfilmentStatus, Deliverystatus, PoType } from 'app/models/Dashboard';
 import { DatePipe } from '@angular/common';
 // import 'chartjs-plugin-annotation';
 // import 'chart.piecelabel.js';
 // import 'chartjs-plugin-labels';
 @Component({
-    selector: 'app-dashboard',
-    templateUrl: './dashboard.component.html',
-    styleUrls: ['./dashboard.component.scss'],
+    selector: 'app-order-fulfilment-center',
+    templateUrl: './order-fulfilment-center.component.html',
+    styleUrls: ['./order-fulfilment-center.component.scss'],
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations
 })
-export class DashboardComponent implements OnInit {
+export class OrderFulFilmentCenterComponent implements OnInit {
     authenticationDetails: AuthenticationDetails;
     currentUserID: Guid;
     currentUserRole: string;
@@ -65,16 +65,18 @@ export class DashboardComponent implements OnInit {
     Fulfilments: any[] = [];
     donutChartData: any[] = [];
     DeliveryStatus: any[] = [];
-    Status: Status[] = [{ Value: 'All', Name: 'All' },
-    { Value: 'Open', Name: 'Open' },
-    { Value: 'Completed', Name: 'Completed' },
-        // { Value: 'All', Name: 'All' },
-    ]
-    // foods: string[] = [
-    //     {value: 'steak-0', viewValue: 'Steak'},
-    //     {value: 'pizza-1', viewValue: 'Pizza'},
-    //     {value: 'tacos-2', viewValue: 'Tacos'}
-    //   ];
+    Status: Status[] = [
+        { Value: 'All', Name: 'All' },
+        { Value: 'Open', Name: 'Open' },
+        { Value: 'Completed', Name: 'Completed' },
+    ];
+    PoTypes: PoType[] = [
+        { Value: 'All', Name: 'All' },
+        { Value: 'Material', Name: 'Material' },
+        { Value: 'Service', Name: 'Service' },
+        { Value: 'Framework', Name: 'Framework' },
+        { Value: 'Contract', Name: 'Contract' }
+    ];
     searchText = '';
     FilterVal = 'All';
     ActionModel = 'Acknowledge';
@@ -252,10 +254,11 @@ export class DashboardComponent implements OnInit {
         // const OTIF = Number(this.OTIFStatus.OTIF);
         // this.progress1(OTIF);
         // this.progress2(this.QualityStatus.Quality);
-        // this.doughnutChartData = [this.FulfilmentStatus.OpenDetails.Value, this.FulfilmentStatus.ScheduledDetails.Value, this.FulfilmentStatus.InProgressDetails.Value, this.FulfilmentStatus.PendingDetails];
+        // this.doughnutChartData = [this.FulfilmentStatus.OpenDetails.Value, this.FulfilmentStatus.ScheduledDetails.Value, 
+        // this.FulfilmentStatus.InProgressDetails.Value, this.FulfilmentStatus.PendingDetails];
         // this.barChartData = [
         //     { data: [45, 70, 65, 20, 80], label: 'Actual' },
-        //     { data: [87, 50, 40, 71, 56], label: 'Planned' }
+        //     { data: [87, 50, 40, 71, 56], label: 'Planned' } 
         // ];
         // console.log(this.barChartData);
 
@@ -359,16 +362,16 @@ export class DashboardComponent implements OnInit {
         // ];
         // this.posDataSource = new MatTableDataSource(this.Pos);
     }
-    openMyMenu(index: any) {
+    openMyMenu(index: any): void {
         alert(index);
         this.matMenuTrigger.openMenu();
 
     }
-    closeMyMenu(index: any) {
+    closeMyMenu(index: any): void {
         alert(index);
         this.matMenuTrigger.closeMenu();
     }
-    GetPODetails() {
+    GetPODetails(): void {
         this.IsProgressBarVisibile = true;
         this._dashboardService
             .GetPODetails(this.PartnerID)
@@ -386,7 +389,7 @@ export class DashboardComponent implements OnInit {
                     this.IsProgressBarVisibile = false;
                 });
     }
-    GetDashboardGraphStatus() {
+    GetDashboardGraphStatus(): void {
         this.IsProgressBarVisibile = true;
         this._dashboardService
             .GetDashboardGraphStatus(this.PartnerID)
@@ -401,7 +404,8 @@ export class DashboardComponent implements OnInit {
                     this.progress1(OTIF);
                     const Quality = Number(this.QualityStatus.Quality);
                     this.progress2(Quality);
-                    this.doughnutChartData = [this.FulfilmentStatus.OpenDetails.Value, this.FulfilmentStatus.ScheduledDetails.Value, this.FulfilmentStatus.InProgressDetails.Value, this.FulfilmentStatus.PendingDetails.Value];
+                    this.doughnutChartData = [this.FulfilmentStatus.OpenDetails.Value, this.FulfilmentStatus.ScheduledDetails.Value,
+                    this.FulfilmentStatus.InProgressDetails.Value, this.FulfilmentStatus.PendingDetails.Value];
                     // this.dashboardDeliverystatus.Planned1.Date = this.dashboardDeliverystatus.Planned1.Date 
                     const Planned1Date = this.datePipe.transform(this.dashboardDeliverystatus.Planned1.Date, 'dd/MM/yyyy');
                     const Planned2Date = this.datePipe.transform(this.dashboardDeliverystatus.Planned2.Date, 'dd/MM/yyyy');
@@ -411,8 +415,16 @@ export class DashboardComponent implements OnInit {
 
                     // this.barChartLabels = [Planned1Date, Planned2Date, Planned3Date, Planned4Date, Planned5Date];
                     this.barChartData = [
-                        { data: [this.dashboardDeliverystatus.Planned1.Actual, this.dashboardDeliverystatus.Planned2.Actual, this.dashboardDeliverystatus.Planned3.Actual, this.dashboardDeliverystatus.Planned4.Actual, this.dashboardDeliverystatus.Planned5.Actual], label: 'Actual' },
-                        { data: [this.dashboardDeliverystatus.Planned1.Planned, this.dashboardDeliverystatus.Planned2.Planned, this.dashboardDeliverystatus.Planned3.Planned, this.dashboardDeliverystatus.Planned4.Planned, this.dashboardDeliverystatus.Planned5.Planned], label: 'Planned' }
+                        {
+                            data: [this.dashboardDeliverystatus.Planned1.Actual, this.dashboardDeliverystatus.Planned2.Actual,
+                            this.dashboardDeliverystatus.Planned3.Actual,
+                            this.dashboardDeliverystatus.Planned4.Actual, this.dashboardDeliverystatus.Planned5.Actual], label: 'Actual'
+                        },
+                        {
+                            data: [this.dashboardDeliverystatus.Planned1.Planned, this.dashboardDeliverystatus.Planned2.Planned,
+                            this.dashboardDeliverystatus.Planned3.Planned, this.dashboardDeliverystatus.Planned4.Planned,
+                            this.dashboardDeliverystatus.Planned5.Planned], label: 'Planned'
+                        }
                     ];
                     console.log(this.barChartData);
                     console.log(this.barChartLabels);
@@ -501,8 +513,8 @@ export class DashboardComponent implements OnInit {
             this._router.navigate(['/pages/asn'], { queryParams: { id: po } });
         }
     }
-    onMouseMove(event) {
-        console.log(event)  // true false
+    onMouseMove(event): void {
+        console.log(event); // true false
         // if true then the mouse is on control and false when you leave the mouse
     }
     progress1(value: number): void {
@@ -543,7 +555,7 @@ export class DashboardComponent implements OnInit {
                 return '';
         }
     }
-    getNextProcess(element: any) {
+    getNextProcess(element: any): void {
         if (element.Status === 'Open') {
             element.NextProcess = 'ACK';
         }

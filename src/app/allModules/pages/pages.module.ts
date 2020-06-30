@@ -49,7 +49,6 @@ import {
 } from "@fuse/components";
 import { FuseSharedModule } from "@fuse/shared.module";
 import { FormsModule } from "@angular/forms";
-import { DashboardComponent } from "./dashboard/dashboard.component";
 import { DecimalPipe } from "@angular/common";
 import { NgCircleProgressModule } from "ng-circle-progress";
 import { ChartsModule } from "ng2-charts";
@@ -65,13 +64,14 @@ import { SupportTicketComponent } from './support-ticket/support-ticket.componen
 import { SupportChatComponent } from './support-chat/support-chat.component';
 import { DataMigrationComponent } from './data-migration/data-migration.component';
 import { PoFactsheetComponent } from './po-factsheet/po-factsheet.component';
+import { OrderFulFilmentCenterComponent } from './order-fulfilment-center/order-fulfilment-center.component';
 
 // import 'chart.piecelabel.js';
 
 const routes = [
     {
         path: "orderfulfilmentCenter",
-        component: DashboardComponent,
+        component: OrderFulFilmentCenterComponent,
     },
     {
         path: "asn",
@@ -188,7 +188,7 @@ const routes = [
         }),
     ],
     declarations: [
-        DashboardComponent,
+        OrderFulFilmentCenterComponent,
         ASNComponent,
         PoFlipComponent,
         HomeComponent,

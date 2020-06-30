@@ -71,12 +71,18 @@ export class POSearch {
     Status: string;
     FromDate: string;
     ToDate: string;
-    PartnerID:string;
+    PartnerID: string;
 }
 export class Status {
     Value: string;
     Name: string;
 }
+
+export class PoType {
+    Value: string;
+    Name: string;
+}
+
 export class DashboardGraphStatus {
     oTIFStatus: OTIFStatus;
     qualityStatus: QualityStatus;
