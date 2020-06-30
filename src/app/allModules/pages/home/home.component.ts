@@ -13,6 +13,7 @@ import { NotificationDialogComponent } from 'app/notifications/notification-dial
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { Guid } from 'guid-typescript';
 import { BPCFact, BPCFactView, BPCFactContactPerson, BPCKRA, BPCFactBank, BPCAIACT } from 'app/models/fact';
+import { LEAVE_SELECTOR } from '@angular/animations/browser/src/util';
 
 @Component({
   selector: 'app-home',
@@ -99,23 +100,6 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  loadSelectedBPCFact(selectedBPCFact: BPCFact): void {
-    this.SelectedBPCFact = selectedBPCFact;
-    this.selectID = selectedBPCFact.PatnerID;
-  }
-
-  getTodayDate(): any {
-    const today = new Date();
-    return today.getDate().toString();
-  }
-
-  typeSelected(event): void {
-    const selectedType = event.value;
-    if (event.value) {
-      this.SelectedBPCFact.Type = event.value;
-    }
-  }
-
   GetKRAsByPartnerID(): void {
     this.IsProgressBarVisibile = true;
     this._FactService.GetKRAsByPartnerID(this.SelectedBPCFact.PatnerID).subscribe(
@@ -184,117 +168,6 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  OpenConfirmationDialog(Actiontype: string, Catagory: string): void {
-    const dialogConfig: MatDialogConfig = {
-      data: {
-        Actiontype: Actiontype,
-        Catagory: Catagory
-      },
-      panelClass: 'confirmation-dialog'
-    };
-    const dialogRef = this.dialog.open(NotificationDialogComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe(
-      result => {
-        if (result) {
-          if (Actiontype === 'Accept') {
-            this.AcceptAIACT();
-          } else if (Actiontype === 'Reject') {
-            this.RejectAIACT();
-          }
-        }
-      });
-  }
-
-  GetBPCFactSubItemValues(): void {
-    this.GetBPCKRAValues();
-    this.GetBPCFactBankValues();
-    this.GetBPCFactContactPersonValues();
-    this.GetBPCAIACTValues();
-  }
-
-  GetBPCKRAValues(): void {
-    this.SelectedBPCFactView.BPCKRAs = [];
-    // this.SelectedBPCFactView.bPIdentities.push(...this.KRAsByPartnerID);
-    this.KRAsByPartnerID.forEach(x => {
-      this.SelectedBPCFactView.BPCKRAs.push(x);
-    });
-  }
-
-  GetBPCFactBankValues(): void {
-    this.SelectedBPCFactView.BPCFactBanks = [];
-    // this.SelectedBPCFactView.BPCFactBanks.push(...this.BanksByPartnerID);
-    this.BanksByPartnerID.forEach(x => {
-      this.SelectedBPCFactView.BPCFactBanks.push(x);
-    });
-  }
-
-  GetBPCFactContactPersonValues(): void {
-    this.SelectedBPCFactView.BPCFactContactPersons = [];
-    // this.SelectedBPCFactView.bPIdentities.push(...this.KRAsByPartnerID);
-    this.ContactPersonsByPartnerID.forEach(x => {
-      this.SelectedBPCFactView.BPCFactContactPersons.push(x);
-    });
-  }
-
-  GetBPCAIACTValues(): void {
-    this.SelectedBPCFactView.BPCAIACTs = [];
-    // this.SelectedBPCFactView.BPCFactBanks.push(...this.BanksByPartnerID);
-    this.AIACTsByPartnerID.forEach(x => {
-      this.SelectedBPCFactView.BPCAIACTs.push(x);
-    });
-  }
-
-  ShowValidationErrors(formGroup: FormGroup): void {
-    Object.keys(formGroup.controls).forEach(key => {
-      if (!formGroup.get(key).valid) {
-        console.log(key);
-      }
-      formGroup.get(key).markAsTouched();
-      formGroup.get(key).markAsDirty();
-      if (formGroup.get(key) instanceof FormArray) {
-        const FormArrayControls = formGroup.get(key) as FormArray;
-        Object.keys(FormArrayControls.controls).forEach(key1 => {
-          if (FormArrayControls.get(key1) instanceof FormGroup) {
-            const FormGroupControls = FormArrayControls.get(key1) as FormGroup;
-            Object.keys(FormGroupControls.controls).forEach(key2 => {
-              FormGroupControls.get(key2).markAsTouched();
-              FormGroupControls.get(key2).markAsDirty();
-              if (!FormGroupControls.get(key2).valid) {
-                console.log(key2);
-              }
-            });
-          } else {
-            FormArrayControls.get(key1).markAsTouched();
-            FormArrayControls.get(key1).markAsDirty();
-          }
-        });
-      }
-    });
-
-  }
-
-  ActionTextClicked(aIACTByPartnerID: BPCAIACT): void {
-    if (aIACTByPartnerID) {
-      if (aIACTByPartnerID.ActionText.toLowerCase() === "accept") {
-        this.SelectedBPCAIACTByPartnerID = aIACTByPartnerID;
-        const Actiontype = 'Accept';
-        const Catagory = 'PO';
-        this.OpenConfirmationDialog(Actiontype, Catagory);
-      }
-      else if (aIACTByPartnerID.ActionText.toLowerCase() === "reject") {
-        this.SelectedBPCAIACTByPartnerID = aIACTByPartnerID;
-        const Actiontype = 'Reject';
-        const Catagory = 'PO';
-        this.OpenConfirmationDialog(Actiontype, Catagory);
-      } else if (aIACTByPartnerID.ActionText.toLowerCase() === "view") {
-        this._router.navigate(['/pages/polookup'], { queryParams: { id: aIACTByPartnerID.DocNumber } });
-      }
-    }
-    else {
-
-    }
-  }
-
   AcceptAIACT(): void {
     this.SelectedBPCAIACTByPartnerID.ModifiedBy = this.authenticationDetails.UserID.toString();
     this.SelectedBPCAIACTByPartnerID.Status = 'Accepted';
@@ -331,11 +204,147 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  SetActionToOpenConfirmation(actiontype: string): void {
+  AcceptAIACTs(): void {
+    this.SelectedBPCAIACTByPartnerID.ModifiedBy = this.authenticationDetails.UserID.toString();
+    this.SelectedBPCAIACTByPartnerID.Status = 'Accepted';
+    this.SelectedBPCAIACTByPartnerID.ActionText = 'View';
+    this.IsProgressBarVisibile = true;
+    this._FactService.AcceptAIACT(this.SelectedBPCAIACTByPartnerID).subscribe(
+      (data) => {
+        this.notificationSnackBarComponent.openSnackBar('PO Accepted successfully', SnackBarStatus.success);
+        this.IsProgressBarVisibile = false;
+      },
+      (err) => {
+        console.error(err);
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+        this.IsProgressBarVisibile = false;
+      }
+    );
+  }
+
+  loadSelectedBPCFact(selectedBPCFact: BPCFact): void {
+    this.SelectedBPCFact = selectedBPCFact;
+    this.selectID = selectedBPCFact.PatnerID;
+  }
+
+  openConfirmationDialog(Actiontype: string, Catagory: string): void {
+    const dialogConfig: MatDialogConfig = {
+      data: {
+        Actiontype: Actiontype,
+        Catagory: Catagory
+      },
+      panelClass: 'confirmation-dialog'
+    };
+    const dialogRef = this.dialog.open(NotificationDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      result => {
+        if (result) {
+          if (Actiontype === 'Accept') {
+            this.AcceptAIACT();
+          } else if (Actiontype === 'Reject') {
+            this.RejectAIACT();
+          } else if (Actiontype === 'Accept All') {
+            this.AcceptAIACTs();
+          }
+        }
+      });
+  }
+
+  getBPCFactSubItemValues(): void {
+    this.getBPCKRAValues();
+    this.getBPCFactBankValues();
+    this.getBPCFactContactPersonValues();
+    this.getBPCAIACTValues();
+  }
+
+  getBPCKRAValues(): void {
+    this.SelectedBPCFactView.BPCKRAs = [];
+    // this.SelectedBPCFactView.bPIdentities.push(...this.KRAsByPartnerID);
+    this.KRAsByPartnerID.forEach(x => {
+      this.SelectedBPCFactView.BPCKRAs.push(x);
+    });
+  }
+
+  getBPCFactBankValues(): void {
+    this.SelectedBPCFactView.BPCFactBanks = [];
+    // this.SelectedBPCFactView.BPCFactBanks.push(...this.BanksByPartnerID);
+    this.BanksByPartnerID.forEach(x => {
+      this.SelectedBPCFactView.BPCFactBanks.push(x);
+    });
+  }
+
+  getBPCFactContactPersonValues(): void {
+    this.SelectedBPCFactView.BPCFactContactPersons = [];
+    // this.SelectedBPCFactView.bPIdentities.push(...this.KRAsByPartnerID);
+    this.ContactPersonsByPartnerID.forEach(x => {
+      this.SelectedBPCFactView.BPCFactContactPersons.push(x);
+    });
+  }
+
+  getBPCAIACTValues(): void {
+    this.SelectedBPCFactView.BPCAIACTs = [];
+    // this.SelectedBPCFactView.BPCFactBanks.push(...this.BanksByPartnerID);
+    this.AIACTsByPartnerID.forEach(x => {
+      this.SelectedBPCFactView.BPCAIACTs.push(x);
+    });
+  }
+
+  showValidationErrors(formGroup: FormGroup): void {
+    Object.keys(formGroup.controls).forEach(key => {
+      if (!formGroup.get(key).valid) {
+        console.log(key);
+      }
+      formGroup.get(key).markAsTouched();
+      formGroup.get(key).markAsDirty();
+      if (formGroup.get(key) instanceof FormArray) {
+        const FormArrayControls = formGroup.get(key) as FormArray;
+        Object.keys(FormArrayControls.controls).forEach(key1 => {
+          if (FormArrayControls.get(key1) instanceof FormGroup) {
+            const FormGroupControls = FormArrayControls.get(key1) as FormGroup;
+            Object.keys(FormGroupControls.controls).forEach(key2 => {
+              FormGroupControls.get(key2).markAsTouched();
+              FormGroupControls.get(key2).markAsDirty();
+              if (!FormGroupControls.get(key2).valid) {
+                console.log(key2);
+              }
+            });
+          } else {
+            FormArrayControls.get(key1).markAsTouched();
+            FormArrayControls.get(key1).markAsDirty();
+          }
+        });
+      }
+    });
+
+  }
+
+  actionTextClicked(aIACTByPartnerID: BPCAIACT): void {
+    if (aIACTByPartnerID) {
+      if (aIACTByPartnerID.ActionText.toLowerCase() === "accept") {
+        this.SelectedBPCAIACTByPartnerID = aIACTByPartnerID;
+        const Actiontype = 'Accept';
+        const Catagory = 'PO';
+        this.openConfirmationDialog(Actiontype, Catagory);
+      }
+      else if (aIACTByPartnerID.ActionText.toLowerCase() === "reject") {
+        this.SelectedBPCAIACTByPartnerID = aIACTByPartnerID;
+        const Actiontype = 'Reject';
+        const Catagory = 'PO';
+        this.openConfirmationDialog(Actiontype, Catagory);
+      } else if (aIACTByPartnerID.ActionText.toLowerCase() === "view") {
+        this._router.navigate(['/pages/polookup'], { queryParams: { id: aIACTByPartnerID.DocNumber } });
+      }
+    }
+    else {
+
+    }
+  }
+
+  setActionToOpenConfirmation(actiontype: string): void {
     if (this.SelectedBPCFact.PatnerID) {
       const Actiontype = actiontype;
       const Catagory = 'Vendor';
-      this.OpenConfirmationDialog(Actiontype, Catagory);
+      this.openConfirmationDialog(Actiontype, Catagory);
     }
   }
 
@@ -350,47 +359,36 @@ export class HomeComponent implements OnInit {
     }
     return true;
   }
-  // GetAttachment(fileName: string, file?: File): void {
-  //   if (file && file.size) {
-  //     const blob = new Blob([file], { type: file.type });
-  //     this.OpenAttachmentDialog(fileName, blob);
-  //   } else {
-  //     this.IsProgressBarVisibile = true;
-  //     this._FactService.DowloandBPCFactImage(fileName).subscribe(
-  //       data => {
-  //         if (data) {
-  //           let fileType = 'image/jpg';
-  //           fileType = fileName.toLowerCase().includes('.jpg') ? 'image/jpg' :
-  //             fileName.toLowerCase().includes('.jpeg') ? 'image/jpeg' :
-  //               fileName.toLowerCase().includes('.png') ? 'image/png' :
-  //                 fileName.toLowerCase().includes('.gif') ? 'image/gif' : '';
-  //           const blob = new Blob([data], { type: fileType });
-  //           this.OpenAttachmentDialog(fileName, blob);
-  //         }
-  //         this.IsProgressBarVisibile = false;
-  //       },
-  //       error => {
-  //         console.error(error);
-  //         this.IsProgressBarVisibile = false;
-  //       }
-  //     );
-  //   }
-  // }
-  // OpenAttachmentDialog(FileName: string, blob: Blob): void {
-  //   const attachmentDetails: AttachmentDetails = {
-  //     FileName: FileName,
-  //     blob: blob
-  //   };
-  //   const dialogConfig: MatDialogConfig = {
-  //     data: attachmentDetails,
-  //     panelClass: 'attachment-dialog'
-  //   };
-  //   const dialogRef = this.dialog.open(AttachmentDialogComponent, dialogConfig);
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     if (result) {
-  //     }
-  //   });
-  // }
+
+  onFactSheetButtonClicked(): void {
+    this._router.navigate(['/pages/orderfulfilmentCenter']);
+  }
+
+  onAcceptAllButtonClicked(): void {
+    if (this.AIACTsByPartnerID && this.AIACTsByPartnerID.length > 0) {
+      const Actiontype = 'Accept All';
+      const Catagory = 'PO';
+      this.openConfirmationDialog(Actiontype, Catagory);
+    }
+
+  }
+
+  onClearAllButtonClicked(): void {
+
+  }
+
+  getTodayDate(): any {
+    const today = new Date();
+    return today.getDate().toString();
+  }
+
+  typeSelected(event): void {
+    const selectedType = event.value;
+    if (event.value) {
+      this.SelectedBPCFact.Type = event.value;
+    }
+  }
+
 }
 
 

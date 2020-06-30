@@ -128,13 +128,25 @@
 
           </div>
         </div>
-        <mat-card-actions class="m-0 cardActions">
+        <mat-card-actions class="m-0 card-actions">
           <div fxFlex fxLayout>
             <div fxFlex="75" fxLayoutAlign="start center">
               <span class="viewMoreDetails">View more details/Change</span>
             </div>
             <div fxFlex="25" fxLayoutAlign="end center">
-              <span><img src="../../../../assets/images/ellipsis.png" style="height: 25px;width: 40px;"></span>
+              <!-- <span><img src="../../../../assets/images/ellipsis.png" style="height: 25px;width: 40px;"></span> -->
+              <span>
+                <button style="height: 25px;width: 40px;" mat-icon-button [matMenuTriggerFor]="menu1"
+                  aria-label="Example icon-button with a menu">
+                  <mat-icon style="font-size: 34px !important;">more_horiz</mat-icon>
+                </button>
+                <mat-menu #menu1="matMenu">
+                  <button mat-menu-item (click)="onFactSheetButtonClicked()">
+                    <mat-icon>dialpad</mat-icon>
+                    <span>Factsheet</span>
+                  </button>
+                </mat-menu>
+              </span>
             </div>
           </div>
         </mat-card-actions>
@@ -174,8 +186,31 @@
             <h2 style="font-weight: 500;margin: 0px;"><span style="margin:0px 5px 0px 0px;"><img style="width: 32px;
                 height: 32px; margin-top: 5px;" src="../../../../assets/images/bot.png"></span>
               Suggested Actions
-              <span><img src="../../../../assets/images/ellipsis.png"
-                  style="height: 25px;width: 40px;float: right;"></span>
+              <!-- <span>
+                <img src="../../../../assets/images/ellipsis.png"
+                  style="height: 25px;width: 40px;float: right;">
+              </span> -->
+              <span>
+                <button style="height: 25px;width: 40px;float: right;" mat-icon-button [matMenuTriggerFor]="menu"
+                  aria-label="Example icon-button with a menu">
+                  <mat-icon style="font-size: 34px !important;">more_horiz</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item (click)="onAcceptAllButtonClicked()">
+                    <mat-icon>dialpad</mat-icon>
+                    <span>Approve All</span>
+                  </button>
+                  <!-- <button mat-menu-item disabled>
+                    <mat-icon>voicemail</mat-icon>
+                    <span>Check voice mail</span>
+                  </button> -->
+                  <button mat-menu-item (click)="onClearAllButtonClicked()">
+                    <mat-icon>notifications_off</mat-icon>
+                    <span>Clear All</span>
+                  </button>
+                </mat-menu>
+              </span>
+
             </h2>
           </div>
           <hr class="rightFlexHr">
@@ -191,7 +226,7 @@
                       </h5>
                       <i
                         style="padding:5px 0px 5px 5px;font-size: smaller;">{{aIACTByPartnerID.Date | date:'dd/MM/yy'}},{{aIACTByPartnerID.Time}}</i>
-                      <button (click)="ActionTextClicked(aIACTByPartnerID)" mat-raised-button
+                      <button (click)="actionTextClicked(aIACTByPartnerID)" mat-raised-button
                         style="float:right;height:32px;background-color:#efb577;color: white; cursor: pointer;">{{aIACTByPartnerID.ActionText}}</button>
                     </mat-card-content>
                   </mat-card>
@@ -253,7 +288,7 @@
                       </h5>
                       <i
                         style="padding:5px 0px 5px 5px;font-size: smaller;">{{aIACTByPartnerID.Date | date:'dd/MM/yy'}},{{aIACTByPartnerID.Time}}</i>
-                      <!-- <button (click)="ActionTextClicked(aIACTByPartnerID)" mat-raised-button
+                      <!-- <button (click)="actionTextClicked(aIACTByPartnerID)" mat-raised-button
                         style="float:right;height:32px;background-color:#efb577;color: white; cursor: pointer;">{{aIACTByPartnerID.ActionText}}</button> -->
                     </mat-card-content>
                   </mat-card>
