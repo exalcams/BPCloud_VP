@@ -34,6 +34,7 @@ export class HomeComponent implements OnInit {
   AllActions: BPCAIACT[] = [];
   AllNotifications: BPCAIACT[] = [];
   AIACTsByPartnerID: BPCAIACT[] = [];
+  AIACTsByPartnerIDView: BPCAIACT[] = [];
   constructor(
     private _FactService: FactService,
     private _router: Router,
@@ -146,13 +147,19 @@ export class HomeComponent implements OnInit {
   }
 
   AcceptAIACTs(): void {
-    this.selectedAIACT.ModifiedBy = this.authenticationDetails.UserID.toString();
-    this.selectedAIACT.Status = 'Accepted';
-    this.selectedAIACT.ActionText = 'View';
+    this.AIACTsByPartnerID.forEach(x => {
+      if (x.Status === 'Open') {
+        x.ModifiedBy = this.authenticationDetails.UserID.toString();
+        x.Status = 'Accepted';
+        x.ActionText = 'View';
+        this.AIACTsByPartnerIDView.push(x);
+      }
+    });
+    console.log(this.AIACTsByPartnerIDView);
     this.isProgressBarVisibile = true;
-    this._FactService.AcceptAIACT(this.selectedAIACT).subscribe(
+    this._FactService.AcceptAIACTs(this.AIACTsByPartnerIDView).subscribe(
       (data) => {
-        this.notificationSnackBarComponent.openSnackBar('PO Accepted successfully', SnackBarStatus.success);
+        this.notificationSnackBarComponent.openSnackBar('POs Accepted successfully', SnackBarStatus.success);
         this.isProgressBarVisibile = false;
       },
       (err) => {

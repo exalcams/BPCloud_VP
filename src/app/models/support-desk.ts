@@ -32,6 +32,7 @@ export class SupportDetails extends CommonClass {
     supportHeader: SupportHeader;
     supportLogs: SupportLog[];
     supportAttachments: BPCSupportAttachment[];
+    supportLogAttachments: BPCSupportAttachment[];
 }
 export class SupportMaster extends CommonClass {
     ID: number;
@@ -54,6 +55,7 @@ export class BPCSupportAttachment {
     ContentType: string;
     ContentLength: number;
     SupportID: string;
+    SupportLogID: string;
     AttachmentFile: any;
 }
 export class SupportHeaderView extends CommonClass {

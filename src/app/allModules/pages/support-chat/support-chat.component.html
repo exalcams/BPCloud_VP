@@ -19,22 +19,31 @@
                 <div fxFlex="70" style="padding: 10px;">
                   <div fxFlex>
                     <div fxLayout="row" fxLayoutAlign="start">
-                      <div fxFlex="50" class=" p-4">
-                        Support Ticket ID: <span
-                          style="font-weight: bold;font-size: 18px;">#{{SupportHeader.SupportID}}</span>
+                      <div fxFlex="50" fxLayout="row" fxLayoutGap="5px" class=" p-4">
+                        <div fxFlex style="text-align: right;">Support Ticket ID:</div>
+                        <div fxFlex style="font-weight: bold;text-align: left; font-size: 18px; line-height: 19px;">
+                          #{{SupportHeader.SupportID}}</div>
                       </div>
-                      <div fxFlex="50" class=" p-4">
-                        Created On: <span
-                          style="font-weight: bold;font-size: 18px;">{{SupportHeader.Date |  date : 'dd/MM/yyyy'}}</span>
+                      <div fxFlex="50" fxLayout="row" fxLayoutGap="5px" class=" p-4">
+                        <div fxFlex style="text-align: right;">Created On:</div>
+                        <div fxFlex style="font-weight: bold; text-align: left; font-size: 18px; line-height: 19px;">
+                          {{SupportHeader.Date |  date : 'dd/MM/yyyy'}}
+                        </div>
                       </div>
                     </div>
                     <div fxLayout="row" fxLayoutAlign="start">
-                      <div fxFlex="50" class=" p-4">
-                        Assigned To: <span style="font-weight: bold;font-size: 18px;">{{SupportHeader.AssignTo}}</span>
+                      <div fxFlex="50" fxLayout="row" fxLayoutGap="5px" class=" p-4">
+                        <div fxFlex style="text-align: right;">Assigned To:</div>
+                        <div fxFlex style="font-weight: bold;text-align: left; font-size: 18px; line-height: 19px;">
+                          {{SupportHeader.AssignTo}}</div>
+                        <!-- Assigned To: <span style="font-weight: bold;font-size: 18px;">{{SupportHeader.AssignTo}}</span> -->
                       </div>
-                      <div fxFlex="50" class=" p-4">
-                        Reason Code: <span
-                          style="font-weight: bold;font-size: 18px;">{{SupportHeader.ReasonCode}}</span>
+                      <div fxFlex="50" fxLayout="row" fxLayoutGap="5px" class=" p-4">
+                        <div fxFlex style="text-align: right;">Reason Code:</div>
+                        <div fxFlex style="font-weight: bold; text-align: left; font-size: 18px; line-height: 19px;">
+                          {{SupportHeader.ReasonCode}}</div>
+                        <!-- Reason Code: <span
+                          style="font-weight: bold;font-size: 18px;">{{SupportHeader.ReasonCode}}</span> -->
                       </div>
                     </div>
                   </div>
@@ -45,13 +54,15 @@
                     <div fxFlex="100" class=" p-4">
                       <span style="border-bottom: 2px solid #e0e0e0;">Attachments:</span>
                       <div *ngFor="let supportAttachment of SupportAttachments">
-                        <div fxFlex *ngIf="supportAttachment?.SupportID===SupportHeader.SupportID"
-                          (click)="GetSupportAttachment(supportAttachment?.AttachmentName,supportAttachment.AttachmentFile)"
-                          class="pdfLinkClass pl-8">
-                          <img class="attachmentIcon" src="assets/images/attachmentNew (1).png"
-                            (click)="GetSupportAttachment(supportAttachment?.AttachmentName,supportAttachment.AttachmentFile)">
-                          <span
-                            style="font-size: 12px;color: #3380d7;cursor: pointer !important;">{{supportAttachment?.AttachmentName}}</span>
+                        <div fxFlex fxLayout="row wrap">
+                          <div fxFlex *ngIf="supportAttachment.SupportID==SupportHeader.SupportID"
+                            (click)="GetSupportAttachment(supportAttachment?.AttachmentName,supportAttachment.AttachmentFile)"
+                            class="pdfLinkClass pl-8">
+                            <img class="attachmentIcon" src="assets/images/attachmentNew (1).png"
+                              (click)="GetSupportAttachment(supportAttachment?.AttachmentName,supportAttachment.AttachmentFile)">
+                            <span
+                              style="font-size: 12px;color: #3380d7;cursor: pointer !important;">{{supportAttachment?.AttachmentName}}</span>
+                          </div>
                         </div>
                         <!-- <div fxFlex (click)="GetSupportAttachment(supportAttachment?.name)" class="pdfLinkClass pl-8">
                         <span style="font-weight: bold;font-size: 20px;">{{supportAttachment?.size}}</span>
@@ -74,7 +85,7 @@
                     <div fxFlex="10">
                       <div [style.background-color]="supportLog.Status==='Closed'?'#4FAB6D':supportLog.Status==='Pending'?' #EF8377'
                         :supportLog.Status==='Open'?'#efb577':''" style="text-orientation: upright; writing-mode: vertical-rl ; 
-                      color: white; font-size: 10px;border-radius: 4px 0px 0px 4px;
+                      color: white; font-size: 10px;
                       padding: 2px;">
                         {{supportLog.Status | uppercase}}</div>
                     </div>
@@ -101,8 +112,7 @@
                   <div class="round" [style.margin-top]="first?'':'-20px'" [style.border-color]="supportLog.Status==='Closed'?'#4FAB6D':supportLog.Status==='Pending'?' #EF8377'
                     :supportLog.Status==='Open'?'#efb577':''">
                   </div>
-                  <div *ngIf="!last"
-                    [class]="supportLog.Status==='Closed'?'green-timeline':supportLog.Status==='Pending'?'red-timeline'
+                  <div *ngIf="!last" [class]="supportLog.Status==='Closed'?'green-timeline':supportLog.Status==='Pending'?'red-timeline'
                     :supportLog.Status==='Open'?'orange-timeline':''">
                   </div>
                   <!-- <div class="round" *ngIf="!last" [style.border-color]="supportLog.Status==='Closed'?'#4FAB6D':supportLog.Status==='Pending'?'#EF8377':
@@ -153,7 +163,7 @@
                     <div fxFlex="100" class="p-4">
                       <div class="pb-12"> <span class="pl-12 pb-12">{{supportLog.Remarks}}</span></div>
                       <div *ngFor="let supportAttachment of SupportAttachments">
-                        <div *ngIf="supportAttachment?.SupportID===supportLog.ID" fxFlex
+                        <div *ngIf="supportAttachment.SupportLogID==supportLog.ID" fxFlex
                           (click)="GetSupportAttachment(supportAttachment?.AttachmentName,supportAttachment.AttachmentFile)"
                           class="pdfLinkClass pl-8">
                           <img class="attachmentIcon" src="assets/images/attachmentNew (1).png"

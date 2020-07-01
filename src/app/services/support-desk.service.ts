@@ -152,7 +152,7 @@ export class SupportDeskService {
         ).pipe(catchError(this.errorHandler));
     }
 
-    AddSupportLogAttachment(SupportID: string, CreatedBy: string, selectedFiles: File[]): Observable<any> {
+    AddSupportLogAttachment(SupportID: string, SupportLogID: string, CreatedBy: string, selectedFiles: File[]): Observable<any> {
         const formData: FormData = new FormData();
         if (selectedFiles && selectedFiles.length) {
             selectedFiles.forEach(x => {
@@ -160,9 +160,10 @@ export class SupportDeskService {
             });
         }
         formData.append('SupportID', SupportID);
+        formData.append('SupportLogID', SupportLogID);
         formData.append('CreatedBy', CreatedBy.toString());
 
-        return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/AddSupportAttachment`,
+        return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/AddSupportLogAttachment`,
             formData,
             // {
             //   headers: new HttpHeaders({

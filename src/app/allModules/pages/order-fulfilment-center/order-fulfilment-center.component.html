@@ -70,7 +70,7 @@
       </div>
     </div>
     <div class="sidenav-content px-24 mt-4" fxFlex>
-      <form class="formGroupStyle" autocomplete="off" fxFlex name="form" [formGroup]="poFormGroup" novalidate>
+      <form class="formGroupStyle" autocomplete="off" fxFlex name="form" [formGroup]="ofDetailsFormGroup" novalidate>
         <div fxLayout="row" class="formRowStyle" fxLayout.xs="column">
           <div fxFlex="21%">
             <mat-form-field>
@@ -99,17 +99,17 @@
             <mat-form-field>
               <mat-select style="width:180px" placeholder="Status" formControlName="Status">
                 <mat-option>None</mat-option>
-                <mat-option *ngFor="let doc1 of Status" [value]="doc1.Value">
-                  <span>{{doc1.Name}}</span>
+                <mat-option *ngFor="let poStatus of ofStatusOptions" [value]="poStatus.Value">
+                  <span>{{poStatus.Name}}</span>
                 </mat-option>
               </mat-select>
             </mat-form-field>
           </div>
           <div fxFlex="19%">
             <mat-form-field>
-              <mat-select style="width:180px" placeholder="PO Type" formControlName="Status">
+              <mat-select style="width:180px" placeholder="Po Type" formControlName="DocType">
                 <mat-option>None</mat-option>
-                <mat-option *ngFor="let poType of PoTypes" [value]="poType.Value">
+                <mat-option *ngFor="let poType of ofTypeOptions" [value]="poType.Value">
                   <span>{{poType.Name}}</span>
                 </mat-option>
               </mat-select>
@@ -117,7 +117,7 @@
           </div>
           <div fxFlex="45%">
             <button class="mt-4" style="background-color: #efb577;color: white;" mat-raised-button
-              (click)="GetAllPOBasedOnDate()">Search</button>
+              (click)="GetOfsByOption()">Search</button>
           </div>
         </div>
       </form>
@@ -138,59 +138,71 @@
       <!-- <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator> -->
     </div>
     <div class="px-20 pb-20">
-      <table class="table" mat-table [dataSource]="posDataSource" matSort>
+      <table class="table" mat-table [dataSource]="ofDetailsDataSource" matSort>
 
-        <ng-container matColumnDef="PO">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> PO </th>
+        <ng-container matColumnDef="DocNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> Doc Number </th>
           <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0" style="text-align: right;">
             <div fxLayout>
               <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
-              <div fxFlex class="pl-4">{{element.PO}} </div>
+              <div fxFlex class="pl-4">{{element.DocNumber}} </div>
             </div>
           </td>
         </ng-container>
 
 
-        <ng-container matColumnDef="Version">
+        <ng-container matColumnDef="DocVersion">
           <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 8%;"> Version </th>
-          <td mat-cell *matCellDef="let element" (click)="Acknowledgement(element.PO)" style="text-align: right;">
-            {{element.Version}} </td>
+          <td mat-cell *matCellDef="let element" (click)="Acknowledgement(element.DocNumber)">
+            {{element.DocVersion}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="PODate">
+        <ng-container matColumnDef="DocType">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 8%;"> Type </th>
+          <td mat-cell *matCellDef="let element" (click)="Acknowledgement(element.DocNumber)">
+            {{element.DocType}} </td>
+        </ng-container> 
+
+        <ng-container matColumnDef="DocDate">
           <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 8%;"> Date </th>
-          <td mat-cell *matCellDef="let element" style="text-align: right;"> {{element.PODate | date :'dd/MM/yyyy'}}
+          <td mat-cell *matCellDef="let element"> {{element.DocDate | date :'dd/MM/yyyy'}}
           </td>
         </ng-container>
 
+        <ng-container matColumnDef="PlantName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 8%;"> Plant Name </th>
+          <td mat-cell *matCellDef="let element" (click)="Acknowledgement(element.DocNumber)">
+            {{element.PlantName}} </td>
+        </ng-container>
+
         <ng-container matColumnDef="Status">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 44%;"> Order Fulfilment Status </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 50%;"> Order Fulfilment Status </th>
           <td mat-cell *matCellDef="let element" style="width:400px">
             <div fxLayout class="mt-4 mr-40 ml-8">
-              <div fxFlex="30" fxLayout>
-                <div class="round" (click)="Acknowledgement(element.PO)"
+              <div fxFlex="27" fxLayout>
+                <div class="round" (click)="Acknowledgement(element.DocNumber)"
                   [style.border-color]="element.Status==='Open'?'#efb577':'#34ad65'"></div>
                 <div style="width: 10px;margin-left: -1px !important"
                   [class]="element.Status==='Open'?'orange-timeline':'green-timeline'"></div>
                 <div [class]="element.Status==='Open'?'white-timeline':'green-timeline'" fxFlex></div>
               </div>
-              <div fxFlex="30" fxLayout>
+              <div fxFlex="27" fxLayout>
                 <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline(element,'ASN')"></div>
-                <div class="round" (click)="Acknowledgement(element.PO)"
+                <div class="round" (click)="Acknowledgement(element.DocNumber)"
                   [style.border-color]="getStatusColor(element,'ASN')"></div>
                 <div style="width: 10px; margin-left: -1px !important" [class]="getTimeline(element,'ASN')"></div>
                 <div [class]="getRestTimeline(element,'ASN')" fxFlex></div>
               </div>
-              <div fxFlex="30" fxLayout>
+              <div fxFlex="27" fxLayout>
                 <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline(element,'Gate')"></div>
-                <div class="round" (click)="Acknowledgement(element.PO)"
+                <div class="round" (click)="Acknowledgement(element.DocNumber)"
                   [style.border-color]="getStatusColor(element,'Gate')"></div>
                 <div style="width: 10px;margin-left: -1px !important" [class]="getTimeline(element,'Gate')"></div>
                 <div [class]="getRestTimeline(element,'Gate')" fxFlex></div>
               </div>
-              <div fxFlex="10" fxLayout>
+              <div fxFlex="19" fxLayout>
                 <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline(element,'GRN')"></div>
-                <div class="round" (click)="Acknowledgement(element.PO)"
+                <div class="round" (click)="Acknowledgement(element.DocNumber)"
                   [style.border-color]="getStatusColor(element,'GRN')"></div>
               </div>
             </div>
@@ -230,7 +242,7 @@
             <span>
               <div [class]="getNextProcess(element)"></div>
               <button style="background-color: #e8ffeb;color: #000000;" mat-button
-                (click)="NextProcess(element.NextProcess,element.PO)">{{element.NextProcess}}</button>
+                (click)="NextProcess(element.NextProcess,element.DocNumber)">{{element.NextProcess}}</button>
               <!-- {{nextProcess}} -->
             </span>
           </td>
@@ -242,11 +254,11 @@
             <mat-form-field appearance="outline" style="width: 120px;">
               <mat-label ng-mouseenter="$mdMenu.open()">Action</mat-label>
               <mat-select ng-mouseleave="$mdMenu.close()">
-                <mat-option value="Acknowledge" (click)="Acknowledgement(element.PO)">ACK</mat-option>
-                <mat-option value="POLookup" (click)="PurchaseOrder(element.PO)">PO Lookup</mat-option>
-                <mat-option value="ASN" (click)="AdvanceShipment(element.PO)">ASN</mat-option>
-                <mat-option value="POFlip" (click)="POFlip(element.PO)">PO Flip</mat-option>
-                <mat-option value="Subcon" (click)="GotoSubcon(element.PO)">Subcon</mat-option>
+                <mat-option value="Acknowledge" (click)="Acknowledgement(element.DocNumber)">ACK</mat-option>
+                <mat-option value="POLookup" (click)="PurchaseOrder(element.DocNumber)">PO Factsheet</mat-option>
+                <mat-option value="ASN" (click)="AdvanceShipment(element.DocNumber)">ASN</mat-option>
+                <mat-option value="POFlip" (click)="POFlip(element.DocNumber)">PO Flip</mat-option>
+                <mat-option value="Subcon" (click)="GotoSubcon(element.DocNumber)">Subcon</mat-option>
               </mat-select>
             </mat-form-field>
             <!-- <div>
@@ -262,14 +274,14 @@
 
         </ng-container>
 
-        <!-- <tr mat-header-row *matHeaderRowDef="posDisplayedColumns;sticky: true"></tr>
-        <tr mat-row *matRowDef="let row; columns: posDisplayedColumns;let even=even" matRipple
+        <!-- <tr mat-header-row *matHeaderRowDef="ofDetailsDisplayedColumns;sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: ofDetailsDisplayedColumns;let even=even" matRipple
           style=" cursor: pointer;"> -->
-        <tr mat-header-row *matHeaderRowDef="posDisplayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: posDisplayedColumns;">
+        <tr mat-header-row *matHeaderRowDef="ofDetailsDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: ofDetailsDisplayedColumns;">
         </tr>
-        <!-- <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="posDisplayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: posDisplayedColumns;" (click)="Checked(row)" style=" cursor: pointer;" [class.highlight]="row === selectedPORow"></tr> -->
+        <!-- <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="ofDetailsDisplayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: ofDetailsDisplayedColumns;" (click)="Checked(row)" style=" cursor: pointer;" [class.highlight]="row === selectedPoDetails"></tr> -->
       </table>
       <div>
         <mat-paginator [pageSizeOptions]="[500]"></mat-paginator>
@@ -277,8 +289,8 @@
     </div>
 
 
-    <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
+    <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
     </mat-progress-spinner>
-    <div id="overlay" *ngIf="IsProgressBarVisibile"></div>
+    <div id="overlay" *ngIf="isProgressBarVisibile"></div>
   </div>
 </div>
