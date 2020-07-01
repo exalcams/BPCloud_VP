@@ -67,18 +67,31 @@ export class Acknowledgement {
     PONumber: string;
     // Status: string;
 }
+export class OfOption {
+    Status: string;
+    FromDate: string;
+    ToDate: string;
+    PartnerID: string;
+    DocType: string;
+}
+
 export class POSearch {
     Status: string;
     FromDate: string;
     ToDate: string;
     PartnerID: string;
+    DocType: string;
 }
 export class Status {
     Value: string;
     Name: string;
 }
+export class OfStatus {
+    Value: string;
+    Name: string;
+}
 
-export class PoType {
+export class OfType {
     Value: string;
     Name: string;
 }
@@ -130,3 +143,4 @@ export class DeliverystatusDetails {
 //     Actual:string;
 //     Date:Date;
 // }
+

@@ -107,6 +107,18 @@ export class FactService {
       .pipe(catchError(this.errorHandler));
   }
 
+  AcceptAIACTs(AIACT: any): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/AcceptAIACTs`,
+      AIACT,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+  
+
   RejectAIACT(AIACT: BPCAIACT): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/RejectAIACT`,
       AIACT,

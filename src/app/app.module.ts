@@ -23,6 +23,7 @@ import { WINDOW_PROVIDERS } from './window.providers';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { AttachmentDialogComponent } from './allModules/pages/attachment-dialog/attachment-dialog.component';
 import { PaymentModule } from './allModules/payment/payment.module';
+import { AttachmentViewDialogComponent } from './allModules/pages/attachment-view-dialog/attachment-view-dialog.component';
 // import { CustomerModule } from './allModules/customer/customer.module';
 // import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
@@ -79,7 +80,8 @@ const appRoutes: Routes = [
         AppComponent,
         NotificationSnackBarComponent,
         NotificationDialogComponent,
-        AttachmentDialogComponent
+        AttachmentDialogComponent,
+        AttachmentViewDialogComponent
     ],
     imports: [
         BrowserModule,
@@ -124,6 +126,7 @@ const appRoutes: Routes = [
     entryComponents: [
         NotificationDialogComponent,
         AttachmentDialogComponent,
+        AttachmentViewDialogComponent
     ]
 })
 export class AppModule {

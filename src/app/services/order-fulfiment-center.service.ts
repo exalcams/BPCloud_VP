@@ -6,14 +6,12 @@ import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import { PO, OrderFulfilmentDetails, Acknowledgement, OfOption, DashboardGraphStatus } from 'app/models/Dashboard';
-import { SODetails } from 'app/models/customer';
-import { BPCKRA, CustomerBarChartData } from 'app/models/fact';
 import { BPCOFHeader } from 'app/models/OrderFulFilment';
 
 @Injectable({
   providedIn: 'root'
 })
-export class DashboardService {
+export class OrderFulFilmentCenterService {
   baseAddress: string;
   NotificationEvent: Subject<any>;
 
@@ -62,13 +60,6 @@ export class DashboardService {
       .pipe(catchError(this.errorHandler));
   }
 
-  // Ramanji Methods(Vendor)
-
-  GetPODetails(PatnerID: any): Observable<any | string> {
-    return this._httpClient.get<any>(`${this.baseAddress}poapi/Dashboard/GetPODetails?PatnerID=${PatnerID}`)
-      .pipe(catchError(this.errorHandler));
-  }
-
   GetOrderFulfilmentDetails(po: any, PatnerID: any): Observable<OrderFulfilmentDetails | string> {
     return this._httpClient
       .get<OrderFulfilmentDetails>(`${this.baseAddress}poapi/Dashboard/GetOrderFulfilmentDetails?PO=${po}&PatnerID=${PatnerID}`)
@@ -83,61 +74,6 @@ export class DashboardService {
           'Content-Type': 'application/json'
         })
       })
-      .pipe(catchError(this.errorHandler));
-  }
-
-  GetAllPOBasedOnDate(poSearch: OfOption): Observable<PO[] | string> {
-    return this._httpClient.post<PO[]>(`${this.baseAddress}poapi/Dashboard/GetAllPOBasedOnDate`,
-      poSearch,
-      {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json'
-        })
-      })
-      .pipe(catchError(this.errorHandler));
-  }
-
-  GetDashboardGraphStatus(PartnerID: string): Observable<DashboardGraphStatus | string> {
-    return this._httpClient
-      .get<DashboardGraphStatus>(`${this.baseAddress}factapi/Fact/GetDashboardGraphStatus?PartnerID=${PartnerID}`)
-      .pipe(catchError(this.errorHandler));
-  }
-
-  // Customer
-  
-  GetSODetails(Type: string, PatnerID: string): Observable<SODetails[] | string> {
-    return this._httpClient.get<SODetails[]>(`${this.baseAddress}poapi/Dashboard/GetSODetails?Type=${Type}&PartnerID=${PatnerID}`)
-      .pipe(catchError(this.errorHandler));
-  }
-
-  GetAllSOBasedOnDate(poSearch: OfOption): Observable<SODetails[] | string> {
-    return this._httpClient.post<SODetails[]>(`${this.baseAddress}poapi/Dashboard/GetAllSOBasedOnDate`,
-      poSearch,
-      {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json'
-        })
-      })
-      .pipe(catchError(this.errorHandler));
-  }
-
-  GetCustomerDoughnutChartData(PartnerID: string): Observable<BPCKRA[] | string> {
-    return this._httpClient.get<BPCKRA[]>(`${this.baseAddress}factapi/Fact/GetCustomerDoughnutChartData?PartnerID=${PartnerID}`)
-      .pipe(catchError(this.errorHandler));
-  }
-
-  GetCustomerOpenProcessCircle(PartnerID: string): Observable<BPCKRA | string> {
-    return this._httpClient.get<BPCKRA>(`${this.baseAddress}factapi/Fact/GetCustomerOpenProcessCircle?PartnerID=${PartnerID}`)
-      .pipe(catchError(this.errorHandler));
-  }
-
-  GetCustomerCreditLimitProcessCircle(PartnerID: string): Observable<BPCKRA | string> {
-    return this._httpClient.get<BPCKRA>(`${this.baseAddress}factapi/Fact/GetCustomerCreditLimitProcessCircle?PartnerID=${PartnerID}`)
-      .pipe(catchError(this.errorHandler));
-  }
-
-  GetCustomerBarChartData(PartnerID: string): Observable<CustomerBarChartData | string> {
-    return this._httpClient.get<CustomerBarChartData>(`${this.baseAddress}factapi/Fact/GetCustomerBarChartData?PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));
   }
 

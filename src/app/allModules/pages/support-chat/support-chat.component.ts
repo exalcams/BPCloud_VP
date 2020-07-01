@@ -36,6 +36,7 @@ export class SupportChatComponent implements OnInit {
   SelectedSupportLog: SupportLog;
   SelectedSupportLogView: SupportLog;
   SupportAttachments: BPCSupportAttachment[] = [];
+  SupportLogAttachments: BPCSupportAttachment[] = [];
   IsProgressBarVisibile: boolean;
   fileToUpload: File;
   fileToUploadList: File[] = [];
@@ -117,6 +118,7 @@ export class SupportChatComponent implements OnInit {
           this.Status = this.SupportHeader.Status;
           this.SupportLogs = this.SupportDetails.supportLogs;
           this.SupportAttachments = this.SupportDetails.supportAttachments;
+          this.SupportLogAttachments = this.SupportDetails.supportLogAttachments;
           this.IsProgressBarVisibile = false;
         }
       },
@@ -245,7 +247,7 @@ export class SupportChatComponent implements OnInit {
           this.ResetControl();
           this.notificationSnackBarComponent.openSnackBar(`Support Log created successfully`, SnackBarStatus.success);
           this.IsProgressBarVisibile = false;
-          this.GetSupportLogsByPartnerAndSupportID();
+          this.GetSupportDetailsByPartnerAndSupportID();
         }
       },
       (err) => {
@@ -266,7 +268,7 @@ export class SupportChatComponent implements OnInit {
           this.ResetControl();
           this.notificationSnackBarComponent.openSnackBar(`Support Log updated successfully`, SnackBarStatus.success);
           this.IsProgressBarVisibile = false;
-          this.GetSupportLogsByPartnerAndSupportID();
+          this.GetSupportDetailsByPartnerAndSupportID();
         }
       },
       (err) => {
@@ -276,16 +278,18 @@ export class SupportChatComponent implements OnInit {
   }
 
   AddSupportLogAttachment(): void {
-    this._supportDeskService.AddSupportLogAttachment(this.SelectedSupportLog.ID.toString(), this.currentUserID.toString(), this.fileToUploadList).subscribe(
-      (dat) => {
-        this.notificationSnackBarComponent.openSnackBar('Support Log created successfully', SnackBarStatus.success);
-        this.IsProgressBarVisibile = false;
-        this.ResetControl();
-      },
-      (err) => {
-        this.ShowErrorNotificationSnackBar(err);
-      }
-    );
+    this._supportDeskService.AddSupportLogAttachment(this.SupportHeader.SupportID.toString(), this.SelectedSupportLog.ID.toString(),
+      this.currentUserID.toString(), this.fileToUploadList).subscribe(
+        (dat) => {
+          this.notificationSnackBarComponent.openSnackBar('Support Log created successfully', SnackBarStatus.success);
+          this.IsProgressBarVisibile = false;
+          this.ResetControl();
+          this.GetSupportDetailsByPartnerAndSupportID();
+        },
+        (err) => {
+          this.ShowErrorNotificationSnackBar(err);
+        }
+      );
   }
 
   OpenConfirmationDialog(Actiontype: string, Catagory: string): void {
