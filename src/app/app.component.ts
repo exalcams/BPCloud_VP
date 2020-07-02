@@ -93,7 +93,7 @@ export class AppComponent implements OnInit, OnDestroy {
         mdIconRegistry.addSvgIcon('powerOffIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/powerOff.svg'));
 
         mdIconRegistry.addSvgIcon('addBlueIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/addBlue.svg'));
-        
+
         mdIconRegistry.addSvgIcon('orderfulfilmentIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/orderfulfilment.svg'));
 
         mdIconRegistry.addSvgIcon('detailsIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/details.svg'));
@@ -112,12 +112,13 @@ export class AppComponent implements OnInit, OnDestroy {
 
         mdIconRegistry.addSvgIcon('bpCollapsedMenuIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/bpCollapsedMenu.svg'));
         mdIconRegistry.addSvgIcon('bpOpenedMenuIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/bpOpenedMenu.svg'));
-        
+
         mdIconRegistry.addSvgIcon('podIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/pod.svg'));
         mdIconRegistry.addSvgIcon('menuwithdotsIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/menuwithdots.svg'));
         mdIconRegistry.addSvgIcon('paymentmethodIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/paymentmethod.svg'));
         mdIconRegistry.addSvgIcon('lookupIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/lookup.svg'));
         mdIconRegistry.addSvgIcon('returnIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/return.svg'));
+        mdIconRegistry.addSvgIcon('thunderBlackIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/thunder_black.svg'));
 
         /**
          * ------------------------------------------------------------------

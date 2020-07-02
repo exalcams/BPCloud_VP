@@ -13,6 +13,7 @@ import { PO, OfStatus, DashboardGraphStatus, OTIFStatus, QualityStatus, Fulfilme
 import { DatePipe } from '@angular/common';
 import { BPCOFHeader } from 'app/models/OrderFulFilment';
 import { DashboardService } from 'app/services/dashboard.service';
+import { NullInjector } from '@angular/core/src/di/injector';
 
 @Component({
     selector: 'app-order-fulfilment-center',
@@ -31,6 +32,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     isProgressBarVisibile: boolean;
     isDateError: boolean;
     ofDetails: BPCOFHeader[] = [];
+    filteredOfDetails: BPCOFHeader[] = [];
     ofDetailsFormGroup: FormGroup;
     ofOption: OfOption;
     ofDetailsDisplayedColumns: string[] = [
@@ -54,10 +56,10 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     DeliveryStatus: any[] = [];
     ofStatusOptions: OfStatus[] = [
         { Value: 'All', Name: 'All' },
-        { Value: 'Due for Ack', Name: 'Due for Ack' },
-        { Value: 'Due for ASN', Name: 'Due for ASN' },
-        { Value: 'Due for Gate', Name: 'Due for Gate' },
-        { Value: 'Due for GRN', Name: 'Due for GRN' }
+        { Value: 'DueForAck', Name: 'Due for Ack' },
+        { Value: 'DueForASN', Name: 'Due for ASN' },
+        { Value: 'DueForGate', Name: 'Due for Gate' },
+        { Value: 'DueForGRN', Name: 'Due for GRN' }
     ];
     ofTypeOptions: OfType[] = [
         { Value: 'All', Name: 'All' },
@@ -115,7 +117,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         }
     };
     public doughnutChartType: ChartType = 'doughnut';
-    public doughnutChartLabels: any[] = ['Due for Ack', 'Due for ASN', 'Due for Gate', 'Due for GRN'];
+    public doughnutChartLabels: any[] = ['Due for ACK', 'Due for ASN', 'Due for Gate', 'Due for GRN'];
     // public doughnutChartData: any[] = [
     //     [40, 20, 30, 10]
     // ];
@@ -313,7 +315,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         this.initialiseOfDetailsFormGroup();
         this.GetOfDetails();
         this.GetOfGraphDetailsByPartnerID();
-        console.log(this.dashboardDeliverystatus);
+        this.GetOfStatusByPartnerID();
     }
 
     initialiseOfDetailsFormGroup(): void {
@@ -383,6 +385,63 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         this.clearOfDetailsFormGroup();
     }
 
+    GetOfStatusByPartnerID(): void {
+        this.isProgressBarVisibile = true;
+        this._dashboardService
+            .GetOfStatusByPartnerID(this.partnerID)
+            .subscribe((data) => {
+                if (data) {
+                    this.FulfilmentStatus = <FulfilmentStatus>data;
+                    console.log(this.FulfilmentStatus);
+                    if (this.FulfilmentStatus) {
+                        this.doughnutChartData = [this.FulfilmentStatus.OpenDetails.Value, this.FulfilmentStatus.ScheduledDetails.Value,
+                        this.FulfilmentStatus.InProgressDetails.Value, this.FulfilmentStatus.PendingDetails.Value];
+                    }
+                }
+                this.isProgressBarVisibile = false;
+            },
+                (err) => {
+                    console.error(err);
+                    this.isProgressBarVisibile = false;
+                });
+    }
+
+    doughnutChartClicked(e: any): void {
+        console.log(e);
+        if (e.active.length > 0) {
+            const chart = e.active[0]._chart;
+            const activePoints = chart.getElementAtEvent(e.event);
+            if (activePoints.length > 0) {
+                // get the internal index of slice in pie chart
+                const clickedElementIndex = activePoints[0]._index;
+                const label = chart.data.labels[clickedElementIndex];
+                // get value by index
+                const value = chart.data.datasets[0].data[clickedElementIndex];
+                console.log(clickedElementIndex, label, value);
+                if (label !== null) {
+                    this.loadOfDetailsByOfStatusChartLabel(label);
+                }
+            }
+        }
+    }
+
+    loadOfDetailsByOfStatusChartLabel(label: any): void {
+        if (label === "Due for ACK") {
+            this.filteredOfDetails = this.ofDetails.filter(x => x.Status === 'DueForACK');
+            this.ofDetailsDataSource = null;
+            this.ofDetailsDataSource = new MatTableDataSource(this.filteredOfDetails);
+            this.ofDetailsDataSource.paginator = this.ofDetailsPaginator;
+            this.ofDetailsDataSource.sort = this.ofDetailsSort;
+        }
+        else if (label === "Due for ASN") {
+            this.filteredOfDetails = this.ofDetails.filter(x => x.Status === 'DueForASN');
+            this.ofDetailsDataSource = new MatTableDataSource(this.filteredOfDetails);
+            this.ofDetailsDataSource.paginator = this.ofDetailsPaginator;
+            this.ofDetailsDataSource.sort = this.ofDetailsSort;
+        }
+
+    }
+
     GetOfGraphDetailsByPartnerID(): void {
         this.isProgressBarVisibile = true;
         this._dashboardService
@@ -398,8 +457,8 @@ export class OrderFulFilmentCenterComponent implements OnInit {
                     this.progress1(OTIF);
                     const Quality = Number(this.QualityStatus.Quality);
                     this.progress2(Quality);
-                    this.doughnutChartData = [this.FulfilmentStatus.OpenDetails.Value, this.FulfilmentStatus.ScheduledDetails.Value,
-                    this.FulfilmentStatus.InProgressDetails.Value, this.FulfilmentStatus.PendingDetails.Value];
+                    // this.doughnutChartData = [this.FulfilmentStatus.OpenDetails.Value, this.FulfilmentStatus.ScheduledDetails.Value,
+                    // this.FulfilmentStatus.InProgressDetails.Value, this.FulfilmentStatus.PendingDetails.Value];
                     // this.dashboardDeliverystatus.Planned1.Date = this.dashboardDeliverystatus.Planned1.Date 
                     const Planned1Date = this.datePipe.transform(this.dashboardDeliverystatus.Planned1.Date, 'dd/MM/yyyy');
                     const Planned2Date = this.datePipe.transform(this.dashboardDeliverystatus.Planned2.Date, 'dd/MM/yyyy');
@@ -529,25 +588,27 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     getStatusColor(element: BPCOFHeader, StatusFor: string): string {
         switch (StatusFor) {
             case 'ASN':
-                return element.Status === 'Open' ? 'gray' : element.Status === 'ACK' ? '#efb577' : '#34ad65';
+                return element.Status === 'DueForACK' ? 'gray' : element.Status === 'DueForASN' ? '#efb577' : '#34ad65';
             case 'Gate':
-                return element.Status === 'Open' ? 'gray' : element.Status === 'ACK' ? 'gray' : element.Status === 'ASN' ? '#efb577' : '#34ad65';
+                return element.Status === 'DueForACK' ? 'gray' : element.Status === 'DueForASN' ? 'gray' :
+                    element.Status === 'DueForGate' ? '#efb577' : '#34ad65';
             case 'GRN':
-                return element.Status === 'Open' ? 'gray' : element.Status === 'ACK' ? 'gray' : element.Status === 'ASN' ? 'gray' :
-                    element.Status === 'Gate' ? '#efb577' : '#34ad65';
+                return element.Status === 'DueForACK' ? 'gray' : element.Status === 'DueForASN' ? 'gray' :
+                    element.Status === 'DueForGate' ? 'gray' :
+                        element.Status === 'DueForGRN' ? '#efb577' : '#34ad65';
             default:
                 return '';
         }
     }
 
     getNextProcess(element: any): void {
-        if (element.Status === 'Open') {
+        if (element.Status === 'DueForACK') {
             element.NextProcess = 'ACK';
         }
-        else if (element.Status === 'ACK') {
+        else if (element.Status === 'DueForASN') {
             element.NextProcess = 'ASN';
         }
-        else if (element.Status === 'ASN') {
+        else if (element.Status === 'DueForGate') {
             element.NextProcess = 'Gate';
         }
         else {
@@ -559,12 +620,15 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     getTimeline(element: BPCOFHeader, StatusFor: string): string {
         switch (StatusFor) {
             case 'ASN':
-                return element.Status === 'Open' ? 'white-timeline' : element.Status === 'ACK' ? 'orange-timeline' : 'green-timeline';
+                return element.Status === 'DueForACK' ? 'white-timeline' : element.Status === 'DueForASN' ? 'orange-timeline' :
+                    'green-timeline';
             case 'Gate':
-                return element.Status === 'Open' ? 'white-timeline' : element.Status === 'ACK' ? 'white-timeline' : element.Status === 'ASN' ? 'orange-timeline' : 'green-timeline';
+                return element.Status === 'DueForACK' ? 'white-timeline' : element.Status === 'DueForASN' ? 'white-timeline' :
+                    element.Status === 'DueForGate' ? 'orange-timeline' : 'green-timeline';
             case 'GRN':
-                return element.Status === 'Open' ? 'white-timeline' : element.Status === 'ACK' ? 'white-timeline' : element.Status === 'ASN' ? 'white-timeline' :
-                    element.Status === 'Gate' ? 'orange-timeline' : 'green-timeline';
+                return element.Status === 'DueForACK' ? 'white-timeline' : element.Status === 'DueForASN' ? 'white-timeline' :
+                    element.Status === 'DueForGate' ? 'white-timeline' :
+                        element.Status === 'DueForGRN' ? 'orange-timeline' : 'green-timeline';
             default:
                 return '';
         }
@@ -573,12 +637,15 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     getRestTimeline(element: BPCOFHeader, StatusFor: string): string {
         switch (StatusFor) {
             case 'ASN':
-                return element.Status === 'Open' ? 'white-timeline' : element.Status === 'ACK' ? 'white-timeline' : 'green-timeline';
+                return element.Status === 'DueForACK' ? 'white-timeline' : element.Status === 'DueForASN' ? 'white-timeline' :
+                    'green-timeline';
             case 'Gate':
-                return element.Status === 'Open' ? 'white-timeline' : element.Status === 'ACK' ? 'white-timeline' : element.Status === 'ASN' ? 'white-timeline' : 'green-timeline';
+                return element.Status === 'DueForACK' ? 'white-timeline' : element.Status === 'DueForASN' ? 'white-timeline' :
+                    element.Status === 'DueForGate' ? 'white-timeline' : 'green-timeline';
             case 'GRN':
-                return element.Status === 'Open' ? 'white-timeline' : element.Status === 'ACK' ? 'white-timeline' : element.Status === 'ASN' ? 'white-timeline' :
-                    element.Status === 'Gate' ? 'white-timeline' : 'green-timeline';
+                return element.Status === 'DueForACK' ? 'white-timeline' : element.Status === 'DueForASN' ? 'white-timeline' :
+                    element.Status === 'DueForGate' ? 'white-timeline' :
+                        element.Status === 'DueForGRN' ? 'white-timeline' : 'green-timeline';
             default:
                 return '';
         }
