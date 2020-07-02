@@ -35,6 +35,7 @@ export class PoFactsheetComponent implements OnInit {
     public QACount: number;
     public DocumentCount: number;
     public FlipCount: number;
+    imageSizeOnMouseEvent: string;
 
     IsProgressBarVisibile: boolean;
     itemDisplayedColumns: string[] = [
@@ -116,6 +117,7 @@ export class PoFactsheetComponent implements OnInit {
         this.tab5 = false;
         this.tab6 = false;
         // this.tabCount = 1;
+        this.imageSizeOnMouseEvent = 'NormalImage';
     }
 
     ngOnInit(): void {
@@ -188,6 +190,13 @@ export class PoFactsheetComponent implements OnInit {
         });
         this.tabCount = 1;
         this.InitializePOItemFormGroup();
+    }
+
+    bigImg(event): void {
+        this.imageSizeOnMouseEvent = "BigImage";
+    }
+    normalImg(event): void {
+        this.imageSizeOnMouseEvent = "NormalImage";
     }
 
     tabone(): void {
@@ -379,12 +388,13 @@ export class PoFactsheetComponent implements OnInit {
     getStatusColor(StatusFor: string): string {
         switch (StatusFor) {
             case 'ASN':
-                return this.Status === 'Open' ? 'gray' : this.Status === 'ACK' ? '#efb577' : '#34ad65';
+                return this.Status === 'DueForACK' ? 'gray' : this.Status === 'DueForASN' ? '#efb577' : '#34ad65';
             case 'Gate':
-                return this.Status === 'Open' ? 'gray' : this.Status === 'ACK' ? 'gray' : this.Status === 'ASN' ? '#efb577' : '#34ad65';
+                return this.Status === 'DueForACK' ? 'gray' : this.Status === 'DueForASN' ? 'gray' : this.Status === 'DueForGate' ? '#efb577' :
+                    '#34ad65';
             case 'GRN':
-                return this.Status === 'Open' ? 'gray' : this.Status === 'ACK' ? 'gray' : this.Status === 'ASN' ? 'gray' :
-                    this.Status === 'Gate' ? '#efb577' : '#34ad65';
+                return this.Status === 'DueForACK' ? 'gray' : this.Status === 'DueForASN' ? 'gray' : this.Status === 'DueForGate' ? 'gray' :
+                    this.Status === 'DueForGRN' ? '#efb577' : '#34ad65';
             default:
                 return '';
         }
@@ -393,12 +403,14 @@ export class PoFactsheetComponent implements OnInit {
     getTimeline(StatusFor: string): string {
         switch (StatusFor) {
             case 'ASN':
-                return this.Status === 'Open' ? 'white-timeline' : this.Status === 'ACK' ? 'orange-timeline' : 'green-timeline';
+                return this.Status === 'DueForACK' ? 'white-timeline' : this.Status === 'DueForASN' ? 'orange-timeline' : 'green-timeline';
             case 'Gate':
-                return this.Status === 'Open' ? 'white-timeline' : this.Status === 'ACK' ? 'white-timeline' : this.Status === 'ASN' ? 'orange-timeline' : 'green-timeline';
+                return this.Status === 'DueForACK' ? 'white-timeline' : this.Status === 'DueForASN' ? 'white-timeline' :
+                    this.Status === 'DueForGate' ? 'orange-timeline' : 'green-timeline';
             case 'GRN':
-                return this.Status === 'Open' ? 'white-timeline' : this.Status === 'ACK' ? 'white-timeline' : this.Status === 'ASN' ? 'white-timeline' :
-                    this.Status === 'Gate' ? 'orange-timeline' : 'green-timeline';
+                return this.Status === 'DueForACK' ? 'white-timeline' : this.Status === 'DueForASN' ? 'white-timeline' :
+                    this.Status === 'DueForGate' ? 'white-timeline' :
+                        this.Status === 'DueForGRN' ? 'orange-timeline' : 'green-timeline';
             default:
                 return '';
         }
@@ -407,12 +419,14 @@ export class PoFactsheetComponent implements OnInit {
     getRestTimeline(StatusFor: string): string {
         switch (StatusFor) {
             case 'ASN':
-                return this.Status === 'Open' ? 'white-timeline' : this.Status === 'ACK' ? 'white-timeline' : 'green-timeline';
+                return this.Status === 'DueForACK' ? 'white-timeline' : this.Status === 'DueForASN' ? 'white-timeline' : 'green-timeline';
             case 'Gate':
-                return this.Status === 'Open' ? 'white-timeline' : this.Status === 'ACK' ? 'white-timeline' : this.Status === 'ASN' ? 'white-timeline' : 'green-timeline';
+                return this.Status === 'DueForACK' ? 'white-timeline' : this.Status === 'DueForASN' ? 'white-timeline' :
+                    this.Status === 'DueForGate' ? 'white-timeline' : 'green-timeline';
             case 'GRN':
-                return this.Status === 'Open' ? 'white-timeline' : this.Status === 'ACK' ? 'white-timeline' : this.Status === 'ASN' ? 'white-timeline' :
-                    this.Status === 'Gate' ? 'white-timeline' : 'green-timeline';
+                return this.Status === 'DueForACK' ? 'white-timeline' : this.Status === 'DueForASN' ? 'white-timeline' :
+                    this.Status === 'DueForGate' ? 'white-timeline' :
+                        this.Status === 'DueForGRN' ? 'white-timeline' : 'green-timeline';
             default:
                 return '';
         }

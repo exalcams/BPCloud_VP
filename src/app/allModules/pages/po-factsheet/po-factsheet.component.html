@@ -10,30 +10,41 @@
       </div>
     </div>
     <div fxLayout="row" style="margin-top: 20px !important;margin-top: 10px !important;">
-      <div fxFlex="50">
-        <div fxFlex="50" class="mx-8 mb-8 mt-0 p-8">
-          <div fxLayout fxLayoutAlign="space-between center">
-            <div fxFlex>PO No : <strong style="font-size: 18px;">{{OrderFulfilmentDetails.PONumber}}</strong></div>
+      <div fxFlex="50" class="p-8">
+        <div fxFlex="45" class="mx-8 mb-8 mt-0">
+          <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="5px">
+            <div fxFlex style="text-align: right;">PO No:</div>
+            <div fxFlex style="text-align: left;"> <strong
+                style="font-size: 18px; line-height: 20px;">{{OrderFulfilmentDetails.PONumber}}</strong></div>
           </div>
-          <div>
-            <div style="margin-top: 20px;color: #2e2e2e">
-              <span>PO Date : <strong
-                  style="font-size: 18px;">{{OrderFulfilmentDetails.PODate  | date :'dd/MM/yyyy'}}</strong></span>
+          <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="5px" style="margin-top: 20px;color: #2e2e2e">
+            <div fxFlex style="text-align: right;">PO Date:</div>
+            <div fxFlex style="text-align: left;"> <strong
+                style="font-size: 18px; line-height: 20px;">{{OrderFulfilmentDetails.PODate  | date :'dd/MM/yyyy'}}</strong>
             </div>
           </div>
         </div>
-        <!-- <mat-divider></mat-divider> -->
-        <div class="divider1"></div>
-        <div fxFlex="50" class="mx-8 mb-8 mt-0 p-8">
-          <div fxLayout fxLayoutAlign="space-between center">
+        <div fxFlex="10" fxLayoutAlign="end end">
+          <div class="divider1"></div>
+        </div>
+        <div fxFlex="45" class="mx-8 mb-8 mt-0">
+          <!-- <div fxLayout fxLayoutAlign="space-between center">
             <div fxFlex>Currency : <strong style="font-size: 18px;">{{OrderFulfilmentDetails.Currency}}</strong></div>
           </div>
           <div>
             <div style="margin-top: 20px;color: #2e2e2e">
-            
-            
-            
               <span>Version :<strong style="font-size: 18px;">{{OrderFulfilmentDetails.Version}}</strong></span>
+            </div>
+          </div> -->
+          <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="5px">
+            <div fxFlex style="text-align: right;">Version:</div>
+            <div fxFlex style="text-align: left;"> <strong
+                style="font-size: 18px; line-height: 20px;">{{OrderFulfilmentDetails.Version}}</strong></div>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="5px" style="margin-top: 20px;color: #2e2e2e">
+            <div fxFlex style="text-align: right;">Currency:</div>
+            <div fxFlex style="text-align: left;"> <strong
+                style="font-size: 18px; line-height: 20px;">{{OrderFulfilmentDetails.Currency}}</strong>
             </div>
           </div>
         </div>
@@ -49,10 +60,10 @@
         </div>
         <div fxLayout class="mt-4 mr-40 ml-8" style="width: 115% !important;">
           <div fxFlex="25" fxLayout>
-            <div class="round" [style.border-color]="Status==='Open'?'#efb577':'#34ad65'"></div>
-            <div style="width: 10px;margin-left: -1px;" [class]="Status==='Open'?'orange-timeline':'green-timeline'">
+            <div class="round" [style.border-color]="Status==='DueForACK'?'#efb577':'#34ad65'"></div>
+            <div style="width: 10px;margin-left: -1px;" [class]="Status==='DueForACK'?'orange-timeline':'green-timeline'">
             </div>
-            <div [class]="Status==='Open'?'white-timeline':'green-timeline'" fxFlex></div>
+            <div [class]="Status==='DueForACK'?'white-timeline':'green-timeline'" fxFlex></div>
           </div>
           <div fxFlex="25" fxLayout>
             <div style="width: 10px;margin-right: -1px;" [class]="getTimeline('ASN')"></div>
@@ -87,8 +98,8 @@
     </div>
 
     <div fxFlex class="mt-24" style="background-color: #fef8f1;">
-      <div class="container m-12" fxLayout fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="center"
-        fxLayoutGap="10px" fxLayoutGap.xs="10">
+      <div class="m-12" fxLayout fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px"
+        fxLayoutGap.xs="10">
         <div fxFlex="7" (click)="tabone()">
           <div class="container" fxLayout fxLayoutAlign="center" fxLayoutGap="10px">
             <div class="item-round1">
@@ -114,6 +125,8 @@
                 <span [matBadge]="ASNCount" id="mat-badge-content-1" matBadgeOverlap="false"></span>
               </div>
               <div class="asn-round2">
+                <!-- [ngStyle]="{'width':imageSizeOnMouseEvent == 'NormalImage' ? '20px' : '15px'}"
+                  (mouseover)="bigImg($event)" (mouseout)="normalImg($event)" -->
                 <img style="margin-top: 8px !important;margin-left: 10px;width: 20px;" src="assets/images/phone.png">
                 <div style="margin-top: 28px;margin-left: 5px;">ASN</div>
                 <div *ngIf="tabCount === 2" class="tab-highlight"></div>
@@ -129,7 +142,8 @@
                 <span [matBadge]="GRNCount" matBadgeColor="primary" matBadgeOverlap="false"></span>
               </div>
               <div class="grn-round2">
-                <img style="margin-top: 8px !important;margin-left: 13px;width: 20px;" src="assets/images/notes.png">
+                <img class="tab-image" style="margin-top: 8px !important;margin-left: 13px;width: 20px;"
+                  src="assets/images/notes.png">
                 <div style="margin-top: 28px;margin-left: 5px;">GRN</div>
                 <div *ngIf="tabCount === 3" class="tab-highlight"></div>
               </div>
@@ -186,6 +200,11 @@
     </div>
     <div>
       <div class="content" fxLayout="column" *ngIf="tab1">
+        <div fxFlex *ngIf="Status === 'DueForACK'">
+          <div fxLayoutAlign="end" style="padding-right: 200px;">
+            <button mat-button class="acknowledge-po-btn" (click)="YesClicked()">Acknowledge PO</button>
+          </div>
+        </div>
         <form name="ACKFormGroup" [formGroup]="ACKFormGroup" fxLayout="column" fxFlex>
           <div class="p-12 mt-24">
             <table class="table" style="width: 85% !important;" mat-table [dataSource]="itemDataSource" matSort
@@ -326,11 +345,6 @@
           <mat-icon style="color: #1b56ca;margin-top: 10px;margin-left: 70px">info</mat-icon>
           <span style="margin-left: 10px;">The table does not contain any data</span>
         </div> -->
-          </div>
-          <div fxFlex *ngIf="Status === 'Open'">
-            <div fxLayoutAlign="center">
-              <button mat-button class="Btn1" (click)="YesClicked()">Acknowledge PO</button>
-            </div>
           </div>
         </form>
         <!-- <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator> -->

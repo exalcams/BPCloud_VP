@@ -5,7 +5,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { PO, OrderFulfilmentDetails, Acknowledgement, OfOption, DashboardGraphStatus } from 'app/models/Dashboard';
+import { PO, OrderFulfilmentDetails, Acknowledgement, OfOption, DashboardGraphStatus, FulfilmentStatus } from 'app/models/Dashboard';
 import { SODetails } from 'app/models/customer';
 import { BPCKRA, CustomerBarChartData } from 'app/models/fact';
 import { BPCOFHeader } from 'app/models/OrderFulFilment';
@@ -53,6 +53,11 @@ export class DashboardService {
           'Content-Type': 'application/json'
         })
       })
+      .pipe(catchError(this.errorHandler));
+  }
+  
+  GetOfStatusByPartnerID(PartnerID: any): Observable<FulfilmentStatus | string> {
+    return this._httpClient.get<FulfilmentStatus>(`${this.baseAddress}poapi/Dashboard/GetOfStatusByPartnerID?PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));
   }
 
