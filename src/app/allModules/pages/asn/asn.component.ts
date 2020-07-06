@@ -195,8 +195,8 @@ export class ASNComponent implements OnInit {
     }
     InitializeInvoiceDetailsFormGroup(): void {
         this.InvoiceDetailsFormGroup = this._formBuilder.group({
-            InvoiceNumber: ['', [Validators.minLength(10), Validators.maxLength(16), Validators.pattern('^[1-9][0-9]*$')]],
-            InvoiceAmount: ['', [Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,2})?$')]],
+            InvoiceNumber: ['', [Validators.minLength(1), Validators.maxLength(16), Validators.pattern('^[1-9][0-9]*$')]],
+            InvoiceAmount: ['', [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,2})?$')]],
             InvoiceAmountUOM: [''],
             InvoiceDate: [''],
             InvoiceAttachment: [''],
@@ -302,14 +302,34 @@ export class ASNComponent implements OnInit {
     handleFileInput1(evt): void {
         if (evt.target.files && evt.target.files.length > 0) {
             if (this.invoiceAttachment && this.invoiceAttachment.name) {
-                this.notificationSnackBarComponent.openSnackBar('Maximum one attachment is allowed, old is attachment is replaced', SnackBarStatus.warning);
+                this.OpenAttachmentReplaceConfirmation(evt);
+                // this.notificationSnackBarComponent.openSnackBar('Maximum one attachment is allowed, old is attachment is replaced', SnackBarStatus.warning);
             }
-            if (this.invAttach && this.invAttach.AttachmentName) {
-                this.notificationSnackBarComponent.openSnackBar('Maximum one attachment is allowed, old is attachment is replaced', SnackBarStatus.warning);
+            else if (this.invAttach && this.invAttach.AttachmentName) {
+                this.OpenAttachmentReplaceConfirmation(evt);
+                // this.notificationSnackBarComponent.openSnackBar('Maximum one attachment is allowed, old is attachment is replaced', SnackBarStatus.warning);
+            } else {
+                this.invoiceAttachment = evt.target.files[0];
+                this.invAttach = new BPCInvoiceAttachment();
             }
-            this.invoiceAttachment = evt.target.files[0];
-            this.invAttach = new BPCInvoiceAttachment();
         }
+    }
+    OpenAttachmentReplaceConfirmation(evt): void {
+        const dialogConfig: MatDialogConfig = {
+            data: {
+                Actiontype: 'Replace',
+                Catagory: 'Attachment'
+            },
+            panelClass: 'confirmation-dialog'
+        };
+        const dialogRef = this.dialog.open(NotificationDialogComponent, dialogConfig);
+        dialogRef.afterClosed().subscribe(
+            result => {
+                if (result) {
+                    this.invoiceAttachment = evt.target.files[0];
+                    this.invAttach = new BPCInvoiceAttachment();
+                }
+            });
     }
     handleFileInput(evt): void {
         if (evt.target.files && evt.target.files.length > 0) {
@@ -619,7 +639,7 @@ export class ASNComponent implements OnInit {
         });
         row.disable();
         if (poItem.OpenQty && poItem.OpenQty > 0) {
-            row.get('ASNQty').setValidators([Validators.required, Validators.max(poItem.OpenQty), Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,3})?$')]);
+            row.get('ASNQty').setValidators([Validators.required, Validators.max(poItem.OpenQty), Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]);
             row.get('ASNQty').updateValueAndValidity();
             row.get('ASNQty').enable();
         }
@@ -641,7 +661,7 @@ export class ASNComponent implements OnInit {
             GRQty: [asnItem.CompletedQty],
             PipelineQty: [asnItem.TransitQty],
             OpenQty: [asnItem.OpenQty],
-            ASNQty: [asnItem.ASNQty, [Validators.required, Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,3})?$')]],
+            ASNQty: [asnItem.ASNQty, [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
             UOM: [asnItem.UOM],
             Batch: [asnItem.Batch],
             ManufactureDate: [asnItem.ManufactureDate],

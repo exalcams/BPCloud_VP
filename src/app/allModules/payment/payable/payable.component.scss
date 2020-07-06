@@ -1,5 +1,6 @@
 @import "src/@fuse/scss/fuse";
 #payable {
+    background-color: white;
     .topbarClass {
         background: url("/assets/images/backgrounds/header 2.png") no-repeat;
         background-repeat: no-repeat;
@@ -369,6 +370,11 @@
         width: 133.33333%;
     }
 
+    .mat-form-field-outline-start,
+    .mat-form-field-outline-end {
+      border-radius: 0 !important;
+    }
+
     .calendarImg {
         height: 20px;
         margin-bottom: 12px;
@@ -399,7 +405,7 @@
         background-color: white;
         color: rgb(46, 125, 50);
         &.mat-stroked-button {
-            border-radius: 5px;
+            // border-radius: 5px;
             padding: 0px 8px;
         }
     }
