@@ -517,7 +517,7 @@ export class LoginComponent implements OnInit {
       this.paymentSubChildren.push(
         {
           id: 'payable',
-          title: 'Payable',
+          title: 'Payables',
           type: 'item',
           url: '/payment/payable'
         },
@@ -557,7 +557,7 @@ export class LoginComponent implements OnInit {
       this.MenuItems.indexOf('AccountStatement') >= 0 || this.MenuItems.indexOf('TDS') >= 0) {
       this.children.push({
         id: 'master',
-        title: 'Financial',
+        title: 'Financials',
         // translate: 'NAV.DASHBOARDS',
         type: 'collapsable',
         icon: 'paymentmethodIcon',

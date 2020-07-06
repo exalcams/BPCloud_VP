@@ -58,8 +58,9 @@
                 <div fxFlex>
                   <div fxLayout="row" class="PO-No px-20 py-12">
                     <div fxFlex='40'>
-                      <div fxLayout="row" fxLayoutGap="2px">
-                        <div fxFlex> <span> PO NO: {{SelectedASNHeader?.DocNumber}}</span></div>
+                      <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="2px">
+                        <div fxFlex="20" fxLayoutAlign="end center"> <span> PO NO : </span></div>
+                        <div fxFlex="80" fxLayoutAlign="start center"> <span> {{SelectedASNHeader?.DocNumber}}</span></div>
                       </div>
                     </div>
                     <div fxFlex='60' *ngIf="SelectedDocNumber && !AllASNHeaders.length" fxLayout fxLayoutGap="10px"
@@ -72,8 +73,13 @@
                   </div>
                 </div>
                 <div fxFlex class="Date px-20 pb-12">
-                  <div fxFlex='30' fxLayout="row" fxLayoutGap="2px">
-                    <div fxFlex> <span>Date : </span><span>{{PO?.DocDate | date :'dd/MM/yyyy'}}</span></div>
+                  <div fxLayout="row" fxLayoutGap="2px">
+                    <div fxFlex='40'>
+                      <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="2px">
+                        <div fxFlex="20" fxLayoutAlign="end center"> <span> Date : </span></div>
+                        <div fxFlex="80" fxLayoutAlign="start center"> <span> {{PO?.DocDate | date :'dd/MM/yyyy'}}</span></div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
