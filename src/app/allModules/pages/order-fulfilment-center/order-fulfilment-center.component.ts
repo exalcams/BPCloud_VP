@@ -1,20 +1,21 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef } from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
-import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatDialog, MatMenuTrigger } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatMenuTrigger } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AuthenticationDetails } from 'app/models/master';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
 import { ChartType } from 'chart.js';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { PO, OfStatus, DashboardGraphStatus, OTIFStatus, QualityStatus, FulfilmentStatus, Deliverystatus, OfType, OfOption } from 'app/models/Dashboard';
+import {
+    OfStatus, DashboardGraphStatus, OTIFStatus, QualityStatus,
+    FulfilmentStatus, Deliverystatus, OfType, OfOption
+} from 'app/models/Dashboard';
 import { DatePipe } from '@angular/common';
 import { BPCOFHeader } from 'app/models/OrderFulFilment';
 import { DashboardService } from 'app/services/dashboard.service';
-import { NullInjector } from '@angular/core/src/di/injector';
-
 @Component({
     selector: 'app-order-fulfilment-center',
     templateUrl: './order-fulfilment-center.component.html',
@@ -52,7 +53,6 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     @ViewChild(MatMenuTrigger) matMenuTrigger: MatMenuTrigger;
     selection = new SelectionModel<any>(true, []);
     Fulfilments: any[] = [];
-    donutChartData: any[] = [];
     DeliveryStatus: any[] = [];
     ofStatusOptions: OfStatus[] = [
         { Value: 'All', Name: 'All' },
@@ -74,7 +74,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     DashboardGraphStatus: DashboardGraphStatus = new DashboardGraphStatus();
     OTIFStatus: OTIFStatus = new OTIFStatus();
     QualityStatus: QualityStatus = new QualityStatus();
-    FulfilmentStatus: FulfilmentStatus = new FulfilmentStatus();
+    fulfilmentStatus: FulfilmentStatus = new FulfilmentStatus();
     dashboardDeliverystatus: Deliverystatus = new Deliverystatus();
     selectedPoDetails: BPCOFHeader = new BPCOFHeader();
 
@@ -232,23 +232,6 @@ export class OrderFulFilmentCenterComponent implements OnInit {
                 'label': '10%'
             }
         ];
-        this.donutChartData = [
-            {
-                label: 'Liverpool FC',
-                value: 5,
-                color: 'red',
-            },
-            {
-                label: 'Real Madrid	',
-                value: 13,
-                color: 'black',
-            },
-            {
-                label: 'FC Bayern München',
-                value: 5,
-                color: 'blue',
-            },
-        ];
         this.DeliveryStatus = [
             {
                 'name': '17/02/20',
@@ -318,22 +301,6 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         this.GetOfStatusByPartnerID();
     }
 
-    initialiseOfDetailsFormGroup(): void {
-        this.ofDetailsFormGroup = this._formBuilder.group({
-            FromDate: [''],
-            ToDate: [''],
-            Status: [''],
-            DocType: ['']
-        });
-    }
-
-    clearOfDetailsFormGroup(): void {
-        Object.keys(this.ofDetailsFormGroup.controls).forEach(key => {
-            this.ofDetailsFormGroup.get(key).markAsTouched();
-            this.ofDetailsFormGroup.get(key).markAsDirty();
-        });
-    }
-
     GetOfDetails(): void {
         this.isProgressBarVisibile = true;
         this._dashboardService
@@ -353,35 +320,23 @@ export class OrderFulFilmentCenterComponent implements OnInit {
                 });
     }
 
-    GetOfsByOption(): void {
-        if (this.ofDetailsFormGroup.valid) {
-            if (!this.isDateError) {
-                this.isProgressBarVisibile = true;
-                this.ofOption = new OfOption();
-                this.ofOption.FromDate = this.datePipe.transform(this.ofDetailsFormGroup.get('FromDate').value as Date, 'yyyy-MM-dd');
-                this.ofOption.ToDate = this.datePipe.transform(this.ofDetailsFormGroup.get('ToDate').value as Date, 'yyyy-MM-dd');
-                this.ofOption.Status = this.ofDetailsFormGroup.get('Status').value;
-                this.ofOption.DocType = this.ofDetailsFormGroup.get('DocType').value;
-                this.ofOption.PartnerID = this.partnerID;
-                this._dashboardService.GetOfsByOption(this.ofOption)
-                    .subscribe((data) => {
-                        if (data) {
-                            this.ofDetails = <BPCOFHeader[]>data;
-                            this.ofDetailsDataSource = new MatTableDataSource(this.ofDetails);
-                            this.ofDetailsDataSource.paginator = this.ofDetailsPaginator;
-                            this.ofDetailsDataSource.sort = this.ofDetailsSort;
-                        }
-
-                        this.isProgressBarVisibile = false;
-                    },
-                        (err) => {
-                            console.error(err);
-                            this.isProgressBarVisibile = false;
-                            this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-                        });
-            }
-
-        }
+    GetOfsByOption(ofOption: OfOption): void {
+        this.isProgressBarVisibile = true;
+        this._dashboardService.GetOfsByOption(ofOption)
+            .subscribe((data) => {
+                if (data) {
+                    this.ofDetails = <BPCOFHeader[]>data;
+                    this.ofDetailsDataSource = new MatTableDataSource(this.ofDetails);
+                    this.ofDetailsDataSource.paginator = this.ofDetailsPaginator;
+                    this.ofDetailsDataSource.sort = this.ofDetailsSort;
+                }
+                this.isProgressBarVisibile = false;
+            },
+                (err) => {
+                    console.error(err);
+                    this.isProgressBarVisibile = false;
+                    this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+                });
         this.clearOfDetailsFormGroup();
     }
 
@@ -391,11 +346,10 @@ export class OrderFulFilmentCenterComponent implements OnInit {
             .GetOfStatusByPartnerID(this.partnerID)
             .subscribe((data) => {
                 if (data) {
-                    this.FulfilmentStatus = <FulfilmentStatus>data;
-                    console.log(this.FulfilmentStatus);
-                    if (this.FulfilmentStatus) {
-                        this.doughnutChartData = [this.FulfilmentStatus.OpenDetails.Value, this.FulfilmentStatus.ScheduledDetails.Value,
-                        this.FulfilmentStatus.InProgressDetails.Value, this.FulfilmentStatus.PendingDetails.Value];
+                    this.fulfilmentStatus = <FulfilmentStatus>data;
+                    if (this.fulfilmentStatus) {
+                        this.doughnutChartData = [this.fulfilmentStatus.OpenDetails.Value, this.fulfilmentStatus.ScheduledDetails.Value,
+                        this.fulfilmentStatus.InProgressDetails.Value, this.fulfilmentStatus.PendingDetails.Value];
                     }
                 }
                 this.isProgressBarVisibile = false;
@@ -404,42 +358,6 @@ export class OrderFulFilmentCenterComponent implements OnInit {
                     console.error(err);
                     this.isProgressBarVisibile = false;
                 });
-    }
-
-    doughnutChartClicked(e: any): void {
-        console.log(e);
-        if (e.active.length > 0) {
-            const chart = e.active[0]._chart;
-            const activePoints = chart.getElementAtEvent(e.event);
-            if (activePoints.length > 0) {
-                // get the internal index of slice in pie chart
-                const clickedElementIndex = activePoints[0]._index;
-                const label = chart.data.labels[clickedElementIndex];
-                // get value by index
-                const value = chart.data.datasets[0].data[clickedElementIndex];
-                console.log(clickedElementIndex, label, value);
-                if (label !== null) {
-                    this.loadOfDetailsByOfStatusChartLabel(label);
-                }
-            }
-        }
-    }
-
-    loadOfDetailsByOfStatusChartLabel(label: any): void {
-        if (label === "Due for ACK") {
-            this.filteredOfDetails = this.ofDetails.filter(x => x.Status === 'DueForACK');
-            this.ofDetailsDataSource = null;
-            this.ofDetailsDataSource = new MatTableDataSource(this.filteredOfDetails);
-            this.ofDetailsDataSource.paginator = this.ofDetailsPaginator;
-            this.ofDetailsDataSource.sort = this.ofDetailsSort;
-        }
-        else if (label === "Due for ASN") {
-            this.filteredOfDetails = this.ofDetails.filter(x => x.Status === 'DueForASN');
-            this.ofDetailsDataSource = new MatTableDataSource(this.filteredOfDetails);
-            this.ofDetailsDataSource.paginator = this.ofDetailsPaginator;
-            this.ofDetailsDataSource.sort = this.ofDetailsSort;
-        }
-
     }
 
     GetOfGraphDetailsByPartnerID(): void {
@@ -452,13 +370,13 @@ export class OrderFulFilmentCenterComponent implements OnInit {
                     this.dashboardDeliverystatus = this.DashboardGraphStatus.deliverystatus;
                     this.OTIFStatus = this.DashboardGraphStatus.oTIFStatus;
                     this.QualityStatus = this.DashboardGraphStatus.qualityStatus;
-                    this.FulfilmentStatus = this.DashboardGraphStatus.fulfilmentStatus;
+                    this.fulfilmentStatus = this.DashboardGraphStatus.fulfilmentStatus;
                     const OTIF = Number(this.OTIFStatus.OTIF);
                     this.progress1(OTIF);
                     const Quality = Number(this.QualityStatus.Quality);
                     this.progress2(Quality);
-                    // this.doughnutChartData = [this.FulfilmentStatus.OpenDetails.Value, this.FulfilmentStatus.ScheduledDetails.Value,
-                    // this.FulfilmentStatus.InProgressDetails.Value, this.FulfilmentStatus.PendingDetails.Value];
+                    // this.doughnutChartData = [this.fulfilmentStatus.OpenDetails.Value, this.fulfilmentStatus.ScheduledDetails.Value,
+                    // this.fulfilmentStatus.InProgressDetails.Value, this.fulfilmentStatus.PendingDetails.Value];
                     // this.dashboardDeliverystatus.Planned1.Date = this.dashboardDeliverystatus.Planned1.Date 
                     const Planned1Date = this.datePipe.transform(this.dashboardDeliverystatus.Planned1.Date, 'dd/MM/yyyy');
                     const Planned2Date = this.datePipe.transform(this.dashboardDeliverystatus.Planned2.Date, 'dd/MM/yyyy');
@@ -491,6 +409,93 @@ export class OrderFulFilmentCenterComponent implements OnInit {
                 });
     }
 
+    initialiseOfDetailsFormGroup(): void {
+        this.ofDetailsFormGroup = this._formBuilder.group({
+            FromDate: [''],
+            ToDate: [''],
+            Status: [''],
+            DocType: ['']
+        });
+    }
+
+    clearOfDetailsFormGroup(): void {
+        Object.keys(this.ofDetailsFormGroup.controls).forEach(key => {
+            this.ofDetailsFormGroup.get(key).markAsTouched();
+            this.ofDetailsFormGroup.get(key).markAsDirty();
+        });
+    }
+
+    getOfDetailsFormValues(): void {
+
+    }
+
+    getOfsByOptionClicked(): void {
+        if (this.ofDetailsFormGroup.valid) {
+            if (!this.isDateError) {
+                this.ofOption = new OfOption();
+                this.ofOption.FromDate = this.datePipe.transform(this.ofDetailsFormGroup.get('FromDate').value as Date, 'yyyy-MM-dd');
+                this.ofOption.ToDate = this.datePipe.transform(this.ofDetailsFormGroup.get('ToDate').value as Date, 'yyyy-MM-dd');
+                this.ofOption.Status = this.ofDetailsFormGroup.get('Status').value;
+                this.ofOption.DocType = this.ofDetailsFormGroup.get('DocType').value;
+                this.ofOption.PartnerID = this.partnerID;
+                this.GetOfsByOption(this.ofOption);
+            }
+        }
+    }
+
+    doughnutChartClicked(e: any): void {
+        console.log(e);
+        if (e.active.length > 0) {
+            const chart = e.active[0]._chart;
+            const activePoints = chart.getElementAtEvent(e.event);
+            if (activePoints.length > 0) {
+                // get the internal index of slice in pie chart
+                const clickedElementIndex = activePoints[0]._index;
+                const label = chart.data.labels[clickedElementIndex];
+                // get value by index
+                const value = chart.data.datasets[0].data[clickedElementIndex];
+                console.log(clickedElementIndex, label, value);
+                if (label !== null) {
+                    this.loadOfDetailsByOfStatusChartLabel(label);
+                }
+            }
+        }
+    }
+
+    loadOfDetailsByOfStatusChartLabel(label: any): void {
+        if (label === "Due for ACK") {
+            // this.filteredOfDetails = this.ofDetails.filter(x => x.Status === 'DueForACK');
+            this.ofDetailsDataSource = null;
+            this.ofOption = new OfOption();
+            this.ofOption.Status = "DueForACK";
+            this.ofOption.PartnerID = this.partnerID;
+            this.GetOfsByOption(this.ofOption);
+        }
+        else if (label === "Due for ASN") {
+            this.ofDetailsDataSource = null;
+            this.ofOption = new OfOption();
+            this.ofOption.Status = "DueForASN";
+            this.ofOption.PartnerID = this.partnerID;
+            this.GetOfsByOption(this.ofOption);
+        }
+        else if (label === "Due for Gate") {
+            this.ofDetailsDataSource = null;
+            this.ofOption = new OfOption();
+            this.ofOption.Status = "DueForGate";
+            this.ofOption.PartnerID = this.partnerID;
+            this.GetOfsByOption(this.ofOption);
+        }
+        else if (label === "Due for GRN") {
+
+            this.ofDetailsDataSource = null;
+            this.ofOption = new OfOption();
+            this.ofOption.Status = "DueForGRN";
+            this.ofOption.PartnerID = this.partnerID;
+            this.GetOfsByOption(this.ofOption);
+        }
+
+    }
+
     openMyMenu(index: any): void {
         alert(index);
         this.matMenuTrigger.openMenu();
@@ -502,8 +507,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         this.matMenuTrigger.closeMenu();
     }
 
-    DateSelected(): void {
-        // console.log('Called');
+    fromAndToDateChanged(): void {
         const FROMDATEVAL = this.ofDetailsFormGroup.get('FromDate').value as Date;
         const TODATEVAL = this.ofDetailsFormGroup.get('ToDate').value as Date;
         if (FROMDATEVAL && TODATEVAL && FROMDATEVAL > TODATEVAL) {
@@ -513,41 +517,32 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         }
     }
 
-    PurchaseOrder(po: string): void {
-        // alert(po);
+    goToPOFactSheetClicked(po: string): void {
         this._router.navigate(['/pages/polookup'], { queryParams: { id: po } });
     }
 
-    Acknowledgement(po: string): void {
-        // alert(po);
+    acknowledgementClicked(po: string): void {
         this._router.navigate(['/pages/polookup'], { queryParams: { id: po } });
     }
 
-    POFlip(po: string): void {
+    goToPOFlipClicked(po: string): void {
         this._router.navigate(['/pages/poflip'], { queryParams: { id: po } });
     }
 
-    Checked(po: string): void {
-        this._router.navigate(['/pages/polookup'], { queryParams: { id: po } });
-    }
-
-    AdvanceShipment(po: string): void {
-        // alert(po);
+    goToASNClicked(po: string): void {
         this._router.navigate(['/pages/asn'], { queryParams: { id: po } });
     }
 
-    GotoSubcon(po: string): void {
+    goToSubconClicked(po: string): void {
         this._router.navigate(['/subcon'], { queryParams: { id: po } });
 
     }
 
-    NextProcess(nextProcess: string, po: string): void {
+    nextProcessClicked(nextProcess: string, po: string): void {
         if (nextProcess === 'ACK') {
-            // this.nextProcess = 'ACK';
             this._router.navigate(['/pages/polookup'], { queryParams: { id: po } });
         }
         else if (nextProcess === 'ASN') {
-            // this.nextProcess = 'ASN';
             this._router.navigate(['/pages/asn'], { queryParams: { id: po } });
         }
     }
@@ -651,24 +646,4 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         }
     }
 
-    // backup 
-    // const OTIF = Number(this.OTIFStatus.OTIF);
-    // this.progress1(OTIF);
-    // this.progress2(this.QualityStatus.Quality);
-    // this.doughnutChartData = [this.FulfilmentStatus.OpenDetails.Value, this.FulfilmentStatus.ScheduledDetails.Value, 
-    // this.FulfilmentStatus.InProgressDetails.Value, this.FulfilmentStatus.PendingDetails];
-    // this.barChartData = [
-    //     { data: [45, 70, 65, 20, 80], label: 'Actual' },
-    //     { data: [87, 50, 40, 71, 56], label: 'Planned' } 
-    // ];
-    // console.log(this.barChartData);
-
-    // const gradient = this.barCanvas.nativeElement.getContext('2d').createLinearGradient(0, 0, 0, 600);
-    // gradient.addColorStop(0, 'red');
-    // gradient.addColorStop(1, 'green');
-    // this.barColors = [
-    //     {
-    //         backgroundColor: gradient
-    //     }
-    // ];
 }

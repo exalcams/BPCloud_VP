@@ -51,8 +51,7 @@
         </div>
         <div id="doughnutChart" fxFlex fxLayoutAlign="start" class="pt-8 pl-8 pr-4">
           <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType"
-            [options]="doughnutChartOptions" [colors]="colors"
-            (chartClick)="doughnutChartClicked($event)">
+            [options]="doughnutChartOptions" [colors]="colors" (chartClick)="doughnutChartClicked($event)">
           </canvas>
         </div>
         <div fxFlex fxLayout fxLayoutAlign="end center">
@@ -76,7 +75,7 @@
           <div fxFlex="21%">
             <mat-form-field>
               <input matInput placeholder="From date" [matDatepicker]="picker1" formControlName="FromDate"
-                (dateChange)="DateSelected()">
+                (dateChange)="fromAndToDateChanged()">
               <mat-datepicker-toggle matSuffix [for]="picker1">
                 <img matDatepickerToggleIcon class="calendarImg" src="assets/images/calendar.png">
               </mat-datepicker-toggle>
@@ -86,7 +85,7 @@
           <div fxFlex="21%">
             <mat-form-field>
               <input matInput placeholder="To Date" [matDatepicker]="picker2" formControlName="ToDate"
-                (dateChange)="DateSelected()">
+                (dateChange)="fromAndToDateChanged()">
               <mat-datepicker-toggle matSuffix [for]="picker2">
                 <img matDatepickerToggleIcon class="calendarImg" src="assets/images/calendar.png">
               </mat-datepicker-toggle>
@@ -118,7 +117,7 @@
           </div>
           <div fxFlex="45%">
             <button class="mt-4" style="background-color: #efb577;color: white;" mat-raised-button
-              (click)="GetOfsByOption()">Search</button>
+              (click)="getOfsByOptionClicked()">Search</button>
           </div>
         </div>
       </form>
@@ -137,13 +136,13 @@
 
         <ng-container matColumnDef="DocVersion">
           <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 8%;"> Version </th>
-          <td mat-cell *matCellDef="let element" (click)="Acknowledgement(element.DocNumber)">
+          <td mat-cell *matCellDef="let element" (click)="acknowledgementClicked(element.DocNumber)">
             {{element.DocVersion}} </td>
         </ng-container>
 
         <ng-container matColumnDef="DocType">
           <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 8%;"> Type </th>
-          <td mat-cell *matCellDef="let element" (click)="Acknowledgement(element.DocNumber)">
+          <td mat-cell *matCellDef="let element" (click)="acknowledgementClicked(element.DocNumber)">
             {{element.DocType}} </td>
         </ng-container>
 
@@ -155,7 +154,7 @@
 
         <ng-container matColumnDef="PlantName">
           <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 8%;"> Plant Name </th>
-          <td mat-cell *matCellDef="let element" (click)="Acknowledgement(element.DocNumber)">
+          <td mat-cell *matCellDef="let element" (click)="acknowledgementClicked(element.DocNumber)">
             {{element.PlantName}} </td>
         </ng-container>
 
@@ -164,7 +163,7 @@
           <td mat-cell *matCellDef="let element" style="width:400px">
             <div fxLayout class="mt-4 mr-40 ml-8">
               <div fxFlex="27" fxLayout>
-                <div class="round" (click)="Acknowledgement(element.DocNumber)"
+                <div class="round" (click)="acknowledgementClicked(element.DocNumber)"
                   [style.border-color]="element.Status==='DueForACK'?'#efb577':'#34ad65'"></div>
                 <div style="width: 10px;margin-left: -1px !important"
                   [class]="element.Status==='DueForACK'?'orange-timeline':'green-timeline'"></div>
@@ -172,21 +171,21 @@
               </div>
               <div fxFlex="27" fxLayout>
                 <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline(element,'ASN')"></div>
-                <div class="round" (click)="Acknowledgement(element.DocNumber)"
+                <div class="round" (click)="acknowledgementClicked(element.DocNumber)"
                   [style.border-color]="getStatusColor(element,'ASN')"></div>
                 <div style="width: 10px; margin-left: -1px !important" [class]="getTimeline(element,'ASN')"></div>
                 <div [class]="getRestTimeline(element,'ASN')" fxFlex></div>
               </div>
               <div fxFlex="27" fxLayout>
                 <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline(element,'Gate')"></div>
-                <div class="round" (click)="Acknowledgement(element.DocNumber)"
+                <div class="round" (click)="acknowledgementClicked(element.DocNumber)"
                   [style.border-color]="getStatusColor(element,'Gate')"></div>
                 <div style="width: 10px;margin-left: -1px !important" [class]="getTimeline(element,'Gate')"></div>
                 <div [class]="getRestTimeline(element,'Gate')" fxFlex></div>
               </div>
               <div fxFlex="19" fxLayout>
                 <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline(element,'GRN')"></div>
-                <div class="round" (click)="Acknowledgement(element.DocNumber)"
+                <div class="round" (click)="acknowledgementClicked(element.DocNumber)"
                   [style.border-color]="getStatusColor(element,'GRN')"></div>
               </div>
             </div>
@@ -226,8 +225,7 @@
             <span>
               <div [class]="getNextProcess(element)"></div>
               <button style="background-color: #e8ffeb;color: #000000;" mat-button
-                (click)="NextProcess(element.NextProcess,element.DocNumber)">{{element.NextProcess}}</button>
-              <!-- {{nextProcess}} -->
+                (click)="nextProcessClicked(element.NextProcess,element.DocNumber)">{{element.NextProcess}}</button>
             </span>
           </td>
         </ng-container>
@@ -239,11 +237,12 @@
               <mat-icon matPrefix svgIcon="thunderBlackIcon" height="20px"></mat-icon>
               <mat-label ng-mouseenter="$mdMenu.open()">Actions</mat-label>
               <mat-select ng-mouseleave="$mdMenu.close()">
-                <mat-option value="Acknowledge" (click)="Acknowledgement(element.DocNumber)">ACK</mat-option>
-                <mat-option value="POLookup" (click)="PurchaseOrder(element.DocNumber)">PO Factsheet</mat-option>
-                <mat-option value="ASN" (click)="AdvanceShipment(element.DocNumber)">ASN</mat-option>
-                <mat-option value="POFlip" (click)="POFlip(element.DocNumber)">PO Flip</mat-option>
-                <mat-option value="Subcon" (click)="GotoSubcon(element.DocNumber)">Subcon</mat-option>
+                <mat-option value="Acknowledge" (click)="acknowledgementClicked(element.DocNumber)">ACK</mat-option>
+                <mat-option value="POLookup" (click)="goToPOFactSheetClicked(element.DocNumber)">PO Factsheet
+                </mat-option>
+                <mat-option value="ASN" (click)="goToASNClicked(element.DocNumber)">ASN</mat-option>
+                <mat-option value="POFlip" (click)="goToPOFlipClicked(element.DocNumber)">PO Flip</mat-option>
+                <mat-option value="Subcon" (click)="goToSubconClicked(element.DocNumber)">Subcon</mat-option>
               </mat-select>
             </mat-form-field>
             <!-- <div>
