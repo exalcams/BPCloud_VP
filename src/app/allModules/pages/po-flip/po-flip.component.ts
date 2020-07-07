@@ -1,25 +1,21 @@
 import { Component, OnInit, ViewChild, ElementRef, ViewEncapsulation } from '@angular/core';
-import { MenuApp, AuthenticationDetails, UserView, VendorUser } from 'app/models/master';
+import { AuthenticationDetails } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { FormGroup, FormBuilder, Validators, AbstractControl, FormArray } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatDialog, MatDialogConfig } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
-import { MasterService } from 'app/services/master.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { AttachmentDialogComponent } from 'app/allModules/pages/attachment-dialog/attachment-dialog.component';
 import { AttachmentDetails } from 'app/models/task';
-import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
 import { BPCFLIPHeader, BPCFLIPHeaderView, BPCFLIPCost, BPCFLIPItem } from 'app/models/po-flip';
 import { POFlipService } from 'app/services/po-flip.service';
 import { BPCOFHeader, BPCOFItem } from 'app/models/OrderFulFilment';
 import { POService } from 'app/services/po.service';
 import { BehaviorSubject } from 'rxjs';
-import { BPCInvoiceAttachment } from 'app/models/ASN';
-
 @Component({
   selector: 'app-po-flip',
   templateUrl: './po-flip.component.html',
@@ -28,30 +24,28 @@ import { BPCInvoiceAttachment } from 'app/models/ASN';
   animations: fuseAnimations
 })
 export class PoFlipComponent implements OnInit {
-  MenuItems: string[];
-  AllMenuApps: MenuApp[] = [];
-  SelectedMenuApp: MenuApp;
+  menuItems: string[];
   authenticationDetails: AuthenticationDetails;
-  CurrentUserID: Guid;
-  CurrentUserRole = '';
+  currentUserID: Guid;
+  currentUserRole = '';
   notificationSnackBarComponent: NotificationSnackBarComponent;
-  IsProgressBarVisibile: boolean;
-  FLIPFormGroup: FormGroup;
-  FLIPCostFormGroup: FormGroup;
-  FLIPItemFormGroup: FormGroup;
-  AllFLIPs: BPCFLIPHeader[] = [];
-  SelectedBPCFLIPHeader: BPCFLIPHeader;
-  SelectedBPCFLIPHeaderView: BPCFLIPHeaderView;
-  FLIPCostByFLIPID: BPCFLIPCost[] = [];
-  FLIPCostDisplayedColumns: string[] = [
+  isProgressBarVisibile: boolean;
+  flipFormGroup: FormGroup;
+  flipCostFormGroup: FormGroup;
+  flipItemFormGroup: FormGroup;
+  flips: BPCFLIPHeader[] = [];
+  selectedFlip: BPCFLIPHeader;
+  selectedFlipHeaderView: BPCFLIPHeaderView;
+  flipCosts: BPCFLIPCost[] = [];
+  flipCostDisplayedColumns: string[] = [
     'ExpenceType',
     'Amount',
     'Remark',
     'Action'
   ];
-  FLIPCostDataSource = new MatTableDataSource<BPCFLIPCost>();
-  FLIPItems: BPCFLIPItem[] = [];
-  FLIPItemDisplayedColumns: string[] = [
+  flipCostDataSource = new MatTableDataSource<BPCFLIPCost>();
+  flipItems: BPCFLIPItem[] = [];
+  flipItemDisplayedColumns: string[] = [
     'Item',
     'MaterialText',
     // 'DeliveryDate',
@@ -63,59 +57,40 @@ export class PoFlipComponent implements OnInit {
     'Tax',
     'Amount',
   ];
-  FLIPItemFormArray: FormArray = this._formBuilder.array([]);
-  FLIPItemDataSource = new BehaviorSubject<AbstractControl[]>([]);
+  flipItemFormArray: FormArray = this._formBuilder.array([]);
+  flipItemDataSource = new BehaviorSubject<AbstractControl[]>([]);
   @ViewChild(MatPaginator) flipItemPaginator: MatPaginator;
   @ViewChild(MatSort) flipItemSort: MatSort;
-  POHeader: BPCOFHeader;
-  POItems: BPCOFItem[] = [];
-  SelectedDocNumber: string;
-  SelectFLIPID: string;
+  poHeader: BPCOFHeader;
+  poItems: BPCOFItem[] = [];
+  selectedDocNumber: string;
+  selectedDocDate: Date;
+  selectedFLIPID: string;
   searchText = '';
   selection = new SelectionModel<any>(true, []);
-  @ViewChild('iDNumber') iDNumber: ElementRef;
-  @ViewChild('validUntil') validUntil: ElementRef;
-  @ViewChild('accHolderName') accHolderName: ElementRef;
-  @ViewChild('accountNo') accountNo: ElementRef;
-  @ViewChild('ifsc') ifsc: ElementRef;
-  @ViewChild('bankName') bankName: ElementRef;
-  @ViewChild('branch') branch: ElementRef;
-  @ViewChild('bankCity') bankCity: ElementRef;
-  @ViewChild('department') department: ElementRef;
-  @ViewChild('title') title: ElementRef;
-  @ViewChild('mobile') mobile: ElementRef;
-  @ViewChild('email') email: ElementRef;
-  @ViewChild('activityDate') activityDate: ElementRef;
-  @ViewChild('activityTime') activityTime: ElementRef;
-  @ViewChild('activityText') activityText: ElementRef;
-  @ViewChild('aAmount') aAmount: ElementRef;
   fileToUpload: File;
   fileToUploadList: File[] = [];
-  AllRoles: string[] = [];
-  AllCurrencies: string[] = [];
-  AllStates: string[] = [];
-  AllInvoiceTypes: string[] = [];
+  currencies: string[] = [];
+  states: string[] = [];
+  invoiceTypes: string[] = [];
   math = Math;
   constructor(
-    private _fuseConfigService: FuseConfigService,
-    private _masterService: MasterService,
-    private _pOFlipService: POFlipService,
-    private _POService: POService,
+    private _poFlipService: POFlipService,
+    private _poService: POService,
     private _router: Router,
     private _route: ActivatedRoute,
     public snackBar: MatSnackBar,
     private dialog: MatDialog,
     private _formBuilder: FormBuilder
   ) {
-    this.SelectedBPCFLIPHeader = new BPCFLIPHeader();
-    this.SelectedBPCFLIPHeaderView = new BPCFLIPHeaderView();
+    this.selectedFlip = new BPCFLIPHeader();
+    this.selectedFlipHeaderView = new BPCFLIPHeaderView();
     this.authenticationDetails = new AuthenticationDetails();
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
-    this.IsProgressBarVisibile = false;
-    this.AllRoles = ['IND'];
-    this.AllCurrencies = ['USD', 'INR'];
-    this.AllInvoiceTypes = ['Service', 'Registered'];
-    this.AllStates = [
+    this.isProgressBarVisibile = false;
+    this.currencies = ['USD', 'INR'];
+    this.invoiceTypes = ['Service', 'Registered'];
+    this.states = [
       'ANDAMAN AND NICOBAR ISLANDS',
       'ANDHRA PRADESH',
       'ARUNACHAL PRADESH',
@@ -157,45 +132,46 @@ export class PoFlipComponent implements OnInit {
 
   ngOnInit(): void {
     this._route.queryParams.subscribe(params => {
-      this.SelectedDocNumber = params['id'];
+      this.selectedDocNumber = params['id'];
     });
     // Retrive authorizationData
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
-      this.CurrentUserID = this.authenticationDetails.UserID;
-      this.CurrentUserRole = this.authenticationDetails.UserRole;
-      this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
-      if (this.MenuItems.indexOf('Flip') < 0) {
+      this.currentUserID = this.authenticationDetails.UserID;
+      this.currentUserRole = this.authenticationDetails.UserRole;
+      this.menuItems = this.authenticationDetails.MenuItemNames.split(',');
+      if (this.menuItems.indexOf('Flip') < 0) {
         this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
         );
         this._router.navigate(['/auth/login']);
       }
       this.GetFLIPBasedOnCondition();
-      this.InitializeFLIPFormGroup();
-      this.InitializeFLIPCostFormGroup();
-      this.InitializeFLIPItemFormGroup();
+      this.initializeFlipFormGroup();
+      this.initializeFlipCostFormGroup();
+      this.initializeFlipItemFormGroup();
     } else {
       this._router.navigate(['/auth/login']);
     }
   }
 
   GetFLIPBasedOnCondition(): void {
-    if (this.SelectedDocNumber) {
+    if (this.selectedDocNumber) {
       this.GetPOByDoc();
       this.GetPOItemsByDoc();
-      this.GetFLIPsByDoc();
-      this.GetFLIPCostsByFLIPID();
+      this.GetFlipsByDoc();
+      this.GetFlipCostsByFLIPID();
     } else {
-      this.GetAllFLIPs();
+      this.GetFlips();
     }
   }
 
   // Get PO Header details by PO/DocNumber
   GetPOByDoc(): void {
-    this._POService.GetPOByDoc(this.SelectedDocNumber).subscribe(
+    this._poService.GetPOByDoc(this.selectedDocNumber).subscribe(
       (data) => {
-        this.POHeader = data as BPCOFHeader;
+        this.poHeader = data as BPCOFHeader;
+        this.selectedDocDate = this.poHeader.DocDate;
       },
       (err) => {
         console.error(err);
@@ -205,18 +181,18 @@ export class PoFlipComponent implements OnInit {
 
   // Get PO Item details by PO/DocNumber
   GetPOItemsByDoc(): void {
-    this._POService.GetPOItemsByDoc(this.SelectedDocNumber).subscribe(
+    this._poService.GetPOItemsByDoc(this.selectedDocNumber).subscribe(
       (data) => {
-        this.POItems = data as BPCOFItem[];
-        this.ClearFormArray(this.FLIPItemFormArray);
-        if (this.POItems && this.POItems.length) {
-          this.SelectedBPCFLIPHeader.Client = this.SelectedBPCFLIPHeaderView.Client = this.POItems[0].Client;
-          this.SelectedBPCFLIPHeader.Company = this.SelectedBPCFLIPHeaderView.Company = this.POItems[0].Company;
-          this.SelectedBPCFLIPHeader.Type = this.SelectedBPCFLIPHeaderView.Type = this.POItems[0].Type;
-          this.SelectedBPCFLIPHeader.PatnerID = this.SelectedBPCFLIPHeaderView.PatnerID = this.POItems[0].PatnerID;
-          this.SelectedBPCFLIPHeader.DocNumber = this.SelectedBPCFLIPHeaderView.DocNumber = this.POItems[0].DocNumber;
-          this.POItems.forEach(x => {
-            this.InsertPOItemsFormGroup(x);
+        this.poItems = data as BPCOFItem[];
+        this.clearFormArray(this.flipItemFormArray);
+        if (this.poItems && this.poItems.length) {
+          this.selectedFlip.Client = this.selectedFlipHeaderView.Client = this.poItems[0].Client;
+          this.selectedFlip.Company = this.selectedFlipHeaderView.Company = this.poItems[0].Company;
+          this.selectedFlip.Type = this.selectedFlipHeaderView.Type = this.poItems[0].Type;
+          this.selectedFlip.PatnerID = this.selectedFlipHeaderView.PatnerID = this.poItems[0].PatnerID;
+          this.selectedFlip.DocNumber = this.selectedFlipHeaderView.DocNumber = this.poItems[0].DocNumber;
+          this.poItems.forEach(x => {
+            this.insertPoItemsFormGroup(x);
           });
         }
       },
@@ -226,13 +202,13 @@ export class PoFlipComponent implements OnInit {
     );
   }
 
-  GetAllFLIPs(): void {
-    this._pOFlipService.GetAllPOFLIPs().subscribe(
+  GetFlips(): void {
+    this._poFlipService.GetAllPOFLIPs().subscribe(
       (data) => {
-        this.AllFLIPs = data as BPCFLIPHeader[];
-        if (this.AllFLIPs && this.AllFLIPs.length) {
-          this.LoadSelectedFLIP(this.AllFLIPs[0]);
-          // this.SelectedDocNumber = this.AllFLIPs[0].DocNumber;
+        this.flips = data as BPCFLIPHeader[];
+        if (this.flips && this.flips.length) {
+          this.loadSelectedFlip(this.flips[0]);
+          // this.selectedDocNumber = this.flips[0].DocNumber;
         }
       },
       (err) => {
@@ -241,12 +217,12 @@ export class PoFlipComponent implements OnInit {
     );
   }
 
-  GetFLIPsByDoc(): void {
-    this._pOFlipService.GetPOFLIPsByDoc(this.SelectedDocNumber).subscribe(
+  GetFlipsByDoc(): void {
+    this._poFlipService.GetPOFLIPsByDoc(this.selectedDocNumber).subscribe(
       (data) => {
-        this.AllFLIPs = data as BPCFLIPHeader[];
-        if (this.AllFLIPs && this.AllFLIPs.length) {
-          this.LoadSelectedFLIP(this.AllFLIPs[0]);
+        this.flips = data as BPCFLIPHeader[];
+        if (this.flips && this.flips.length) {
+          this.loadSelectedFlip(this.flips[0]);
         }
       },
       (err) => {
@@ -255,30 +231,30 @@ export class PoFlipComponent implements OnInit {
     );
   }
 
-  GetFLIPCostsByFLIPID(): void {
-    this.IsProgressBarVisibile = true;
-    this._pOFlipService.GetFLIPCostsByFLIPID(this.SelectedBPCFLIPHeader.FLIPID).subscribe(
+  GetFlipCostsByFLIPID(): void {
+    this.isProgressBarVisibile = true;
+    this._poFlipService.GetFLIPCostsByFLIPID(this.selectedFlip.FLIPID).subscribe(
       (data) => {
-        this.IsProgressBarVisibile = false;
-        this.FLIPCostByFLIPID = data as BPCFLIPCost[];
-        this.FLIPCostDataSource = new MatTableDataSource(this.FLIPCostByFLIPID);
+        this.isProgressBarVisibile = false;
+        this.flipCosts = data as BPCFLIPCost[];
+        this.flipCostDataSource = new MatTableDataSource(this.flipCosts);
       },
       (err) => {
         console.error(err);
-        this.IsProgressBarVisibile = false;
+        this.isProgressBarVisibile = false;
         // this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
       }
     );
   }
 
-  GetFLIPItemsByFLIPID(): void {
-    this._pOFlipService.GetFLIPItemsByFLIPID(this.SelectedBPCFLIPHeader.FLIPID).subscribe(
+  GetFlipItemsByFLIPID(): void {
+    this._poFlipService.GetFLIPItemsByFLIPID(this.selectedFlip.FLIPID).subscribe(
       (data) => {
-        this.SelectedBPCFLIPHeaderView.FLIPItems = data as BPCFLIPItem[];
-        if (this.SelectedBPCFLIPHeaderView.FLIPItems && this.SelectedBPCFLIPHeaderView.FLIPItems.length) {
-          this.ClearFormArray(this.FLIPItemFormArray);
-          this.SelectedBPCFLIPHeaderView.FLIPItems.forEach(x => {
-            this.InsertFLIPItemsFormGroup(x);
+        this.selectedFlipHeaderView.FLIPItems = data as BPCFLIPItem[];
+        if (this.selectedFlipHeaderView.FLIPItems && this.selectedFlipHeaderView.FLIPItems.length) {
+          this.clearFormArray(this.flipItemFormArray);
+          this.selectedFlipHeaderView.FLIPItems.forEach(x => {
+            this.insertFlipItemsFormGroup(x);
           });
         }
       },
@@ -288,8 +264,82 @@ export class PoFlipComponent implements OnInit {
     );
   }
 
-  InitializeFLIPFormGroup(): void {
-    this.FLIPFormGroup = this._formBuilder.group({
+  CreatePOFLIP(): void {
+    this.selectedFlipHeaderView.CreatedBy = this.authenticationDetails.UserID.toString();
+    this.isProgressBarVisibile = true;
+    this._poFlipService.CreatePOFLIP(this.selectedFlipHeaderView).subscribe(
+      (data) => {
+        this.selectedFlip.FLIPID = (data as BPCFLIPHeader).FLIPID;
+        if (this.fileToUploadList && this.fileToUploadList.length) {
+          this._poFlipService.AddPOFLIPAttachment(this.selectedFlip.FLIPID, this.authenticationDetails.UserID.toString(), this.fileToUploadList).subscribe(
+            (dat) => {
+              this.resetControl();
+              this.notificationSnackBarComponent.openSnackBar('PO Flip Saved successfully', SnackBarStatus.success);
+              this.isProgressBarVisibile = false;
+              this.GetFlipsByDoc();
+              this.GetFlipCostsByFLIPID();
+            },
+            (err) => {
+              this.showErrorNotificationSnackBar(err);
+            }
+          );
+        }
+        else {
+          this.resetControl();
+          this.notificationSnackBarComponent.openSnackBar('PO Flip Saved successfully', SnackBarStatus.success);
+          this.isProgressBarVisibile = false;
+          this.GetFlipsByDoc();
+          this.GetFlipCostsByFLIPID();
+        }
+      },
+      (err) => {
+        this.showErrorNotificationSnackBar(err);
+      }
+    );
+  }
+
+  UpdatePOFLIP(): void {
+    this.selectedFlipHeaderView.FLIPID = this.selectedFlip.FLIPID;
+    this.selectedFlipHeaderView.ModifiedBy = this.authenticationDetails.UserID.toString();
+    this.isProgressBarVisibile = true;
+    this._poFlipService.UpdatePOFLIP(this.selectedFlipHeaderView).subscribe(
+      (data) => {
+        this.resetControl();
+        this.notificationSnackBarComponent.openSnackBar('PO Flip Updated successfully', SnackBarStatus.success);
+        this.isProgressBarVisibile = false;
+        this.GetFlipsByDoc();
+        this.GetFlipCostsByFLIPID();
+      },
+      (err) => {
+        console.error(err);
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+        this.isProgressBarVisibile = false;
+      }
+    );
+  }
+
+  DeletePOFLIP(): void {
+    this.getFlipValues();
+    // this.selectedFlip.ModifiedBy = this.authenticationDetails.userID.toString();
+    this.isProgressBarVisibile = true;
+    this._poFlipService.DeletePOFLIP(this.selectedFlip).subscribe(
+      (data) => {
+        // console.log(data);
+        this.resetControl();
+        this.notificationSnackBarComponent.openSnackBar('PO Flip deleted successfully', SnackBarStatus.success);
+        this.isProgressBarVisibile = false;
+        // this.GetFlips();
+      },
+      (err) => {
+        console.error(err);
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+        this.isProgressBarVisibile = false;
+      }
+    );
+  }
+
+  initializeFlipFormGroup(): void {
+    this.flipFormGroup = this._formBuilder.group({
       InvoiceNumber: ['', Validators.required],
       InvoiceDate: ['', Validators.required],
       InvoiceAmount: ['', Validators.required],
@@ -299,21 +349,21 @@ export class PoFlipComponent implements OnInit {
     });
   }
 
-  InitializeFLIPCostFormGroup(): void {
-    this.FLIPCostFormGroup = this._formBuilder.group({
+  initializeFlipCostFormGroup(): void {
+    this.flipCostFormGroup = this._formBuilder.group({
       ExpenceType: ['', Validators.required],
       Amount: ['', Validators.required],
       Remarks: ['', Validators.required],
     });
   }
 
-  InitializeFLIPItemFormGroup(): void {
-    this.FLIPItemFormGroup = this._formBuilder.group({
-      FLIPItems: this.FLIPItemFormArray
+  initializeFlipItemFormGroup(): void {
+    this.flipItemFormGroup = this._formBuilder.group({
+      flipItems: this.flipItemFormArray
     });
   }
 
-  InsertPOItemsFormGroup(poItem: BPCOFItem): void {
+  insertPoItemsFormGroup(poItem: BPCOFItem): void {
     const row = this._formBuilder.group({
       Item: [poItem.Item],
       Material: [poItem.Material],
@@ -331,12 +381,12 @@ export class PoFlipComponent implements OnInit {
     row.get('InvoiceQty').enable();
     row.get('Price').enable();
     row.get('Amount').enable();
-    this.FLIPItemFormArray.push(row);
-    this.FLIPItemDataSource.next(this.FLIPItemFormArray.controls);
+    this.flipItemFormArray.push(row);
+    this.flipItemDataSource.next(this.flipItemFormArray.controls);
     // return row;
   }
 
-  InsertFLIPItemsFormGroup(flipItem: BPCFLIPItem): void {
+  insertFlipItemsFormGroup(flipItem: BPCFLIPItem): void {
     const row = this._formBuilder.group({
       Item: [flipItem.Item],
       Material: [flipItem.Material],
@@ -354,81 +404,82 @@ export class PoFlipComponent implements OnInit {
     row.get('Price').enable();
     row.get('InvoiceQty').enable();
     row.get('Amount').enable();
-    this.FLIPItemFormArray.push(row);
-    this.FLIPItemDataSource.next(this.FLIPItemFormArray.controls);
+    this.flipItemFormArray.push(row);
+    this.flipItemDataSource.next(this.flipItemFormArray.controls);
     // return row;
   }
 
-  ResetControl(): void {
-    this.SelectedBPCFLIPHeader = new BPCFLIPHeader();
-    this.SelectedBPCFLIPHeaderView = new BPCFLIPHeaderView();
-    this.SelectFLIPID = null;
-    this.FLIPFormGroup.reset();
-    Object.keys(this.FLIPFormGroup.controls).forEach(key => {
-      this.FLIPFormGroup.get(key).enable();
-      this.FLIPFormGroup.get(key).markAsUntouched();
+  resetControl(): void {
+    this.selectedFlip = new BPCFLIPHeader();
+    this.selectedFlipHeaderView = new BPCFLIPHeaderView();
+    this.selectedFLIPID = null;
+    this.flipFormGroup.reset();
+    Object.keys(this.flipFormGroup.controls).forEach(key => {
+      this.flipFormGroup.get(key).enable();
+      this.flipFormGroup.get(key).markAsUntouched();
     });
     this.fileToUpload = null;
     this.fileToUploadList = [];
-    this.ClearFLIPCostFormGroup();
-    this.ClearFLIPCostDataSource();
+    this.clearFlipCostFormGroup();
+    this.clearFlipCostDataSource();
   }
 
-  ClearFLIPCostFormGroup(): void {
-    this.FLIPCostFormGroup.reset();
-    Object.keys(this.FLIPCostFormGroup.controls).forEach(key => {
-      this.FLIPCostFormGroup.get(key).markAsUntouched();
+  clearFlipCostFormGroup(): void {
+    this.flipCostFormGroup.reset();
+    Object.keys(this.flipCostFormGroup.controls).forEach(key => {
+      this.flipCostFormGroup.get(key).markAsUntouched();
     });
   }
 
-  ClearFLIPCostDataSource(): void {
-    this.FLIPCostByFLIPID = [];
-    this.FLIPCostDataSource = new MatTableDataSource(this.FLIPCostByFLIPID);
+  clearFlipCostDataSource(): void {
+    this.flipCosts = [];
+    this.flipCostDataSource = new MatTableDataSource(this.flipCosts);
   }
 
-  ClearFormArray = (formArray: FormArray) => {
+  clearFormArray = (formArray: FormArray) => {
     while (formArray.length !== 0) {
       formArray.removeAt(0);
     }
   }
 
-  LoadSelectedFLIP(selectedFLIP: BPCFLIPHeader): void {
-    this.ResetControl();
-    this.SelectedBPCFLIPHeader = selectedFLIP;
-    this.SelectFLIPID = selectedFLIP.FLIPID;
-    this.GetFLIPItemsByFLIPID();
-    this.GetFLIPCostsByFLIPID();
-    // this.EnableAllFLIPTypes();
-    this.SetFLIPValues();
+  loadSelectedFlip(selectedFLIP: BPCFLIPHeader): void {
+    this.resetControl();
+    this.selectedFlip = selectedFLIP;
+    this.selectedFLIPID = selectedFLIP.FLIPID;
+    this.selectedDocNumber = selectedFLIP.DocNumber;
+    this.selectedDocDate = selectedFLIP.InvoiceDate;
+    this.GetFlipItemsByFLIPID();
+    this.GetFlipCostsByFLIPID();
+    this.setFlipValues();
   }
 
-  SetFLIPValues(): void {
-    this.FLIPFormGroup.get('InvoiceNumber').patchValue(this.SelectedBPCFLIPHeader.InvoiceNumber);
-    this.FLIPFormGroup.get('InvoiceDate').patchValue(this.SelectedBPCFLIPHeader.InvoiceDate);
-    this.FLIPFormGroup.get('InvoiceCurrency').patchValue(this.SelectedBPCFLIPHeader.InvoiceCurrency);
-    this.FLIPFormGroup.get('InvoiceType').patchValue(this.SelectedBPCFLIPHeader.InvoiceType);
-    this.FLIPFormGroup.get('IsInvoiceOrCertified').patchValue(this.SelectedBPCFLIPHeader.IsInvoiceOrCertified);
-    this.FLIPFormGroup.get('InvoiceAmount').patchValue(this.SelectedBPCFLIPHeader.InvoiceAmount);
+  setFlipValues(): void {
+    this.flipFormGroup.get('InvoiceNumber').patchValue(this.selectedFlip.InvoiceNumber);
+    this.flipFormGroup.get('InvoiceDate').patchValue(this.selectedFlip.InvoiceDate);
+    this.flipFormGroup.get('InvoiceCurrency').patchValue(this.selectedFlip.InvoiceCurrency);
+    this.flipFormGroup.get('InvoiceType').patchValue(this.selectedFlip.InvoiceType);
+    this.flipFormGroup.get('IsInvoiceOrCertified').patchValue(this.selectedFlip.IsInvoiceOrCertified);
+    this.flipFormGroup.get('InvoiceAmount').patchValue(this.selectedFlip.InvoiceAmount);
   }
 
-  GetFLIPValues(): void {
-    this.SelectedBPCFLIPHeader.InvoiceNumber = this.SelectedBPCFLIPHeaderView.InvoiceNumber = this.FLIPFormGroup.get('InvoiceNumber').value;
-    this.SelectedBPCFLIPHeader.InvoiceDate = this.SelectedBPCFLIPHeaderView.InvoiceDate = this.FLIPFormGroup.get('InvoiceDate').value;
-    this.SelectedBPCFLIPHeader.InvoiceCurrency = this.SelectedBPCFLIPHeaderView.InvoiceCurrency = this.FLIPFormGroup.get('InvoiceCurrency').value;
-    this.SelectedBPCFLIPHeader.InvoiceAmount = this.SelectedBPCFLIPHeaderView.InvoiceAmount = this.FLIPFormGroup.get('InvoiceAmount').value;
-    this.SelectedBPCFLIPHeader.InvoiceType = this.SelectedBPCFLIPHeaderView.InvoiceType = this.FLIPFormGroup.get('InvoiceType').value;
-    this.SelectedBPCFLIPHeader.IsInvoiceOrCertified = this.SelectedBPCFLIPHeaderView.IsInvoiceOrCertified = this.FLIPFormGroup.get('IsInvoiceOrCertified').value;
-    this.SelectedBPCFLIPHeader.InvoiceAmount = this.SelectedBPCFLIPHeaderView.InvoiceAmount = this.FLIPFormGroup.get('InvoiceAmount').value;
+  getFlipValues(): void {
+    this.selectedFlip.InvoiceNumber = this.selectedFlipHeaderView.InvoiceNumber = this.flipFormGroup.get('InvoiceNumber').value;
+    this.selectedFlip.InvoiceDate = this.selectedFlipHeaderView.InvoiceDate = this.flipFormGroup.get('InvoiceDate').value;
+    this.selectedFlip.InvoiceCurrency = this.selectedFlipHeaderView.InvoiceCurrency = this.flipFormGroup.get('InvoiceCurrency').value;
+    this.selectedFlip.InvoiceAmount = this.selectedFlipHeaderView.InvoiceAmount = this.flipFormGroup.get('InvoiceAmount').value;
+    this.selectedFlip.InvoiceType = this.selectedFlipHeaderView.InvoiceType = this.flipFormGroup.get('InvoiceType').value;
+    this.selectedFlip.IsInvoiceOrCertified = this.selectedFlipHeaderView.IsInvoiceOrCertified = this.flipFormGroup.get('IsInvoiceOrCertified').value;
+    this.selectedFlip.InvoiceAmount = this.selectedFlipHeaderView.InvoiceAmount = this.flipFormGroup.get('InvoiceAmount').value;
     if (this.fileToUpload) {
-      this.SelectedBPCFLIPHeader.InvoiceAttachmentName = this.SelectedBPCFLIPHeaderView.InvoiceAttachmentName = this.fileToUpload.name;
+      this.selectedFlip.InvoiceAttachmentName = this.selectedFlipHeaderView.InvoiceAttachmentName = this.fileToUpload.name;
       this.fileToUploadList.push(this.fileToUpload);
       this.fileToUpload = null;
     }
   }
 
-  GetFLIPItemValues(): void {
-    this.SelectedBPCFLIPHeaderView.FLIPItems = [];
-    const fLIPItemFormArray = this.FLIPItemFormGroup.get('FLIPItems') as FormArray;
+  getFlipItemValues(): void {
+    this.selectedFlipHeaderView.FLIPItems = [];
+    const fLIPItemFormArray = this.flipItemFormGroup.get('flipItems') as FormArray;
     fLIPItemFormArray.controls.forEach((x, i) => {
       const item: BPCFLIPItem = new BPCFLIPItem();
       item.Item = x.get('Item').value;
@@ -442,61 +493,61 @@ export class PoFlipComponent implements OnInit {
       item.Price = x.get('Price').value;
       item.Tax = x.get('Tax').value;
       item.Amount = x.get('Amount').value;
-      this.SelectedBPCFLIPHeaderView.FLIPItems.push(item);
+      this.selectedFlipHeaderView.FLIPItems.push(item);
     });
   }
 
-  GetFLIPCostValues(): void {
-    this.SelectedBPCFLIPHeaderView.FLIPCosts = [];
-    // this.SelectedBPCFLIPHeaderView.BPCFLIPCosts.push(...this.FLIPCostByFLIPID);
-    this.FLIPCostByFLIPID.forEach(x => {
-      this.SelectedBPCFLIPHeaderView.FLIPCosts.push(x);
+  getFlipCostValues(): void {
+    this.selectedFlipHeaderView.FLIPCosts = [];
+    // this.selectedFlipHeaderView.BPCFLIPCosts.push(...this.flipCosts);
+    this.flipCosts.forEach(x => {
+      this.selectedFlipHeaderView.FLIPCosts.push(x);
     });
   }
 
-  GetFLIPFromPOHeader(): void {
-    this.SelectedBPCFLIPHeader.Client = this.SelectedBPCFLIPHeaderView.Client = this.POHeader.Client;
-    this.SelectedBPCFLIPHeader.Company = this.SelectedBPCFLIPHeaderView.Company = this.POHeader.Company;
-    this.SelectedBPCFLIPHeader.Type = this.SelectedBPCFLIPHeaderView.Type = this.POHeader.Type;
-    this.SelectedBPCFLIPHeader.PatnerID = this.SelectedBPCFLIPHeaderView.PatnerID = this.POHeader.PatnerID;
-    this.SelectedBPCFLIPHeader.DocNumber = this.SelectedBPCFLIPHeaderView.DocNumber = this.POHeader.DocNumber;
+  getFlipFromPoHeader(): void {
+    this.selectedFlip.Client = this.selectedFlipHeaderView.Client = this.poHeader.Client;
+    this.selectedFlip.Company = this.selectedFlipHeaderView.Company = this.poHeader.Company;
+    this.selectedFlip.Type = this.selectedFlipHeaderView.Type = this.poHeader.Type;
+    this.selectedFlip.PatnerID = this.selectedFlipHeaderView.PatnerID = this.poHeader.PatnerID;
+    this.selectedFlip.DocNumber = this.selectedFlipHeaderView.DocNumber = this.poHeader.DocNumber;
   }
 
-  AddFLIPCostToTable(): void {
-    if (this.FLIPCostFormGroup.valid) {
+  addFlipCostToTable(): void {
+    if (this.flipCostFormGroup.valid) {
       const bPCFlipCost = new BPCFLIPCost();
-      bPCFlipCost.Amount = this.FLIPCostFormGroup.get('Amount').value;
-      bPCFlipCost.Remarks = this.FLIPCostFormGroup.get('Remarks').value;
-      bPCFlipCost.ExpenceType = this.FLIPCostFormGroup.get('ExpenceType').value;
-      if (!this.FLIPCostByFLIPID || !this.FLIPCostByFLIPID.length) {
-        this.FLIPCostByFLIPID = [];
+      bPCFlipCost.Amount = this.flipCostFormGroup.get('Amount').value;
+      bPCFlipCost.Remarks = this.flipCostFormGroup.get('Remarks').value;
+      bPCFlipCost.ExpenceType = this.flipCostFormGroup.get('ExpenceType').value;
+      if (!this.flipCosts || !this.flipCosts.length) {
+        this.flipCosts = [];
       }
-      this.FLIPCostByFLIPID.push(bPCFlipCost);
-      this.FLIPCostDataSource = new MatTableDataSource(this.FLIPCostByFLIPID);
-      this.ClearFLIPCostFormGroup();
+      this.flipCosts.push(bPCFlipCost);
+      this.flipCostDataSource = new MatTableDataSource(this.flipCosts);
+      this.clearFlipCostFormGroup();
     } else {
-      this.ShowValidationErrors(this.FLIPCostFormGroup);
+      this.showValidationErrors(this.flipCostFormGroup);
     }
   }
 
-  RemoveFLIPCostFromTable(bPCFlipCost: BPCFLIPCost): void {
-    const index: number = this.FLIPCostByFLIPID.indexOf(bPCFlipCost);
+  removeFlipCostFromTable(bPCFlipCost: BPCFLIPCost): void {
+    const index: number = this.flipCosts.indexOf(bPCFlipCost);
     if (index > -1) {
-      this.FLIPCostByFLIPID.splice(index, 1);
+      this.flipCosts.splice(index, 1);
     }
-    this.FLIPCostDataSource = new MatTableDataSource(this.FLIPCostByFLIPID);
+    this.flipCostDataSource = new MatTableDataSource(this.flipCosts);
   }
 
-  AddFLIPItemAfterCalculationToTable(): void {
-    // this.SelectedBPCFLIPHeaderView.FLIPItems = [];
-    const fLIPItemFormArray = this.FLIPItemFormGroup.get('FLIPItems') as FormArray;
+  addFlipItemAfterCalculationToTable(): void {
+    // this.selectedFlipHeaderView.flipItems = [];
+    const fLIPItemFormArray = this.flipItemFormGroup.get('flipItems') as FormArray;
     fLIPItemFormArray.controls.forEach((x, i) => {
       // const item: BPCFLIPItem = new BPCFLIPItem();
       // item.Item = x.get('Item').value;
       // item.Material = x.get('Material').value;
       // item.MaterialText = x.get('MaterialText').value;
       // item.DeliveryDate = x.get('DeliveryDate').value;
-            // item.HSN = x.get('HSN').value;
+      // item.HSN = x.get('HSN').value;
       // item.OrderedQty = x.get('OrderedQty').value;
       // item.OpenQty = x.get('OpenQty').value;
       // item.InvoiceQty = x.get('InvoiceQty').value;
@@ -512,47 +563,47 @@ export class PoFlipComponent implements OnInit {
         x.get('InvoiceQty').patchValue(this.convertStringToNumber(openQty));
         x.get('Amount').patchValue(amount);
       }
-      // this.SelectedBPCFLIPHeaderView.FLIPItems.push(item);
+      // this.selectedFlipHeaderView.flipItems.push(item);
     });
   }
 
-  SaveClicked(): void {
-    if (this.FLIPFormGroup.valid) {
-      this.GetFLIPValues();
-      this.GetFLIPFromPOHeader();
-      this.GetFLIPCostValues();
-      this.GetFLIPItemValues();
-      this.SetActionToOpenConfirmation();
+  saveClicked(): void {
+    if (this.flipFormGroup.valid) {
+      this.getFlipValues();
+      this.getFlipFromPoHeader();
+      this.getFlipCostValues();
+      this.getFlipItemValues();
+      this.setActionToOpenConfirmation();
     } else {
-      this.ShowValidationErrors(this.FLIPFormGroup);
+      this.showValidationErrors(this.flipFormGroup);
     }
   }
 
-  DeleteClicked(): void {
-    // if (this.FLIPFormGroup.valid) {
-    if (this.SelectedBPCFLIPHeader.FLIPID) {
+  deleteClicked(): void {
+    // if (this.flipFormGroup.valid) {
+    if (this.selectedFlip.FLIPID) {
       const Actiontype = 'Delete';
       const Catagory = 'PO Flip';
-      this.OpenConfirmationDialog(Actiontype, Catagory);
+      this.openConfirmationDialog(Actiontype, Catagory);
     }
     // } else {
-    //   this.ShowValidationErrors(this.FLIPFormGroup);
+    //   this.showValidationErrors(this.flipFormGroup);
     // }
   }
 
-  SetActionToOpenConfirmation(): void {
-    if (this.SelectedBPCFLIPHeader.FLIPID) {
+  setActionToOpenConfirmation(): void {
+    if (this.selectedFlip.FLIPID) {
       const Actiontype = 'Update';
       const Catagory = 'PO Flip';
-      this.OpenConfirmationDialog(Actiontype, Catagory);
+      this.openConfirmationDialog(Actiontype, Catagory);
     } else {
       const Actiontype = 'Save';
       const Catagory = 'PO Flip';
-      this.OpenConfirmationDialog(Actiontype, Catagory);
+      this.openConfirmationDialog(Actiontype, Catagory);
     }
   }
 
-  OpenConfirmationDialog(Actiontype: string, Catagory: string): void {
+  openConfirmationDialog(Actiontype: string, Catagory: string): void {
     const dialogConfig: MatDialogConfig = {
       data: {
         Actiontype: Actiontype,
@@ -575,161 +626,6 @@ export class PoFlipComponent implements OnInit {
       });
   }
 
-  CreatePOFLIP(): void {
-    this.SelectedBPCFLIPHeaderView.CreatedBy = this.authenticationDetails.UserID.toString();
-    this.IsProgressBarVisibile = true;
-    this._pOFlipService.CreatePOFLIP(this.SelectedBPCFLIPHeaderView).subscribe(
-      (data) => {
-        this.SelectedBPCFLIPHeader.FLIPID = (data as BPCFLIPHeader).FLIPID;
-        if (this.fileToUploadList && this.fileToUploadList.length) {
-          this._pOFlipService.AddPOFLIPAttachment(this.SelectedBPCFLIPHeader.FLIPID, this.authenticationDetails.UserID.toString(), this.fileToUploadList).subscribe(
-            (dat) => {
-              this.ResetControl();
-              this.notificationSnackBarComponent.openSnackBar('PO Flip Saved successfully', SnackBarStatus.success);
-              this.IsProgressBarVisibile = false;
-              this.GetFLIPsByDoc();
-              this.GetFLIPCostsByFLIPID();
-            },
-            (err) => {
-              this.showErrorNotificationSnackBar(err);
-            }
-          );
-        }
-        else {
-          this.ResetControl();
-          this.notificationSnackBarComponent.openSnackBar('PO Flip Saved successfully', SnackBarStatus.success);
-          this.IsProgressBarVisibile = false;
-          this.GetFLIPsByDoc();
-          this.GetFLIPCostsByFLIPID();
-        }
-      },
-      (err) => {
-        this.showErrorNotificationSnackBar(err);
-      }
-    );
-  }
-
-  UpdatePOFLIP(): void {
-    this.SelectedBPCFLIPHeaderView.FLIPID = this.SelectedBPCFLIPHeader.FLIPID;
-    this.SelectedBPCFLIPHeaderView.ModifiedBy = this.authenticationDetails.UserID.toString();
-    this.IsProgressBarVisibile = true;
-    this._pOFlipService.UpdatePOFLIP(this.SelectedBPCFLIPHeaderView).subscribe(
-      (data) => {
-        this.ResetControl();
-        this.notificationSnackBarComponent.openSnackBar('PO Flip Updated successfully', SnackBarStatus.success);
-        this.IsProgressBarVisibile = false;
-        this.GetFLIPsByDoc();
-        this.GetFLIPCostsByFLIPID();
-      },
-      (err) => {
-        console.error(err);
-        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-        this.IsProgressBarVisibile = false;
-      }
-    );
-  }
-
-  DeletePOFLIP(): void {
-    this.GetFLIPValues();
-    // this.SelectedBPCFLIPHeader.ModifiedBy = this.authenticationDetails.userID.toString();
-    this.IsProgressBarVisibile = true;
-    this._pOFlipService.DeletePOFLIP(this.SelectedBPCFLIPHeader).subscribe(
-      (data) => {
-        // console.log(data);
-        this.ResetControl();
-        this.notificationSnackBarComponent.openSnackBar('PO Flip deleted successfully', SnackBarStatus.success);
-        this.IsProgressBarVisibile = false;
-        // this.GetAllFLIPs();
-      },
-      (err) => {
-        console.error(err);
-        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-        this.IsProgressBarVisibile = false;
-      }
-    );
-  }
-
-  POFlipCostEnterKeyDown(): boolean {
-    this.bankCity.nativeElement.blur();
-    this.AddFLIPCostToTable();
-    return true;
-  }
-
-  keytab(elementName): void {
-    switch (elementName) {
-      case 'iDNumber': {
-        this.iDNumber.nativeElement.focus();
-        break;
-      }
-      case 'validUntil': {
-        this.validUntil.nativeElement.focus();
-        break;
-      }
-      case 'accountNo': {
-        this.accountNo.nativeElement.focus();
-        break;
-      }
-      case 'accHolderName': {
-        this.accHolderName.nativeElement.focus();
-        break;
-      }
-      case 'ifsc': {
-        this.ifsc.nativeElement.focus();
-        break;
-      }
-      case 'bankName': {
-        this.bankName.nativeElement.focus();
-        break;
-      }
-      case 'branch': {
-        this.branch.nativeElement.focus();
-        break;
-      }
-      case 'bankCity': {
-        this.bankCity.nativeElement.focus();
-        break;
-      }
-      case 'department': {
-        this.department.nativeElement.focus();
-        break;
-      }
-      case 'title': {
-        this.title.nativeElement.focus();
-        break;
-      }
-      case 'mobile': {
-        this.mobile.nativeElement.focus();
-        break;
-      }
-      case 'email': {
-        this.email.nativeElement.focus();
-        break;
-      }
-      case 'activityDate': {
-        this.activityDate.nativeElement.focus();
-        break;
-      }
-      case 'activityTime': {
-        this.activityTime.nativeElement.focus();
-        break;
-      }
-      case 'activityText': {
-        this.activityText.nativeElement.focus();
-        break;
-      }
-      default: {
-        break;
-      }
-    }
-  }
-
-  // typeSelected(event): void {
-  //   const selectedType = event.value;
-  //   if (event.value) {
-  //     this.SelectedBPCFLIPHeader.Type = event.value;
-  //   }
-  // }
-
   invoiceTypeSelected(event): void {
 
   }
@@ -739,22 +635,16 @@ export class PoFlipComponent implements OnInit {
   }
 
   applyFilter(filterValue: string): void {
-    this.FLIPCostDataSource.filter = filterValue.trim().toLowerCase();
-  }
-
-  EnableAllFLIPTypes(): void {
-    Object.keys(this.FLIPFormGroup.controls).forEach(key => {
-      this.FLIPFormGroup.get(key).enable();
-    });
+    this.flipCostDataSource.filter = filterValue.trim().toLowerCase();
   }
 
   showErrorNotificationSnackBar(err: any): void {
     console.error(err);
     this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-    this.IsProgressBarVisibile = false;
+    this.isProgressBarVisibile = false;
   }
 
-  ShowValidationErrors(formGroup: FormGroup): void {
+  showValidationErrors(formGroup: FormGroup): void {
     Object.keys(formGroup.controls).forEach(key => {
       if (!formGroup.get(key).valid) {
         console.log(key);
@@ -806,7 +696,7 @@ export class PoFlipComponent implements OnInit {
     // this.aAmount.nativeElement.focus();
     // const price = event.target.value;
     // if (index) {
-    const fLIPItemFormArray = this.FLIPItemFormGroup.get('FLIPItems') as FormArray;
+    const fLIPItemFormArray = this.flipItemFormGroup.get('flipItems') as FormArray;
     // fLIPItemFormArray.controls.forEach((x, i) => {
     //   const invoiceQty = x.get('InvoiceQty').value;
     //   const tax = x.get('Tax').value;
@@ -834,29 +724,18 @@ export class PoFlipComponent implements OnInit {
     const numeric = Number(input);
     return numeric;
   }
-//   handleFileInput1(evt): void {
-//     if (evt.target.files && evt.target.files.length > 0) {
-//         if (this.invoiceAttachment && this.invoiceAttachment.name) {
-//             this.notificationSnackBarComponent.openSnackBar('Maximum one attachment is allowed, old is attachment is replaced', SnackBarStatus.warning);
-//         }
-//         if (this.invAttach && this.invAttach.AttachmentName) {
-//             this.notificationSnackBarComponent.openSnackBar('Maximum one attachment is allowed, old is attachment is replaced', SnackBarStatus.warning);
-//         }
-//         this.invoiceAttachment = evt.target.files[0];
-//         this.invAttach = new BPCInvoiceAttachment();
-//     }
-// }
-//   GetInvoiceAttachmentByASN(): void {
-//     this._ASNService.GetInvoiceAttachmentByASN(this.SelectedASNHeader.ASNNumber, this.SelectedASNHeader.InvDocReferenceNo).subscribe(
-//         (data) => {
-//             this.invAttach = data as BPCInvoiceAttachment;
-//         },
-//         (err) => {
-//             console.error(err);
-//         }
-//     );
-// }
-  
+
+  //   GetInvoiceAttachmentByASN(): void {
+  //     this._ASNService.GetInvoiceAttachmentByASN(this.SelectedASNHeader.ASNNumber, this.SelectedASNHeader.InvDocReferenceNo).subscribe(
+  //         (data) => {
+  //             this.invAttach = data as BPCInvoiceAttachment;
+  //         },
+  //         (err) => {
+  //             console.error(err);
+  //         }
+  //     );
+  // }
+
 }
 
 

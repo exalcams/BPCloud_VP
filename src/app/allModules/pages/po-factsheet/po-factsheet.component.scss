@@ -224,6 +224,17 @@
     @extend .tab-round2;
     border-color: #fef7e9;
   }
+  .sl-round1 {
+    @extend .tab-round1;
+    border-color: #f98b8b;
+    .mat-badge-content {
+      background-color: #f98b8b !important;
+    }
+  }
+  .sl-round2 {
+    @extend .tab-round2;
+    border-color: #fbe8e8;
+  }
   .document-round1 {
     @extend .tab-round1;
     border-color: #f98bb5;

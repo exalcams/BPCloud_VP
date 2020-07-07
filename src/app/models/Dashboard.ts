@@ -39,6 +39,17 @@ export class QADetails {
     RejQty: number;
     RejReason: string;
 }
+
+export class SLDetails {
+    Item: string;
+    DocNumber: string;
+    SlLine: string;
+    DeliveryDate: Date;
+    OrderedQty: number;
+    AckStatus: string;
+    AckDeliveryDate: Date;
+}
+
 export class OrderFulfilmentDetails {
     PONumber: string;
     PODate: Date;
@@ -50,12 +61,14 @@ export class OrderFulfilmentDetails {
     ASNCount: number;
     GRNCount: number;
     QACount: number;
+    SLCount: number;
     DocumentCount: number;
     FlipCount: number;
     aSNDetails: ASNDetails[];
     itemDetails: ItemDetails[];
     gRNDetails: GRNDetails[];
     qADetails: QADetails[];
+    slDetails: SLDetails[];
     constructor() {
         // super();
         this.itemDetails = [];
