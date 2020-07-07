@@ -18,6 +18,8 @@ export class BPCOFHeader extends CommonClass {
     AckDate?: Date;
     AckUser: string;
     PINNumber: string;
+    DocType: string;
+    PlantName: string;
 }
 
 export class BPCOFItem extends CommonClass {
@@ -44,6 +46,7 @@ export class BPCOFItem extends CommonClass {
     Price: number;
     Tax: number;
     Amount: number;
+    MaxAllowedQty: number;
 }
 
 export class BPCOFScheduleLine extends CommonClass {
@@ -178,6 +181,18 @@ export class BPCOFSubcon extends CommonClass {
     Batch: string;
     Remarks: string;
     Status: string;
+}
+
+export interface BPCOFSubconView {
+    ID: number;
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
+    DocNumber: string;
+    Item: string;
+    SlLine: string;
+    OrderedQty: number;
 }
 export class SubconItems {
     items: BPCOFSubcon[];

@@ -60,7 +60,8 @@
                     <div fxFlex='40'>
                       <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="2px">
                         <div fxFlex="20" fxLayoutAlign="end center"> <span> PO NO : </span></div>
-                        <div fxFlex="80" fxLayoutAlign="start center"> <span> {{SelectedASNHeader?.DocNumber}}</span></div>
+                        <div fxFlex="80" fxLayoutAlign="start center"> <span> {{SelectedASNHeader?.DocNumber}}</span>
+                        </div>
                       </div>
                     </div>
                     <div fxFlex='60' *ngIf="SelectedDocNumber && !AllASNHeaders.length" fxLayout fxLayoutGap="10px"
@@ -77,7 +78,8 @@
                     <div fxFlex='40'>
                       <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="2px">
                         <div fxFlex="20" fxLayoutAlign="end center"> <span> Date : </span></div>
-                        <div fxFlex="80" fxLayoutAlign="start center"> <span> {{PO?.DocDate | date :'dd/MM/yyyy'}}</span></div>
+                        <div fxFlex="80" fxLayoutAlign="start center"> <span>
+                            {{PO?.DocDate | date :'dd/MM/yyyy'}}</span></div>
                       </div>
                     </div>
                   </div>
@@ -630,11 +632,17 @@
                         <th mat-header-cell *matHeaderCellDef style="width: 120px;"> ASN Qty</th>
                         <td mat-cell class="QtyClass editable" *matCellDef="let element; let index = index"
                           [formGroupName]="index" style="width: 120px;">
-                          <mat-form-field class="pl-8 pr-12" appearance="outline" style="width: 100px;">
+                          <mat-form-field class="px-8" appearance="outline" style="width: 100px;">
                             <input matInput formControlName="ASNQty" (keydown)="decimalOnly($event)">
                             <mat-error *ngIf="ASNItemFormGroup.get('ASNItems').controls[index]?.get('ASNQty').touched && 
                             ASNItemFormGroup.get('ASNItems').controls[index]?.get('ASNQty').hasError('required')">
                               *
+                            </mat-error>
+                            <mat-error style="margin-left: -9px;" *ngIf="ASNItemFormGroup.get('ASNItems').controls[index]?.get('ASNQty').touched && 
+                            !ASNItemFormGroup.get('ASNItems').controls[index]?.get('ASNQty').hasError('required')&&
+                            ASNItemFormGroup.get('ASNItems').controls[index]?.get('ASNQty').hasError('max')">
+                              <span *ngIf="(PO?.DocType | lowercase) === 'subcon'"> {{POItems[index]?.MaxAllowedQty}} Prd Qty left</span>
+                              <span *ngIf="(PO?.DocType | lowercase) !== 'subcon'"> {{POItems[index]?.MaxAllowedQty}} is the max</span>
                             </mat-error>
                             <mat-error *ngIf="ASNItemFormGroup.get('ASNItems').controls[index]?.get('ASNQty').touched && 
                             !ASNItemFormGroup.get('ASNItems').controls[index]?.get('ASNQty').hasError('required')&&

@@ -18,10 +18,11 @@ import { FactService } from 'app/services/fact.service';
 import { VendorMasterService } from 'app/services/vendor-master.service';
 import { POService } from 'app/services/po.service';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { BPCOFItem, BPCOFHeader } from 'app/models/OrderFulFilment';
+import { BPCOFItem, BPCOFHeader, BPCOFSubconView } from 'app/models/OrderFulFilment';
 import { AttachmentDetails } from 'app/models/task';
 import { AttachmentDialogComponent } from '../attachment-dialog/attachment-dialog.component';
 import { DatePipe } from '@angular/common';
+import { SubconService } from 'app/services/subcon.service';
 
 @Component({
     selector: 'app-asn',
@@ -97,13 +98,14 @@ export class ASNComponent implements OnInit {
     @ViewChild('fileInput1') fileInput: ElementRef<HTMLElement>;
     selectedDocCenterMaster: BPCDocumentCenterMaster;
     ArrivalDateInterval: number;
-
+    SubconViews: BPCOFSubconView[] = [];
     constructor(
         private _fuseConfigService: FuseConfigService,
         private _masterService: MasterService,
         private _FactService: FactService,
         private _POService: POService,
         private _ASNService: ASNService,
+        private _subConService: SubconService,
         private _vendorMasterService: VendorMasterService,
         private _datePipe: DatePipe,
         private _route: ActivatedRoute,
@@ -261,7 +263,7 @@ export class ASNComponent implements OnInit {
         if (this.SelectedDocNumber) {
             this.GetASNByDocAndPartnerID();
             this.GetPOByDocAndPartnerID(this.SelectedDocNumber);
-            this.GetPOItemsByDocAndPartnerID();
+            // this.GetPOItemsByDocAndPartnerID();
             this.GetArrivalDateIntervalByPOAndPartnerID();
         } else {
             this.GetAllASNByPartnerID();
@@ -505,6 +507,12 @@ export class ASNComponent implements OnInit {
                 if (this.SelectedDocNumber) {
                     this.InvoiceDetailsFormGroup.get('InvoiceAmountUOM').patchValue(this.PO.Currency);
                 }
+                if (this.PO && this.PO.DocType && this.PO.DocType.toLocaleLowerCase() === "subcon") {
+                    this.GetSubconViewByDocAndPartnerID();
+                }
+                else if (this.SelectedDocNumber && !this.SelectedASNHeader.ASNNumber) {
+                    this.GetPOItemsByDocAndPartnerID();
+                }
             },
             (err) => {
                 console.error(err);
@@ -523,8 +531,19 @@ export class ASNComponent implements OnInit {
                     this.SelectedASNHeader.Type = this.SelectedASNView.Type = this.POItems[0].Type;
                     this.SelectedASNHeader.PatnerID = this.SelectedASNView.PatnerID = this.POItems[0].PatnerID;
                     this.SelectedASNHeader.DocNumber = this.SelectedASNView.DocNumber = this.POItems[0].DocNumber;
-                    this.POItems.forEach(x => {
-                        this.InsertPOItemsFormGroup(x);
+                    this.POItems.forEach(poItem => {
+                        if (poItem.OpenQty && poItem.OpenQty > 0) {
+                            if (this.PO && this.PO.DocType && this.PO.DocType.toLocaleLowerCase() === "subcon") {
+                                const sub = this.SubconViews.filter(x => x.Item === poItem.Item)[0];
+                                if (sub) {
+                                    const remainingQty = sub.OrderedQty - poItem.TransitQty;
+                                    poItem.MaxAllowedQty = remainingQty;
+                                }
+                            } else {
+                                poItem.MaxAllowedQty = poItem.OpenQty;
+                            }
+                        }
+                        this.InsertPOItemsFormGroup(poItem);
                     });
                 }
             },
@@ -542,6 +561,20 @@ export class ASNComponent implements OnInit {
                     let today = new Date();
                     today.setDate(today.getDate() + this.ArrivalDateInterval);
                     this.ASNFormGroup.get('ArrivalDate').patchValue(today);
+                }
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
+
+    GetSubconViewByDocAndPartnerID(): void {
+        this._subConService.GetSubconViewByDocAndPartnerID(this.SelectedDocNumber, this.currentUserName).subscribe(
+            (data) => {
+                this.SubconViews = data as BPCOFSubconView[];
+                if (this.SelectedDocNumber && !this.SelectedASNHeader.ASNNumber) {
+                    this.GetPOItemsByDocAndPartnerID();
                 }
             },
             (err) => {
@@ -631,18 +664,36 @@ export class ASNComponent implements OnInit {
             GRQty: [poItem.CompletedQty],
             PipelineQty: [poItem.TransitQty],
             OpenQty: [poItem.OpenQty],
-            ASNQty: [poItem.OpenQty],
+            ASNQty: [poItem.MaxAllowedQty],
             UOM: [poItem.UOM],
             Batch: [''],
             ManufactureDate: [''],
             ExpiryDate: [''],
         });
         row.disable();
-        if (poItem.OpenQty && poItem.OpenQty > 0) {
-            row.get('ASNQty').setValidators([Validators.required, Validators.max(poItem.OpenQty), Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]);
+        if (poItem.MaxAllowedQty && poItem.MaxAllowedQty > 0) {
+            row.get('ASNQty').setValidators([Validators.required, Validators.max(poItem.MaxAllowedQty), Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]);
             row.get('ASNQty').updateValueAndValidity();
             row.get('ASNQty').enable();
         }
+        // if (poItem.OpenQty && poItem.OpenQty > 0) {
+        //     if (this.PO && this.PO.DocType && this.PO.DocType.toLocaleLowerCase() === "subcon") {
+        //         const sub = this.SubconViews.filter(x => x.Item === poItem.Item)[0];
+        //         if (sub) {
+        //             const remainingQty = sub.OrderedQty - poItem.TransitQty;
+        //             row.get('ASNQty').patchValue(remainingQty);
+        //             if (remainingQty > 0) {
+        //                 row.get('ASNQty').setValidators([Validators.required, Validators.max(remainingQty), Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]);
+        //                 row.get('ASNQty').updateValueAndValidity();
+        //                 row.get('ASNQty').enable();
+        //             }
+        //         }
+        //     } else {
+        //         row.get('ASNQty').setValidators([Validators.required, Validators.max(poItem.OpenQty), Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]);
+        //         row.get('ASNQty').updateValueAndValidity();
+        //         row.get('ASNQty').enable();
+        //     }
+        // }
         row.get('Batch').enable();
         row.get('ManufactureDate').enable();
         row.get('ExpiryDate').enable();

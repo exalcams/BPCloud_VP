@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { Observable, throwError } from 'rxjs';
-import { POScheduleLineView, BPCOFSubcon, SubconItems } from 'app/models/OrderFulFilment';
+import { POScheduleLineView, BPCOFSubcon, SubconItems, BPCOFSubconView } from 'app/models/OrderFulFilment';
 import { catchError } from 'rxjs/operators';
 
 @Injectable({
@@ -56,6 +56,11 @@ export class SubconService {
   GetSubconBySLAndPartnerID(DocNumber: string, Item: string, SlLine: string, PartnerID: string): Observable<BPCOFSubcon[] | string> {
     return this._httpClient.get<BPCOFSubcon[]>
       (`${this.baseAddress}poapi/Subcon/GetSubconBySLAndPartnerID?DocNumber=${DocNumber}&Item=${Item}&SlLine=${SlLine}&PartnerID=${PartnerID}`)
+      .pipe(catchError(this.errorHandler));
+  }
+  GetSubconViewByDocAndPartnerID(DocNumber: string, PartnerID: string): Observable<BPCOFSubconView[] | string> {
+    return this._httpClient.get<BPCOFSubconView[]>
+      (`${this.baseAddress}poapi/Subcon/GetSubconViewByDocAndPartnerID?DocNumber=${DocNumber}&PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));
   }
 }

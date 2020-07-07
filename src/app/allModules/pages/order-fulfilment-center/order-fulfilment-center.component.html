@@ -242,7 +242,12 @@
                 </mat-option>
                 <mat-option value="ASN" (click)="goToASNClicked(element.DocNumber)">ASN</mat-option>
                 <mat-option value="POFlip" (click)="goToPOFlipClicked(element.DocNumber)">PO Flip</mat-option>
-                <mat-option value="Subcon" (click)="goToSubconClicked(element.DocNumber)">Subcon</mat-option>
+                <mat-option value="Subcon" *ngIf="(element.DocType | lowercase)==='subcon'" (click)="goToSubconClicked(element.DocNumber)">Subcon</mat-option>
+                <!-- <mat-option value="Acknowledge" (click)="Acknowledgement(element.DocNumber)">ACK</mat-option>
+                <mat-option value="POLookup" (click)="PurchaseOrder(element.DocNumber)">PO Factsheet</mat-option>
+                <mat-option value="ASN" (click)="AdvanceShipment(element.DocNumber)">ASN</mat-option>
+                <mat-option value="POFlip" (click)="POFlip(element.DocNumber)">PO Flip</mat-option>
+                <mat-option value="Subcon" *ngIf="(element.DocType | lowercase)==='subcon'" (click)="GotoSubcon(element.DocNumber)">Subcon</mat-option> -->
               </mat-select>
             </mat-form-field>
             <!-- <div>
