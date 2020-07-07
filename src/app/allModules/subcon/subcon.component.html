@@ -133,7 +133,7 @@
                   <div class="mx-8 mb-8 mt-0 p-8 leftCard" (click)="LoadSelectedSL(usr)"
                     [class.highlightCard]="SelectedSlLine===usr.SlLine && SelectedItem===usr.Item">
                     <div fxLayout class="py-4" fxLayoutAlign="space-between center">
-                      <div fxFlex><strong>{{usr.MaterialText}}</strong></div>
+                      <div fxFlex><strong>{{usr.SlLine +' . '}}{{usr.MaterialText}}</strong></div>
                       <div fxFlex align="end">#{{usr.Material}}</div>
                     </div>
                     <div fxLayout class="py-4" fxLayoutAlign="space-between center">
@@ -241,7 +241,7 @@
                     <div fxFlex="15">
                       <mat-form-field class="px-12" style="width: 100%;">
                         <mat-select placeholder="Status" formControlName="Status">
-                          <mat-option value="Packed">Packed</mat-option>
+                          <!-- <mat-option value="Packed">Packed</mat-option> -->
                           <mat-option value="Shipped">Shipped</mat-option>
                         </mat-select>
                         <mat-error

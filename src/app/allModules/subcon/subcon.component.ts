@@ -222,14 +222,22 @@ export class SubconComponent implements OnInit {
       if (!this.AllSubconItems || !this.AllSubconItems.length) {
         this.AllSubconItems = [];
       }
-      this.AllSubconItems.push(SubItem);
-      this.SubconItemDataSource = new MatTableDataSource(this.AllSubconItems);
-      this.ReadyToBeShippedQty = 0;
-      this.ProducedQty = 0;
-      this.AllSubconItems.forEach(x => {
-        this.ReadyToBeShippedQty += +x.OrderedQty;
-        this.ProducedQty += +x.OrderedQty;
-      });
+      this.ProducedQty += +SubItem.OrderedQty;
+      this.ReadyToBeShippedQty += +SubItem.OrderedQty;
+      if (this.ProducedQty > this.SelectedScheduleLineView.OrderedQty) {
+        this.notificationSnackBarComponent.openSnackBar('Cumulative produced quantity should not greater than Order qty', SnackBarStatus.danger);
+        this.ProducedQty -= +SubItem.OrderedQty;
+        this.ReadyToBeShippedQty -= +SubItem.OrderedQty;
+      } else {
+        this.AllSubconItems.push(SubItem);
+        this.SubconItemDataSource = new MatTableDataSource(this.AllSubconItems);
+      }
+      // this.ReadyToBeShippedQty = 0;
+      // this.ProducedQty = 0;
+      // this.AllSubconItems.forEach(x => {
+      //   this.ReadyToBeShippedQty += +x.OrderedQty;
+      //   this.ProducedQty += +x.OrderedQty;
+      // });
       this.ResetSubconItemFormGroup();
     } else {
       this.ShowValidationErrors(this.SubconItemFormGroup);
@@ -242,12 +250,14 @@ export class SubconComponent implements OnInit {
       this.AllSubconItems.splice(index, 1);
     }
     this.SubconItemDataSource = new MatTableDataSource(this.AllSubconItems);
-    this.ReadyToBeShippedQty = 0;
-    this.ProducedQty = 0;
-    this.AllSubconItems.forEach(x => {
-      this.ReadyToBeShippedQty += +x.OrderedQty;
-      this.ProducedQty += +x.OrderedQty;
-    });
+    this.ProducedQty -= +doc.OrderedQty;
+    this.ReadyToBeShippedQty -= +doc.OrderedQty;
+    // this.ReadyToBeShippedQty = 0;
+    // this.ProducedQty = 0;
+    // this.AllSubconItems.forEach(x => {
+    //   this.ReadyToBeShippedQty += +x.OrderedQty;
+    //   this.ProducedQty += +x.OrderedQty;
+    // });
   }
   DeleteClicked(): void {
     this.SetActionToOpenConfirmation('Delete');
@@ -345,6 +355,7 @@ export class SubconComponent implements OnInit {
     this.AllSubconItems.forEach(x => {
       subconItems.items.push(x);
     });
+    this.IsProgressBarVisibile = true;
     this._subConService.CreateSubcon(subconItems).subscribe(
       (data) => {
         this.ResetControl();
@@ -358,6 +369,7 @@ export class SubconComponent implements OnInit {
     );
   }
   DeleteSubcon(): void {
+    this.IsProgressBarVisibile = true;
     this._subConService.DeleteSubcon(this.AllSubconItems[0]).subscribe(
       (data) => {
         this.ResetControl();

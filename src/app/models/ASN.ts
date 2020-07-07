@@ -29,6 +29,11 @@ export class BPCASNHeader extends CommonClass {
     InvDocReferenceNo: string;
     IsSubmitted: boolean;
     ArrivalDateInterval: number;
+    BillOfLading: string;
+    TransporterName: string;
+    AccessibleValue: number | null;
+    ContactPerson: string;
+    ContactPersonNo: string;
 }
 
 export class BPCASNItem extends CommonClass {
@@ -126,6 +131,11 @@ export class BPCASNView extends CommonClass {
     InvDocReferenceNo: string;
     IsSubmitted: boolean;
     ArrivalDateInterval: number;
+    BillOfLading: string;
+    TransporterName: string;
+    AccessibleValue: number | null;
+    ContactPerson: string;
+    ContactPersonNo: string;
     ASNItems: BPCASNItem[];
     DocumentCenters: DocumentCenter[];
     constructor() {
