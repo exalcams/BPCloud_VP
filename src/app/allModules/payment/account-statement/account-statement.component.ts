@@ -32,6 +32,8 @@ export class AccountStatementComponent implements OnInit {
   AccountStatements: BPCPayAccountStatement[] = [];
   SearchFormGroup: FormGroup;
   isDateError: boolean;
+  DefaultFromDate: Date;
+  DefaultToDate: Date;
   searchText: string;
   SelectValue: string;
   isExpanded: boolean;
@@ -65,6 +67,9 @@ export class AccountStatementComponent implements OnInit {
     this.searchText = '';
     this.SelectValue = 'All';
     this.isExpanded = false;
+    this.DefaultFromDate = new Date();
+    this.DefaultFromDate.setDate(this.DefaultFromDate.getDate() - 30);
+    this.DefaultToDate = new Date();
   }
 
   ngOnInit(): void {
@@ -86,14 +91,15 @@ export class AccountStatementComponent implements OnInit {
       this._router.navigate(['/auth/login']);
     }
     this.InitializeSearchForm();
-    this.GetAccountStatementByPatnerID();
+    // this.GetAccountStatementByPatnerID();
+    this.SearchClicked();
   }
 
   InitializeSearchForm(): void {
     this.SearchFormGroup = this.formBuilder.group({
       DocumentID: [''],
-      FromDate: [''],
-      ToDate: ['']
+      FromDate: [this.DefaultFromDate],
+      ToDate: [this.DefaultToDate]
     });
   }
   ResetControl(): void {
@@ -216,6 +222,10 @@ export class AccountStatementComponent implements OnInit {
   }
   expandClicked(): void {
     this.isExpanded = !this.isExpanded;
+  }
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.tableDataSource.filter = filterValue.trim().toLowerCase();
   }
 }
 

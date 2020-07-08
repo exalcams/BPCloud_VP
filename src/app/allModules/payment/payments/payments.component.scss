@@ -369,7 +369,16 @@
         transform: translateY(-1.1em) scale(0.75);
         width: 133.33333%;
     }
-
+    .mat-form-field-outline-start,
+    .mat-form-field-outline-end {
+      border-radius: 0 !important;
+    }
+    .DateError {
+        color: #f44336;
+        font-size: 12px;
+        margin-top: -16px;
+        // margin-left: 32px;
+    }
     .calendarImg {
         height: 20px;
         margin-bottom: 12px;
@@ -392,5 +401,43 @@
     .pdfLinkClass {
         color: #1e8bed;
         cursor: pointer;
+    }
+    .expandImg {
+        height: 36px;
+        margin-top: -16px;
+        cursor: pointer;
+    }
+    .excelBtn {
+        margin-top: -16px;
+        min-width: 0px;
+        background-color: white;
+        color: rgb(46, 125, 50);
+        &.mat-stroked-button {
+            // border-radius: 5px;
+            padding: 0px 8px;
+        }
+    }
+    .excelImg {
+        // margin: 4px 6px 4px 4px;
+        height: 24px;
+    }
+    .excelText {
+        color: black;
+    }
+    .SectionTitle {
+        display: inline-block;
+        position: relative;
+        font-size: 18px;
+    }
+
+    .SectionTitle strong:after {
+        content: "";
+        height: 3px;
+        width: 90%;
+        background-color: #efb577;
+        position: absolute;
+        bottom: -0.2em;
+        left: 52%;
+        transform: translate(-50%);
     }
 }

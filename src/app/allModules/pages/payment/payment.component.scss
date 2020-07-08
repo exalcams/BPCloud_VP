@@ -38,10 +38,10 @@
         background-size: cover;
     }
 
-    .content {
-        padding: 0px 30px 0px 30px;
-        background-color: white;
-    }
+    // .content {
+    //     padding: 0px 30px 0px 30px;
+    //     background-color: white;
+    // }
 
     .rightFlexHr {
         margin: 0px;
@@ -129,9 +129,80 @@
         padding: 0px 40px;
         color: white;
     }
+    .mat-form-field-flex > .mat-form-field-infix {
+        padding: 0em 0px 0.6em !important;
+    }
+    .mat-form-field-appearance-outline {
+        .mat-form-field-suffix,
+        .mat-form-field-prefix {
+            top: 0.5em;
+            .mat-icon-button {
+                width: 1.5em;
+                height: 1.5em;
+            }
+        }
+    }
+    .mat-form-field-infix {
+        width: auto;
+    }
+    .mat-form-field-label-wrapper {
+        top: -1.5em;
+    }
+    .mat-form-field-wrapper {
+        margin: 0 0 0 0;
+        padding-bottom: 1em;
+    }
+
+    .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
+        transform: translateY(-1.1em) scale(0.75);
+        width: 133.33333%;
+    }
+    .mat-form-field-outline-start,
+    .mat-form-field-outline-end {
+        border-radius: 0 !important;
+    }
     .DateError {
         color: #f44336;
         font-size: 12px;
         margin-top: -16px;
+        // margin-left: 32px;
+    }
+    .expandImg {
+        height: 36px;
+        margin-top: -16px;
+        cursor: pointer;
+    }
+    .excelBtn {
+        margin-top: -16px;
+        min-width: 0px;
+        background-color: white;
+        color: rgb(46, 125, 50);
+        &.mat-stroked-button {
+            // border-radius: 5px;
+            padding: 0px 8px;
+        }
+    }
+    .excelImg {
+        // margin: 4px 6px 4px 4px;
+        height: 24px;
+    }
+    .excelText {
+        color: black;
+    }
+    .SectionTitle {
+        display: inline-block;
+        position: relative;
+        font-size: 18px;
+    }
+
+    .SectionTitle strong:after {
+        content: "";
+        height: 3px;
+        width: 90%;
+        background-color: #efb577;
+        position: absolute;
+        bottom: -0.2em;
+        left: 52%;
+        transform: translate(-50%);
     }
 }

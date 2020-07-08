@@ -547,7 +547,7 @@ export class LoginComponent implements OnInit {
       this.paymentSubChildren.push(
         {
           id: 'payment',
-          title: 'Status report',
+          title: 'Payment Advise',
           type: 'item',
           url: '/pages/payment'
         },

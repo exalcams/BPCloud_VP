@@ -66,7 +66,8 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         { Value: 'Material', Name: 'Material' },
         { Value: 'Service', Name: 'Service' },
         { Value: 'Framework', Name: 'Framework' },
-        { Value: 'Contract', Name: 'Contract' }
+        { Value: 'Contract', Name: 'Contract' },
+        { Value: 'Subcon', Name: 'Subcon' }
     ];
     searchText = '';
     FilterVal = 'All';

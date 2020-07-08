@@ -53,26 +53,65 @@
       <mat-card fxFlex="100" class="side-bar p-0">
         <div fxLayout class="p-0 grayBorderBottom" fxLayoutAlign="start center">
           <div fxFlex="20" fxLayout="column" class="px-12 my-24">
-            <div>
-              PO No : <span class="boldClass">#{{SelectedPO?.DocNumber}}</span>
+            <div fxLayout fxLayoutAlign="center" fxLayoutGap="2px">
+              <div fxFlex="40" fxLayoutAlign="end center">
+                PO No : 
+              </div>
+              <div fxFlex="60" fxLayoutAlign="start center">
+                <span class="boldClass">{{SelectedPO?.DocNumber}}</span>
+              </div>
             </div>
             <div class="mt-12">
-              PO Date : <span class="boldClass">{{SelectedPO?.DocDate | date : 'dd/MM/yyyy'}}</span>
+              <div fxLayout fxLayoutAlign="center" fxLayoutGap="2px">
+                <div fxFlex="40" fxLayoutAlign="end center">
+                  PO Date : 
+                </div>
+                <div fxFlex="60" fxLayoutAlign="start center">
+                  <span class="boldClass">{{SelectedPO?.DocDate | date : 'dd/MM/yyyy'}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div fxFlex="20" fxLayout="column" class="borderleft px-12 my-24">
+            <div fxLayout fxLayoutAlign="center" fxLayoutGap="2px">
+              <div fxFlex="40" fxLayoutAlign="end center">
+                Currency : 
+              </div>
+              <div fxFlex="60" fxLayoutAlign="start center">
+                <span class="boldClass">{{SelectedPO?.Currency}}</span>
+              </div>
+            </div>
+            <div class="mt-12">
+              <div fxLayout fxLayoutAlign="center" fxLayoutGap="2px">
+                <div fxFlex="40" fxLayoutAlign="end center">
+                  Version : 
+                </div>
+                <div fxFlex="60" fxLayoutAlign="start center">
+                  <span class="boldClass">{{SelectedPO?.DocVersion}}</span>
+                </div>
+              </div>
             </div>
           </div>
           <!-- <div fxFlex="1" class="borderleft my-24">
 
           </div> -->
-          <div fxFlex="20" fxLayoutAlign="end center" class="borderleft px-32 my-24">
-            <div fxLayout="column" >
+          <!-- <div fxFlex="20" fxLayoutAlign="end center" class="borderleft px-12 my-24">
+            <div fxLayout="column">
               <div style="text-align: right;">
                 Currency : <span class="boldClass">{{SelectedPO?.Currency}}</span>
               </div>
-              <div class="mt-12" style="text-align: right;">
-                Version : <span class="boldClass">{{SelectedPO?.DocVersion}}</span>
+              <div class="mt-12">
+                <div fxLayout fxLayoutAlign="center" fxLayoutGap="2px">
+                  <div fxFlex="40" fxLayoutAlign="end center">
+                    Version :  
+                  </div>
+                  <div fxFlex="60" fxLayoutAlign="start center">
+                    <span class="boldClass">{{SelectedPO?.DocVersion}}</span>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          </div> -->
           <div fxFlex="auto" class="borderleft pb-40 pt-12" *ngIf="SelectedPO">
             <div fxLayout class="mx-40">
               <div fxFlex="30">ACK</div>

@@ -44,8 +44,18 @@ export class PaymentService {
     return this._httpClient.get<BPCPayPayment[]>(`${this.baseAddress}poapi/Payment/GetPaymentByPartnerID?PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));
   }
+  FilterPaymentByPartnerID(PartnerID: string, FromDate: string, ToDate: string): Observable<BPCPayPayment[] | string> {
+    return this._httpClient.get<BPCPayPayment[]>
+      (`${this.baseAddress}poapi/Payment/FilterPaymentByPartnerID?PartnerID=${PartnerID}&FromDate=${FromDate}&ToDate=${ToDate}`)
+      .pipe(catchError(this.errorHandler));
+  }
   GetTDSByPartnerID(PartnerID: string): Observable<BPCPayTDS[] | string> {
     return this._httpClient.get<BPCPayTDS[]>(`${this.baseAddress}poapi/Payment/GetTDSByPartnerID?PartnerID=${PartnerID}`)
+      .pipe(catchError(this.errorHandler));
+  }
+  FilterTDSByPartnerID(PartnerID: string, FromDate: string, ToDate: string): Observable<BPCPayTDS[] | string> {
+    return this._httpClient.get<BPCPayTDS[]>
+      (`${this.baseAddress}poapi/Payment/FilterTDSByPartnerID?PartnerID=${PartnerID}&FromDate=${FromDate}&ToDate=${ToDate}`)
       .pipe(catchError(this.errorHandler));
   }
 }
