@@ -60,7 +60,8 @@
                     <div fxFlex='40'>
                       <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="2px">
                         <div fxFlex="20" fxLayoutAlign="end center"> <span> PO NO : </span></div>
-                        <div fxFlex="80" fxLayoutAlign="start center"> <span> {{SelectedASNHeader?.DocNumber}}</span>
+                        <div fxFlex="80" fxLayoutAlign="start center"> <span class="boldClass">
+                            {{SelectedASNHeader?.DocNumber}}</span>
                         </div>
                       </div>
                     </div>
@@ -78,8 +79,9 @@
                     <div fxFlex='40'>
                       <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="2px">
                         <div fxFlex="20" fxLayoutAlign="end center"> <span> Date : </span></div>
-                        <div fxFlex="80" fxLayoutAlign="start center"> <span>
-                            {{PO?.DocDate | date :'dd/MM/yyyy'}}</span></div>
+                        <div fxFlex="80" fxLayoutAlign="start center">
+                          <span class="boldClass">{{PO?.DocDate | date :'dd/MM/yyyy'}}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -641,8 +643,10 @@
                             <mat-error style="margin-left: -9px;" *ngIf="ASNItemFormGroup.get('ASNItems').controls[index]?.get('ASNQty').touched && 
                             !ASNItemFormGroup.get('ASNItems').controls[index]?.get('ASNQty').hasError('required')&&
                             ASNItemFormGroup.get('ASNItems').controls[index]?.get('ASNQty').hasError('max')">
-                              <span *ngIf="(PO?.DocType | lowercase) === 'subcon'"> {{POItems[index]?.MaxAllowedQty}} Prd Qty left</span>
-                              <span *ngIf="(PO?.DocType | lowercase) !== 'subcon'"> {{POItems[index]?.MaxAllowedQty}} is the max</span>
+                              <span *ngIf="(PO?.DocType | lowercase) === 'subcon'"> {{POItems[index]?.MaxAllowedQty}}
+                                Prd Qty left</span>
+                              <span *ngIf="(PO?.DocType | lowercase) !== 'subcon'"> {{POItems[index]?.MaxAllowedQty}} is
+                                the max</span>
                             </mat-error>
                             <mat-error *ngIf="ASNItemFormGroup.get('ASNItems').controls[index]?.get('ASNQty').touched && 
                             !ASNItemFormGroup.get('ASNItems').controls[index]?.get('ASNQty').hasError('required')&&

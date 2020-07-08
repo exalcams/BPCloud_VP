@@ -49,7 +49,8 @@ export class PayableComponent implements OnInit {
   @ViewChild(MatPaginator) tablePaginator: MatPaginator;
   @ViewChild(MatMenuTrigger) matMenuTrigger: MatMenuTrigger;
   @ViewChild(MatSort) tableSort: MatSort;
-
+  DefaultFromDate: Date;
+  DefaultToDate: Date;
   // Bar chart
   public barChartOptions = {
     responsive: true,
@@ -193,6 +194,9 @@ export class PayableComponent implements OnInit {
     this.searchText = '';
     this.SelectValue = 'All';
     this.isExpanded = false;
+    this.DefaultFromDate = new Date();
+    this.DefaultFromDate.setDate(this.DefaultFromDate.getDate() - 30);
+    this.DefaultToDate = new Date();
   }
 
   ngOnInit(): void {
@@ -213,14 +217,15 @@ export class PayableComponent implements OnInit {
       this._router.navigate(['/auth/login']);
     }
     this.InitializeSearchForm();
-    this.GetPayableByPatnerID();
+    // this.GetPayableByPatnerID();
+    this.SearchClicked();
   }
 
   InitializeSearchForm(): void {
     this.SearchFormGroup = this.formBuilder.group({
       Invoice: [''],
-      FromDate: [''],
-      ToDate: ['']
+      FromDate: [this.DefaultFromDate],
+      ToDate: [this.DefaultToDate]
     });
   }
   ResetControl(): void {
@@ -343,6 +348,10 @@ export class PayableComponent implements OnInit {
   }
   expandClicked(): void {
     this.isExpanded = !this.isExpanded;
+  }
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.tableDataSource.filter = filterValue.trim().toLowerCase();
   }
 }
 

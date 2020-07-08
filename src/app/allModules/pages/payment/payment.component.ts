@@ -40,6 +40,11 @@ export class PaymentComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   SearchFormGroup: FormGroup;
   isDateError: boolean;
+  DefaultFromDate: Date;
+  DefaultToDate: Date;
+  searchText: string;
+  SelectValue: string;
+  isExpanded: boolean;
   constructor(
     private _formBuilder: FormBuilder,
     private _router: Router,
@@ -47,7 +52,19 @@ export class PaymentComponent implements OnInit {
     private _reportService: ReportService,
     private _excelService: ExcelService,
     private _datePipe: DatePipe
-  ) { }
+  ) { 
+    this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
+    this.authenticationDetails = new AuthenticationDetails();
+    this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
+    this.IsProgressBarVisibile = false;
+    this.isDateError = false;
+    this.DefaultFromDate = new Date();
+    this.DefaultFromDate.setDate(this.DefaultFromDate.getDate() - 30);
+    this.DefaultToDate = new Date();
+    this.searchText = '';
+    this.SelectValue = 'All';
+    this.isExpanded = false;
+  }
 
   ngOnInit(): void {
     const retrievedObject = localStorage.getItem('authorizationData');
@@ -66,13 +83,14 @@ export class PaymentComponent implements OnInit {
       this._router.navigate(['/auth/login']);
     }
     this.InitializeSearchFormGroup();
-    this.GetAllPayments();
+    this.SearchClicked();
+    // this.GetAllPayments();
   }
 
   InitializeSearchFormGroup(): void {
     this.SearchFormGroup = this._formBuilder.group({
-      FromDate: [''],
-      ToDate: [''],
+      FromDate: [this.DefaultFromDate],
+      ToDate: [this.DefaultToDate]
     });
   }
   ResetControl(): void {
@@ -176,6 +194,33 @@ export class PaymentComponent implements OnInit {
 
   }
 
+  exportAsXLSX(): void {
+    const currentPageIndex = this.PaymentDataSource.paginator.pageIndex;
+    const PageSize = this.PaymentDataSource.paginator.pageSize;
+    const startIndex = currentPageIndex * PageSize;
+    const endIndex = startIndex + PageSize;
+    const itemsShowed = this.AllPayments.slice(startIndex, endIndex);
+    const itemsShowedd = [];
+    itemsShowed.forEach(x => {
+      const item = {
+        'Payment Doc': x.PaymentDoc,
+        'Date': x.Date ? this._datePipe.transform(x.Date, 'dd-MM-yyyy') : '',
+        // 'Posting Date': x.PostingDate ? this._datePipe.transform(x.PostingDate, 'dd-MM-yyyy') : '',
+        'Amount': x.Amount,
+        'Attachment': x.Attachment,
+        'Remark': x.Remark,
+      };
+      itemsShowedd.push(item);
+    });
+    this._excelService.exportAsExcelFile(itemsShowedd, 'payment');
+  }
+  expandClicked(): void {
+    this.isExpanded = !this.isExpanded;
+  }
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.PaymentDataSource.filter = filterValue.trim().toLowerCase();
+  }
 }
 
 export class PaymentModel {
