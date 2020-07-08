@@ -119,4 +119,7 @@
     position: fixed;
     bottom: 80px !important;
   }
+  [hidden]{
+    display: none !important;
+  }
 }

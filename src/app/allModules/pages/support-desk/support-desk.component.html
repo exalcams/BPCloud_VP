@@ -10,7 +10,7 @@
           <span><img src="../../../../assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
         </div>
       </div>
-      <div fxLayout *ngIf="SupportHeaders?.length===0 && IsSupportHeader">
+      <div fxLayout *ngIf="supports?.length===0 && isSupport">
         <div fxFlex>
           <div fxFlex="30" style="margin-left: 5%;margin-top: 5%;">
             <div fxLayout="row" fxLayoutAlign="start">
@@ -27,7 +27,7 @@
             </div>
             <div fxLayout="row" fxLayoutAlign="start">
               <div fxLayoutAlign="start" style="margin-top: 10%;">
-                <button mat-button class="Btn1" style="width: 140%;" (click)="AddSupportTicketClicked()">Connect with Us
+                <button mat-button class="Btn1" style="width: 140%;" (click)="addSupportTicketClicked()">Connect with Us
                   !
                 </button>
               </div>
@@ -40,22 +40,11 @@
             </div>
           </div>
         </div>
-        <!-- <div fxFlex align="start">
-          <div FxLayout="row" style="height: 400px;">
-            <div><span style="font-size: 25px !important;">Let Connectc For </span></div>
-
-            <div><span><img src="../../../../assets/images/illustration.png"></span></div>
-          </div>
-        </div> -->
       </div>
     </div>
-    <div style="padding: 30px;" *ngIf="SupportHeaders?.length" class="content" fxLayout="column">
-      <!-- <div fxFlex>
-        <span style="font-size: 15px;" class="boldClass orangeBorderBottom pl-8">Raised Tickets</span>
-        <h2><strong>Raised Tickets</strong></h2>
-        <hr class="rightFlexHr">
-      </div> -->
-      <table style="width: 100% !important;" class="table" mat-table [dataSource]="SupportDataSource" matSort>
+    <div style="padding: 30px;" *ngIf="supports?.length" class="content" fxLayout="column">
+
+      <table style="width: 100% !important;" class="table" mat-table [dataSource]="supportDataSource" matSort>
         <ng-container matColumnDef="Reason">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Reason </th>
           <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
@@ -66,21 +55,11 @@
           </td>
         </ng-container>
 
-        <!-- <ng-container matColumnDef="Reason">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Reason</th>
-          <td mat-cell style="text-align: right;" *matCellDef="let element"> {{element.Reason}} </td>
-        </ng-container> -->
-
         <ng-container matColumnDef="Date">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
           <td mat-cell *matCellDef="let element"> {{element.Date | date :'dd/MM/yyyy'}}
           </td>
         </ng-container>
-
-        <!-- <ng-container matColumnDef="Status">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-          <td mat-cell *matCellDef="let element" style="text-align: left"> {{element.Status}} </td>
-        </ng-container> -->
 
         <ng-container matColumnDef="Status">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
@@ -95,35 +74,37 @@
           <td mat-cell *matCellDef="let element"> {{element.AssignTo}} </td>
         </ng-container>
 
-        <!-- <tr mat-header-row *matHeaderRowDef="SupportDisplayedColumns;sticky: true"></tr>
-          <tr mat-row *matRowDef="let row; columns: SupportDisplayedColumns;let even=even" matRipple
+        <!-- <tr mat-header-row *matHeaderRowDef="supportDisplayedColumns;sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: supportDisplayedColumns;let even=even" matRipple
             style=" cursor: pointer;">
           </tr> -->
         <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
-          *matHeaderRowDef="SupportDisplayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: SupportDisplayedColumns;" (click)="OnSupportHeaderRowClicked(row)"
-          style=" cursor: pointer;" [class.highlight]="row === SelectedSupportHeader"></tr>
+          *matHeaderRowDef="supportDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: supportDisplayedColumns;" (click)="onSupportRowClicked(row)"
+          style=" cursor: pointer;" [class.highlight]="row === selectedSupport"></tr>
       </table>
-      <!-- <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator> -->
-      <!-- <div fxFlex fxLayout="column" class="mx-20 my-12">
-        <div fxLayoutAlign="end">
-          <button class="Btn2" mat-fab (click)="AddSupportTicketClicked()">
-            <mat-icon class="s-16">add</mat-icon>
-          </button>
-        </div>
+      <!-- <div flex fxLayoutAlign="center center" style="margin-top: 10px;" *ngIf="!supports?.length">
+        <mat-icon svgIcon="infoIcon" style="color: #1b56ca;">
+        </mat-icon>
+        <span style="margin-left: 10px;">The table does not contain any records</span>
       </div> -->
+      <div flex>
+        <mat-paginator [hidden]="!supports?.length" [pageSize]="5" [pageSizeOptions]="[10, 20, 30, 50, 75, 100]"
+          showFirstLastButtons>
+        </mat-paginator>
+      </div>
       <div fxLayout>
         <div fxFlex fxLayoutAlign="end">
-          <button *ngIf="SupportHeaders[0]?.PatnerID===this.authenticationDetails.UserName" class="float-add-button"
-            mat-fab style="background-color: #f6b570" (click)="AddSupportTicketClicked()">
+          <button *ngIf="supports[0]?.PatnerID===this.authenticationDetails.UserName" class="float-add-button"
+            mat-fab style="background-color: #f6b570" (click)="addSupportTicketClicked()">
             <mat-icon style="color: white;">add</mat-icon>
           </button>
         </div>
       </div>
     </div>
-    <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
+    <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
     </mat-progress-spinner>
-    <div id="overlay" *ngIf="IsProgressBarVisibile">
+    <div id="overlay" *ngIf="isProgressBarVisibile">
     </div>
   </div>
 </div>

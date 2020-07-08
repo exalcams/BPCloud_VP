@@ -85,6 +85,7 @@ export class PoFlipComponent implements OnInit {
   ) {
     this.selectedFlip = new BPCFLIPHeader();
     this.selectedFlipHeaderView = new BPCFLIPHeaderView();
+    this.poHeader = new BPCOFHeader();
     this.authenticationDetails = new AuthenticationDetails();
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.isProgressBarVisibile = false;
@@ -163,6 +164,7 @@ export class PoFlipComponent implements OnInit {
       this.GetFlipCostsByFLIPID();
     } else {
       this.GetFlips();
+      // this.GetPOByDoc();
     }
   }
 
@@ -171,6 +173,7 @@ export class PoFlipComponent implements OnInit {
     this._poService.GetPOByDoc(this.selectedDocNumber).subscribe(
       (data) => {
         this.poHeader = data as BPCOFHeader;
+        console.log(this.poHeader);
         this.selectedDocDate = this.poHeader.DocDate;
       },
       (err) => {
@@ -251,6 +254,7 @@ export class PoFlipComponent implements OnInit {
     this._poFlipService.GetFLIPItemsByFLIPID(this.selectedFlip.FLIPID).subscribe(
       (data) => {
         this.selectedFlipHeaderView.FLIPItems = data as BPCFLIPItem[];
+        console.log(this.selectedFlipHeaderView.FLIPItems);
         if (this.selectedFlipHeaderView.FLIPItems && this.selectedFlipHeaderView.FLIPItems.length) {
           this.clearFormArray(this.flipItemFormArray);
           this.selectedFlipHeaderView.FLIPItems.forEach(x => {
