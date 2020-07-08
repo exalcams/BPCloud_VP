@@ -312,6 +312,60 @@
     margin-left: 20px;
     cursor: pointer !important;
   }
+  .flip-rectangle-card {
+    cursor: pointer !important;
+    // height: 115px;
+    // border-radius: 7px;
+    border: solid 2px #e0e0e0;
+    background-color: #ffffff;
+    border-left: solid 8px #3380d7;
+  }
+  .doc-number{
+    // width: 90px;
+    // height: 33px;
+    // font-family: SegoeUI;
+    font-size: 16px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 0.77;
+    letter-spacing: 0.5px;
+    text-align: left;
+    color: #3e3e3e;
+    // padding: 20px;
+  }
+  .doc-date {
+    // width: 59px;
+    // height: 33px;
+    //font-family: SegoeUI;
+    font-size: 16px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 0.77;
+    letter-spacing: 0.5px;
+    text-align: left;
+    color: #3e3e3e;
+    // padding: 20px;
+  }
+  .no-flip-created-for-this-po {
+    // width: 349px;
+    // height: 33px;
+    //font-family: SegoeUI;
+    font-size: 16px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 0.77;
+    letter-spacing: 0.5px;
+    text-align: left;
+    color: #3e3e3e;
+  }
+  .alert {
+    width: 31.5px;
+    height: 27.4px;
+    object-fit: contain;
+  }
   .flipInfoCard {
     // @include mat-elevation(2);
     // min-height: 80px;
@@ -397,7 +451,7 @@
     color: #1e8bed;
     cursor: pointer;
   }
-  .cardActions {
+  .card-actions {
     box-shadow: 0 -5px 10px 0 rgba(0, 0, 0, 0.16);
   }
 }

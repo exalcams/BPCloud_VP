@@ -53,30 +53,44 @@
       <mat-card fxFlex="77" class="side-bar p-0">
         <div class="sidenav-content" fxFlex fxLayout="column">
           <div fxFlex fxLayout="column" class="p-0 pt-8">
-            <div fxFlex class="px-24 mt-4">
-              <div class="p-8 flipInfoCard">
-                <div fxLayout fxLayoutAlign="space-between center">
-                  <div fxFlex>
-                    <span style="text-align: right;">PO No: </span>
-                    <span style="text-align: left;"><strong>{{selectedDocNumber}}</strong></span>
-                  </div>
-                  <div *ngIf="!selectedFlip?.FLIPID" fxFlex fxLayoutAlign="end" class="mr-8">
-                    <img class="m-8" style="height: 20px !important;" src="assets/images/alert.png">
-                    <span style="margin-top: 10px;">No Flip Created for this PO</span>
-                  </div>
-                  <div *ngIf="selectedFlip?.FLIPID" fxFlex fxLayoutAlign="end" class="mr-8">
-                    <span style="margin-top: 10px;"><span>FLIP:</span><strong> {{selectedFlip?.FLIPID}}</strong></span>
+            <div fxFlex fxLayout class="px-12 mt-4">
+              <div fxFlex="100" fxLayout="column" class="flip-rectangle-card">
+                <div fxFlex>
+                  <div fxLayout="row" class="doc-number px-20 py-12">
+                    <div fxFlex='40'>
+                      <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="2px">
+                        <div fxFlex="20" fxLayoutAlign="end center"> <span> PO NO : </span></div>
+                        <div fxFlex="80" fxLayoutAlign="start center"> <span> {{selectedDocNumber}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div fxFlex='60' *ngIf="!selectedFlip?.FLIPID" fxLayout fxLayoutGap="10px"
+                      class="no-flip-created-for-this-po">
+                      <div fxFlex fxLayoutAlign="end center" align="end">
+                        <img src="assets/images/asn/alert.png" class="alert">
+                        <span style="margin-left: 5px;">No Flip Created for this PO</span>
+                      </div>
+                    </div>
+                    <div fxFlex='60' *ngIf="selectedFlip?.FLIPID" fxLayoutAlign="end">
+                      <span>FLIP : </span>
+                      <span> <strong>{{selectedFlip?.FLIPID}}</strong></span>
+                    </div>
                   </div>
                 </div>
-                <div style="font-size: 11px">
-                  <div style="margin-top: 10px;color: #2e2e2e">
-                    <span style="font-size: 13px;text-align: right;">Date: </span>
-                    <span style="text-align: left;"><strong>{{ selectedDocDate | date : 'dd/MM/yyyy'}}</strong></span>
+                <div fxFlex class="doc-date px-20 pb-12">
+                  <div fxLayout="row" fxLayoutGap="2px">
+                    <div fxFlex='40'>
+                      <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="2px">
+                        <div fxFlex="20" fxLayoutAlign="end center"> <span> Date : </span></div>
+                        <div fxFlex="80" fxLayoutAlign="start center"> <span>
+                            {{selectedDocDate | date :'dd/MM/yyyy'}}</span></div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div fxFlex class="px-24 mt-4">
+            <div fxFlex class="px-12 mt-4">
               <form autocomplete="off" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="10px" fxFlex="1 0 auto"
                 name="form" novalidate [formGroup]="flipFormGroup">
                 <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="50px">
@@ -182,7 +196,7 @@
                 </div>
               </form>
             </div>
-            <div fxFlex fxLayout="column" fxLayoutGap="20px" class="px-24 mt-12">
+            <div fxFlex fxLayout="column" fxLayoutGap="20px" class="px-12 mt-12">
               <div fxFlex>
                 <span class="title"><strong>Other Cost</strong></span>
               </div>
@@ -266,7 +280,7 @@
                 </div> -->
               </div>
             </div>
-            <div fxFlex fxLayout="column" fxLayoutGap="20px" class="px-24 mt-12">
+            <div fxFlex fxLayout="column" fxLayoutGap="20px" class="px-12 mt-12">
               <div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
                 <div fxFlex fxLayout="row" fxLayoutAlign="start center">
                 </div>
@@ -351,8 +365,8 @@
                 <form autocomplete="off" class="abnormal" fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto"
                   name="form" novalidate [formGroup]="flipItemFormGroup">
                   <div style="overflow-x:auto;">
-                    <table
-                      *ngIf="(poItems && poItems.length)|| (selectedFlipHeaderView?.flipItems && selectedFlipHeaderView?.flipItems?.length)"
+                    <!-- *ngIf="(poItems && poItems.length)|| (selectedFlipHeaderView?.FlipItems && selectedFlipHeaderView?.FlipItems?.length)" -->
+                    <table                    
                       class="table" mat-table [dataSource]="flipItemDataSource" formArrayName="flipItems">
 
                       <ng-container matColumnDef="Item">
@@ -533,14 +547,14 @@
           </div>
         </div>
         <!-- <div fxLayout id="footerCard">
-          <div fxLayout fxFlex class="my-8 px-24" fxLayoutAlign="end">
+          <div fxLayout fxFlex class="my-8 px-12" fxLayoutAlign="end">
             <button (click)="saveClicked()" *ngIf="!selectedFlip?.FLIPID" class="SaveBtn" mat-stroked-button>
               Save</button>
             <button (click)="saveClicked()" *ngIf="selectedFlip?.FLIPID" class="SaveBtn" mat-raised-button>
               Update</button>
           </div>
         </div> -->
-        <mat-card-actions class="m-0 pl-12 pr-16 cardActions">
+        <mat-card-actions class="m-0 pl-12 pr-16 card-actions">
           <div fxLayout fxFlex fxLayoutAlign="end">
             <button (click)="saveClicked()" *ngIf="!selectedFlip?.FLIPID" class="SaveBtn" mat-stroked-button>
               Save</button>
