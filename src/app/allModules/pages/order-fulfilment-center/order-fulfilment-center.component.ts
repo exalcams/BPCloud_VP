@@ -306,7 +306,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         this.GetOfDetails();
         this.GetOfGraphDetailsByPartnerID();
         this.GetOfStatusByPartnerID();
-        this.GetOfAttachmentsByPartnerID();
+        // this.GetOfAttachmentsByPartnerID();
     }
 
     GetOfDetails(): void {
@@ -671,8 +671,8 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     }
 
     viewOfAttachmentClicked(element: BPCOFHeader): void {
-        const attachments = this.ofAttachments.filter(x => x.AttachmentName === element.DocNumber);
-        this.openAttachmentViewDialog(attachments);
+        // const attachments = this.ofAttachments.filter(x => x.AttachmentName === element.DocNumber);
+        // this.openAttachmentViewDialog(attachments);
     }
 
     openAttachmentViewDialog(attachments: any): void {
