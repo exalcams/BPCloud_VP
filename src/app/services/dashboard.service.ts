@@ -12,6 +12,7 @@ import {
 import { SODetails } from 'app/models/customer';
 import { BPCKRA, CustomerBarChartData } from 'app/models/fact';
 import { BPCOFHeader } from 'app/models/OrderFulFilment';
+import { BPCInvoiceAttachment } from 'app/models/ASN';
 
 @Injectable({
   providedIn: 'root'
@@ -70,6 +71,12 @@ export class DashboardService {
       .pipe(catchError(this.errorHandler));
   }
 
+  GetOfAttachmentsByPartnerID(PartnerID: string): Observable<BPCInvoiceAttachment[] | string> {
+    return this._httpClient
+      .get<BPCInvoiceAttachment[]>(`${this.baseAddress}factapi/Fact/GetOfAttachmentsByPartnerID?PartnerID=${PartnerID}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
   GetOfItemsByPartnerIDAndDocNumber(PartnerID: any, DocNumber: any): Observable<ItemDetails[] | string> {
     return this._httpClient
       .get<ItemDetails[]>(`${this.baseAddress}poapi/Dashboard/GetOfItemsByPartnerIDAndDocNumber?PartnerID=${PartnerID}&DocNumber=${DocNumber}`)
@@ -97,6 +104,14 @@ export class DashboardService {
   GetOfSLsByPartnerIDAndDocNumber(PartnerID: any, DocNumber: any): Observable<SLDetails[] | string> {
     return this._httpClient
       .get<SLDetails[]>(`${this.baseAddress}poapi/Dashboard/GetOfSLsByPartnerIDAndDocNumber?PartnerID=${PartnerID}&DocNumber=${DocNumber}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  DownloadOfAttachment(AttachmentName: string, DocNumber: string): Observable<Blob | string> {
+    return this._httpClient.get(`${this.baseAddress}poapi/Dashboard/DownloadOfAttachment?AttachmentName=${AttachmentName}&DocNumber=${DocNumber}`, {
+      responseType: 'blob',
+      headers: new HttpHeaders().append('Content-Type', 'application/json')
+    })
       .pipe(catchError(this.errorHandler));
   }
 

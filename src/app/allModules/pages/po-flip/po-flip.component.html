@@ -72,8 +72,7 @@
                       </div>
                     </div>
                     <div fxFlex='60' *ngIf="selectedFlip?.FLIPID" fxLayoutAlign="end">
-                      <span>FLIP : </span>
-                      <span> <strong>{{selectedFlip?.FLIPID}}</strong></span>
+                      <span>FLIP : <strong>{{selectedFlip?.FLIPID}}</strong></span>
                     </div>
                   </div>
                 </div>
@@ -557,6 +556,8 @@
           <div fxLayout fxFlex fxLayoutAlign="end">
             <button (click)="saveClicked()" *ngIf="!selectedFlip?.FLIPID" class="SaveBtn" mat-stroked-button>
               Save</button>
+              <button (click)="deleteClicked()" *ngIf="selectedFlip?.FLIPID" mat-stroked-button class="DeleteBtn mr-4 mb-8" mat-raised-button>
+                Delete</button>
             <button (click)="saveClicked()" *ngIf="selectedFlip?.FLIPID" class="SaveBtn" mat-raised-button>
               Update</button>
           </div>

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef } from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
-import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatMenuTrigger } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatMenuTrigger, MatDialogConfig, MatDialog } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AuthenticationDetails } from 'app/models/master';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
@@ -16,6 +16,8 @@ import {
 import { DatePipe } from '@angular/common';
 import { BPCOFHeader } from 'app/models/OrderFulFilment';
 import { DashboardService } from 'app/services/dashboard.service';
+import { AttachmentViewDialogComponent } from '../attachment-view-dialog/attachment-view-dialog.component';
+import { BPCInvoiceAttachment } from 'app/models/ASN';
 @Component({
     selector: 'app-order-fulfilment-center',
     templateUrl: './order-fulfilment-center.component.html',
@@ -30,10 +32,13 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     partnerID: string;
     menuItems: string[];
     notificationSnackBarComponent: NotificationSnackBarComponent;
+    attachmentViewDialogComponent: AttachmentViewDialogComponent;
     isProgressBarVisibile: boolean;
     isDateError: boolean;
     ofDetails: BPCOFHeader[] = [];
     filteredOfDetails: BPCOFHeader[] = [];
+    public ofAttachmentCount: number;
+    ofAttachments: BPCInvoiceAttachment[] = [];
     ofDetailsFormGroup: FormGroup;
     ofOption: OfOption;
     ofDetailsDisplayedColumns: string[] = [
@@ -56,7 +61,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     DeliveryStatus: any[] = [];
     ofStatusOptions: OfStatus[] = [
         { Value: 'All', Name: 'All' },
-        { Value: 'DueForAck', Name: 'Due for Ack' },
+        { Value: 'DueForACK', Name: 'Due for ACK' },
         { Value: 'DueForASN', Name: 'Due for ASN' },
         { Value: 'DueForGate', Name: 'Due for Gate' },
         { Value: 'DueForGRN', Name: 'Due for GRN' }
@@ -196,6 +201,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         public snackBar: MatSnackBar,
         public _dashboardService: DashboardService,
         private datePipe: DatePipe,
+        private dialog: MatDialog,
     ) {
         this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
         this.authenticationDetails = new AuthenticationDetails();
@@ -300,6 +306,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         this.GetOfDetails();
         this.GetOfGraphDetailsByPartnerID();
         this.GetOfStatusByPartnerID();
+        this.GetOfAttachmentsByPartnerID();
     }
 
     GetOfDetails(): void {
@@ -401,6 +408,22 @@ export class OrderFulFilmentCenterComponent implements OnInit {
                     console.log(this.barChartData);
                     console.log(this.barChartLabels);
                     console.log(this.DashboardGraphStatus);
+                }
+                this.isProgressBarVisibile = false;
+            },
+                (err) => {
+                    console.error(err);
+                    this.isProgressBarVisibile = false;
+                });
+    }
+
+    GetOfAttachmentsByPartnerID(): void {
+        this.isProgressBarVisibile = true;
+        this._dashboardService.GetOfAttachmentsByPartnerID(this.partnerID)
+            .subscribe((data) => {
+                if (data) {
+                    this.ofAttachments = data as BPCInvoiceAttachment[];
+                    this.ofAttachmentCount = this.ofAttachments.length;
                 }
                 this.isProgressBarVisibile = false;
             },
@@ -645,6 +668,23 @@ export class OrderFulFilmentCenterComponent implements OnInit {
             default:
                 return '';
         }
+    }
+
+    viewOfAttachmentClicked(element: BPCOFHeader): void {
+        const attachments = this.ofAttachments.filter(x => x.AttachmentName === element.DocNumber);
+        this.openAttachmentViewDialog(attachments);
+    }
+
+    openAttachmentViewDialog(attachments: any): void {
+        const dialogConfig: MatDialogConfig = {
+            data: attachments,
+            panelClass: 'attachment-view-dialog'
+        };
+        const dialogRef = this.dialog.open(AttachmentViewDialogComponent, dialogConfig);
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+            }
+        });
     }
 
 }
