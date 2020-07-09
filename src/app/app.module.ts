@@ -26,7 +26,8 @@ import { PaymentModule } from './allModules/payment/payment.module';
 import { AttachmentViewDialogComponent } from './allModules/pages/attachment-view-dialog/attachment-view-dialog.component';
 // import { CustomerModule } from './allModules/customer/customer.module';
 // import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
-
+import { BnNgIdleService } from 'bn-ng-idle';
+import { InformationDialogComponent } from './notifications/information-dialog/information-dialog.component';
 
 const appRoutes: Routes = [
     {
@@ -81,7 +82,8 @@ const appRoutes: Routes = [
         NotificationSnackBarComponent,
         NotificationDialogComponent,
         AttachmentDialogComponent,
-        AttachmentViewDialogComponent
+        AttachmentViewDialogComponent,
+        InformationDialogComponent
     ],
     imports: [
         BrowserModule,
@@ -118,7 +120,8 @@ const appRoutes: Routes = [
         DatePipe,
         WINDOW_PROVIDERS,
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
-        { provide: MAT_DATE_LOCALE, useValue: 'en-IN' }
+        { provide: MAT_DATE_LOCALE, useValue: 'en-IN' },
+        BnNgIdleService
     ],
     bootstrap: [
         AppComponent
@@ -126,7 +129,8 @@ const appRoutes: Routes = [
     entryComponents: [
         NotificationDialogComponent,
         AttachmentDialogComponent,
-        AttachmentViewDialogComponent
+        AttachmentViewDialogComponent,
+        InformationDialogComponent
     ]
 })
 export class AppModule {

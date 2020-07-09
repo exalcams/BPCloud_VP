@@ -38,12 +38,12 @@ export class PayableComponent implements OnInit {
   tableDisplayedColumns: string[] = [
     // 'Vendor',
     'Invoice',
-    'InvoiceBooking',
     'InvoiceDate',
+    'PostedOn',
     'DueDate',
     'AdvAmount',
     'Amount',
-    'Balance'
+    'Currency'
   ];
   tableDataSource: MatTableDataSource<BPCPayPayable>;
   @ViewChild(MatPaginator) tablePaginator: MatPaginator;
@@ -335,12 +335,12 @@ export class PayableComponent implements OnInit {
     itemsShowed.forEach(x => {
       const item = {
         'Invoice': x.Invoice,
-        'Invoice Booking': x.InvoiceBooking,
         'Invoice Date': x.InvoiceDate ? this._datePipe.transform(x.InvoiceDate, 'dd-MM-yyyy') : '',
+        'Posted on': x.PostedOn ? this._datePipe.transform(x.PostedOn, 'dd-MM-yyyy') : '',
         'Due Date': x.DueDate,
         'Adv Amount': x.AdvAmount,
-        'Amount': x.Amount,
-        'Balance': x.Balance,
+        'Invoice value': x.Amount,
+        'Currency': x.Currency,
       };
       itemsShowedd.push(item);
     });
@@ -355,13 +355,3 @@ export class PayableComponent implements OnInit {
   }
 }
 
-export class Test1 {
-  Vendor: string;
-  Invoice: string;
-  InvoiceBooking: string;
-  InvoiceDate: Date;
-  DueDate: Date;
-  AdvAmount: number;
-  Amount: number;
-  Balance: number;
-}

@@ -37,14 +37,16 @@ export class BPCPayPayable extends CommonClass {
     Client: string;
     Company: string;
     Type: string;
-    PatnerID: string;
+    PartnerID: string;
     FYear: string;
     Invoice: string;
-    InvoiceBooking: string;
+    // InvoiceBooking: string;
     InvoiceDate: Date | string | null;
+    PostedOn: Date | string | null;
     DueDate: Date | string | null;
     AdvAmount: number;
     Amount: number;
+    Currency: string;
     Balance: number;
 }
 
