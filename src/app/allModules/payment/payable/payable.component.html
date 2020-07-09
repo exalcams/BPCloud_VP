@@ -117,16 +117,16 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="InvoiceBooking">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice Booking </th>
-          <td mat-cell *matCellDef="let element"> {{element.InvoiceBooking}}
-          </td>
-        </ng-container>
-
         <ng-container matColumnDef="InvoiceDate">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice Date </th>
           <td mat-cell *matCellDef="let element">
             {{element.InvoiceDate  | date :'dd/MM/yyyy'}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="PostedOn">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Posted on </th>
+          <td mat-cell *matCellDef="let element"> {{element.PostedOn | date :'dd/MM/yyyy'}}
           </td>
         </ng-container>
 
@@ -138,23 +138,23 @@
         </ng-container>
 
         <ng-container matColumnDef="AdvAmount">
-          <th mat-header-cell *matHeaderCellDef>Adv Amount </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Adv Amount </th>
           <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
             {{element.AdvAmount}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="Amount">
-          <th mat-header-cell *matHeaderCellDef>Amount </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Invoice value </th>
           <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
             {{element.Amount}}
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="Balance">
-          <th mat-header-cell *matHeaderCellDef>Balance </th>
+        <ng-container matColumnDef="Currency">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Currency </th>
           <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
-            {{element.Balance}}
+            {{element.Currency}}
           </td>
         </ng-container>
 

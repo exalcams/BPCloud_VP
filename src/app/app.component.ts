@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, Compiler } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Platform } from '@angular/cdk/platform';
 import { TranslateService } from '@ngx-translate/core';
@@ -15,8 +15,15 @@ import { navigation } from 'app/navigation/navigation';
 import { locale as navigationEnglish } from 'app/navigation/i18n/en';
 import { locale as navigationTurkish } from 'app/navigation/i18n/tr';
 import { MenuUpdataionService } from './services/menu-update.service';
-import { MatIconRegistry } from '@angular/material';
+import { MatIconRegistry, MatSnackBar, MatDialogConfig, MatDialog } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
+import { BnNgIdleService } from 'bn-ng-idle';
+import { AuthenticationDetails, SessionMaster } from './models/master';
+import { NotificationSnackBarComponent } from './notifications/notification-snack-bar/notification-snack-bar.component';
+import { AuthService } from './services/auth.service';
+import { Router } from '@angular/router';
+import { SnackBarStatus } from './notifications/notification-snack-bar/notification-snackbar-status-enum';
+import { InformationDialogComponent } from './notifications/information-dialog/information-dialog.component';
 
 @Component({
     selector: 'app',
@@ -26,7 +33,11 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class AppComponent implements OnInit, OnDestroy {
     fuseConfig: any;
     navigation: any;
-
+    sessionMaster: SessionMaster;
+    sessionTimeOut: number;
+    isShowPopup: boolean;
+    authenticationDetails: AuthenticationDetails;
+    notificationSnackBarComponent: NotificationSnackBarComponent;
     // Private
     private _unsubscribeAll: Subject<any>;
 
@@ -53,8 +64,19 @@ export class AppComponent implements OnInit, OnDestroy {
         private _platform: Platform,
         private _menuUpdationService: MenuUpdataionService,
         mdIconRegistry: MatIconRegistry,
-        sanitizer: DomSanitizer
+        sanitizer: DomSanitizer,
+        private bnIdle: BnNgIdleService,
+        public snackBar: MatSnackBar,
+        private dialog: MatDialog,
+        private _authService: AuthService,
+        private _compiler: Compiler,
+        private _router: Router,
     ) {
+        this.authenticationDetails = new AuthenticationDetails();
+        this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
+        this.sessionTimeOut = 300;
+        this.isShowPopup = true;
+        this.GetSessionMasterByProject();
         // Get default navigation
         this.navigation = navigation;
 
@@ -162,6 +184,76 @@ export class AppComponent implements OnInit, OnDestroy {
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
     // -----------------------------------------------------------------------------------------------------
+    GetSessionMasterByProject(): void {
+        this._authService.GetSessionMasterByProject('BPCloud_VP').subscribe(
+            (data) => {
+                this.sessionMaster = data as SessionMaster;
+                if (this.sessionMaster && this.sessionMaster.SessionTimeOut) {
+                    this.sessionTimeOut = this.sessionMaster.SessionTimeOut * 60;
+                    this.InitializeNgIdleService();
+                } else {
+                    this.InitializeNgIdleService();
+                }
+            },
+            (err) => {
+                this.InitializeNgIdleService();
+            }
+        );
+    }
+
+    InitializeNgIdleService(): void {
+        this.bnIdle.startWatching(this.sessionTimeOut).subscribe((res) => {
+            if (res) {
+                // Retrive authorizationData
+                const retrievedObject = localStorage.getItem('authorizationData');
+                if (retrievedObject) {
+                    this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+                    this.SignoutAndExit();
+                }
+            }
+        });
+    }
+
+    OpenInformationDialog(): void {
+        const dialogConfig: MatDialogConfig = {
+            data: 'Your session has expired! Please login again',
+            panelClass: 'information-dialog'
+        };
+        const dialogRef = this.dialog.open(InformationDialogComponent, dialogConfig);
+        dialogRef.afterClosed().subscribe(
+            result => {
+                this._router.navigate(['auth/login']);
+            },
+            err => {
+                this._router.navigate(['auth/login']);
+            });
+    }
+
+    SignoutAndExit(): void {
+        this._authService.SignOut(this.authenticationDetails.UserID).subscribe(
+            (data) => {
+                localStorage.removeItem('authorizationData');
+                localStorage.removeItem('menuItemsData');
+                this._compiler.clearCache();
+                // this._router.navigate(['auth/login']);
+                console.error('Your session has expired! Please login again');
+                this.OpenInformationDialog();
+                // this.notificationSnackBarComponent.openSnackBar('Idle timout occurred , please login again', SnackBarStatus.danger);
+            },
+            (err) => {
+                console.error(err);
+                // this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+                localStorage.removeItem('authorizationData');
+                localStorage.removeItem('menuItemsData');
+                this._compiler.clearCache();
+                // this._router.navigate(['auth/login']);
+                console.error('Your session has expired! Please login again');
+                this.OpenInformationDialog();
+                // this.notificationSnackBarComponent.openSnackBar('Idle timout occurred , please login again', SnackBarStatus.danger);
+            }
+        );
+    }
+
 
     /**
      * On init
