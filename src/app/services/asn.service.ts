@@ -160,6 +160,7 @@ export class ASNService {
         })
             .pipe(catchError(this.errorHandler));
     }
+    
     DowloandDocumentCenterAttachment(AttachmentName: string, ASNNumber: string): Observable<Blob | string> {
         return this._httpClient.get(`${this.baseAddress}poapi/ASN/DowloandDocumentCenterAttachment?AttachmentName=${AttachmentName}&ASNNumber=${ASNNumber}`, {
             responseType: 'blob',

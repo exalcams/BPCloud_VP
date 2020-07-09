@@ -23,13 +23,13 @@ export class POFlipService {
   }
 
   // POFLIPs
-  GetAllPOFLIPs(): Observable<any | string> {
-    return this._httpClient.get<any>(`${this.baseAddress}poapi/PO/GetAllPOFLIPs`)
+  GetPOFLIPsByPartnerID(PartnerID: string): Observable<any | string> {
+    return this._httpClient.get<any>(`${this.baseAddress}poapi/PO/GetPOFLIPsByPartnerID?PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));
   }
 
-  GetPOFLIPsByDoc(DocNumber: string): Observable<any | string> {
-    return this._httpClient.get<any>(`${this.baseAddress}poapi/PO/GetPOFLIPsByDoc?DocNumber=${DocNumber}`)
+  GetPOFLIPsByDocAndPartnerID(DocNumber: string, PartnerID: string): Observable<any | string> {
+    return this._httpClient.get<any>(`${this.baseAddress}poapi/PO/GetPOFLIPsByDocAndPartnerID?DocNumber=${DocNumber}&PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));
   }
 

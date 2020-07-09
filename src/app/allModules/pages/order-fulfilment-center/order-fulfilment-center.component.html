@@ -200,20 +200,9 @@
 
         <ng-container matColumnDef="Document">
           <th mat-header-cell *matHeaderCellDef style="width: 10%;"> Document </th>
-          <td mat-cell *matCellDef="let element">
-            <!-- <div fxLayout class="Rectangle">
-                <div class="Rectangle-106 m-8">
-                  <img class="m-8" src="assets/images/imageIcon.png">
-                </div>
-                <div fxFlex class="m-8" fxLayout="column">
-                  <div fxFlex>attachment.jpg</div>
-                  <div fxFlex>10KB</div>
-                </div>
-              </div> -->
-            <!-- <div fxFlex> -->
-            <!-- </div> -->
+          <td mat-cell *matCellDef="let element" (click)="viewOfAttachmentClicked(element)">
             <div style="margin-top: 3px; margin-left: 15px;">
-              <span matBadge="3" matBadgeColor="accent" matBadgeOverlap="false"></span>
+              <span [matBadge]="element.DocCount" matBadgeColor="accent" matBadgeOverlap="false"></span>
             </div>
             <img style="height: 30px" src="assets/images/attachment.png">
           </td>
@@ -242,7 +231,8 @@
                 </mat-option>
                 <mat-option value="ASN" (click)="goToASNClicked(element.DocNumber)">ASN</mat-option>
                 <mat-option value="POFlip" (click)="goToPOFlipClicked(element.DocNumber)">PO Flip</mat-option>
-                <mat-option value="Subcon" *ngIf="(element.DocType | lowercase)==='subcon'" (click)="goToSubconClicked(element.DocNumber)">Subcon</mat-option>
+                <mat-option value="Subcon" *ngIf="(element.DocType | lowercase)==='subcon'"
+                  (click)="goToSubconClicked(element.DocNumber)">Subcon</mat-option>
                 <!-- <mat-option value="Acknowledge" (click)="Acknowledgement(element.DocNumber)">ACK</mat-option>
                 <mat-option value="POLookup" (click)="PurchaseOrder(element.DocNumber)">PO Factsheet</mat-option>
                 <mat-option value="ASN" (click)="AdvanceShipment(element.DocNumber)">ASN</mat-option>

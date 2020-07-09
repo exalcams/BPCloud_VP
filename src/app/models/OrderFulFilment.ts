@@ -20,6 +20,7 @@ export class BPCOFHeader extends CommonClass {
     PINNumber: string;
     DocType: string;
     PlantName: string;
+    DocCount: number;
 }
 
 export class BPCOFItem extends CommonClass {
