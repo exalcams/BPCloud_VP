@@ -65,6 +65,8 @@ import { SupportChatComponent } from './support-chat/support-chat.component';
 import { DataMigrationComponent } from './data-migration/data-migration.component';
 import { PoFactsheetComponent } from './po-factsheet/po-factsheet.component';
 import { OrderFulFilmentCenterComponent } from './order-fulfilment-center/order-fulfilment-center.component';
+import { PerformanceComponent } from './performance/performance.component';
+import { NgImageSliderModule } from 'ng-image-slider';
 
 // import 'chart.piecelabel.js';
 
@@ -94,7 +96,7 @@ const routes = [
         component: PoFactsheetComponent,
     },
     {
-        path: "resource", 
+        path: "resource",
         component: ResourceComponent,
     },
     {
@@ -112,6 +114,10 @@ const routes = [
     {
         path: "datamigration",
         component: DataMigrationComponent,
+    },
+    {
+        path: "performance",
+        component: PerformanceComponent,
     },
     {
         path: "**",
@@ -186,6 +192,7 @@ const routes = [
             showInnerStroke: true,
             animationDuration: 300,
         }),
+        NgImageSliderModule
     ],
     declarations: [
         OrderFulFilmentCenterComponent,
@@ -198,7 +205,8 @@ const routes = [
         SupportDeskComponent,
         SupportTicketComponent,
         SupportChatComponent,
-        DataMigrationComponent
+        DataMigrationComponent,
+        PerformanceComponent
     ],
     providers: [DecimalPipe],
     entryComponents: [],

@@ -260,7 +260,6 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-
     if (this.MenuItems.indexOf('ASN') >= 0) {
       this.children.push(
         {
@@ -317,7 +316,6 @@ export class LoginComponent implements OnInit {
     //     }
     //   );
     // }
-
     if (this.MenuItems.indexOf('PurchaseIndent') >= 0) {
       this.children.push(
         {
@@ -444,6 +442,19 @@ export class LoginComponent implements OnInit {
         }
       );
     }
+    if (this.MenuItems.indexOf('Performance') >= 0) {
+      this.children.push(
+        {
+          id: 'performance',
+          title: 'Performance',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          icon: 'resourceIcon',
+          isSvgIcon: true,
+          url: '/pages/performance',
+        }
+      );
+    }
 
     // if (this.MenuItems.indexOf('InvoiceDetails') >= 0) {
     //   this.children.push(
@@ -567,7 +578,6 @@ export class LoginComponent implements OnInit {
       }
       );
     }
-
     if (this.MenuItems.indexOf('App') >= 0) {
       this.subChildren.push(
         {
