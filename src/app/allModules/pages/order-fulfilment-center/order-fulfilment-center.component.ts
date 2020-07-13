@@ -37,7 +37,6 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     isDateError: boolean;
     ofDetails: BPCOFHeader[] = [];
     filteredOfDetails: BPCOFHeader[] = [];
-    public ofAttachmentCount: number;
     ofAttachments: BPCInvoiceAttachment[] = [];
     ofDetailsFormGroup: FormGroup;
     ofOption: OfOption;
@@ -423,7 +422,6 @@ export class OrderFulFilmentCenterComponent implements OnInit {
             .subscribe((data) => {
                 if (data) {
                     this.ofAttachments = data as BPCInvoiceAttachment[];
-                    this.ofAttachmentCount = this.ofAttachments.length;
                 }
                 this.isProgressBarVisibile = false;
             },
@@ -671,8 +669,8 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     }
 
     viewOfAttachmentClicked(element: BPCOFHeader): void {
-        // const attachments = this.ofAttachments.filter(x => x.AttachmentName === element.DocNumber);
-        // this.openAttachmentViewDialog(attachments);
+        const attachments = this.ofAttachments.filter(x => x.AttachmentID.toString() === element.RefDoc);
+        this.openAttachmentViewDialog(attachments);
     }
 
     openAttachmentViewDialog(attachments: any): void {
