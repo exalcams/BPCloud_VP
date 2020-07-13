@@ -168,7 +168,7 @@
                           </mat-error>
                           <mat-error *ngIf="ASNFormGroup.get('NetWeight').touched && !ASNFormGroup.get('NetWeight').hasError('required')
             &&ASNFormGroup.get('NetWeight').hasError('pattern')">
-                            Enter a valid number
+                            Enter a valid Weight
                           </mat-error>
                         </mat-form-field>
                       </div>
@@ -197,7 +197,7 @@
                           </mat-error>
                           <mat-error *ngIf="ASNFormGroup.get('GrossWeight').touched && !ASNFormGroup.get('GrossWeight').hasError('required')
             &&ASNFormGroup.get('GrossWeight').hasError('pattern')">
-                            Enter a valid number
+                            Enter a valid Weight
                           </mat-error>
                         </mat-form-field>
                         <div *ngIf="isWeightError" class="WeightError">
@@ -273,7 +273,7 @@
                     </mat-form-field>
                   </div>
                 </div>
-                <div fxFlex fxLayout="row wrap" fxLayoutGap="20px">
+                <div fxFlex fxLayout="row" fxLayoutGap="20px">
                   <div fxFlex="33" fxLayout>
                     <div fxFlex='60'>
                       <mat-form-field class="pl-8 pr-8" style="width: 100%;">
@@ -285,7 +285,7 @@
                         </mat-error>
                         <mat-error *ngIf="ASNFormGroup.get('VolumetricWeight').touched && !ASNFormGroup.get('VolumetricWeight').hasError('required')
                   &&ASNFormGroup.get('VolumetricWeight').hasError('pattern')">
-                          Enter a valid number
+                          Enter a valid Weight
                         </mat-error>
                       </mat-form-field>
                     </div>
@@ -304,7 +304,61 @@
                       </mat-form-field>
                     </div>
                   </div>
-
+                  <div fxFlex="33">
+                    <mat-form-field class="pl-8 pr-12" style="width: 100%;">
+                      <input matInput placeholder="Bill Of Lading" formControlName="BillOfLading">
+                      <mat-error
+                        *ngIf="ASNFormGroup.get('BillOfLading').touched && ASNFormGroup.get('BillOfLading').hasError('required')">
+                        Bill Of Lading is required
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div fxFlex="33">
+                    <mat-form-field class="pl-8 pr-12" style="width: 100%;">
+                      <input matInput placeholder="Transporter Name" formControlName="TransporterName">
+                      <mat-error
+                        *ngIf="ASNFormGroup.get('TransporterName').touched && ASNFormGroup.get('TransporterName').hasError('required')">
+                        Transporter Name is required
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div fxFlex fxLayout="row" fxLayoutGap="20px">
+                  <div fxFlex="33">
+                    <mat-form-field class="pl-8 pr-12" style="width: 100%;">
+                      <input matInput placeholder="Accessible Value" formControlName="AccessibleValue">
+                      <mat-error
+                        *ngIf="ASNFormGroup.get('AccessibleValue').touched && ASNFormGroup.get('AccessibleValue').hasError('required')">
+                        Accessible Value is required
+                      </mat-error>
+                      <mat-error *ngIf="ASNFormGroup.get('AccessibleValue').touched && !ASNFormGroup.get('AccessibleValue').hasError('required')
+                &&ASNFormGroup.get('AccessibleValue').hasError('pattern')">
+                        Enter a valid amount
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div fxFlex="33">
+                    <mat-form-field class="pl-8 pr-12" style="width: 100%;">
+                      <input matInput placeholder="Contact Person" formControlName="ContactPerson">
+                      <mat-error
+                        *ngIf="ASNFormGroup.get('ContactPerson').touched && ASNFormGroup.get('ContactPerson').hasError('required')">
+                        Contact Person is required
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div fxFlex="33">
+                    <mat-form-field class="pl-8 pr-12" style="width: 100%;">
+                      <input matInput placeholder="Contact Person No." formControlName="ContactPersonNo">
+                      <mat-error
+                        *ngIf="ASNFormGroup.get('ContactPersonNo').touched && ASNFormGroup.get('ContactPersonNo').hasError('required')">
+                        Contact Person No is required
+                      </mat-error>
+                      <mat-error *ngIf="ASNFormGroup.get('ContactPersonNo').touched && !ASNFormGroup.get('ContactPersonNo').hasError('required') &&
+                      ASNFormGroup.get('ContactPersonNo').hasError('pattern')">
+                        Please enter a valid Mobile Number
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
                 </div>
               </form>
               <!-- <form autocomplete="off" fxLayout="row" fxLayoutAlign="start" fxLayoutGap="20px" fxFlex="1 0 auto"
@@ -739,7 +793,7 @@
                   <div fxFlex="33">
                     <mat-form-field class="pl-8 pr-12" style="width: 100%;">
                       <input matInput placeholder="Invoice Number (16 Char)" formControlName="InvoiceNumber"
-                        (keydown)="numberOnly($event)">
+                        >
                       <mat-error
                         *ngIf="InvoiceDetailsFormGroup.get('InvoiceNumber').touched && InvoiceDetailsFormGroup.get('InvoiceNumber').hasError('required')">
                         Invoice Number is required

@@ -33,6 +33,7 @@ export class LoginComponent implements OnInit {
   subChildren: FuseNavigation[] = [];
   reportSubChildren: FuseNavigation[] = [];
   paymentSubChildren: FuseNavigation[] = [];
+  configSubChildren: FuseNavigation[] = [];
   private _unsubscribeAll: Subject<any>;
   message = 'Snack Bar opened.';
   actionButtonLabel = 'Retry';
@@ -629,6 +630,30 @@ export class LoginComponent implements OnInit {
         isSvgIcon: true,
         // icon: 'view_list',
         children: this.subChildren
+      }
+      );
+    }
+    if (this.MenuItems.indexOf('Doctype') >= 0) {
+      this.configSubChildren.push(
+        {
+          id: 'doctype',
+          title: 'ASN Doctype',
+          type: 'item',
+          url: '/configuration/doctype'
+        }
+      );
+    }
+    if (this.MenuItems.indexOf('Doctype') >= 0 || this.MenuItems.indexOf('Session') >= 0 ||
+      this.MenuItems.indexOf('SupportDeskMaster') >= 0) {
+      this.children.push({
+        id: 'configuration',
+        title: 'Configuration',
+        // translate: 'NAV.DASHBOARDS',
+        type: 'collapsable',
+        icon: 'settings',
+        isSvgIcon: false,
+        // icon: 'view_list',
+        children: this.configSubChildren
       }
       );
     }

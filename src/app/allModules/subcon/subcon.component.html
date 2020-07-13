@@ -231,7 +231,7 @@
                     [formGroup]="SubconItemFormGroup">
                     <div fxFlex="15">
                       <mat-form-field class="px-12" style="width: 100%;">
-                        <input matInput placeholder="Date" [matDatepicker]="picker1" formControlName="Date">
+                        <input matInput placeholder="Date" [max]="maxDate" [matDatepicker]="picker1" formControlName="Date">
                         <mat-datepicker-toggle matSuffix [for]="picker1">
                           <mat-icon matDatepickerToggleIcon svgIcon="calendarIcon" class="mb-12"></mat-icon>
                         </mat-datepicker-toggle>
@@ -281,7 +281,10 @@
                       <mat-form-field class="px-12" style="width: 100%;">
                         <mat-select placeholder="Status" formControlName="Status">
                           <!-- <mat-option value="Packed">Packed</mat-option> -->
-                          <mat-option value="Shipped">Shipped</mat-option>
+                          <!-- <mat-option value="Shipped">Shipped</mat-option> -->
+                          <mat-option value="FullProduction">Full Production</mat-option>
+                          <mat-option value="PartialProduction">Partial Production</mat-option>
+                          <mat-option value="NoProduction">No Production</mat-option>
                         </mat-select>
                         <mat-error
                           *ngIf="SubconItemFormGroup.get('Status').touched && SubconItemFormGroup.get('Status').hasError('required')">
