@@ -555,6 +555,9 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     goToPOFlipClicked(po: string): void {
         this._router.navigate(['/pages/poflip'], { queryParams: { id: po } });
     }
+    goToSupportDeskClicked(po: string): void {
+        this._router.navigate(['/pages/supportdesk'], { queryParams: { id: po } });
+    }
 
     goToASNClicked(po: string): void {
         this._router.navigate(['/pages/asn'], { queryParams: { id: po } });

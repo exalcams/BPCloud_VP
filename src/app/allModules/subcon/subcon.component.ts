@@ -59,6 +59,8 @@ export class SubconComponent implements OnInit {
   ReadyToBeShippedQty: number;
   ProducedQty: number;
   IsDeleteRequired: boolean;
+  currentDate: Date;
+  lastOrderedQty: number;
   constructor(
     private _fuseConfigService: FuseConfigService,
     private _masterService: MasterService,
@@ -81,6 +83,8 @@ export class SubconComponent implements OnInit {
     this.ReadyToBeShippedQty = 0;
     this.ProducedQty = 0;
     this.IsDeleteRequired = false;
+    this.currentDate = new Date();
+    this.lastOrderedQty = 0;
   }
 
   ngOnInit(): void {
@@ -118,6 +122,8 @@ export class SubconComponent implements OnInit {
 
   ResetSubconItemFormGroup(): void {
     this.ResetFormGroup(this.SubconItemFormGroup);
+    this.SubconItemFormGroup.get('Date').patchValue(this.currentDate);
+    this.SubconItemFormGroup.get('OrderedQty').patchValue(this.lastOrderedQty);
   }
 
   ResetFormGroup(formGroup: FormGroup): void {
@@ -136,11 +142,11 @@ export class SubconComponent implements OnInit {
 
   InitializeSubconItemFormGroup(): void {
     this.SubconItemFormGroup = this._formBuilder.group({
-      Date: ['', Validators.required],
+      Date: [this.currentDate, Validators.required],
       OrderedQty: ['', [Validators.required, Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,2})?$')]],
-      Batch: ['', Validators.required],
-      Remarks: ['', Validators.required],
-      Status: ['', Validators.required],
+      Batch: [''],
+      Remarks: [''],
+      Status: [''],
     });
   }
 
@@ -192,6 +198,7 @@ export class SubconComponent implements OnInit {
           this.AllSubconItems.forEach(x => {
             this.ReadyToBeShippedQty += + x.OrderedQty;
             this.ProducedQty += +x.OrderedQty;
+            this.SubconItemFormGroup.get('OrderedQty').patchValue(x.OrderedQty);
           });
         } else {
           this.IsDeleteRequired = false;
@@ -230,6 +237,8 @@ export class SubconComponent implements OnInit {
         this.ReadyToBeShippedQty -= +SubItem.OrderedQty;
       } else {
         this.AllSubconItems.push(SubItem);
+        this.SubconItemFormGroup.get('OrderedQty').patchValue(SubItem.OrderedQty);
+        this.lastOrderedQty = SubItem.OrderedQty;
         this.SubconItemDataSource = new MatTableDataSource(this.AllSubconItems);
       }
       // this.ReadyToBeShippedQty = 0;

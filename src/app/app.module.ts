@@ -31,6 +31,7 @@ import { AttachmentViewDialogComponent } from './allModules/pages/attachment-vie
 // import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { BnNgIdleService } from 'bn-ng-idle';
 import { InformationDialogComponent } from './notifications/information-dialog/information-dialog.component';
+import { ConfigurationModule } from './allModules/configuration/configuration.module';
 
 const appRoutes: Routes = [
     {
@@ -44,6 +45,10 @@ const appRoutes: Routes = [
     {
         path: 'master',
         loadChildren: './allModules/master/master.module#MasterModule'
+    },
+    {
+        path: 'configuration',
+        loadChildren: './allModules/configuration/configuration.module#ConfigurationModule'
     },
     {
         path: 'invoice',
@@ -119,7 +124,8 @@ const appRoutes: Routes = [
 
         // App modules
         LayoutModule,
-        PaymentModule
+        PaymentModule,
+        ConfigurationModule
     ],
     providers: [
         DatePipe,

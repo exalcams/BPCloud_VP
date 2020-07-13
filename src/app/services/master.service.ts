@@ -5,6 +5,7 @@ import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import { MenuApp, RoleWithApp, UserWithRole, UserNotification, Reason, UserView, VendorUser } from 'app/models/master';
+import { BPCDocumentCenterMaster } from 'app/models/ASN';
 
 @Injectable({
   providedIn: 'root'
@@ -250,4 +251,40 @@ export class MasterService {
       .pipe(catchError(this.errorHandler));
   }
 
+  GetAllDocumentCenterMaster(): Observable<BPCDocumentCenterMaster[] | string> {
+    return this._httpClient.get<BPCDocumentCenterMaster[]>(`${this.baseAddress}poapi/Master/GetAllDocumentCenterMaster`)
+      .pipe(catchError(this.errorHandler));
+  }
+  CreateDocumentCenterMaster(center: BPCDocumentCenterMaster): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}poapi/Master/CreateDocumentCenterMaster`,
+      center,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  UpdateDocumentCenterMaster(center: BPCDocumentCenterMaster): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}poapi/Master/UpdateDocumentCenterMaster`,
+      center,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  DeleteDocumentCenterMaster(center: BPCDocumentCenterMaster): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}poapi/Master/DeleteDocumentCenterMaster`,
+      center,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
 }

@@ -167,17 +167,22 @@ export class ASNComponent implements OnInit {
             VessleNumber: ['', Validators.required],
             AWBNumber: ['', Validators.required],
             AWBDate: [new Date(), Validators.required],
-            NetWeight: ['', [Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
+            NetWeight: ['', [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
             NetWeightUOM: ['KG', Validators.required],
-            GrossWeight: ['', [Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
+            GrossWeight: ['', [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
             GrossWeightUOM: ['KG', Validators.required],
-            VolumetricWeight: ['', [Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
+            VolumetricWeight: ['', [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
             VolumetricWeightUOM: [''],
             DepartureDate: [new Date(), Validators.required],
             ArrivalDate: [this.minDate, Validators.required],
             NumberOfPacks: ['', [Validators.pattern('^[1-9][0-9]*$')]],
             CountryOfOrigin: ['IND', Validators.required],
             ShippingAgency: [''],
+            BillOfLading: ['', Validators.required],
+            TransporterName: ['', Validators.required],
+            AccessibleValue: ['', [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,2})?$')]],
+            ContactPerson: ['', Validators.required],
+            ContactPersonNo: ['', [Validators.required, Validators.pattern('^(\\+91[\\-\\s]?)?[0]?(91)?[6789]\\d{9}$')]],
         });
         // this.DynamicallyAddAcceptedValidation();
     }
@@ -197,7 +202,7 @@ export class ASNComponent implements OnInit {
     }
     InitializeInvoiceDetailsFormGroup(): void {
         this.InvoiceDetailsFormGroup = this._formBuilder.group({
-            InvoiceNumber: ['', [Validators.minLength(1), Validators.maxLength(16), Validators.pattern('^[1-9][0-9]*$')]],
+            InvoiceNumber: ['', [Validators.minLength(1), Validators.maxLength(16)]],
             InvoiceAmount: ['', [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,2})?$')]],
             InvoiceAmountUOM: [''],
             InvoiceDate: [''],
@@ -643,6 +648,7 @@ export class ASNComponent implements OnInit {
         this.ASNFormGroup.get('AWBDate').patchValue(this.SelectedASNHeader.AWBDate);
         this.ASNFormGroup.get('CountryOfOrigin').patchValue(this.SelectedASNHeader.CountryOfOrigin);
         this.ASNFormGroup.get('ShippingAgency').patchValue(this.SelectedASNHeader.ShippingAgency);
+        this.ASNFormGroup.get('NumberOfPacks').patchValue(this.SelectedASNHeader.NumberOfPacks);
         this.ASNFormGroup.get('DepartureDate').patchValue(this.SelectedASNHeader.DepartureDate);
         this.ASNFormGroup.get('ArrivalDate').patchValue(this.SelectedASNHeader.ArrivalDate);
         this.ASNFormGroup.get('GrossWeight').patchValue(this.SelectedASNHeader.GrossWeight);
@@ -651,7 +657,11 @@ export class ASNComponent implements OnInit {
         this.ASNFormGroup.get('NetWeightUOM').patchValue(this.SelectedASNHeader.NetWeightUOM);
         this.ASNFormGroup.get('VolumetricWeight').patchValue(this.SelectedASNHeader.VolumetricWeight);
         this.ASNFormGroup.get('VolumetricWeightUOM').patchValue(this.SelectedASNHeader.VolumetricWeightUOM);
-        this.ASNFormGroup.get('NumberOfPacks').patchValue(this.SelectedASNHeader.NumberOfPacks);
+        this.ASNFormGroup.get('BillOfLading').patchValue(this.SelectedASNHeader.BillOfLading);
+        this.ASNFormGroup.get('TransporterName').patchValue(this.SelectedASNHeader.TransporterName);
+        this.ASNFormGroup.get('AccessibleValue').patchValue(this.SelectedASNHeader.AccessibleValue);
+        this.ASNFormGroup.get('ContactPerson').patchValue(this.SelectedASNHeader.ContactPerson);
+        this.ASNFormGroup.get('ContactPersonNo').patchValue(this.SelectedASNHeader.ContactPersonNo);
     }
 
     InsertPOItemsFormGroup(poItem: BPCOFItem): void {
@@ -765,6 +775,12 @@ export class ASNComponent implements OnInit {
         // this.SelectedASNHeader.Status = this.SelectedASNView.Status = this.ASNFormGroup.get('Status').value;
         this.SelectedASNHeader.ArrivalDateInterval = this.SelectedASNView.ArrivalDateInterval = this.calculateDiff(this.SelectedASNHeader.ArrivalDate);
         this.SelectedASNHeader.DocNumber = this.SelectedASNView.DocNumber = this.SelectedDocNumber ? this.SelectedDocNumber : this.SelectedASNHeader.DocNumber;
+        this.SelectedASNHeader.BillOfLading = this.SelectedASNView.BillOfLading = this.ASNFormGroup.get('BillOfLading').value;
+        this.SelectedASNHeader.TransporterName = this.SelectedASNView.TransporterName = this.ASNFormGroup.get('TransporterName').value;
+        this.SelectedASNHeader.AccessibleValue = this.SelectedASNView.AccessibleValue = this.ASNFormGroup.get('AccessibleValue').value;
+        this.SelectedASNHeader.ContactPerson = this.SelectedASNView.ContactPerson = this.ASNFormGroup.get('ContactPerson').value;
+        this.SelectedASNHeader.ContactPersonNo = this.SelectedASNView.ContactPersonNo = this.ASNFormGroup.get('ContactPersonNo').value;
+
         if (this.SelectedDocNumber && this.PO) {
             this.SelectedASNHeader.Client = this.SelectedASNView.Client = this.PO.Client;
             this.SelectedASNHeader.Company = this.SelectedASNView.Company = this.PO.Company;
