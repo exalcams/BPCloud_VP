@@ -1,4 +1,5 @@
 import { CommonClass } from './common';
+import { BPCInvoiceAttachment } from './ASN';
 export class BPCOFHeader extends CommonClass {
     ID: number;
     Client: string;
@@ -253,6 +254,11 @@ export class BPCOFQMXLSX {
     Unit: string;
     Lotqty: number;
     Rejqty: number;
+}
+
+export class OfAttachmentData {
+    DocNumber: string;
+    OfAttachments: BPCInvoiceAttachment[];
 }
 
 

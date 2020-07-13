@@ -155,6 +155,7 @@ export class DocumentCenter extends CommonClass {
 export class BPCInvoiceAttachment {
     AttachmentID: number;
     AttachmentName: string;
+    ReferenceNo: string;
     ContentType: string;
     ContentLength: number;
 }

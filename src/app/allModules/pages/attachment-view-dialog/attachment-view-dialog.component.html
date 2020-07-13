@@ -6,13 +6,6 @@
         <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
           <mat-icon svgIcon="closeIcon"></mat-icon>
         </button>
-        <!-- <button class="float-add-button" mat-fab style="background-color: #f6b570"
-        (click)="uploadClicked()">
-        <mat-icon style="color: white;">add</mat-icon> -->
-        <img class="add-attachment-icon" src="assets/images/logos/add-button.png" (click)="fileInput2.click()">
-        <input hidden type="file" #fileInput2 id="file" (change)="addAttachmentClicked($event)"
-          accept="image/x-png,image/gif,image/jpeg,image/jpg,application/pdf" />
-        </button>
       </div>
     </mat-toolbar-row>
   </mat-toolbar>
@@ -21,19 +14,48 @@
 </mat-dialog-content> -->
 
   <div mat-dialog-content>
-    <div fxLayout>
-      <div fxFlex="99.9" class="role-side-bar">
-        <div fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto">
-          <ul *ngFor="let attachment of ofAttachments">
-            <li style="cursor: pointer;" (click)="attachmentClicked(attachment)">{{attachment.AttachmentName}}</li>
-          </ul>
+    <div fxLayout style="padding: 10px;">
+      <div fxFlex>
+        <div fxFlex="90">
+          <div fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto">
+            <div *ngIf="ofAttachments?.length > 0 ">
+              <ul *ngFor="let attachment of ofAttachments">
+                <li style="cursor: pointer; color: #1e8bed;" (click)="attachmentClicked(attachment,invoiceAttachment)">
+                  {{attachment.AttachmentName}}</li>
+              </ul>
+            </div>
+            <div *ngIf="ofAttachments?.length === 0" class="no-results-message">
+              <span class="pl-12"> No attachments..</span>
+            </div>
+          </div>
+        </div>
+        <!-- <div fxFlex *ngIf="!invAttach?.AttachmentName"
+        (click)="GetInvoiceAttachment(invoiceAttachment?.name,invoiceAttachment)" class="pdfLinkClass pl-8">
+        {{invoiceAttachment?.name}}</div>
+      <div fxFlex *ngIf="invAttach?.AttachmentName"
+        (click)="GetInvoiceAttachment(invAttach?.AttachmentName)" class="pdfLinkClass pl-8">
+        {{invAttach?.AttachmentName}}
+      </div> -->
+        <div fxFlex="10">
+          <img class="add-attachment-icon" src="assets/images/logos/add-button.png" (click)="fileInput2.click()">
+          <input hidden type="file" #fileInput2 id="file" (change)="addAttachmentClicked($event)"
+            accept="image/x-png,image/gif,image/jpeg,image/jpg,application/pdf" />
         </div>
       </div>
-      <div fxFlex="0.01"></div>
+      <!-- <div fxLayout>
+        <div fxLayout fxFlex class="my-8 px-12" fxLayoutAlign="end">
+          <button mat-stroked-button class="btnBg" (click)="uploadAttachmentClicked()">Upload</button>
+        </div>
+      </div> -->
     </div>
   </div>
 
   <mat-dialog-actions class="m-0 p-16" align="end">
-    <button mat-button type="button" (click)="closeClicked()">Close</button>
+    <button mat-button type="button" (click)="closeClicked()" style="margin-right: 10px;">Close</button>
+    <button mat-stroked-button class="btnBg" (click)="uploadAttachmentClicked()">Upload</button>
   </mat-dialog-actions>
+  <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
+  </mat-progress-spinner>
+  <div id="overlay" *ngIf="isProgressBarVisibile"></div>
+
 </div>

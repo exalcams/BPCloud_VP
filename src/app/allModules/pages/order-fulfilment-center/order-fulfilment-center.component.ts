@@ -14,7 +14,7 @@ import {
     FulfilmentStatus, Deliverystatus, OfType, OfOption
 } from 'app/models/Dashboard';
 import { DatePipe } from '@angular/common';
-import { BPCOFHeader } from 'app/models/OrderFulFilment';
+import { BPCOFHeader, OfAttachmentData } from 'app/models/OrderFulFilment';
 import { DashboardService } from 'app/services/dashboard.service';
 import { AttachmentViewDialogComponent } from '../attachment-view-dialog/attachment-view-dialog.component';
 import { BPCInvoiceAttachment } from 'app/models/ASN';
@@ -416,12 +416,17 @@ export class OrderFulFilmentCenterComponent implements OnInit {
                 });
     }
 
-    GetOfAttachmentsByPartnerID(): void {
+    GetOfAttachmentsByPartnerIDAndDocNumber(docNumber: string): void {
         this.isProgressBarVisibile = true;
-        this._dashboardService.GetOfAttachmentsByPartnerID(this.partnerID)
+        this._dashboardService.GetOfAttachmentsByPartnerIDAndDocNumber(this.authenticationDetails.UserName, docNumber)
             .subscribe((data) => {
                 if (data) {
                     this.ofAttachments = data as BPCInvoiceAttachment[];
+                    console.log(this.ofAttachments);
+                    const ofAttachmentData = new OfAttachmentData();
+                    ofAttachmentData.DocNumber = docNumber;
+                    ofAttachmentData.OfAttachments = this.ofAttachments;
+                    this.openAttachmentViewDialog(ofAttachmentData);
                 }
                 this.isProgressBarVisibile = false;
             },
@@ -669,13 +674,14 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     }
 
     viewOfAttachmentClicked(element: BPCOFHeader): void {
-        const attachments = this.ofAttachments.filter(x => x.AttachmentID.toString() === element.RefDoc);
-        this.openAttachmentViewDialog(attachments);
+        // const attachments = this.ofAttachments.filter(x => x.AttachmentID.toString() === element.RefDoc);
+        this.GetOfAttachmentsByPartnerIDAndDocNumber(element.DocNumber);
     }
 
-    openAttachmentViewDialog(attachments: any): void {
+    openAttachmentViewDialog(ofAttachmentData: OfAttachmentData): void {
+
         const dialogConfig: MatDialogConfig = {
-            data: attachments,
+            data: ofAttachmentData,
             panelClass: 'attachment-view-dialog'
         };
         const dialogRef = this.dialog.open(AttachmentViewDialogComponent, dialogConfig);
@@ -684,5 +690,5 @@ export class OrderFulFilmentCenterComponent implements OnInit {
             }
         });
     }
-
 }
+

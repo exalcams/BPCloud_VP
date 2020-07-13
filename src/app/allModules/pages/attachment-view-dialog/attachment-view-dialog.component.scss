@@ -1,6 +1,12 @@
 @import "src/@fuse/scss/fuse";
 
 .attachment-view-dialog {
+    .progressBarPostion {
+        position: absolute !important;
+        top: 350px;
+        z-index: 1;
+        left: 55%;
+    }
     @include media-breakpoint("xs") {
         width: 100%;
     }
@@ -46,6 +52,6 @@
     .add-attachment-icon {
         @extend .add-icon;
         margin-top: 0px;
-        height: 15px;
+        height: 24px;
     }
 }
