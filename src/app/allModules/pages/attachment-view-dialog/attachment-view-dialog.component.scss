@@ -1,13 +1,19 @@
 @import "src/@fuse/scss/fuse";
 
 .attachment-view-dialog {
+    .progressBarPostion {
+        position: absolute !important;
+        top: 350px;
+        z-index: 1;
+        left: 55%;
+    }
     @include media-breakpoint("xs") {
         width: 100%;
-      }
-    
-      @include media-breakpoint-up("sm") {
+    }
+
+    @include media-breakpoint-up("sm") {
         width: 440px;
-      }
+    }
     .mat-radio-button {
         margin: 0 5px;
     }
@@ -31,5 +37,21 @@
     .btnBg {
         background-color: #efb577 !important;
         color: white !important;
+    }
+    .add-icon {
+        height: 20px;
+        margin-top: 16px;
+        padding-left: 4px;
+        cursor: pointer !important;
+    }
+    //   .addAttachmentClass {
+    //     margin-top: 25px;
+    //     color: #4784f7;
+    //     cursor: pointer !important;
+    //   }
+    .add-attachment-icon {
+        @extend .add-icon;
+        margin-top: 0px;
+        height: 24px;
     }
 }

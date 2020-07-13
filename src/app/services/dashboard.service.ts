@@ -71,12 +71,6 @@ export class DashboardService {
       .pipe(catchError(this.errorHandler));
   }
 
-  GetOfAttachmentsByPartnerID(PartnerID: string): Observable<BPCInvoiceAttachment[] | string> {
-    return this._httpClient
-      .get<BPCInvoiceAttachment[]>(`${this.baseAddress}factapi/Fact/GetOfAttachmentsByPartnerID?PartnerID=${PartnerID}`)
-      .pipe(catchError(this.errorHandler));
-  }
-
   GetOfItemsByPartnerIDAndDocNumber(PartnerID: any, DocNumber: any): Observable<ItemDetails[] | string> {
     return this._httpClient
       .get<ItemDetails[]>(`${this.baseAddress}poapi/Dashboard/GetOfItemsByPartnerIDAndDocNumber?PartnerID=${PartnerID}&DocNumber=${DocNumber}`)
@@ -107,11 +101,32 @@ export class DashboardService {
       .pipe(catchError(this.errorHandler));
   }
 
-  DownloadOfAttachment(AttachmentName: string, DocNumber: string): Observable<Blob | string> {
-    return this._httpClient.get(`${this.baseAddress}poapi/Dashboard/DownloadOfAttachment?AttachmentName=${AttachmentName}&DocNumber=${DocNumber}`, {
+  UploadOfAttachment(PartnerID: string, DocNumber: string, CreatedBy: string, selectedFile: File): Observable<any> {
+    const formData: FormData = new FormData();
+    if (selectedFile) {
+      formData.append(selectedFile.name, selectedFile, selectedFile.name);
+    }
+    formData.append('PartnerID', PartnerID);
+    formData.append('DocNumber', DocNumber);
+    formData.append('CreatedBy', CreatedBy.toString());
+
+    return this._httpClient.post<any>(`${this.baseAddress}poapi/Dashboard/UploadOfAttachment`,
+      formData,
+    ).pipe(catchError(this.errorHandler));
+
+  }
+
+  DownloadOfAttachment(PartnerID: string, AttachmentName: string, DocNumber: string): Observable<Blob | string> {
+    return this._httpClient.get(`${this.baseAddress}poapi/Dashboard/DownloadOfAttachment?PartnerID=${PartnerID}&AttachmentName=${AttachmentName}&DocNumber=${DocNumber}`, {
       responseType: 'blob',
       headers: new HttpHeaders().append('Content-Type', 'application/json')
     })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetOfAttachmentsByPartnerIDAndDocNumber(PartnerID: string, DocNumber: string): Observable<BPCInvoiceAttachment[] | string> {
+    return this._httpClient
+      .get<BPCInvoiceAttachment[]>(`${this.baseAddress}poapi/Dashboard/GetOfAttachmentsByPartnerIDAndDocNumber?PartnerID=${PartnerID}&DocNumber=${DocNumber}`)
       .pipe(catchError(this.errorHandler));
   }
 
