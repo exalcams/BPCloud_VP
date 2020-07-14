@@ -609,18 +609,18 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.MenuItems.indexOf('SupportDeskMaster') >= 0) {
+    if (this.MenuItems.indexOf('LoginHistory') >= 0) {
       this.subChildren.push(
         {
-          id: 'supportmaster',
-          title: 'Support',
+          id: 'loginHistory',
+          title: 'Login History',
           type: 'item',
-          url: '/master/supportmaster'
+          url: '/master/loginHistory'
         }
       );
     }
     if (this.MenuItems.indexOf('App') >= 0 || this.MenuItems.indexOf('Role') >= 0 ||
-      this.MenuItems.indexOf('User') >= 0 || this.MenuItems.indexOf('SupportDeskMaster') >= 0) {
+      this.MenuItems.indexOf('User') >= 0) {
       this.children.push({
         id: 'master',
         title: 'Master',
@@ -640,6 +640,26 @@ export class LoginComponent implements OnInit {
           title: 'ASN Doctype',
           type: 'item',
           url: '/configuration/doctype'
+        }
+      );
+    }
+    if (this.MenuItems.indexOf('Session') >= 0) {
+      this.configSubChildren.push(
+        {
+          id: 'session',
+          title: 'Session',
+          type: 'item',
+          url: '/configuration/session'
+        }
+      );
+    }
+    if (this.MenuItems.indexOf('SupportDeskMaster') >= 0) {
+      this.configSubChildren.push(
+        {
+          id: 'supportmaster',
+          title: 'Support',
+          type: 'item',
+          url: '/configuration/supportmaster'
         }
       );
     }

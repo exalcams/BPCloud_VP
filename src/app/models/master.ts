@@ -105,3 +105,16 @@ export class SessionMaster {
     ModifiedOn: Date | string | null;
     ModifiedBy: string;
 }
+export class UserLoginHistory {
+    ID: number;
+    UserID: string;
+    UserName: string;
+    LoginTime: Date | string;
+    LogoutTime: Date | string | null;
+    // IP: string;
+}
+export class LoginHistoryFilter {
+    FromDate: string;
+    ToDate: string;
+    UserName: string;
+}
