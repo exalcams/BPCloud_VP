@@ -27,7 +27,6 @@ export class BPCFact extends CommonClass {
     CreditBalance: number;
     CreditEvalDate?: Date;
 }
-
 export class BPCFactContactPerson extends CommonClass {
     ID: number;
     Client: string;
@@ -39,7 +38,6 @@ export class BPCFactContactPerson extends CommonClass {
     ContactNumber: string;
     Email: string;
 }
-
 export class BPCFactBank extends CommonClass {
     ID: number;
     Client: string;
@@ -51,7 +49,6 @@ export class BPCFactBank extends CommonClass {
     BankID: string;
     BankName: string;
 }
-
 export class BPCKRA extends CommonClass {
     ID: number;
     Client: string;
@@ -77,7 +74,6 @@ export class BPCAIACT extends CommonClass {
     Date: Date | string | null;
     Time: string;
 }
-
 export class BPCCertificate extends CommonClass {
     ID: number;
     Client: string;
@@ -127,7 +123,6 @@ export class CustomerBarChartData {
     PlannedData: string[];
     ActualData: string[];
 }
-
 export class BPCFactXLSX {
     ID: number;
     Client: string;
@@ -148,7 +143,6 @@ export class BPCFactXLSX {
     Lastpayment: number;
     Lastpaymentdate: string;
 }
-
 export class BPCFactBankXLSX {
     Partnerid: string;
     Accountnumber: string;

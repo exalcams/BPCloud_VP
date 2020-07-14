@@ -36,6 +36,7 @@ export class AttachmentViewDialogComponent implements OnInit {
   ofAttachments: BPCInvoiceAttachment[] = [];
   docNumber: string;
   invoiceAttachment: File;
+  invoiceAttachments: File[] = [];
   invAttach: BPCInvoiceAttachment;
   users: UserWithRole[] = [];
   filteredUsers: UserWithRole[] = [];
@@ -71,10 +72,11 @@ export class AttachmentViewDialogComponent implements OnInit {
       this.menuItems = this.authenticationDetails.MenuItemNames.split(',');
     }
     this.GetUsers();
+    this.GetSupportMasters();
   }
 
-  closeClicked(): void {
-    this.matDialogRef.close(null);
+  closeClicked(docNumber: string): void {
+    this.matDialogRef.close(docNumber);
   }
 
   attachmentClicked(attachment: BPCInvoiceAttachment, file?: File): void {
@@ -117,8 +119,11 @@ export class AttachmentViewDialogComponent implements OnInit {
         if (data) {
           const uploadedAttachment = data as BPCInvoiceAttachment;
           // Create support ticket
-          this.getSupportTicket(uploadedAttachment.AttachmentID.toString());
+          this.getSupportTicket(this.docNumber);
           this.CreateSupportTicket(this.docNumber);
+        }
+        else {
+
         }
       },
       (err) => {
@@ -156,21 +161,46 @@ export class AttachmentViewDialogComponent implements OnInit {
 
   CreateSupportTicket(docNumber: string): void {
     this.isProgressBarVisibile = true;
+    console.log(this.supportTicketView);
     this._supportDeskService.CreateSupportTicket(this.supportTicketView).subscribe(
       (data) => {
         const support = (data as SupportHeader);
-        this.notificationSnackBarComponent.openSnackBar(`Attachment uploaded successfully`, SnackBarStatus.success);
-        this.closeClicked();
-        this._router.navigate(['/pages/orderfulfilmentCenter']);
+        if (support) {
+          this.AddSupportAttachment(docNumber, support.SupportID);
+        }
+        else {
+          this.notificationSnackBarComponent.openSnackBar(`Attachment uploaded successfully`, SnackBarStatus.success);
+          this.resetControl();
+          this.closeClicked(docNumber);
+          // this._router.navigate(['/pages/orderfulfilmentCenter']);
+        }
         // this.GetOfAttachmentsByPartnerIDAndDocNumber(docNumber);
         this.isProgressBarVisibile = false;
       },
       (err) => {
         this.isProgressBarVisibile = false;
-        this.closeClicked();
+        this.closeClicked(docNumber);
+        this.resetControl();
         // this.GetOfAttachmentsByPartnerIDAndDocNumber(docNumber);
-        this._router.navigate(['/pages/orderfulfilmentCenter']);
+        // this._router.navigate(['/pages/orderfulfilmentCenter']);
         this.notificationSnackBarComponent.openSnackBar(`Attachment uploaded successfully`, SnackBarStatus.success);
+      }
+    );
+  }
+
+  AddSupportAttachment(docNumber: string, supportID: string): void {
+    this.invoiceAttachments.push(this.invoiceAttachment);
+    this._supportDeskService.AddSupportAttachment(supportID, this.currentUserID.toString(), this.invoiceAttachments).subscribe(
+      (dat) => {
+        this.notificationSnackBarComponent.openSnackBar(`Attachment uploaded successfully`, SnackBarStatus.success);
+        this.resetControl();
+        this.closeClicked(docNumber);
+        // this._router.navigate(['/pages/orderfulfilmentCenter']);
+        this.isProgressBarVisibile = false;
+      },
+      (err) => {
+        this.resetControl();
+        this.isProgressBarVisibile = false;
       }
     );
   }
@@ -181,6 +211,22 @@ export class AttachmentViewDialogComponent implements OnInit {
       .subscribe((data) => {
         if (data) {
           this.ofAttachments = data as BPCInvoiceAttachment[];
+        }
+        this.isProgressBarVisibile = false;
+      },
+        (err) => {
+          console.error(err);
+          this.isProgressBarVisibile = false;
+        });
+  }
+
+  GetSupportMasters(): void {
+    this.isProgressBarVisibile = true;
+    this._supportDeskService
+      .GetSupportMasters()
+      .subscribe((data) => {
+        if (data) {
+          this.supportMasters = <SupportMaster[]>data;
         }
         this.isProgressBarVisibile = false;
       },
@@ -202,6 +248,11 @@ export class AttachmentViewDialogComponent implements OnInit {
         this.isProgressBarVisibile = false;
       }
     );
+  }
+
+  resetControl(): void {
+    this.invoiceAttachment = null;
+    this.invoiceAttachments = [];
   }
 
   openAttachmentDialog(FileName: string, blob: Blob): void {
@@ -234,6 +285,14 @@ export class AttachmentViewDialogComponent implements OnInit {
         ofattach.AttachmentName = this.invoiceAttachment.name;
         ofattach.ContentType = this.invoiceAttachment.type;
         ofattach.ContentLength = this.invoiceAttachment.size;
+        this.ofAttachments.forEach(x => {
+          if (!x.AttachmentID) {
+            const index = this.ofAttachments.indexOf(x, 0);
+            if (index > -1) {
+              this.ofAttachments.splice(index, 1);
+            }
+          }
+        });
         this.ofAttachments.push(ofattach);
       }
     }
@@ -263,14 +322,22 @@ export class AttachmentViewDialogComponent implements OnInit {
           ofattach.AttachmentName = this.invoiceAttachment.name;
           ofattach.ContentType = this.invoiceAttachment.type;
           ofattach.ContentLength = this.invoiceAttachment.size;
+          this.ofAttachments.forEach(x => {
+            if (!x.AttachmentID) {
+              const index = this.ofAttachments.indexOf(x, 0);
+              if (index > -1) {
+                this.ofAttachments.splice(index, 1);
+              }
+            }
+          });
           this.ofAttachments.push(ofattach);
         }
       });
   }
 
   getSupportTicket(documentRefNo: string): void {
-    this.supportTicketView.ReasonCode = "Others";
-    this.supportTicketView.ReasonRemarks = "Ticket is raised";
+    this.supportTicketView.ReasonCode = "4592";
+    this.supportTicketView.ReasonRemarks = "ABC Ticket is raised for the PO" + documentRefNo;
     this.supportTicketView.DocumentRefNo = documentRefNo;
     this.supportTicketView.PatnerID = this.authenticationDetails.UserName;
     let supportMaster = new SupportMaster();
@@ -279,6 +346,7 @@ export class AttachmentViewDialogComponent implements OnInit {
       this.getFilteredUsers(supportMaster);
     }
     this.supportTicketView.Users = this.filteredUsers;
+    console.log(this.filteredUsers);
   }
 
   getFilteredUsers(supportMaster: SupportMaster): any {

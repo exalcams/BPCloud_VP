@@ -215,18 +215,17 @@
           <hr class="rightFlexHr">
           <div fxFlex>
             <mat-tab-group>
-              <mat-tab label="Action ({{AllActions?.length}})">
+              <mat-tab label="Action ({{actions?.length}})">
                 <div class="mat-tab-body-content">
-                  <mat-card *ngFor="let aIACTByPartnerID of AllActions" fxFlex="100%" fxLayout="column"
-                    class="rightBorder"
+                  <mat-card *ngFor="let action of actions" fxFlex="100%" fxLayout="column" class="rightBorder"
                     style="height: 80px;margin: 20px 5px 5px 2px;padding: 10px;border-color:#67c18b;">
                     <mat-card-content>
-                      <h5 style="padding:5px 0px 5px 5px;">PO <strong>{{aIACTByPartnerID.DocNumber}} </strong>
+                      <h5 style="padding:5px 0px 5px 5px;">PO Created <strong>{{action.DocNumber}} </strong>
                       </h5>
                       <i
-                        style="padding:5px 0px 5px 5px;font-size: smaller;">{{aIACTByPartnerID.Date | date:'dd/MM/yy'}},{{aIACTByPartnerID.Time}}</i>
-                      <button (click)="actionTextClicked(aIACTByPartnerID)" mat-raised-button
-                        style="float:right;height:32px;background-color:#efb577;color: white; cursor: pointer;">{{aIACTByPartnerID.ActionText}}</button>
+                        style="padding:5px 0px 5px 5px;font-size: smaller;">{{action.Date | date:'dd/MM/yy'}},{{action.Time}}</i>
+                      <button (click)="actionTextButtonClicked(action)" mat-raised-button
+                        style="float:right;height:32px;background-color:#efb577;color: white; cursor: pointer;">{{action.ActionText}}</button>
                     </mat-card-content>
                   </mat-card>
                 </div>
@@ -276,19 +275,19 @@
                     </mat-card-content>
                   </mat-card> -->
               </mat-tab>
-              <mat-tab label="Notifications ({{AllNotifications?.length}})">
+              <mat-tab label="Notifications ({{notifications?.length}})">
                 <div class="mat-tab-body-content">
-                  <mat-card *ngFor="let aIACTByPartnerID of AllNotifications" fxFlex="100%" fxLayout="column"
+                  <mat-card *ngFor="let notification of notifications" fxFlex="100%" fxLayout="column"
                     class="rightBorder"
                     style="height: 80px;margin: 20px 5px 5px 2px;padding: 10px;border-color:#67c18b;">
                     <mat-card-content>
-                      <h5 style="padding:5px 0px 5px 5px;">PO <strong>{{aIACTByPartnerID.DocNumber}}</strong> is
-                        {{aIACTByPartnerID.Status}}
+                      <h5 style="padding:5px 0px 5px 5px;">PO <strong>{{notification.DocNumber}}</strong> is
+                        <span></span>{{notification.Status}}
                       </h5>
                       <i
-                        style="padding:5px 0px 5px 5px;font-size: smaller;">{{aIACTByPartnerID.Date | date:'dd/MM/yy'}},{{aIACTByPartnerID.Time}}</i>
-                      <!-- <button (click)="actionTextClicked(aIACTByPartnerID)" mat-raised-button
-                        style="float:right;height:32px;background-color:#efb577;color: white; cursor: pointer;">{{aIACTByPartnerID.ActionText}}</button> -->
+                        style="padding:5px 0px 5px 5px;font-size: smaller;">{{notification.Date | date:'dd/MM/yy'}},{{notification.Time}}</i>
+                      <!-- <button (click)="actionTextButtonClicked(notification)" mat-raised-button
+                        style="float:right;height:32px;background-color:#efb577;color: white; cursor: pointer;">{{notification.ActionText}}</button> -->
                     </mat-card-content>
                   </mat-card>
                 </div>

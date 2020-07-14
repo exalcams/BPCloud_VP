@@ -16,7 +16,8 @@ import { POFlipService } from 'app/services/po-flip.service';
 import { BPCOFHeader, BPCOFItem } from 'app/models/OrderFulFilment';
 import { POService } from 'app/services/po.service';
 import { BehaviorSubject } from 'rxjs';
-import { BPCInvoiceAttachment } from 'app/models/ASN';
+import { BPCInvoiceAttachment, BPCCurrencyMaster, BPCCountryMaster } from 'app/models/ASN';
+import { ASNService } from 'app/services/asn.service';
 @Component({
   selector: 'app-po-flip',
   templateUrl: './po-flip.component.html',
@@ -71,13 +72,16 @@ export class PoFlipComponent implements OnInit {
   selection = new SelectionModel<any>(true, []);
   fileToUpload: File;
   fileToUploadList: File[] = [];
-  currencies: string[] = [];
+  currencies: BPCCurrencyMaster[] = [];
+  countries: BPCCountryMaster[] = [];
   states: string[] = [];
   invoiceTypes: string[] = [];
   math = Math;
+  maxDate: Date;
   constructor(
     private _poFlipService: POFlipService,
     private _poService: POService,
+    private _ASNService: ASNService,
     private _router: Router,
     private _route: ActivatedRoute,
     public snackBar: MatSnackBar,
@@ -90,7 +94,7 @@ export class PoFlipComponent implements OnInit {
     this.authenticationDetails = new AuthenticationDetails();
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.isProgressBarVisibile = false;
-    this.currencies = ['USD', 'INR'];
+    // this.currencies = ['USD', 'INR'];
     this.invoiceTypes = ['Service', 'Registered'];
     this.states = [
       'ANDAMAN AND NICOBAR ISLANDS',
@@ -130,6 +134,7 @@ export class PoFlipComponent implements OnInit {
       'UTTAR PRADESH',
       'WEST BENGAL'
     ];
+    this.maxDate = new Date();
   }
 
   ngOnInit(): void {
@@ -152,6 +157,8 @@ export class PoFlipComponent implements OnInit {
       this.initializeFlipFormGroup();
       this.initializeFlipCostFormGroup();
       this.initializeFlipItemFormGroup();
+      this.GetCurrencyMasters();
+      this.GetCountryMasters();
     } else {
       this._router.navigate(['/auth/login']);
     }
@@ -273,29 +280,31 @@ export class PoFlipComponent implements OnInit {
     this.selectedFlipHeaderView.Company = this.selectedFlip.Company;
     this.selectedFlipHeaderView.Type = this.selectedFlip.Type;
     this.selectedFlipHeaderView.PatnerID = this.selectedFlip.PatnerID;
-    this.selectedFlipHeaderView.DocNumber = this.selectedFlip.DocNumber;
+    this.selectedFlipHeaderView.DocNumber = this.selectedDocNumber;
     this.isProgressBarVisibile = true;
     this._poFlipService.CreatePOFLIP(this.selectedFlipHeaderView).subscribe(
       (data) => {
         this.selectedFlip.FLIPID = (data as BPCFLIPHeader).FLIPID;
-        if (this.fileToUploadList && this.fileToUploadList.length) {
-          this._poFlipService.AddPOFLIPAttachment(this.selectedFlip.FLIPID, this.authenticationDetails.UserID.toString(), this.fileToUploadList).subscribe(
-            (dat) => {
-              this.resetControl();
-              this.notificationSnackBarComponent.openSnackBar('PO Flip Saved successfully', SnackBarStatus.success);
-              this.isProgressBarVisibile = false;
-              this.GetFlipsByDocAndPartnerID();
-            },
-            (err) => {
-              this.showErrorNotificationSnackBar(err);
-            }
-          );
-        }
-        else {
-          this.resetControl();
-          this.notificationSnackBarComponent.openSnackBar('PO Flip Saved successfully', SnackBarStatus.success);
-          this.isProgressBarVisibile = false;
-          this.GetFlipsByDocAndPartnerID();
+        if (this.selectedFlip.FLIPID) {
+          if (this.fileToUploadList && this.fileToUploadList.length) {
+            this._poFlipService.AddPOFLIPAttachment(this.selectedFlip.FLIPID, this.authenticationDetails.UserID.toString(), this.fileToUploadList).subscribe(
+              (dat) => {
+                this.resetControl();
+                this.notificationSnackBarComponent.openSnackBar('PO Flip Saved successfully', SnackBarStatus.success);
+                this.isProgressBarVisibile = false;
+                this.GetFlipsByDocAndPartnerID();
+              },
+              (err) => {
+                this.showErrorNotificationSnackBar(err);
+              }
+            );
+          }
+          else {
+            this.resetControl();
+            this.notificationSnackBarComponent.openSnackBar('PO Flip Saved successfully', SnackBarStatus.success);
+            this.isProgressBarVisibile = false;
+            this.GetFlipsByDocAndPartnerID();
+          }
         }
       },
       (err) => {
@@ -315,10 +324,25 @@ export class PoFlipComponent implements OnInit {
     this.isProgressBarVisibile = true;
     this._poFlipService.UpdatePOFLIP(this.selectedFlipHeaderView).subscribe(
       (data) => {
-        this.resetControl();
-        this.notificationSnackBarComponent.openSnackBar('PO Flip Updated successfully', SnackBarStatus.success);
-        this.isProgressBarVisibile = false;
-        this.GetFlipsByDocAndPartnerID();
+        if (this.fileToUploadList && this.fileToUploadList.length) {
+          this._poFlipService.AddPOFLIPAttachment(this.selectedFlip.FLIPID, this.authenticationDetails.UserID.toString(), this.fileToUploadList).subscribe(
+            (dat) => {
+              this.resetControl();
+              this.notificationSnackBarComponent.openSnackBar('PO Flip Updated successfully', SnackBarStatus.success);
+              this.isProgressBarVisibile = false;
+              this.GetFlipsByDocAndPartnerID();
+            },
+            (err) => {
+              this.showErrorNotificationSnackBar(err);
+            }
+          );
+        }
+        else {
+          this.resetControl();
+          this.notificationSnackBarComponent.openSnackBar('PO Flip Updated successfully', SnackBarStatus.success);
+          this.isProgressBarVisibile = false;
+          this.GetFlipsByDocAndPartnerID();
+        }
       },
       (err) => {
         console.error(err);
@@ -347,11 +371,33 @@ export class PoFlipComponent implements OnInit {
     );
   }
 
+  GetCountryMasters(): void {
+    this._ASNService.GetAllBPCCountryMasters().subscribe(
+      (data) => {
+        this.countries = data as BPCCountryMaster[];
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+
+  GetCurrencyMasters(): void {
+    this._ASNService.GetAllBPCCurrencyMasters().subscribe(
+      (data) => {
+        this.currencies = data as BPCCurrencyMaster[];
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+
   initializeFlipFormGroup(): void {
     this.flipFormGroup = this._formBuilder.group({
-      InvoiceNumber: ['', Validators.required],
+      InvoiceNumber: ['', [Validators.minLength(1), Validators.maxLength(16)]],
       InvoiceDate: ['', Validators.required],
-      InvoiceAmount: ['', Validators.required],
+      InvoiceAmount: ['', [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,2})?$')]],
       InvoiceCurrency: ['', Validators.required],
       InvoiceType: ['', Validators.required],
       IsInvoiceOrCertified: ['', Validators.required],
@@ -361,7 +407,7 @@ export class PoFlipComponent implements OnInit {
   initializeFlipCostFormGroup(): void {
     this.flipCostFormGroup = this._formBuilder.group({
       ExpenceType: ['', Validators.required],
-      Amount: ['', Validators.required],
+      Amount: ['', [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,2})?$')]],
       Remarks: ['', Validators.required],
     });
   }
@@ -481,7 +527,6 @@ export class PoFlipComponent implements OnInit {
     this.selectedFlip.InvoiceAmount = this.selectedFlipHeaderView.InvoiceAmount = this.flipFormGroup.get('InvoiceAmount').value;
     this.selectedFlip.InvoiceType = this.selectedFlipHeaderView.InvoiceType = this.flipFormGroup.get('InvoiceType').value;
     this.selectedFlip.IsInvoiceOrCertified = this.selectedFlipHeaderView.IsInvoiceOrCertified = this.flipFormGroup.get('IsInvoiceOrCertified').value;
-    this.selectedFlip.InvoiceAmount = this.selectedFlipHeaderView.InvoiceAmount = this.flipFormGroup.get('InvoiceAmount').value;
     if (this.fileToUpload) {
       this.selectedFlip.InvoiceAttachmentName = this.selectedFlipHeaderView.InvoiceAttachmentName = this.fileToUpload.name;
       this.fileToUploadList.push(this.fileToUpload);
@@ -688,6 +733,19 @@ export class PoFlipComponent implements OnInit {
   }
 
   numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode === 8 || charCode === 9 || charCode === 13 || charCode === 46
+      || charCode === 37 || charCode === 39 || charCode === 123 || charCode === 190) {
+      return true;
+    }
+    else if (charCode < 48 || charCode > 57) {
+      return false;
+    }
+    return true;
+  }
+
+  decimalOnly(event): boolean {
+    // this.AmountSelected();
     const charCode = (event.which) ? event.which : event.keyCode;
     if (charCode === 8 || charCode === 9 || charCode === 13 || charCode === 46
       || charCode === 37 || charCode === 39 || charCode === 123 || charCode === 190) {

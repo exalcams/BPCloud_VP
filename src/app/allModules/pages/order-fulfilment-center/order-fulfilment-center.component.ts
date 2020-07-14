@@ -555,8 +555,9 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     goToPOFlipClicked(po: string): void {
         this._router.navigate(['/pages/poflip'], { queryParams: { id: po } });
     }
+
     goToSupportDeskClicked(po: string): void {
-        this._router.navigate(['/pages/supportdesk'], { queryParams: { id: po } });
+        this._router.navigate(['/pages/supportticket'], { queryParams: { id: po } });
     }
 
     goToASNClicked(po: string): void {
@@ -690,6 +691,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         const dialogRef = this.dialog.open(AttachmentViewDialogComponent, dialogConfig);
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+                this.GetOfDetails();
             }
         });
     }
