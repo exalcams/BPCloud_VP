@@ -173,7 +173,7 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy {
     toggleSidebarOpened(): void {
         // console.log('Called')
         this.isShowIcon = true;
-        this._fuseSidebarService.getSidebar('navbar').toggleFold();
+        this._fuseSidebarService.getSidebar('navbar').unfold();
     }
 
     /**
@@ -181,7 +181,7 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy {
      */
     toggleSidebarFolded(): void {
         this.isShowIcon = !this.isShowIcon;
-        this._fuseSidebarService.getSidebar('navbar').toggleFold();
+        this._fuseSidebarService.getSidebar('navbar').fold();
         // this._fuseSidebarService.getSidebar('navbar').toggleFold();
         // console.log(test.folded());
         // }

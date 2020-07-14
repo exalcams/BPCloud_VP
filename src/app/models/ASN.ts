@@ -58,7 +58,24 @@ export class BPCASNItem extends CommonClass {
     ExpiryDate: Date | string | null;
     ManfCountry: string;
 }
-
+export class BPCASNPack extends CommonClass {
+    ID: number;
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
+    ASNNumber: string;
+    // Item: string;
+    PackageID: string;
+    ReferenceNumber: string;
+    Dimension: string;
+    GrossWeight: number | null;
+    GrossWeightUOM: string;
+    NetWeight: number | null;
+    NetWeightUOM: string;
+    VolumetricWeight: number | null;
+    VolumetricWeightUOM: string;
+}
 export class BPCFLIPHeader extends CommonClass {
     ID: number;
     Client: string;
@@ -137,10 +154,12 @@ export class BPCASNView extends CommonClass {
     ContactPerson: string;
     ContactPersonNo: string;
     ASNItems: BPCASNItem[];
+    ASNPacks: BPCASNPack[];
     DocumentCenters: DocumentCenter[];
     constructor() {
         super();
         this.ASNItems = [];
+        this.ASNPacks = [];
         this.DocumentCenters = [];
     }
 }

@@ -11,25 +11,28 @@ import {
 import { FuseSharedModule } from '@fuse/shared.module';
 import { FileUploadModule } from 'ng2-file-upload';
 import { DocTypeMasterComponent } from './doc-type-master/doc-type-master.component';
+import { SessionMasterComponent } from './session-master/session-master.component';
+import { SupportDeskMasterComponent } from './support-desk-master/support-desk-master.component';
 
 const menuRoutes: Routes = [
     {
         path: 'doctype',
         component: DocTypeMasterComponent,
     },
-    // {
-    //     path: 'role',
-    //     component: RoleComponent,
-    // },
-    // {
-    //     path: 'user',
-    //     component: UserComponent,
-    // },
-
+    {
+        path: 'session',
+        component: SessionMasterComponent,
+    },
+    {
+        path: 'supportmaster',
+        component: SupportDeskMasterComponent
+    }
 ];
 @NgModule({
     declarations: [
-        DocTypeMasterComponent
+        DocTypeMasterComponent,
+        SessionMasterComponent,
+        SupportDeskMasterComponent
     ],
     imports: [
         MatButtonModule,

@@ -670,6 +670,7 @@ export class FuseSidebarComponent implements OnInit, OnDestroy
         }
 
         // this.unfoldTemporarily();
+        this.unfold();
     }
 
     /**

@@ -10,7 +10,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Guid } from 'guid-typescript';
 import { ASNService } from 'app/services/asn.service';
 import { ShareParameterService } from 'app/services/share-parameters.service';
-import { BPCASNHeader, BPCASNItem, DocumentCenter, BPCASNView, BPCInvoiceAttachment, BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster } from 'app/models/ASN';
+import { BPCASNHeader, BPCASNItem, DocumentCenter, BPCASNView, BPCInvoiceAttachment, BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster, BPCASNPack } from 'app/models/ASN';
 import { BehaviorSubject } from 'rxjs';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { FuseConfigService } from '@fuse/services/config.service';
@@ -42,6 +42,7 @@ export class ASNComponent implements OnInit {
     AllASNHeaders: BPCASNHeader[] = [];
     ASNFormGroup: FormGroup;
     ASNItemFormGroup: FormGroup;
+    ASNPackFormGroup: FormGroup;
     InvoiceDetailsFormGroup: FormGroup;
     DocumentCenterFormGroup: FormGroup;
     AllUserWithRoles: UserWithRole[] = [];
@@ -70,6 +71,26 @@ export class ASNComponent implements OnInit {
     ASNItemDataSource = new BehaviorSubject<AbstractControl[]>([]);
     @ViewChild(MatPaginator) asnItemPaginator: MatPaginator;
     @ViewChild(MatSort) asnItemSort: MatSort;
+
+
+    ASNPacks: BPCASNItem[] = [];
+    ASNPackDisplayedColumns: string[] = [
+        'PackageID',
+        'ReferenceNumber',
+        'Dimension',
+        'GrossWeight',
+        'GrossWeightUOM',
+        'NetWeight',
+        'NetWeightUOM',
+        'VolumetricWeight',
+        'VolumetricWeightUOM'
+    ];
+    ASNPackFormArray: FormArray = this._formBuilder.array([]);
+    ASNPackDataSource = new BehaviorSubject<AbstractControl[]>([]);
+    @ViewChild(MatPaginator) asnPackPaginator: MatPaginator;
+    @ViewChild(MatSort) asnPackSort: MatSort;
+
+
     invoiceAttachment: File;
     invAttach: BPCInvoiceAttachment;
     fileToUpload: File;
@@ -153,6 +174,7 @@ export class ASNComponent implements OnInit {
         });
         this.InitializeASNFormGroup();
         this.InitializeASNItemFormGroup();
+        this.InitializeASNPackFormGroup();
         this.InitializeInvoiceDetailsFormGroup();
         this.InitializeDocumentCenterFormGroup();
         this.GetAllBPCCountryMasters();
@@ -198,6 +220,11 @@ export class ASNComponent implements OnInit {
     InitializeASNItemFormGroup(): void {
         this.ASNItemFormGroup = this._formBuilder.group({
             ASNItems: this.ASNItemFormArray
+        });
+    }
+    InitializeASNPackFormGroup(): void {
+        this.ASNPackFormGroup = this._formBuilder.group({
+            ASNPacks: this.ASNPackFormArray
         });
     }
     InitializeInvoiceDetailsFormGroup(): void {
@@ -262,6 +289,25 @@ export class ASNComponent implements OnInit {
         this.fileToUpload = null;
         this.fileToUploadList = [];
         this.invoiceAttachment = null;
+    }
+
+    RefreshPackages(): void {
+        const NoOfPacks = +this.ASNFormGroup.get('NumberOfPacks').value;
+        const Remaing = NoOfPacks - this.SelectedASNView.ASNPacks.length;
+        if (Remaing > 0) {
+            for (let i = 0; i < Remaing; i++) {
+                const pack: BPCASNPack = new BPCASNPack();
+                this.SelectedASNView.ASNPacks.push(pack);
+                this.InsertASNPacksFormGroup(pack);
+            }
+        }
+        if (Remaing < 0) {
+            const Remaining = this.math.abs(Remaing);
+            for (let i = 0; i < Remaining; i++) {
+                this.SelectedASNView.ASNPacks.pop();
+                this.RemoveASNPacksFormGroup();
+            }
+        }
     }
 
     GetASNBasedOnCondition(): void {
@@ -594,6 +640,7 @@ export class ASNComponent implements OnInit {
         this.SelectedASNNumber = this.SelectedASNHeader.ASNNumber;
         this.GetPOByDocAndPartnerID(this.SelectedASNHeader.DocNumber);
         this.GetASNItemsByASN();
+        this.GetASNPacksByASN();
         this.GetDocumentCentersByASN();
         this.GetInvoiceAttachmentByASN();
         this.SetASNHeaderValues();
@@ -608,6 +655,23 @@ export class ASNComponent implements OnInit {
                 if (this.SelectedASNView.ASNItems && this.SelectedASNView.ASNItems.length) {
                     this.SelectedASNView.ASNItems.forEach(x => {
                         this.InsertASNItemsFormGroup(x);
+                    });
+                }
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
+
+    GetASNPacksByASN(): void {
+        this._ASNService.GetASNPacksByASN(this.SelectedASNHeader.ASNNumber).subscribe(
+            (data) => {
+                this.SelectedASNView.ASNPacks = data as BPCASNPack[];
+                this.ClearFormArray(this.ASNPackFormArray);
+                if (this.SelectedASNView.ASNPacks && this.SelectedASNView.ASNPacks.length) {
+                    this.SelectedASNView.ASNPacks.forEach(x => {
+                        this.InsertASNPacksFormGroup(x);
                     });
                 }
             },
@@ -738,6 +802,28 @@ export class ASNComponent implements OnInit {
         // return row;
     }
 
+    InsertASNPacksFormGroup(pack: BPCASNPack): void {
+        const row = this._formBuilder.group({
+            PackageID: [pack.PackageID, Validators.required],
+            ReferenceNumber: [pack.ReferenceNumber, Validators.required],
+            Dimension: [pack.Dimension, Validators.required],
+            GrossWeight: [pack.GrossWeight, [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
+            GrossWeightUOM: [pack.GrossWeightUOM, Validators.required],
+            NetWeight: [pack.NetWeight, [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
+            NetWeightUOM: [pack.NetWeightUOM, Validators.required],
+            VolumetricWeight: [pack.VolumetricWeight, [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
+            VolumetricWeightUOM: [pack.VolumetricWeightUOM, Validators.required],
+        });
+        this.ASNPackFormArray.push(row);
+        this.ASNPackDataSource.next(this.ASNPackFormArray.controls);
+        // return row;
+    }
+
+    RemoveASNPacksFormGroup(): void {
+        this.ASNPackFormArray.removeAt(this.ASNPackFormArray.controls.length - 1);
+        this.ASNPackDataSource.next(this.ASNPackFormArray.controls);
+    }
+
     SetInvoiceDetailValues(): void {
         this.InvoiceDetailsFormGroup.get('InvoiceNumber').patchValue(this.SelectedASNHeader.InvoiceNumber);
         this.InvoiceDetailsFormGroup.get('InvoiceDate').patchValue(this.SelectedASNHeader.InvoiceDate);
@@ -844,6 +930,35 @@ export class ASNComponent implements OnInit {
         });
     }
 
+    GetASNPacksValues(): void {
+        this.SelectedASNView.ASNPacks = [];
+        // const aSNPackFormArray = this.ASNItemFormGroup.get('ASNPacks') as FormArray;
+        this.ASNPackFormArray.controls.forEach((x, i) => {
+            const pack: BPCASNPack = new BPCASNPack();
+            pack.PackageID = x.get('PackageID').value;
+            pack.ReferenceNumber = x.get('ReferenceNumber').value;
+            pack.Dimension = x.get('Dimension').value;
+            pack.GrossWeight = x.get('GrossWeight').value;
+            pack.GrossWeightUOM = x.get('GrossWeightUOM').value;
+            pack.NetWeight = x.get('NetWeight').value;
+            pack.NetWeightUOM = x.get('NetWeightUOM').value;
+            pack.VolumetricWeight = x.get('VolumetricWeight').value;
+            pack.VolumetricWeightUOM = x.get('VolumetricWeightUOM').value;
+            if (this.SelectedDocNumber && this.PO) {
+                pack.Client = this.PO.Client;
+                pack.Company = this.PO.Company;
+                pack.Type = this.PO.Type;
+                pack.PatnerID = this.PO.PatnerID;
+            } else {
+                pack.Client = this.SelectedASNHeader.Client;
+                pack.Company = this.SelectedASNHeader.Company;
+                pack.Type = this.SelectedASNHeader.Type;
+                pack.PatnerID = this.SelectedASNHeader.PatnerID;
+            }
+            this.SelectedASNView.ASNPacks.push(pack);
+        });
+    }
+
     CheckForNonZeroOpenQty(): boolean {
         let NonZero = false;
         this.SelectedASNView.ASNItems.forEach(x => {
@@ -881,6 +996,7 @@ export class ASNComponent implements OnInit {
                     if (this.InvoiceDetailsFormGroup.valid) {
                         this.GetASNValues();
                         this.GetASNItemValues();
+                        this.GetASNPacksValues();
                         if (this.CheckForNonZeroOpenQty()) {
                             this.GetInvoiceDetailValues();
                             this.GetDocumentCenterValues();
@@ -910,6 +1026,7 @@ export class ASNComponent implements OnInit {
                     if (this.InvoiceDetailsFormGroup.valid) {
                         this.GetASNValues();
                         this.GetASNItemValues();
+                        this.GetASNPacksValues();
                         if (this.CheckForNonZeroOpenQty()) {
                             this.GetInvoiceDetailValues();
                             this.GetDocumentCenterValues();

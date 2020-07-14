@@ -5,7 +5,7 @@ import {
     // tslint:disable-next-line:max-line-length
     MatButtonModule, MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule,
     MatStepperModule, MatListModule, MatMenuModule, MatRadioModule, MatSidenavModule, MatToolbarModule,
-    MatProgressSpinnerModule, MatTooltipModule
+    MatProgressSpinnerModule, MatTooltipModule, MatDatepickerModule, MatTableModule, MatPaginatorModule
 } from '@angular/material';
 
 import { FuseSharedModule } from '@fuse/shared.module';
@@ -14,7 +14,7 @@ import { MenuAppComponent } from './menu-app/menu-app.component';
 import { RoleComponent } from './role/role.component';
 import { UserComponent } from './user/user.component';
 import { ReasonComponent } from './reason/reason.component';
-import { SupportDeskMasterComponent } from './support-desk-master/support-desk-master.component';
+import { LoginHistoryComponent } from './login-history/login-history.component';
 
 const menuRoutes: Routes = [
     {
@@ -34,9 +34,9 @@ const menuRoutes: Routes = [
         component: ReasonComponent,
     },
     {
-        path: 'supportmaster',
-        component: SupportDeskMasterComponent
-    }
+        path: 'loginHistory',
+        component: LoginHistoryComponent,
+    },
 ];
 @NgModule({
     declarations: [
@@ -44,7 +44,7 @@ const menuRoutes: Routes = [
         RoleComponent,
         MenuAppComponent,
         ReasonComponent,
-        SupportDeskMasterComponent
+        LoginHistoryComponent,
     ],
     imports: [
         MatButtonModule,
@@ -53,6 +53,9 @@ const menuRoutes: Routes = [
         MatIconModule,
         MatInputModule,
         MatSelectModule,
+        MatDatepickerModule,
+        MatTableModule,
+        MatPaginatorModule,
         MatStepperModule,
         MatProgressSpinnerModule,
         MatListModule,

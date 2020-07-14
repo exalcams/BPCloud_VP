@@ -4,8 +4,9 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { MenuApp, RoleWithApp, UserWithRole, UserNotification, Reason, UserView, VendorUser } from 'app/models/master';
+import { MenuApp, RoleWithApp, UserWithRole, UserNotification, Reason, UserView, VendorUser, SessionMaster, UserLoginHistory, LoginHistoryFilter } from 'app/models/master';
 import { BPCDocumentCenterMaster } from 'app/models/ASN';
+import { Guid } from 'guid-typescript';
 
 @Injectable({
   providedIn: 'root'
@@ -285,6 +286,77 @@ export class MasterService {
           'Content-Type': 'application/json'
         })
       })
+      .pipe(catchError(this.errorHandler));
+  }
+  // SessionMaster
+
+  GetSessionMasterByProject(ProjectName: string): Observable<SessionMaster | string> {
+    return this._httpClient.get<SessionMaster>(`${this.baseAddress}authenticationapi/Master/GetSessionMasterByProject?ProjectName=${ProjectName}`,
+    ).pipe(catchError(this.errorHandler));
+  }
+
+  GetAllSessionMasters(): Observable<SessionMaster[] | string> {
+    return this._httpClient.get<SessionMaster[]>(`${this.baseAddress}authenticationapi/Master/GetAllSessionMasters`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAllSessionMastersByProject(ProjectName: string): Observable<SessionMaster[] | string> {
+    return this._httpClient.get<SessionMaster[]>(`${this.baseAddress}authenticationapi/Master/GetAllSessionMastersByProject?ProjectName=${ProjectName}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  CreateSessionMaster(sessionMaster: SessionMaster): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}authenticationapi/Master/CreateSessionMaster`,
+      sessionMaster,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  UpdateSessionMaster(sessionMaster: SessionMaster): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}authenticationapi/Master/UpdateSessionMaster`,
+      sessionMaster,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  DeleteSessionMaster(sessionMaster: SessionMaster): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}authenticationapi/Master/DeleteSessionMaster`,
+      sessionMaster,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAllUsersLoginHistory(): Observable<UserLoginHistory[] | string> {
+    return this._httpClient.get<UserLoginHistory[]>(`${this.baseAddress}authenticationapi/Master/GetAllUsersLoginHistory`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  FilterLoginHistory(UserName: string, FromDate: string, ToDate: string): Observable<UserLoginHistory[] | string> {
+    return this._httpClient.get<UserLoginHistory[]>
+      (`${this.baseAddress}authenticationapi/Master/FilterLoginHistory?UserName=${UserName}&FromDate=${FromDate}&ToDate=${ToDate}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetCurrentUserLoginHistory(UserID: Guid): Observable<UserLoginHistory[] | string> {
+    return this._httpClient.get<UserLoginHistory[]>(`${this.baseAddress}authenticationapi/Master/GetCurrentUserLoginHistory?UserID=${UserID}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  FilterLoginHistoryByUser(UserName: string, FromDate: string, ToDate: string): Observable<UserLoginHistory[] | string> {
+    return this._httpClient.get<UserLoginHistory[]>
+      (`${this.baseAddress}authenticationapi/Master/FilterLoginHistory?UserName=${UserName}&FromDate=${FromDate}&ToDate=${ToDate}`)
       .pipe(catchError(this.errorHandler));
   }
 }

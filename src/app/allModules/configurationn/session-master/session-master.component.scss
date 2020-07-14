@@ -1,16 +1,6 @@
 @import "src/@fuse/scss/fuse";
-#asn {
+#session-master {
   background-color: white;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    padding: 0px;
-    margin: 0px;
-  }
   .outer {
     border-bottom: 1px solid rgba(255, 85, 0, 0.1);
     position: relative;
@@ -32,7 +22,6 @@
     display: inline-block;
     vertical-align: middle;
   }
-
   .topbarClass {
     background: url("/assets/images/backgrounds/header 2.png") no-repeat;
     background-repeat: no-repeat;
@@ -151,16 +140,6 @@
     border-radius: 0 25px 25px 0;
     margin-right: 7px;
   }
-  .Advanced-Shipment-Notification {
-    font-size: 20px;
-    font-weight: bold;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 0.6;
-    letter-spacing: 0.64px;
-    text-align: left;
-    color: #3e3e3e;
-  }
   .SaveBtn {
     background-color: #efb577;
     color: white;
@@ -170,121 +149,9 @@
     background-color: white;
     color: #efb577;
   }
-  .Rectangle-721 {
-    // height: 115px;
-    // border-radius: 7px;
-    border: solid 2px #e0e0e0;
-    background-color: #ffffff;
-    border-left: solid 8px #3380d7;
-  }
-  .PO-No {
-    // width: 90px;
-    // height: 33px;
-    // font-family: SegoeUI;
-    font-size: 16px;
-    // font-weight: 600;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 0.77;
-    letter-spacing: 0.5px;
-    text-align: left;
-    color: #3e3e3e;
-    // padding: 20px;
-  }
-  .Date {
-    // width: 59px;
-    // height: 33px;
-    //font-family: SegoeUI;
-    font-size: 16px;
-    font-weight: normal;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 0.77;
-    letter-spacing: 0.5px;
-    text-align: left;
-    color: #3e3e3e;
-    // padding: 20px;
-  }
   .calendarImg {
     height: 20px;
     margin-bottom: 12px;
-  }
-  .alert {
-    width: 31.5px;
-    height: 27.4px;
-    object-fit: contain;
-  }
-  .No-Invoice-Created-for-this-PO {
-    // width: 349px;
-    // height: 33px;
-    //font-family: SegoeUI;
-    font-size: 16px;
-    font-weight: normal;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 0.77;
-    letter-spacing: 0.5px;
-    text-align: left;
-    color: #3e3e3e;
-  }
-  .Shipment-Proposal {
-    font-size: 20px;
-    font-weight: bold;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 0.6;
-    letter-spacing: 0.64px;
-    text-align: left;
-    color: #3e3e3e;
-    margin-bottom: 10px;
-    // text-decoration-color: #efb577;
-    // text-decoration-line: underline;
-    // text-decoration-style: solid;
-    border-bottom: 2px solid #efb577;
-  }
-  .Rectangle-708 {
-    padding-top: 12px;
-    width: 105px;
-    height: 42px;
-    border-radius: 5px;
-    background-color: #d8f0ff;
-  }
-  .Batch-2 {
-    width: 65px;
-    height: 26px;
-    // font-size: 19px;
-    font-weight: 600;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 0.84;
-    letter-spacing: 0.19px;
-    text-align: left;
-    color: #3e3e3e;
-  }
-  .Rectangle {
-    width: 300px;
-    min-height: 50px;
-    border-radius: 9px;
-    border: solid 1px #cccccc;
-    border-left: solid 8px #abf7b9 !important;
-    background-color: #ffffff;
-    cursor: pointer !important;
-  }
-  .Rectangle-106 {
-    width: 36px;
-    height: 33px;
-    opacity: 0.2;
-    border-radius: 2px;
-    background-color: #f9d2a8;
-  }
-  .Rectangle-199 {
-    //width: 230px;
-    font-weight: 600;
-    height: 50px;
-    border-radius: 5px;
-    border: solid 3px #f4cda4;
-    background-color: #ffffff;
-    cursor: pointer !important;
   }
   .addAttachmentClass {
     padding-left: 70px;
@@ -349,13 +216,6 @@
   .removeIcon {
     height: 20px;
     padding-right: 16px;
-    cursor: pointer !important;
-  }
-  .refreshIcon {
-    height: 20px;
-    padding-left: 16px;
-    margin-bottom: 5px;
-    padding-bottom: 2px;
     cursor: pointer !important;
   }
   .mat-input-element:disabled {
@@ -467,27 +327,18 @@
   }
   .abnormal {
     .mat-form-field-flex > .mat-form-field-infix {
-      padding: 0em 0px 0.6em !important;
-    }
-    .mat-form-field-appearance-outline {
-      .mat-form-field-suffix,
-      .mat-form-field-prefix {
-        top: 0.5em;
-        .mat-icon-button {
-          width: 1.5em;
-          height: 1.5em;
-        }
-      }
-    }
-    .mat-form-field-infix {
-      width: auto;
+      padding: 0.3em 0px !important;
     }
     .mat-form-field-label-wrapper {
       top: -1.5em;
     }
     .mat-form-field-wrapper {
-      margin: 0 0 0 0;
-      padding-bottom: 0em;
+      margin: 0 !important;
+      padding-bottom: 4px !important;
+      padding-top: 4px !important;
+    }
+    .mat-form-field-appearance-outline .mat-form-field-flex {
+      padding: 0 0.4em 0 0.4em;
     }
     .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
       transform: translateY(-1.1em) scale(0.75);
@@ -836,9 +687,8 @@
     color: #f44336;
     font-size: 12px;
   }
-  .mat-input-element:disabled {
-    color: gray !important;
-    background: whitesmoke !important;
-    cursor: not-allowed !important;
+  .floatBtn {
+    position: fixed;
+    bottom: 80px !important;
   }
 }

@@ -5,7 +5,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { BPCASNHeader, BPCASNView, BPCASNItem, DocumentCenter, BPCInvoiceAttachment, BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster } from 'app/models/ASN';
+import { BPCASNHeader, BPCASNView, BPCASNItem, DocumentCenter, BPCInvoiceAttachment, BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster, BPCASNPack } from 'app/models/ASN';
 
 @Injectable({
     providedIn: 'root'
@@ -107,6 +107,10 @@ export class ASNService {
     }
     GetASNItemsByASN(ASNNumber: string): Observable<BPCASNItem[] | string> {
         return this._httpClient.get<BPCASNItem[]>(`${this.baseAddress}poapi/ASN/GetASNItemsByASN?ASNNumber=${ASNNumber}`)
+            .pipe(catchError(this.errorHandler));
+    }
+    GetASNPacksByASN(ASNNumber: string): Observable<BPCASNPack[] | string> {
+        return this._httpClient.get<BPCASNPack[]>(`${this.baseAddress}poapi/ASN/GetASNPacksByASN?ASNNumber=${ASNNumber}`)
             .pipe(catchError(this.errorHandler));
     }
     GetDocumentCentersByASN(ASNNumber: string): Observable<DocumentCenter[] | string> {
