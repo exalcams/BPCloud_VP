@@ -23,7 +23,6 @@ export class BPCOFHeader extends CommonClass {
     PlantName: string;
     DocCount: number;
 }
-
 export class BPCOFItem extends CommonClass {
     ID: number;
     Client: string;
@@ -50,7 +49,6 @@ export class BPCOFItem extends CommonClass {
     Amount: number;
     MaxAllowedQty: number;
 }
-
 export class BPCOFScheduleLine extends CommonClass {
     ID: number;
     Client: string;
@@ -65,7 +63,6 @@ export class BPCOFScheduleLine extends CommonClass {
     AckStatus: string;
     AckDelDate?: Date;
 }
-
 export class BPCOFGRGI extends CommonClass {
     ID: number;
     Client: string;
@@ -97,7 +94,20 @@ export class BPCOFQM extends CommonClass {
     RejQty: number;
     RejReason: string;
 }
-
+export class BPCOFAIACT extends CommonClass {
+    ID: number;
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
+    SeqNo: string;
+    AppID: string;
+    DocNumber: string;
+    ActionText: string;
+    Status: string;
+    Date: Date | string | null;
+    Time: string;
+}
 export class PODetails {
     PO: string;
     Version: string;

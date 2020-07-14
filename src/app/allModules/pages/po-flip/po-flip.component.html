@@ -95,16 +95,29 @@
                 <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="50px">
                   <div fxFlex="33.33">
                     <mat-form-field style="width: 100%;">
-                      <input matInput placeholder="Invoice No" formControlName="InvoiceNumber">
+                      <input matInput placeholder="Invoice No (16 Char)" formControlName="InvoiceNumber">
                       <mat-error
                         *ngIf="flipFormGroup.get('InvoiceNumber').touched && flipFormGroup.get('InvoiceNumber').hasError('required')">
                         Invoice Number is required
+                      </mat-error>
+                      <mat-error *ngIf="flipFormGroup.get('InvoiceNumber').touched && !flipFormGroup.get('InvoiceNumber').hasError('required')
+                      &&flipFormGroup.get('InvoiceNumber').hasError('pattern')">
+                        Please enter valid Invoice Number
+                      </mat-error>
+                      <mat-error *ngIf="flipFormGroup.get('InvoiceNumber').touched && !flipFormGroup.get('InvoiceNumber').hasError('required')
+                    &&(flipFormGroup.get('InvoiceNumber').hasError('minlength'))">
+                        Minimum allowed character is 10
+                      </mat-error>
+                      <mat-error *ngIf="flipFormGroup.get('InvoiceNumber').touched && !flipFormGroup.get('InvoiceNumber').hasError('required')
+                      &&(flipFormGroup.get('InvoiceNumber').hasError('maxlength'))">
+                        Maximum allowed character is 16
                       </mat-error>
                     </mat-form-field>
                   </div>
                   <div fxFlex="33.33">
                     <mat-form-field style="width: 100%;">
-                      <input matInput placeholder="Date" [matDatepicker]="picker1" formControlName="InvoiceDate">
+                      <input matInput placeholder="Date" [matDatepicker]="picker1" formControlName="InvoiceDate"
+                        [max]="maxDate">
                       <mat-datepicker-toggle matSuffix [for]="picker1">
                         <img matDatepickerToggleIcon class="calendarImg" src="assets/images/calendar.png">
                       </mat-datepicker-toggle>
@@ -119,14 +132,14 @@
                     <div fxFlex="65">
                       <mat-form-field style="width: 100%;">
                         <input matInput placeholder="Invoice Amount" formControlName="InvoiceAmount"
-                          (keydown)="numberOnly($event)">
+                          (keydown)="decimalOnly($event)">
                         <mat-error
                           *ngIf="flipFormGroup.get('InvoiceAmount').touched && flipFormGroup.get('InvoiceAmount').hasError('required')">
                           Invoice Amount is required
                         </mat-error>
                         <mat-error *ngIf="flipFormGroup.get('InvoiceAmount').touched && !flipFormGroup.get('InvoiceAmount').hasError('required')
-                  &&flipFormGroup.get('InvoiceAmount').hasError('pattern')">
-                          Enter a valid number
+                        &&flipFormGroup.get('InvoiceAmount').hasError('pattern')">
+                          Enter a valid amount
                         </mat-error>
                       </mat-form-field>
                     </div>
@@ -134,8 +147,8 @@
                       <mat-form-field style="width: 100%;">
                         <mat-select (selectionChange)="invoiceCurrencySelected($event)" placeholder="Cur"
                           formControlName="InvoiceCurrency">
-                          <mat-option *ngFor="let currency of currencies" [value]="currency">
-                            {{currency}}
+                          <mat-option *ngFor="let currency of currencies" [value]="currency.CurrencyCode">
+                            {{currency.CurrencyCode}}
                           </mat-option>
                         </mat-select>
                         <mat-error
@@ -213,10 +226,14 @@
                   </div>
                   <div fxFlex="32">
                     <mat-form-field style="width: 100%;">
-                      <input matInput placeholder="Amount" formControlName="Amount">
+                      <input matInput placeholder="Amount" formControlName="Amount" (keydown)="decimalOnly($event)">
                       <mat-error
                         *ngIf="flipCostFormGroup.get('Amount').touched && flipCostFormGroup.get('Amount').hasError('required')">
                         Amount is required
+                      </mat-error>
+                      <mat-error *ngIf="flipCostFormGroup.get('Amount').touched && !flipCostFormGroup.get('Amount').hasError('required')
+                      &&flipCostFormGroup.get('Amount').hasError('pattern')">
+                        Enter a valid amount
                       </mat-error>
                     </mat-form-field>
                   </div>
@@ -365,8 +382,7 @@
                   name="form" novalidate [formGroup]="flipItemFormGroup">
                   <div style="overflow-x:auto;">
                     <!-- *ngIf="(poItems && poItems.length)|| (selectedFlipHeaderView?.FlipItems && selectedFlipHeaderView?.FlipItems?.length)" -->
-                    <table                    
-                      class="table" mat-table [dataSource]="flipItemDataSource" formArrayName="flipItems">
+                    <table class="table" mat-table [dataSource]="flipItemDataSource" formArrayName="flipItems">
                       <ng-container matColumnDef="Item">
                         <th mat-header-cell *matHeaderCellDef> Item </th>
                         <td mat-cell *matCellDef="let element;let odd=odd;let index=index" [formGroupName]="index"
@@ -556,8 +572,9 @@
           <div fxLayout fxFlex fxLayoutAlign="end">
             <button (click)="saveClicked()" *ngIf="!selectedFlip?.FLIPID" class="SaveBtn" mat-stroked-button>
               Save</button>
-              <button (click)="deleteClicked()" *ngIf="selectedFlip?.FLIPID" mat-stroked-button class="DeleteBtn mr-4 mb-8" mat-raised-button>
-                Delete</button>
+            <button (click)="deleteClicked()" *ngIf="selectedFlip?.FLIPID" mat-stroked-button
+              class="DeleteBtn mr-4 mb-8" mat-raised-button>
+              Delete</button>
             <button (click)="saveClicked()" *ngIf="selectedFlip?.FLIPID" class="SaveBtn" mat-raised-button>
               Update</button>
           </div>

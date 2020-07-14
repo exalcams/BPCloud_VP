@@ -32,10 +32,12 @@ export class FactService {
     return this._httpClient.get<any>(`${this.baseAddress}factapi/Fact/GetFactByPartnerID?PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));
   }
+
   GetFactByPartnerIDAndType(PartnerID: string, Type: string): Observable<any | string> {
     return this._httpClient.get<any>(`${this.baseAddress}factapi/Fact/GetFactByPartnerIDAndType?PartnerID=${PartnerID}&Type=${Type}`)
       .pipe(catchError(this.errorHandler));
   }
+
   GetFactByEmailID(EmailID: string): Observable<BPCFact | string> {
     return this._httpClient.get<BPCFact>(`${this.baseAddress}factapi/Fact/GetFactByEmailID?EmailID=${EmailID}`)
       .pipe(catchError(this.errorHandler));
@@ -78,6 +80,7 @@ export class FactService {
     return this._httpClient.get<BPCFactContactPerson[]>(`${this.baseAddress}factapi/Fact/GetContactPersonsByPartnerID?PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));
   }
+
   GetBanksByPartnerID(PartnerID: string): Observable<BPCFactBank[] | string> {
     return this._httpClient.get<BPCFactBank[]>(`${this.baseAddress}factapi/Fact/GetBanksByPartnerID?PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));
@@ -92,10 +95,12 @@ export class FactService {
     return this._httpClient.get<BPCAIACT[]>(`${this.baseAddress}factapi/Fact/GetAIACTsByPartnerID?PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));
   }
+
   GetCertificatesByPartnerID(PartnerID: string): Observable<BPCCertificate[] | string> {
     return this._httpClient.get<BPCCertificate[]>(`${this.baseAddress}factapi/Fact/GetCertificatesByPartnerID?PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));
   }
+
   AcceptAIACT(AIACT: BPCAIACT): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/AcceptAIACT`,
       AIACT,
@@ -117,7 +122,6 @@ export class FactService {
       })
       .pipe(catchError(this.errorHandler));
   }
-  
 
   RejectAIACT(AIACT: BPCAIACT): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/RejectAIACT`,
@@ -129,7 +133,7 @@ export class FactService {
       })
       .pipe(catchError(this.errorHandler));
   }
-  
+
   CreateFacts(Facts: BPCFactXLSX[]): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/CreateFacts`,
       Facts,

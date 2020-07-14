@@ -13,14 +13,14 @@
       <div fxFlex="50" class="p-8">
         <div fxFlex="45" class="mx-8 mb-8 mt-0">
           <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="5px">
-            <div fxFlex style="text-align: right;">PO No:</div>
+            <div fxFlex style="text-align: right;">PO No : </div>
             <div fxFlex style="text-align: left;"> <strong
-                style="font-size: 18px; line-height: 20px;">{{orderFulfilmentDetails.PONumber}}</strong></div>
+                style=" line-height: 20px;">{{orderFulfilmentDetails.PONumber}}</strong></div>
           </div>
           <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="5px" style="margin-top: 20px;color: #2e2e2e">
-            <div fxFlex style="text-align: right;">PO Date:</div>
+            <div fxFlex style="text-align: right;">PO Date : </div>
             <div fxFlex style="text-align: left;"> <strong
-                style="font-size: 18px; line-height: 20px;">{{orderFulfilmentDetails.PODate  | date :'dd/MM/yyyy'}}</strong>
+                style=" line-height: 20px;">{{orderFulfilmentDetails.PODate  | date :'dd/MM/yyyy'}}</strong>
             </div>
           </div>
         </div>
@@ -29,14 +29,14 @@
         </div>
         <div fxFlex="45" class="mx-8 mb-8 mt-0">
           <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="5px">
-            <div fxFlex style="text-align: right;">Version:</div>
+            <div fxFlex style="text-align: right;">Version : </div>
             <div fxFlex style="text-align: left;"> <strong
-                style="font-size: 18px; line-height: 20px;">{{orderFulfilmentDetails.Version}}</strong></div>
+                style=" line-height: 20px;">{{orderFulfilmentDetails.Version}}</strong></div>
           </div>
           <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="5px" style="margin-top: 20px;color: #2e2e2e">
-            <div fxFlex style="text-align: right;">Currency:</div>
+            <div fxFlex style="text-align: right;">Currency : </div>
             <div fxFlex style="text-align: left;"> <strong
-                style="font-size: 18px; line-height: 20px;">{{orderFulfilmentDetails.Currency}}</strong>
+                style=" line-height: 20px;">{{orderFulfilmentDetails.Currency}}</strong>
             </div>
           </div>
         </div>
@@ -86,7 +86,6 @@
     <div fxFlex class="mt-24" style="background-color: #fef8f1;">
       <div class="m-12" fxLayout fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px"
         fxLayoutGap.xs="10">
-
         <div fxFlex="7" (click)="tabOneClicked()">
           <div class="container" fxLayout fxLayoutAlign="center" fxLayoutGap="10px">
             <div class="item-round1">
@@ -96,8 +95,7 @@
                 </span>
               </div>
               <div class="item-round2">
-                <img style="margin-top: 10px !important;margin-left: 10px !important;width: 20px;"
-                  src="assets/images/shopping-cart.png">
+                <img class="item-image" src="assets/images/shopping-cart.png">
                 <div style="margin-top: 28px;margin-left: 5px;">Item</div>
                 <div *ngIf="tabCount === 1" class="tab-highlight"></div>
               </div>
@@ -112,7 +110,7 @@
                 <span [matBadge]="asnCount" id="mat-badge-content-1" matBadgeOverlap="false"></span>
               </div>
               <div class="asn-round2">
-                <img style="margin-top: 9px !important;margin-left: 8px;width: 22px;" src="assets/images/phone.png">
+                <img class="asn-image" src="assets/images/phone.png">
                 <div style="margin-top: 28px;margin-left: 5px;">ASN</div>
                 <div *ngIf="tabCount === 2" class="tab-highlight"></div>
               </div>
@@ -127,8 +125,7 @@
                 <span [matBadge]="grnCount" matBadgeColor="primary" matBadgeOverlap="false"></span>
               </div>
               <div class="grn-round2">
-                <img class="tab-image" style="margin-top: 8px !important;margin-left: 13px;width: 20px;"
-                  src="assets/images/notes.png">
+                <img class="grn-image" src="assets/images/notes.png">
                 <div style="margin-top: 28px;margin-left: 5px;">GRN</div>
                 <div *ngIf="tabCount === 3" class="tab-highlight"></div>
               </div>
@@ -143,8 +140,7 @@
                 <span [matBadge]="qaCount" matBadgeColor="#8ba0f9" matBadgeOverlap="false"></span>
               </div>
               <div class="qa-round2">
-                <img style="margin-top: 8px !important; margin-left: 11px;width: 20px;"
-                  src="assets/images/surface1.png">
+                <img class="qa-image" src="assets/images/surface1.png">
                 <div style="margin-top: 24px;margin-left: 8px;">QA</div>
                 <div *ngIf="tabCount === 4" class="tab-highlight"></div>
               </div>
@@ -159,7 +155,7 @@
                 <span [matBadge]="slCount" matBadgeColor="#f98b8b" matBadgeOverlap="false"></span>
               </div>
               <div class="sl-round2">
-                <img style="margin-top: 9px !important;margin-left: 7px;width: 26px;" src="assets/images/sl.png">
+                <img class="sl-image" src="assets/images/sl.png">
                 <div style="margin-top: 26px; margin-left: 12px;">SL</div>
                 <div *ngIf="tabCount === 5" class="tab-highlight"></div>
               </div>
@@ -174,7 +170,7 @@
                 <span [matBadge]="documentCount" matBadgeColor="#8ba0f9" matBadgeOverlap="false"></span>
               </div>
               <div class="document-round2">
-                <img style="margin-top: 8px !important;margin-left: 11px;width: 17px;" src="assets/images/file.png">
+                <img class="document-image" src="assets/images/file.png">
                 <div style="margin-top: 24px; margin-left: -5px;">Document</div>
                 <div *ngIf="tabCount === 6" class="tab-highlight"></div>
               </div>
@@ -189,7 +185,7 @@
                 <span [matBadge]="flipCount" matBadgeColor="#8ba0f9" matBadgeOverlap="false"></span>
               </div>
               <div class="flip-round2">
-                <img style="margin-top: 5px !important;margin-left: 10px;width: 20px;" src="assets/images/reflect.png">
+                <img class="flip-image" src="assets/images/reflect.png">
                 <div style="margin-top: 24px;margin-left: 8px;">Flip</div>
                 <div *ngIf="tabCount === 7" class="tab-highlight"></div>
               </div>

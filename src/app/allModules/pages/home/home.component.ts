@@ -8,7 +8,9 @@ import { Router } from '@angular/router';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { Guid } from 'guid-typescript';
-import { BPCFact, BPCAIACT } from 'app/models/fact';
+import { BPCFact } from 'app/models/fact';
+import { DashboardService } from 'app/services/dashboard.service';
+import { BPCOFAIACT } from 'app/models/OrderFulFilment';
 
 @Component({
   selector: 'app-home',
@@ -29,20 +31,21 @@ export class HomeComponent implements OnInit {
   selection = new SelectionModel<any>(true, []);
   todayDate: any;
   selectedFact: BPCFact;
-  selectedAIACT: BPCAIACT;
-  AllFacts: BPCFact[] = [];
-  AllActions: BPCAIACT[] = [];
-  AllNotifications: BPCAIACT[] = [];
-  AIACTsByPartnerID: BPCAIACT[] = [];
-  AIACTsByPartnerIDView: BPCAIACT[] = [];
+  selectedAIACT: BPCOFAIACT;
+  facts: BPCFact[] = [];
+  actions: BPCOFAIACT[] = [];
+  notifications: BPCOFAIACT[] = [];
+  aIACTs: BPCOFAIACT[] = [];
+  aIACTsView: BPCOFAIACT[] = [];
   constructor(
-    private _FactService: FactService,
+    private _factService: FactService,
+    private _dashboardService: DashboardService,
     private _router: Router,
     public snackBar: MatSnackBar,
     private dialog: MatDialog
   ) {
     this.selectedFact = new BPCFact();
-    this.selectedAIACT = new BPCAIACT();
+    this.selectedAIACT = new BPCOFAIACT();
     this.authenticationDetails = new AuthenticationDetails();
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.isProgressBarVisibile = false;
@@ -65,21 +68,17 @@ export class HomeComponent implements OnInit {
         this._router.navigate(['/auth/login']);
       }
       this.GetFactByPartnerIDAndType();
+      this.GetAIACTsByPartnerID(this.authenticationDetails.UserName);
     } else {
       this._router.navigate(['/auth/login']);
     }
   }
 
   GetFactByPartnerIDAndType(): void {
-    // console.log(this.authenticationDetails.EmailAddress);
-    this._FactService.GetFactByPartnerIDAndType(this.currentUserName, 'Vendor').subscribe(
+    this._factService.GetFactByPartnerIDAndType(this.currentUserName, 'Vendor').subscribe(
       (data) => {
         const fact = data as BPCFact;
-        // console.log(fact);
-        if (fact) {
-          this.GetAIACTsByPartnerID(fact.PatnerID);
-          this.loadSelectedBPCFact(fact);
-        }
+        this.loadSelectedFact(fact);
       },
       (err) => {
         console.error(err);
@@ -89,16 +88,16 @@ export class HomeComponent implements OnInit {
 
   GetAIACTsByPartnerID(PartnerID: any): void {
     this.isProgressBarVisibile = true;
-    this._FactService.GetAIACTsByPartnerID(PartnerID).subscribe(
+    this._dashboardService.GetAIACTsByPartnerID(PartnerID).subscribe(
       (data) => {
         this.isProgressBarVisibile = false;
-        this.AIACTsByPartnerID = data as BPCAIACT[];
-        this.AIACTsByPartnerID.forEach(x => {
+        this.aIACTs = data as BPCOFAIACT[];
+        this.aIACTs.forEach(x => {
           if (x.Type === 'Action') {
-            this.AllActions.push(x);
+            this.actions.push(x);
           }
           else {
-            this.AllNotifications.push(x);
+            this.notifications.push(x);
           }
         });
       },
@@ -115,7 +114,7 @@ export class HomeComponent implements OnInit {
     this.selectedAIACT.Status = 'Accepted';
     this.selectedAIACT.ActionText = 'View';
     this.isProgressBarVisibile = true;
-    this._FactService.AcceptAIACT(this.selectedAIACT).subscribe(
+    this._dashboardService.AcceptAIACT(this.selectedAIACT).subscribe(
       (data) => {
         this.notificationSnackBarComponent.openSnackBar('PO Accepted successfully', SnackBarStatus.success);
         this.isProgressBarVisibile = false;
@@ -133,7 +132,7 @@ export class HomeComponent implements OnInit {
     this.selectedAIACT.Status = 'Rejected';
     this.selectedAIACT.ActionText = 'View';
     this.isProgressBarVisibile = true;
-    this._FactService.RejectAIACT(this.selectedAIACT).subscribe(
+    this._dashboardService.RejectAIACT(this.selectedAIACT).subscribe(
       (data) => {
         this.notificationSnackBarComponent.openSnackBar('PO Rejected successfully', SnackBarStatus.success);
         this.isProgressBarVisibile = false;
@@ -147,17 +146,17 @@ export class HomeComponent implements OnInit {
   }
 
   AcceptAIACTs(): void {
-    this.AIACTsByPartnerID.forEach(x => {
+    this.aIACTs.forEach(x => {
       if (x.Status === 'Open') {
         x.ModifiedBy = this.authenticationDetails.UserID.toString();
         x.Status = 'Accepted';
         x.ActionText = 'View';
-        this.AIACTsByPartnerIDView.push(x);
+        this.aIACTsView.push(x);
       }
     });
-    console.log(this.AIACTsByPartnerIDView);
+    console.log(this.aIACTsView);
     this.isProgressBarVisibile = true;
-    this._FactService.AcceptAIACTs(this.AIACTsByPartnerIDView).subscribe(
+    this._dashboardService.AcceptAIACTs(this.aIACTsView).subscribe(
       (data) => {
         this.notificationSnackBarComponent.openSnackBar('POs Accepted successfully', SnackBarStatus.success);
         this.isProgressBarVisibile = false;
@@ -170,7 +169,7 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  loadSelectedBPCFact(selectedBPCFact: BPCFact): void {
+  loadSelectedFact(selectedBPCFact: BPCFact): void {
     this.selectedFact = selectedBPCFact;
     this.selectID = selectedBPCFact.PatnerID;
   }
@@ -198,7 +197,7 @@ export class HomeComponent implements OnInit {
       });
   }
 
-  actionTextClicked(aIACTByPartnerID: BPCAIACT): void {
+  actionTextButtonClicked(aIACTByPartnerID: BPCOFAIACT): void {
     if (aIACTByPartnerID) {
       if (aIACTByPartnerID.ActionText.toLowerCase() === "accept") {
         this.selectedAIACT = aIACTByPartnerID;
@@ -211,7 +210,20 @@ export class HomeComponent implements OnInit {
         const Actiontype = 'Reject';
         const Catagory = 'PO';
         this.openConfirmationDialog(Actiontype, Catagory);
-      } else if (aIACTByPartnerID.ActionText.toLowerCase() === "view") {
+      }
+      else if (aIACTByPartnerID.ActionText.toLowerCase() === "view") {
+        this._router.navigate(['/pages/polookup'], { queryParams: { id: aIACTByPartnerID.DocNumber } });
+      }
+      else if (aIACTByPartnerID.ActionText.toLowerCase() === "ack") {
+        this._router.navigate(['/pages/polookup'], { queryParams: { id: aIACTByPartnerID.DocNumber } });
+      }
+      else if (aIACTByPartnerID.ActionText.toLowerCase() === "asn") {
+        this._router.navigate(['/pages/asn'], { queryParams: { id: aIACTByPartnerID.DocNumber } });
+      }
+      else if (aIACTByPartnerID.ActionText.toLowerCase() === "grn") {
+        this._router.navigate(['/pages/polookup'], { queryParams: { id: aIACTByPartnerID.DocNumber } });
+      }
+      else if (aIACTByPartnerID.ActionText.toLowerCase() === "gate") {
         this._router.navigate(['/pages/polookup'], { queryParams: { id: aIACTByPartnerID.DocNumber } });
       }
     }
@@ -241,11 +253,11 @@ export class HomeComponent implements OnInit {
   }
 
   onFactSheetButtonClicked(): void {
-    this._router.navigate(['/pages/orderfulfilmentCenter']);
+    this._router.navigate(['/pages/polookup']);
   }
 
   onAcceptAllButtonClicked(): void {
-    if (this.AIACTsByPartnerID && this.AIACTsByPartnerID.length > 0) {
+    if (this.aIACTs && this.aIACTs.length > 0) {
       const Actiontype = 'Accept All';
       const Catagory = 'PO';
       this.openConfirmationDialog(Actiontype, Catagory);

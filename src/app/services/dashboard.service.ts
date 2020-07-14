@@ -11,7 +11,7 @@ import {
 } from 'app/models/Dashboard';
 import { SODetails } from 'app/models/customer';
 import { BPCKRA, CustomerBarChartData } from 'app/models/fact';
-import { BPCOFHeader } from 'app/models/OrderFulFilment';
+import { BPCOFHeader, BPCOFAIACT } from 'app/models/OrderFulFilment';
 import { BPCInvoiceAttachment } from 'app/models/ASN';
 
 @Injectable({
@@ -127,6 +127,46 @@ export class DashboardService {
   GetOfAttachmentsByPartnerIDAndDocNumber(PartnerID: string, DocNumber: string): Observable<BPCInvoiceAttachment[] | string> {
     return this._httpClient
       .get<BPCInvoiceAttachment[]>(`${this.baseAddress}poapi/Dashboard/GetOfAttachmentsByPartnerIDAndDocNumber?PartnerID=${PartnerID}&DocNumber=${DocNumber}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  // AIACT
+
+  GetAIACTsByPartnerID(PartnerID: string): Observable<BPCOFAIACT[] | string> {
+    return this._httpClient.get<BPCOFAIACT[]>(`${this.baseAddress}poapi/Dashboard/GetAIACTsByPartnerID?PartnerID=${PartnerID}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  AcceptAIACT(AIACT: BPCOFAIACT): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}poapi/Dashboard/AcceptAIACT`,
+      AIACT,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  AcceptAIACTs(AIACT: any): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}poapi/Dashboard/AcceptAIACTs`,
+      AIACT,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  RejectAIACT(AIACT: BPCOFAIACT): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}poapi/Dashboard/RejectAIACT`,
+      AIACT,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
       .pipe(catchError(this.errorHandler));
   }
 

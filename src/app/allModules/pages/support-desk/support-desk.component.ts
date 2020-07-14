@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation, AfterViewInit } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { SupportHeader, SupportMaster } from 'app/models/support-desk';
 import { SupportDeskService } from 'app/services/support-desk.service';
@@ -7,7 +7,7 @@ import { Guid } from 'guid-typescript';
 import { fuseAnimations } from '@fuse/animations';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-support-desk',
   templateUrl: './support-desk.component.html',
@@ -17,7 +17,7 @@ import { Router } from '@angular/router';
 })
 
 export class SupportDeskComponent implements OnInit {
-
+  // private paginator: MatPaginator; private sort: MatSort;
   authenticationDetails: AuthenticationDetails;
   currentUserID: Guid;
   currentUserRole: string;
@@ -25,6 +25,7 @@ export class SupportDeskComponent implements OnInit {
   partnerID: string;
   notificationSnackBarComponent: NotificationSnackBarComponent;
   isProgressBarVisibile: boolean;
+  docRefNo: any;
   supports: SupportHeader[] = [];
   selectedSupport: SupportHeader = new SupportHeader();
   supportDisplayedColumns: string[] = [
@@ -34,25 +35,20 @@ export class SupportDeskComponent implements OnInit {
     'AssignTo',
   ];
   supportDataSource: MatTableDataSource<SupportHeader>;
-  private paginator: MatPaginator; private sort: MatSort;
-  @ViewChild(MatSort) set matSort(ms: MatSort) {
-    this.sort = ms;
-    this.setDataSourceAttributes();
-  }
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
-  @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
-    this.paginator = mp;
-    this.setDataSourceAttributes();
-  }
   supportMasters: SupportMaster[] = [];
   isSupport: boolean;
 
   constructor(
     public _supportdeskService: SupportDeskService,
-    private _router: Router) {
+    private _router: Router,
+    private _activatedRoute: ActivatedRoute) {
     this.partnerID = '';
     this.isSupport = false;
   }
+
 
   ngOnInit(): void {
     const retrievedObject = localStorage.getItem('authorizationData');
@@ -66,21 +62,24 @@ export class SupportDeskComponent implements OnInit {
         );
         this._router.navigate(['/auth/login']);
       }
-
+      this.GetSupportMasters();
+      this.GetSupportTicketsByPartnerID();
     } else {
       this._router.navigate(['/auth/login']);
     }
-    this.GetSupportMastersByPartnerID();
-    this.GetSupportTicketsByPartnerID();
+    this._activatedRoute.queryParams.subscribe(params => {
+      this.docRefNo = params['id'];
+    });
   }
 
-  setDataSourceAttributes(): void {
-    this.supportDataSource.paginator = this.paginator;
-    this.supportDataSource.sort = this.sort;
-
-    // if (this.paginator && this.sort) {
-    //     this.applyFilter('');
-    // }
+  loadSupportDeskBasedOnCondition(): void {
+    if (this.docRefNo) {
+      this._router.navigate(['/pages/supportticket'], { queryParams: { DocRefNo: this.docRefNo } });
+    }
+    else {
+      this.GetSupportMasters();
+      this.GetSupportTicketsByPartnerID();
+    }
   }
 
   GetSupportTicketsByPartnerID(): void {
@@ -105,10 +104,10 @@ export class SupportDeskComponent implements OnInit {
         });
   }
 
-  GetSupportMastersByPartnerID(): void {
+  GetSupportMasters(): void {
     this.isProgressBarVisibile = true;
     this._supportdeskService
-      .GetSupportMastersByPartnerID(this.authenticationDetails.UserName)
+      .GetSupportMasters()
       .subscribe((data) => {
         if (data) {
           this.supportMasters = <SupportMaster[]>data;

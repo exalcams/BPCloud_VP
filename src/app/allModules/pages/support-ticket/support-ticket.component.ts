@@ -36,9 +36,10 @@ export class SupportTicketComponent implements OnInit {
   SupportMasters: SupportMaster[] = [];
   SupportHeader: SupportHeader;
   dateOfCreation: Date;
+  docRefNo: string;
   notificationSnackBarComponent: NotificationSnackBarComponent;
   constructor(
-    private _route: ActivatedRoute,
+    private _activatedRoute: ActivatedRoute,
     private _router: Router,
     public snackBar: MatSnackBar,
     private dialog: MatDialog,
@@ -72,15 +73,22 @@ export class SupportTicketComponent implements OnInit {
       this._router.navigate(['/auth/login']);
     }
 
+    this._activatedRoute.queryParams.subscribe(params => {
+      this.docRefNo = params['id'];
+    });
+    if (!this.docRefNo) {
+      this.docRefNo = '';
+    }
+
     this.InitializeSupportTicketFormGroup();
-    this.GetSupportMastersByPartnerID();
+    this.GetSupportMasters();
     this.GetUsers();
   }
 
   InitializeSupportTicketFormGroup(): void {
     this.SupportTicketFormGroup = this._formBuilder.group({
       ReasonCode: ['', Validators.required],
-      DocumentRefNo: ['', Validators.required],
+      DocumentRefNo: [this.docRefNo, Validators.required],
       Remarks: ['', Validators.required]
     });
   }
@@ -100,10 +108,10 @@ export class SupportTicketComponent implements OnInit {
     this.ClearSupportTicketForm();
   }
 
-  GetSupportMastersByPartnerID(): void {
+  GetSupportMasters(): void {
     this.IsProgressBarVisibile = true;
     this._supportDeskService
-      .GetSupportMastersByPartnerID(this.PartnerID)
+      .GetSupportMasters()
       .subscribe((data) => {
         if (data) {
           this.SupportMasters = <SupportMaster[]>data;

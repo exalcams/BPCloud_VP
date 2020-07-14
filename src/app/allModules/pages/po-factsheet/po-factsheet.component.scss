@@ -162,6 +162,76 @@
     margin-top: -10px;
     margin-bottom: -34px;
   }
+  .item-image {
+    margin-top: 10px !important;
+    margin-left: 10px !important;
+    width: 20px;
+  }
+  .item-image:hover {
+    margin-top: 12px !important;
+    margin-left: 11px !important;
+    width: 15px !important;
+  }
+  .asn-image {
+    margin-top: 9px !important;
+    margin-left: 8px;
+    width: 22px;
+  }
+  .asn-image:hover {
+    margin-top: 12px !important;
+    margin-left: 11px !important;
+    width: 17px !important;
+  }
+  .grn-image {
+    margin-top: 8px !important;
+    margin-left: 13px;
+    width: 20px;
+  }
+  .grn-image:hover {
+    margin-top: 12px !important;
+    margin-left: 13px !important;
+    width: 15px !important;
+  }
+  .qa-image {
+    margin-top: 8px !important;
+    margin-left: 11px;
+    width: 20px;
+  }
+  .qa-image:hover {
+    margin-top: 11px !important;
+    margin-left: 12px !important;
+    width: 15px !important;
+  }
+  .sl-image {
+    margin-top: 9px !important;
+    margin-left: 7px;
+    width: 26px;
+  }
+  .sl-image:hover {
+    margin-top: 11px !important;
+    margin-left: 10px !important;
+    width: 21px !important;
+  }
+  .document-image {
+    margin-top: 8px !important;
+    margin-left: 11px;
+    width: 17px;
+  }
+  .document-image:hover {
+    margin-top: 12px !important;
+    margin-left: 14px !important;
+    width: 12px !important;
+  }
+  .flip-image {
+    margin-top: 5px !important;
+    margin-left: 10px;
+    width: 20px;
+  }
+  .flip-image:hover {
+    margin-top: 9px !important;
+    margin-left: 12px !important;
+    width: 15px !important;
+  }
   .tab-round1 {
     height: 50px;
     width: 50px;
@@ -326,7 +396,7 @@
     /* margin-bottom: 12px; */
     margin-left: 10px;
   }
-  img:hover {
-    width: 15px !important;
-  }
+  // img:hover {
+  //   width: 15px !important;
+  // }
 }
