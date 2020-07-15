@@ -4,7 +4,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { MenuApp, RoleWithApp, UserWithRole, UserNotification, Reason, UserView, VendorUser, SessionMaster, UserLoginHistory, LoginHistoryFilter } from 'app/models/master';
+import { MenuApp, RoleWithApp, UserWithRole, UserNotification, Reason, UserView, VendorUser, SessionMaster, UserLoginHistory, LoginHistoryFilter, AppUsage } from 'app/models/master';
 import { BPCDocumentCenterMaster } from 'app/models/ASN';
 import { Guid } from 'guid-typescript';
 
@@ -72,6 +72,50 @@ export class MasterService {
       })
       .pipe(catchError(this.errorHandler));
   }
+
+
+  // AppUsage
+  CreateAppUsage(appUsage: AppUsage): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}authenticationapi/Master/CreateAppUsage`,
+      appUsage,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAllAppUsage(): Observable<AppUsage[] | string> {
+    return this._httpClient.get<AppUsage[]>(`${this.baseAddress}authenticationapi/Master/GetAllAppUsages`)
+      .pipe(catchError(this.errorHandler));
+  }
+  GetAppUsagesByUser(UserID: Guid): Observable<AppUsage[] | string> {
+    return this._httpClient.get<AppUsage[]>(`${this.baseAddress}authenticationapi/Master/GetAppUsagesByUser?UserID=${UserID}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  // UpdateAppUsage(appUsage: AppUsage): Observable<any> {
+  //   return this._httpClient.post<any>(`${this.baseAddress}authenticationapi/Master/UpdateAppUsage`,
+  //   appUsage,
+  //     {
+  //       headers: new HttpHeaders({
+  //         'Content-Type': 'application/json'
+  //       })
+  //     })
+  //     .pipe(catchError(this.errorHandler));
+  // }
+
+  // DeleteAppUsage(appUsage: AppUsage): Observable<any> {
+  //   return this._httpClient.post<any>(`${this.baseAddress}authenticationapi/Master/DeleteAppUsage`,
+  //   appUsage,
+  //     {
+  //       headers: new HttpHeaders({
+  //         'Content-Type': 'application/json'
+  //       })
+  //     })
+  //     .pipe(catchError(this.errorHandler));
+  // }
 
   // Reason
   CreateReason(reason: Reason): Observable<any> {

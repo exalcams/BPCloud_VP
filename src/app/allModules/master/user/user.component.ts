@@ -1,14 +1,16 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
 import { MasterService } from 'app/services/master.service';
 import { Router } from '@angular/router';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
-import { MatSnackBar, MatDialogConfig, MatDialog } from '@angular/material';
+import { MatSnackBar, MatDialogConfig, MatDialog, MatTableDataSource, MatPaginator, MatMenuTrigger, MatSort } from '@angular/material';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { UserWithRole, AuthenticationDetails, RoleWithApp } from 'app/models/master';
+import { UserWithRole, AuthenticationDetails, RoleWithApp, AppUsage } from 'app/models/master';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Guid } from 'guid-typescript';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
+import { DatePipe } from '@angular/common';
+import { ExcelService } from 'app/services/excel.service';
 
 @Component({
   selector: 'app-user',
@@ -27,17 +29,34 @@ export class UserComponent implements OnInit {
   isProgressBarVisibile: boolean;
   selectID: Guid;
   userMainFormGroup: FormGroup;
-  searchText = '';
+  searchText: string;
+  SelectValue: string;
+  isExpanded: boolean;
+  AppUsages: AppUsage[] = [];
+
+  tableDisplayedColumns: string[] = [
+    'AppName',
+    'UsageCount',
+    'LastUsedOn',
+  ];
+  tableDataSource: MatTableDataSource<AppUsage>;
+  @ViewChild(MatPaginator) tablePaginator: MatPaginator;
+  @ViewChild(MatMenuTrigger) matMenuTrigger: MatMenuTrigger;
+  @ViewChild(MatSort) tableSort: MatSort;
   constructor(
     private _masterService: MasterService,
     private _router: Router,
     public snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private _formBuilder: FormBuilder) {
+    private _formBuilder: FormBuilder,
+    private _datePipe: DatePipe,
+    private _excelService: ExcelService,) {
     this.selectedUser = new UserWithRole();
     this.authenticationDetails = new AuthenticationDetails();
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.isProgressBarVisibile = true;
+    this.searchText = '';
+    this.SelectValue = 'All';
   }
 
   ngOnInit(): void {
@@ -74,9 +93,10 @@ export class UserComponent implements OnInit {
     Object.keys(this.userMainFormGroup.controls).forEach(key => {
       this.userMainFormGroup.get(key).markAsUntouched();
     });
+    this.AppUsages = [];
     // this.fileToUpload = null;
   }
-  
+
   GetAllRoles(): void {
     this._masterService.GetAllRoles().subscribe(
       (data) => {
@@ -111,6 +131,7 @@ export class UserComponent implements OnInit {
     this.selectID = selectedUser.UserID;
     this.selectedUser = selectedUser;
     this.SetUserValues();
+    this.GetAppUsagesByUser();
   }
 
   SetUserValues(): void {
@@ -119,6 +140,23 @@ export class UserComponent implements OnInit {
     this.userMainFormGroup.get('roleID').patchValue(this.selectedUser.RoleID);
     this.userMainFormGroup.get('email').patchValue(this.selectedUser.Email);
     this.userMainFormGroup.get('contactNumber').patchValue(this.selectedUser.ContactNumber);
+  }
+
+  GetAppUsagesByUser(): void {
+    this.isProgressBarVisibile = true;
+    this._masterService.GetAppUsagesByUser(this.selectedUser.UserID).subscribe(
+      (data) => {
+        this.isProgressBarVisibile = false;
+        this.AppUsages = data as AppUsage[];
+        this.tableDataSource = new MatTableDataSource(this.AppUsages);
+        this.tableDataSource.paginator = this.tablePaginator;
+        this.tableDataSource.sort = this.tableSort;
+      },
+      (err) => {
+        console.error(err);
+        this.isProgressBarVisibile = false;
+      }
+    );
   }
 
   OpenConfirmationDialog(Actiontype: string, Catagory: string): void {
@@ -248,6 +286,34 @@ export class UserComponent implements OnInit {
     } else {
       this.ShowValidationErrors();
     }
+  }
+
+
+  exportAsXLSX(): void {
+    const currentPageIndex = this.tableDataSource.paginator.pageIndex;
+    const PageSize = this.tableDataSource.paginator.pageSize;
+    const startIndex = currentPageIndex * PageSize;
+    const endIndex = startIndex + PageSize;
+    const itemsShowed = this.AppUsages.slice(startIndex, endIndex);
+    const itemsShowedd = [];
+    itemsShowed.forEach(x => {
+      const item = {
+        'User ID': x.UserID,
+        'User Name': this.selectedUser.UserName,
+        'App Name': x.AppName,
+        'Usages': x.UsageCount,
+        'Last UsedOn': x.LastUsedOn ? this._datePipe.transform(x.LastUsedOn, 'dd-MM-yyyy') : '',
+      };
+      itemsShowedd.push(item);
+    });
+    this._excelService.exportAsExcelFile(itemsShowedd, `${this.selectedUser.UserName}AppUsage`);
+  }
+  expandClicked(): void {
+    this.isExpanded = !this.isExpanded;
+  }
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.tableDataSource.filter = filterValue.trim().toLowerCase();
   }
 }
 

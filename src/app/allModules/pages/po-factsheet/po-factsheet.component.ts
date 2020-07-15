@@ -9,7 +9,8 @@ import { BehaviorSubject } from 'rxjs';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { fuseAnimations } from '@fuse/animations';
 import { Guid } from 'guid-typescript';
-import { AuthenticationDetails } from 'app/models/master';
+import { AuthenticationDetails, AppUsage } from 'app/models/master';
+import { MasterService } from 'app/services/master.service';
 @Component({
     selector: 'app-po-factsheet',
     templateUrl: './po-factsheet.component.html',
@@ -21,6 +22,7 @@ export class PoFactsheetComponent implements OnInit {
 
     authenticationDetails: AuthenticationDetails;
     currentUserID: Guid;
+    currentUserName: string;
     currentUserRole: string;
     partnerID: string;
     isProgressBarVisibile: boolean;
@@ -114,6 +116,7 @@ export class PoFactsheetComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         public _dashboardService: DashboardService,
+        private _masterService: MasterService,
         private _router: Router,
         private formBuilder: FormBuilder,
         private datepipe: DatePipe,
@@ -133,6 +136,7 @@ export class PoFactsheetComponent implements OnInit {
         if (retrievedObject) {
             this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
             this.currentUserID = this.authenticationDetails.UserID;
+            this.currentUserName = this.authenticationDetails.UserName;
             this.partnerID = this.authenticationDetails.UserName;
             this.currentUserRole = this.authenticationDetails.UserRole;
             // this.menuItems = this.authenticationDetails.MenuItemNames.split(',');
@@ -150,11 +154,26 @@ export class PoFactsheetComponent implements OnInit {
             this.PO = params['id'];
         });
         this.tabCount = 1;
+        this.CreateAppUsage();
         this.GetOfDetailsByPartnerIDAndDocNumber();
         this.initializeACKFormGroup();
         this.initializePOItemFormGroup();
     }
-
+    CreateAppUsage(): void {
+        const appUsage: AppUsage = new AppUsage();
+        appUsage.UserID = this.currentUserID;
+        appUsage.AppName = 'PO Factsheet';
+        appUsage.UsageCount = 1;
+        appUsage.CreatedBy = this.currentUserName;
+        appUsage.ModifiedBy = this.currentUserName;
+        this._masterService.CreateAppUsage(appUsage).subscribe(
+            (data) => {
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
     GetOfDetailsByPartnerIDAndDocNumber(): void {
         this.isProgressBarVisibile = true;
         this._dashboardService.GetOrderFulfilmentDetails(this.PO, this.partnerID).subscribe(

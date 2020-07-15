@@ -898,6 +898,11 @@
                             ASNPackFormGroup.get('ASNPacks').controls[index]?.get('GrossWeight').hasError('pattern')">
                               *
                             </mat-error>
+                            <mat-error *ngIf="ASNPackFormGroup.get('ASNPacks').controls[index]?.get('GrossWeight').touched && 
+                            !ASNPackFormGroup.get('ASNPacks').controls[index]?.get('GrossWeight').hasError('required')&&
+                            ASNPackFormGroup.get('ASNPacks').controls[index]?.get('GrossWeight').hasError('mustValid')">
+                              *
+                            </mat-error>
                           </mat-form-field>
                         </td>
                       </ng-container>

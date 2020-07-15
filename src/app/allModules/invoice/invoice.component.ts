@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { AuthenticationDetails } from 'app/models/master';
+import { AuthenticationDetails, AppUsage } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar } from '@angular/material';
@@ -12,6 +12,7 @@ import { ReportService } from 'app/services/report.service';
 import { BPCInvoice } from 'app/models/ReportModel';
 import { DatePipe } from '@angular/common';
 import { ExcelService } from 'app/services/excel.service';
+import { MasterService } from 'app/services/master.service';
 
 @Component({
   selector: 'app-invoice',
@@ -48,6 +49,7 @@ export class InvoiceComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private _router: Router,
     public snackBar: MatSnackBar,
+    private _masterService: MasterService,
     private _reportService: ReportService,
     private _excelService: ExcelService,
     private _datePipe: DatePipe
@@ -76,10 +78,25 @@ export class InvoiceComponent implements OnInit {
     } else {
       this._router.navigate(['/auth/login']);
     }
+    this.CreateAppUsage();
     this.InitializeSearchFormGroup();
     this.GetAllInvoicesByPartnerID();
   }
-
+  CreateAppUsage(): void {
+    const appUsage: AppUsage = new AppUsage();
+    appUsage.UserID = this.currentUserID;
+    appUsage.AppName = 'Invoice';
+    appUsage.UsageCount = 1;
+    appUsage.CreatedBy = this.currentUserName;
+    appUsage.ModifiedBy = this.currentUserName;
+    this._masterService.CreateAppUsage(appUsage).subscribe(
+      (data) => {
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
   InitializeSearchFormGroup(): void {
     this.SearchFormGroup = this._formBuilder.group({
       FromDate: [''],
