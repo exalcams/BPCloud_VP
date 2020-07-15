@@ -4,7 +4,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { MenuApp, RoleWithApp, UserWithRole, UserNotification, Reason, UserView, VendorUser, SessionMaster, UserLoginHistory, LoginHistoryFilter, AppUsage } from 'app/models/master';
+import { MenuApp, RoleWithApp, UserWithRole, UserNotification, Reason, UserView, VendorUser, SessionMaster, UserLoginHistory, LoginHistoryFilter, AppUsage, AppUsageView } from 'app/models/master';
 import { BPCDocumentCenterMaster } from 'app/models/ASN';
 import { Guid } from 'guid-typescript';
 
@@ -86,12 +86,12 @@ export class MasterService {
       .pipe(catchError(this.errorHandler));
   }
 
-  GetAllAppUsage(): Observable<AppUsage[] | string> {
-    return this._httpClient.get<AppUsage[]>(`${this.baseAddress}authenticationapi/Master/GetAllAppUsages`)
+  GetAllAppUsage(): Observable<AppUsageView[] | string> {
+    return this._httpClient.get<AppUsageView[]>(`${this.baseAddress}authenticationapi/Master/GetAllAppUsages`)
       .pipe(catchError(this.errorHandler));
   }
-  GetAppUsagesByUser(UserID: Guid): Observable<AppUsage[] | string> {
-    return this._httpClient.get<AppUsage[]>(`${this.baseAddress}authenticationapi/Master/GetAppUsagesByUser?UserID=${UserID}`)
+  GetAppUsagesByUser(UserID: Guid): Observable<AppUsageView[] | string> {
+    return this._httpClient.get<AppUsageView[]>(`${this.baseAddress}authenticationapi/Master/GetAppUsagesByUser?UserID=${UserID}`)
       .pipe(catchError(this.errorHandler));
   }
 

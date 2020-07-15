@@ -5,40 +5,22 @@ import {
     // tslint:disable-next-line:max-line-length
     MatButtonModule, MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule,
     MatStepperModule, MatListModule, MatMenuModule, MatRadioModule, MatSidenavModule, MatToolbarModule,
-    MatProgressSpinnerModule, MatTooltipModule, MatDatepickerModule, MatTableModule, MatPaginatorModule
+    MatProgressSpinnerModule, MatTooltipModule, MatDatepickerModule, MatTableModule, MatPaginatorModule, MatSortModule
 } from '@angular/material';
 
 import { FuseSharedModule } from '@fuse/shared.module';
 import { FileUploadModule } from 'ng2-file-upload';
-import { MenuAppComponent } from './menu-app/menu-app.component';
-import { RoleComponent } from './role/role.component';
-import { UserComponent } from './user/user.component';
-import { ReasonComponent } from './reason/reason.component';
+import { LoginHistoryComponent } from './login-history/login-history.component';
 
 const menuRoutes: Routes = [
     {
-        path: 'menuApp',
-        component: MenuAppComponent,
-    },
-    {
-        path: 'role',
-        component: RoleComponent,
-    },
-    {
-        path: 'user',
-        component: UserComponent,
-    },
-    {
-        path: 'reason',
-        component: ReasonComponent,
+        path: 'loginHistory',
+        component: LoginHistoryComponent,
     },
 ];
 @NgModule({
     declarations: [
-        UserComponent,
-        RoleComponent,
-        MenuAppComponent,
-        ReasonComponent,
+        LoginHistoryComponent,
     ],
     imports: [
         MatButtonModule,
@@ -50,6 +32,7 @@ const menuRoutes: Routes = [
         MatDatepickerModule,
         MatTableModule,
         MatPaginatorModule,
+        MatSortModule,
         MatStepperModule,
         MatProgressSpinnerModule,
         MatListModule,
@@ -66,6 +49,6 @@ const menuRoutes: Routes = [
 
     ]
 })
-export class MasterModule {
+export class AuditModule {
 }
 

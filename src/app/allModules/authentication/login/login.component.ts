@@ -609,16 +609,7 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.MenuItems.indexOf('LoginHistory') >= 0) {
-      this.subChildren.push(
-        {
-          id: 'loginHistory',
-          title: 'Login History',
-          type: 'item',
-          url: '/master/loginHistory'
-        }
-      );
-    }
+    
     if (this.MenuItems.indexOf('App') >= 0 || this.MenuItems.indexOf('Role') >= 0 ||
       this.MenuItems.indexOf('User') >= 0) {
       this.children.push({
@@ -675,6 +666,19 @@ export class LoginComponent implements OnInit {
         // icon: 'view_list',
         children: this.configSubChildren
       }
+      );
+    }
+    if (this.MenuItems.indexOf('LoginHistory') >= 0) {
+      this.children.push(
+        {
+          id: 'loginHistory',
+          title: 'Login History',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          icon: 'history',
+          isSvgIcon: false,
+          url: '/audit/loginHistory',
+        }
       );
     }
     this.navigation.push({

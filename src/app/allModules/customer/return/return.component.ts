@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { AuthenticationDetails, UserWithRole } from 'app/models/master';
+import { AuthenticationDetails, UserWithRole, AppUsage } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 
@@ -134,6 +134,7 @@ export class ReturnComponent implements OnInit {
     this._route.queryParams.subscribe(params => {
       this.SelectedRetReqID = params['id'];
     });
+    this.CreateAppUsage();
     this.InitializeReturnFormGroup();
     this.InitializeReturnItemFormGroup();
     this.GetAllBPCCountryMasters();
@@ -141,7 +142,21 @@ export class ReturnComponent implements OnInit {
     this.GetAllProducts();
     this.GetReturnBasedOnCondition();
   }
-
+  CreateAppUsage(): void {
+    const appUsage: AppUsage = new AppUsage();
+    appUsage.UserID = this.currentUserID;
+    appUsage.AppName = 'Return';
+    appUsage.UsageCount = 1;
+    appUsage.CreatedBy = this.currentUserName;
+    appUsage.ModifiedBy = this.currentUserName;
+    this._masterService.CreateAppUsage(appUsage).subscribe(
+      (data) => {
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
   InitializeReturnFormGroup(): void {
     this.ReturnFormGroup = this._formBuilder.group({
       RetReqID: [''],

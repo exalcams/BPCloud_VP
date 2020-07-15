@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { MenuApp, AuthenticationDetails } from 'app/models/master';
+import { MenuApp, AuthenticationDetails, AppUsage } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
@@ -158,6 +158,7 @@ export class CustomerFactComponent implements OnInit {
         );
         this._router.navigate(['/auth/login']);
       }
+      this.CreateAppUsage();
       this.InitializeFactFormGroup();
       this.InitializeKRAFormGroup();
       this.InitializeBankDetailsFormGroup();
@@ -168,7 +169,21 @@ export class CustomerFactComponent implements OnInit {
       this._router.navigate(['/auth/login']);
     }
   }
-
+  CreateAppUsage(): void {
+    const appUsage: AppUsage = new AppUsage();
+    appUsage.UserID = this.CurrentUserID;
+    appUsage.AppName = 'My details';
+    appUsage.UsageCount = 1;
+    appUsage.CreatedBy = this.currentUserName;
+    appUsage.ModifiedBy = this.currentUserName;
+    this._masterService.CreateAppUsage(appUsage).subscribe(
+      (data) => {
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
   InitializeFactFormGroup(): void {
     this.FactFormGroup = this._formBuilder.group({
       Client: ['', Validators.required],

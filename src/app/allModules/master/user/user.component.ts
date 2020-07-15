@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { MatSnackBar, MatDialogConfig, MatDialog, MatTableDataSource, MatPaginator, MatMenuTrigger, MatSort } from '@angular/material';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { UserWithRole, AuthenticationDetails, RoleWithApp, AppUsage } from 'app/models/master';
+import { UserWithRole, AuthenticationDetails, RoleWithApp, AppUsage, AppUsageView } from 'app/models/master';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Guid } from 'guid-typescript';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
@@ -32,14 +32,14 @@ export class UserComponent implements OnInit {
   searchText: string;
   SelectValue: string;
   isExpanded: boolean;
-  AppUsages: AppUsage[] = [];
+  AppUsages: AppUsageView[] = [];
 
   tableDisplayedColumns: string[] = [
     'AppName',
     'UsageCount',
     'LastUsedOn',
   ];
-  tableDataSource: MatTableDataSource<AppUsage>;
+  tableDataSource: MatTableDataSource<AppUsageView>;
   @ViewChild(MatPaginator) tablePaginator: MatPaginator;
   @ViewChild(MatMenuTrigger) matMenuTrigger: MatMenuTrigger;
   @ViewChild(MatSort) tableSort: MatSort;
@@ -147,7 +147,7 @@ export class UserComponent implements OnInit {
     this._masterService.GetAppUsagesByUser(this.selectedUser.UserID).subscribe(
       (data) => {
         this.isProgressBarVisibile = false;
-        this.AppUsages = data as AppUsage[];
+        this.AppUsages = data as AppUsageView[];
         this.tableDataSource = new MatTableDataSource(this.AppUsages);
         this.tableDataSource.paginator = this.tablePaginator;
         this.tableDataSource.sort = this.tableSort;
@@ -299,7 +299,8 @@ export class UserComponent implements OnInit {
     itemsShowed.forEach(x => {
       const item = {
         'User ID': x.UserID,
-        'User Name': this.selectedUser.UserName,
+        'User Name': x.UserName,
+        'User Role': x.UserRole,
         'App Name': x.AppName,
         'Usages': x.UsageCount,
         'Last UsedOn': x.LastUsedOn ? this._datePipe.transform(x.LastUsedOn, 'dd-MM-yyyy') : '',

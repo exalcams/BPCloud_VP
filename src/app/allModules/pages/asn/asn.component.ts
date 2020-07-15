@@ -10,7 +10,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Guid } from 'guid-typescript';
 import { ASNService } from 'app/services/asn.service';
 import { ShareParameterService } from 'app/services/share-parameters.service';
-import { BPCASNHeader, BPCASNItem, DocumentCenter, BPCASNView, BPCInvoiceAttachment, BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster, BPCASNPack } from 'app/models/ASN';
+import { BPCASNHeader, BPCASNItem, DocumentCenter, BPCASNView, BPCInvoiceAttachment, 
+    BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster, BPCASNPack } from 'app/models/ASN';
 import { BehaviorSubject } from 'rxjs';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { FuseConfigService } from '@fuse/services/config.service';
@@ -78,10 +79,10 @@ export class ASNComponent implements OnInit {
         'PackageID',
         'ReferenceNumber',
         'Dimension',
-        'GrossWeight',
-        'GrossWeightUOM',
         'NetWeight',
         'NetWeightUOM',
+        'GrossWeight',
+        'GrossWeightUOM',
         'VolumetricWeight',
         'VolumetricWeightUOM'
     ];
@@ -827,10 +828,10 @@ export class ASNComponent implements OnInit {
             PackageID: [pack.PackageID, Validators.required],
             ReferenceNumber: [pack.ReferenceNumber, Validators.required],
             Dimension: [pack.Dimension, Validators.required],
-            GrossWeight: [pack.GrossWeight, [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
-            GrossWeightUOM: [pack.GrossWeightUOM, Validators.required],
             NetWeight: [pack.NetWeight, [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
             NetWeightUOM: [pack.NetWeightUOM, Validators.required],
+            GrossWeight: [pack.GrossWeight, [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
+            GrossWeightUOM: [pack.GrossWeightUOM, Validators.required],
             VolumetricWeight: [pack.VolumetricWeight, [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
             VolumetricWeightUOM: [pack.VolumetricWeightUOM, Validators.required],
         }, {
