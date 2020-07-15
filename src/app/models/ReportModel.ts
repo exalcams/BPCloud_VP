@@ -63,7 +63,6 @@ export class BPCInvoiceXLSX  {
     Dateofpayment: string;
     Poddate: string;
 }
-
 export class BPCPaymentXLSX  {
     Company: string;
     Type: string;
@@ -73,4 +72,7 @@ export class BPCPaymentXLSX  {
     Date: string;
     Amount: number;
     Currency: string;
+}
+export class BPCReportOV extends CommonClass{
+
 }
