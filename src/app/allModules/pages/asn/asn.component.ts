@@ -267,6 +267,7 @@ export class ASNComponent implements OnInit {
         this.SelectedASNView = new BPCASNView();
         this.SelectedASNNumber = '';
         this.ResetASNFormGroup();
+        this.ResetASNPacksFormGroup();
         this.SetInitialValueForASNFormGroup();
         this.ResetInvoiceDetailsFormGroup();
         this.ResetDocumentCenterFormGroup();
@@ -286,7 +287,11 @@ export class ASNComponent implements OnInit {
     ResetDocumentCenterFormGroup(): void {
         this.ResetFormGroup(this.DocumentCenterFormGroup);
     }
-
+    ResetASNPacksFormGroup(): void {
+        this.ResetFormGroup(this.ASNPackFormGroup);
+        this.ClearFormArray(this.ASNPackFormArray);
+        this.ASNPackDataSource.next(this.ASNPackFormArray.controls);
+    }
     ResetFormGroup(formGroup: FormGroup): void {
         formGroup.reset();
         Object.keys(formGroup.controls).forEach(key => {
