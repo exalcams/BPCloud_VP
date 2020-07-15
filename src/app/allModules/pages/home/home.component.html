@@ -220,60 +220,17 @@
                   <mat-card *ngFor="let action of actions" fxFlex="100%" fxLayout="column" class="rightBorder"
                     style="height: 80px;margin: 20px 5px 5px 2px;padding: 10px;border-color:#67c18b;">
                     <mat-card-content>
-                      <h5 style="padding:5px 0px 5px 5px;">PO Created <strong>{{action.DocNumber}} </strong>
+                      <h5 style="padding:5px 0px 5px 5px;">PO <strong>{{action.DocNumber}} </strong>
+                        <strong>{{getActionData(action,'actionFirstData')}} </strong>
+                        <span>{{getActionData(action,'actionSecondData')}}</span>
                       </h5>
                       <i
-                        style="padding:5px 0px 5px 5px;font-size: smaller;">{{action.Date | date:'dd/MM/yy'}},{{action.Time}}</i>
+                        style="padding:5px 0px 5px 5px;font-size: smaller;">{{action.Date | date:'dd/MM/yy'}},{{action.Date| date:'hh:MM a'}}</i>
                       <button (click)="actionTextButtonClicked(action)" mat-raised-button
                         style="float:right;height:32px;background-color:#efb577;color: white; cursor: pointer;">{{action.ActionText}}</button>
                     </mat-card-content>
                   </mat-card>
                 </div>
-                <!-- <mat-card fxFlex="100%" class="rightBorder"
-                    style="height: 80px;margin: 20px 5px 5px 2px;padding: 10px;border-color:#67c18b;">
-                    <mat-card-content>
-                      <h5 style="padding:5px 0px 5px 5px;">PO <strong>12345 </strong>to be accepted</h5>
-                      <i style="padding:5px 0px 5px 5px;font-size: smaller;">Today,04:32 PM</i>
-                      <button mat-raised-button
-                        style="float:right;height:32px;background-color:#efb577;color: white;">Accept</button>
-                    </mat-card-content>
-                  </mat-card>
-                  <mat-card fxFlex="100%" class="rightBorder"
-                    style="height: 80px;margin: 20px 5px 5px 2px;padding: 10px;border-color:#67c18b;">
-                    <mat-card-content>
-                      <h5 style="padding:5px 0px 5px 5px;">PO <strong>12345 </strong>to be accepted</h5>
-                      <i style="padding:5px 0px 5px 5px;font-size: smaller;">Today,04:32 PM</i>
-                      <button mat-raised-button
-                        style="float:right;height:32px;background-color:#efb577;color: white;">View</button>
-                    </mat-card-content>
-                  </mat-card>
-                  <mat-card fxFlex="100%" class="rightBorder"
-                    style="height: 80px;margin: 20px 5px 5px 2px;padding: 10px;border-color:#eb6767;">
-                    <mat-card-content>
-                      <h5 style="padding:5px 0px 5px 5px;">PO <strong>12345 </strong>to be accepted</h5>
-                      <i style="padding:5px 0px 5px 5px;font-size: smaller;">Today,04:32 PM</i>
-                      <button mat-raised-button
-                        style="float:right;height:32px;background-color:#efb577;color: white;">View</button>
-                    </mat-card-content>
-                  </mat-card>
-                  <mat-card fxFlex="100%" class="rightBorder"
-                    style="height: 80px;margin: 20px 5px 5px 2px;padding: 10px;border-color:#eb6767;">
-                    <mat-card-content>
-                      <h5 style="padding:5px 0px 5px 5px;">PO <strong>12345 </strong>to be accepted</h5>
-                      <i style="padding:5px 0px 5px 5px;font-size: smaller;">Today,04:32 PM</i>
-                      <button mat-raised-button
-                        style="float:right;height:32px;background-color:#efb577;color: white;">Accept</button>
-                    </mat-card-content>
-                  </mat-card>
-                  <mat-card fxFlex="100%" class="rightBorder"
-                    style="height: 80px;margin: 20px 5px 5px 2px;padding: 10px;border-color:#67c18b;">
-                    <mat-card-content>
-                      <h5 style="padding:5px 0px 5px 5px;">PO <strong>12345 </strong>to be accepted</h5>
-                      <i style="padding:5px 0px 5px 5px;font-size: smaller;">Today,04:32 PM</i>
-                      <button mat-raised-button
-                        style="float:right;height:32px;background-color:#efb577;color: white;">Accept</button>
-                    </mat-card-content>
-                  </mat-card> -->
               </mat-tab>
               <mat-tab label="Notifications ({{notifications?.length}})">
                 <div class="mat-tab-body-content">
@@ -286,8 +243,6 @@
                       </h5>
                       <i
                         style="padding:5px 0px 5px 5px;font-size: smaller;">{{notification.Date | date:'dd/MM/yy'}},{{notification.Time}}</i>
-                      <!-- <button (click)="actionTextButtonClicked(notification)" mat-raised-button
-                        style="float:right;height:32px;background-color:#efb577;color: white; cursor: pointer;">{{notification.ActionText}}</button> -->
                     </mat-card-content>
                   </mat-card>
                 </div>
@@ -295,21 +250,7 @@
             </mat-tab-group>
           </div>
         </div>
-
       </div>
-      <!-- Third Div -->
-
-      <!-- <div fxFlex fxLayout class="theme-options-button">
-          <div fxFlex="33%" fxLayoutAlign="start center" style="padding-left: 10px;">
-            <span class="view-more-details">View more details/Change</span>
-          </div>
-          <div fxFlex="33%" fxLayoutAlign="start center">
-          </div>
-          <div fxFlex="33%" fxLayoutAlign="end center" style="padding-right: 10px;">
-            <span><img src="../../../../assets/images/ellipsis.png" style="height: 25px;width: 40px;"></span>
-          </div>
-        </div> -->
-      <!-- </div> -->
     </div>
     <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
     </mat-progress-spinner>

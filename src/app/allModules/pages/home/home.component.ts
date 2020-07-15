@@ -281,6 +281,20 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  getActionData(element: BPCOFAIACT, StatusFor: string): string {
+    switch (StatusFor) {
+      case 'actionFirstData':
+        return element.Status === 'DueForACK' ? 'Created' : element.Status === 'DueForASN' ? 'Acknowledged' :
+          element.Status === 'DueForGate' ? 'ASN Done' : element.Status === 'DueForGRN' ? 'Gate Done' :
+            element.Status === 'Accepted' ? 'Accepted' : element.Status === 'Rejected' ? 'Rejected' : '';
+      case 'actionSecondData':
+        return element.Status === 'DueForACK' ? 'waiting for Acknowledgement ' : element.Status === 'DueForASN' ? 'waiting for ASN' :
+          element.Status === 'DueForGate' ? 'waiting for Gate' : element.Status === 'DueForGRN' ? 'waiting for GRN' : '';
+      default:
+        return '';
+    }
+  }
+
 }
 
 
