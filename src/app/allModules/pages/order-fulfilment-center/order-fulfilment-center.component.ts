@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef } from '@an
 import { fuseAnimations } from '@fuse/animations';
 import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatMenuTrigger, MatDialogConfig, MatDialog } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
-import { AuthenticationDetails } from 'app/models/master';
+import { AuthenticationDetails, AppUsage } from 'app/models/master';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -18,6 +18,7 @@ import { BPCOFHeader, OfAttachmentData } from 'app/models/OrderFulFilment';
 import { DashboardService } from 'app/services/dashboard.service';
 import { AttachmentViewDialogComponent } from '../attachment-view-dialog/attachment-view-dialog.component';
 import { BPCInvoiceAttachment } from 'app/models/ASN';
+import { MasterService } from 'app/services/master.service';
 @Component({
     selector: 'app-order-fulfilment-center',
     templateUrl: './order-fulfilment-center.component.html',
@@ -28,6 +29,7 @@ import { BPCInvoiceAttachment } from 'app/models/ASN';
 export class OrderFulFilmentCenterComponent implements OnInit {
     authenticationDetails: AuthenticationDetails;
     currentUserID: Guid;
+    currentUserName: string;
     currentUserRole: string;
     partnerID: string;
     menuItems: string[];
@@ -199,6 +201,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         private _router: Router,
         public snackBar: MatSnackBar,
         public _dashboardService: DashboardService,
+        private _masterService: MasterService,
         private datePipe: DatePipe,
         private dialog: MatDialog,
     ) {
@@ -289,6 +292,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
             this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
             this.currentUserID = this.authenticationDetails.UserID;
             this.partnerID = this.authenticationDetails.UserName;
+            this.currentUserName = this.authenticationDetails.UserName;
             this.currentUserRole = this.authenticationDetails.UserRole;
             this.menuItems = this.authenticationDetails.MenuItemNames.split(',');
             // console.log(this.authenticationDetails);
@@ -301,13 +305,28 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         } else {
             this._router.navigate(['/auth/login']);
         }
+        this.CreateAppUsage();
         this.initialiseOfDetailsFormGroup();
         this.GetOfDetails();
         this.GetOfGraphDetailsByPartnerID();
         this.GetOfStatusByPartnerID();
         // this.GetOfAttachmentsByPartnerID();
     }
-
+    CreateAppUsage(): void {
+        const appUsage: AppUsage = new AppUsage();
+        appUsage.UserID = this.currentUserID;
+        appUsage.AppName = 'Order fulfillment Center';
+        appUsage.UsageCount = 1;
+        appUsage.CreatedBy = this.currentUserName;
+        appUsage.ModifiedBy = this.currentUserName;
+        this._masterService.CreateAppUsage(appUsage).subscribe(
+            (data) => {
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
     GetOfDetails(): void {
         this.isProgressBarVisibile = true;
         this._dashboardService

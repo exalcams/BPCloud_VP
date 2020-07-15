@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, ViewEncapsulation } from '@angular/core';
-import { AuthenticationDetails, UserWithRole } from 'app/models/master';
+import { AuthenticationDetails, UserWithRole, AppUsage } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { Task } from 'app/models/task';
@@ -16,6 +16,7 @@ import { ChartType } from 'chart.js';
 import { fuseAnimations } from '@fuse/animations';
 import { SODetails } from 'app/models/customer';
 import { BPCKRA, CustomerBarChartData } from 'app/models/fact';
+import { MasterService } from 'app/services/master.service';
 
 @Component({
   selector: 'app-customer-orderfulfilment',
@@ -28,6 +29,7 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
 
   authenticationDetails: AuthenticationDetails;
   currentUserID: Guid;
+  currentUserName: string;
   currentUserRole: string;
   PartnerID: string;
   MenuItems: string[];
@@ -199,6 +201,7 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
     private _router: Router,
     public snackBar: MatSnackBar,
     public _dashboardService: DashboardService,
+    private _masterService: MasterService,
     private datePipe: DatePipe,
   ) {
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
@@ -218,6 +221,7 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
       this.currentUserID = this.authenticationDetails.UserID;
+      this.currentUserName = this.authenticationDetails.UserName;
       this.PartnerID = this.authenticationDetails.UserName;
       this.currentUserRole = this.authenticationDetails.UserRole;
       this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
@@ -231,6 +235,7 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
     } else {
       this._router.navigate(['/auth/login']);
     }
+    this.CreateAppUsage();
     this.GetSODetails();
     this.GetCustomerOpenProcessCircle();
     this.GetCustomerCreditLimitProcessCircle();
@@ -335,6 +340,21 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
   closeMyMenu(index: any): void {
     alert(index);
     this.matMenuTrigger.closeMenu();
+  }
+  CreateAppUsage(): void {
+    const appUsage: AppUsage = new AppUsage();
+    appUsage.UserID = this.currentUserID;
+    appUsage.AppName = 'Order Fulfillment';
+    appUsage.UsageCount = 1;
+    appUsage.CreatedBy = this.currentUserName;
+    appUsage.ModifiedBy = this.currentUserName;
+    this._masterService.CreateAppUsage(appUsage).subscribe(
+      (data) => {
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
   }
   GetSODetails(): void {
     this.IsProgressBarVisibile = true;

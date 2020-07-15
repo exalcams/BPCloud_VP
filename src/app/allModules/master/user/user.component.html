@@ -52,9 +52,9 @@
             </div>
             <mat-card fxFlex="77" class="side-bar p-0">
                 <div class="sidenav-content" fxFlex fxLayout="column">
-                    <div fxFlex fxLayout="column" class="p-0 pt-8">
-                        <div fxFlex class="px-12 mt-4">
-                            <form autocomplete="off" class="normal" fxLayout="column" fxLayoutGap="20px"
+                    <div fxFlex fxLayout="column" fxLayoutAlign="start" class="p-0 pt-8">
+                        <div fxFlex="0 1 auto" class="px-12 mt-12">
+                            <form autocomplete="off" class="normal" fxLayout="column" fxLayoutGap="0px"
                                 fxLayoutAlign="start" name="form" novalidate [formGroup]="userMainFormGroup">
 
                                 <div fxFlex fxLayout="row" fxLayoutGap="40px">
@@ -131,7 +131,6 @@
                                         </mat-form-field>
                                     </div>
 
-
                                     <div fxFlex="50">
 
                                     </div>
@@ -146,6 +145,66 @@
                                         <mat-icon style="color: white;">add</mat-icon>
                                     </button>
                                 </div>
+                            </div>
+                        </div>
+                        <div fxFlex class="px-12" [hidden]="!AppUsages?.length">
+                            <div fxLayout="row">
+                                <div fxFlex="100%">
+                                    <div class="SectionTitle">
+                                        <strong>App Usage</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div fxLayout="row" class="mt-20" fxLayoutAlign="start center">
+                                <mat-form-field appearance="outline" fxFlex="50">
+                                    <mat-icon class="mr-12" matPrefix>search</mat-icon>
+                                    <input [(ngModel)]="searchText" matInput placeholder="Search"
+                                        (keyup)="applyFilter($event)">
+                                </mat-form-field>
+                                <div fxFlex fxLayoutAlign="end center">
+                                    <mat-form-field appearance="outline" style="min-width: 100px;">
+                                        <mat-select [(ngModel)]="SelectValue">
+                                            <mat-option value="All">All</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <button (click)="exportAsXLSX()" class="excelBtn mx-24" mat-stroked-button>
+                                        <img class="excelImg" src="assets/images/excel.png">
+                                    </button>
+                                    <!-- <img class="expandImg" src="assets/images/expand.png" (click)="expandClicked()"> -->
+                                </div>
+                            </div>
+                            <table class="table" mat-table [dataSource]="tableDataSource" matSort>
+                                <ng-container matColumnDef="AppName">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> App Name </th>
+                                    <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
+                                        <div fxLayout>
+                                            <div class="tableCellBorder"
+                                                [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
+                                            <div fxFlex class="pl-8">{{element.AppName}} </div>
+                                        </div>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="UsageCount">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Usage </th>
+                                    <td mat-cell *matCellDef="let element" class="QtyClass">
+                                        {{element.UsageCount}}
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="LastUsedOn">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Last UsedOn </th>
+                                    <td mat-cell *matCellDef="let element;let i= index;">
+                                        {{element.LastUsedOn | date :'dd/MM/yyyy hh:mm:ss a'}}
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="tableDisplayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: tableDisplayedColumns;">
+                                </tr>
+                            </table>
+                            <div>
+                                <mat-paginator [pageSizeOptions]="[10,20,50]"></mat-paginator>
                             </div>
                         </div>
                     </div>

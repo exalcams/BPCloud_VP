@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, ViewEncapsulation } from '@angular/core';
-import { AuthenticationDetails, UserWithRole } from 'app/models/master';
+import { AuthenticationDetails, UserWithRole, AppUsage } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators } from '@angular/forms';
@@ -137,6 +137,7 @@ export class PurchaseIndentComponent implements OnInit {
         this._route.queryParams.subscribe(params => {
             this.SelectedPINumber = params['id'];
         });
+        this.CreateAppUsage();
         this.InitializePurchaseIndentFormGroup();
         this.InitializePurchaseIndentItemFormGroup();
         this.GetAllBPCCountryMasters();
@@ -144,7 +145,21 @@ export class PurchaseIndentComponent implements OnInit {
         this.GetAllProducts();
         this.GetPurchaseIndentBasedOnCondition();
     }
-
+    CreateAppUsage(): void {
+        const appUsage: AppUsage = new AppUsage();
+        appUsage.UserID = this.currentUserID;
+        appUsage.AppName = 'Purchase Indent';
+        appUsage.UsageCount = 1;
+        appUsage.CreatedBy = this.currentUserName;
+        appUsage.ModifiedBy = this.currentUserName;
+        this._masterService.CreateAppUsage(appUsage).subscribe(
+            (data) => {
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
     InitializePurchaseIndentFormGroup(): void {
         this.PurchaseIndentFormGroup = this._formBuilder.group({
             PINumber: [''],
@@ -329,7 +344,7 @@ export class PurchaseIndentComponent implements OnInit {
         const index: number = this.AllPurchaseIndentItems.indexOf(doc);
         if (index > -1) {
             this.AllPurchaseIndentItems.splice(index, 1);
-          }
+        }
         this.PurchaseIndentItemDataSource = new MatTableDataSource(this.AllPurchaseIndentItems);
     }
 

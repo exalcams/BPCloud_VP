@@ -38,6 +38,33 @@ export class MenuApp {
     ModifiedOn?: Date;
     ModifiedBy: string;
 }
+export class AppUsage {
+    ID: number;
+    UserID: Guid;
+    // AppID: number;
+    AppName: string;
+    UsageCount: number;
+    LastUsedOn: Date | string;
+    IsActive: boolean;
+    CreatedOn: Date | string;
+    CreatedBy: string;
+    ModifiedOn: Date | string | null;
+    ModifiedBy: string;
+}
+export class AppUsageView {
+    ID: number;
+    UserID: Guid;
+    UserName: string;
+    UserRole: string;
+    AppName: string;
+    UsageCount: number;
+    LastUsedOn: Date | string;
+    IsActive: boolean;
+    CreatedOn: Date | string;
+    CreatedBy: string;
+    ModifiedOn: Date | string | null;
+    ModifiedBy: string;
+}
 export class Reason {
     ReasonID: number;
     Description: string;

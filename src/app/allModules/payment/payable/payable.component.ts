@@ -4,7 +4,7 @@ import { PO } from 'app/models/Dashboard';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { fuseAnimations } from '@fuse/animations';
 import { ChartType } from 'chart.js';
-import { AuthenticationDetails } from 'app/models/master';
+import { AuthenticationDetails, AppUsage } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { Router } from '@angular/router';
@@ -13,6 +13,7 @@ import { BPCPayPayable } from 'app/models/Payment.model';
 import { PaymentService } from 'app/services/payment.service';
 import { DatePipe } from '@angular/common';
 import { ExcelService } from 'app/services/excel.service';
+import { MasterService } from 'app/services/master.service';
 
 @Component({
   selector: 'app-payable',
@@ -183,6 +184,7 @@ export class PayableComponent implements OnInit {
     public snackBar: MatSnackBar,
     private dialog: MatDialog,
     private paymentService: PaymentService,
+    private _masterService: MasterService,
     private _datePipe: DatePipe,
     private _excelService: ExcelService,
   ) {
@@ -216,11 +218,26 @@ export class PayableComponent implements OnInit {
     } else {
       this._router.navigate(['/auth/login']);
     }
+    this.CreateAppUsage();
     this.InitializeSearchForm();
     // this.GetPayableByPatnerID();
     this.SearchClicked();
   }
-
+  CreateAppUsage(): void {
+    const appUsage: AppUsage = new AppUsage();
+    appUsage.UserID = this.currentUserID;
+    appUsage.AppName = 'Payables';
+    appUsage.UsageCount = 1;
+    appUsage.CreatedBy = this.currentUserName;
+    appUsage.ModifiedBy = this.currentUserName;
+    this._masterService.CreateAppUsage(appUsage).subscribe(
+      (data) => {
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
   InitializeSearchForm(): void {
     this.SearchFormGroup = this.formBuilder.group({
       Invoice: [''],

@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AbstractControl, FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, MatSort, MatDialog, MatDialogConfig } from '@angular/material';
 import { ASNDetails, GRNDetails, QADetails, ItemDetails, OrderFulfilmentDetails, Acknowledgement } from 'app/models/Dashboard';
-import { AuthenticationDetails } from 'app/models/master';
+import { AuthenticationDetails, AppUsage } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DashboardService } from 'app/services/dashboard.service';
@@ -12,6 +12,7 @@ import { NotificationDialogComponent } from 'app/notifications/notification-dial
 import { fuseAnimations } from '@fuse/animations';
 import { BPCOFItem } from 'app/models/OrderFulFilment';
 import { POService } from 'app/services/po.service';
+import { MasterService } from 'app/services/master.service';
 
 @Component({
   selector: 'app-customer-polookup',
@@ -63,6 +64,7 @@ export class CustomerPolookupComponent implements OnInit {
   @ViewChild(MatSort) qaSort: MatSort;
   authenticationDetails: AuthenticationDetails;
   currentUserID: Guid;
+  currentUserName: string;
   currentUserRole: string;
   PartnerID: string;
 
@@ -70,6 +72,7 @@ export class CustomerPolookupComponent implements OnInit {
     private route: ActivatedRoute,
     public _dashboardService: DashboardService,
     public _POService: POService,
+    private _masterService: MasterService,
     private _router: Router,
     private formBuilder: FormBuilder,
     private datepipe: DatePipe,
@@ -80,6 +83,7 @@ export class CustomerPolookupComponent implements OnInit {
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
       this.currentUserID = this.authenticationDetails.UserID;
+      this.currentUserName = this.authenticationDetails.UserName;
       this.PartnerID = this.authenticationDetails.UserName;
       this.currentUserRole = this.authenticationDetails.UserRole;
       // this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
@@ -107,7 +111,23 @@ export class CustomerPolookupComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.CreateAppUsage();
     this.tabone();
+  }
+  CreateAppUsage(): void {
+    const appUsage: AppUsage = new AppUsage();
+    appUsage.UserID = this.currentUserID;
+    appUsage.AppName = 'SO Lookup';
+    appUsage.UsageCount = 1;
+    appUsage.CreatedBy = this.currentUserName;
+    appUsage.ModifiedBy = this.currentUserName;
+    this._masterService.CreateAppUsage(appUsage).subscribe(
+      (data) => {
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
   }
   tabone(): void {
     this.tab1 = true;

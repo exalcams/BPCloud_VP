@@ -4,7 +4,7 @@ import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar } from "@angular
 import { fuseAnimations } from "@fuse/animations";
 import { ReportService } from 'app/services/report.service';
 import { BPCPayment } from 'app/models/ReportModel';
-import { AuthenticationDetails } from 'app/models/master';
+import { AuthenticationDetails, AppUsage } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 import { ExcelService } from 'app/services/excel.service';
 import { DatePipe } from '@angular/common';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
+import { MasterService } from 'app/services/master.service';
 
 @Component({
   selector: "app-payment",
@@ -23,6 +24,7 @@ import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notific
 export class PaymentComponent implements OnInit {
   authenticationDetails: AuthenticationDetails;
   currentUserID: Guid;
+  currentUserName: string;
   currentUserRole: string;
   MenuItems: string[];
   notificationSnackBarComponent: NotificationSnackBarComponent;
@@ -50,9 +52,10 @@ export class PaymentComponent implements OnInit {
     private _router: Router,
     public snackBar: MatSnackBar,
     private _reportService: ReportService,
+    private _masterService: MasterService,
     private _excelService: ExcelService,
     private _datePipe: DatePipe
-  ) { 
+  ) {
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.authenticationDetails = new AuthenticationDetails();
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
@@ -71,6 +74,7 @@ export class PaymentComponent implements OnInit {
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
       this.currentUserID = this.authenticationDetails.UserID;
+      this.currentUserName = this.authenticationDetails.UserName;
       this.currentUserRole = this.authenticationDetails.UserRole;
       this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
       if (this.MenuItems.indexOf('Dashboard') < 0) {
@@ -86,7 +90,21 @@ export class PaymentComponent implements OnInit {
     this.SearchClicked();
     // this.GetAllPayments();
   }
-
+  CreateAppUsage(): void {
+    const appUsage: AppUsage = new AppUsage();
+    appUsage.UserID = this.currentUserID;
+    appUsage.AppName = 'Payment advise';
+    appUsage.UsageCount = 1;
+    appUsage.CreatedBy = this.currentUserName;
+    appUsage.ModifiedBy = this.currentUserName;
+    this._masterService.CreateAppUsage(appUsage).subscribe(
+      (data) => {
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
   InitializeSearchFormGroup(): void {
     this.SearchFormGroup = this._formBuilder.group({
       FromDate: [this.DefaultFromDate],

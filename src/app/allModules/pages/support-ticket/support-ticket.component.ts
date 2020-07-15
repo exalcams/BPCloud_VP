@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { Guid } from 'guid-typescript';
-import { AuthenticationDetails, UserWithRole } from 'app/models/master';
+import { AuthenticationDetails, UserWithRole, AppUsage } from 'app/models/master';
 import { MatSnackBar, MatDialogConfig, MatDialog } from '@angular/material';
 import { AttachmentDetails } from 'app/models/task';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -22,6 +22,7 @@ export class SupportTicketComponent implements OnInit {
 
   authenticationDetails: AuthenticationDetails;
   currentUserID: Guid;
+  currentUserName: string;
   currentUserRole: string;
   Users: UserWithRole[] = [];
   FilteredUsers: UserWithRole[] = [];
@@ -59,6 +60,7 @@ export class SupportTicketComponent implements OnInit {
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
       this.currentUserID = this.authenticationDetails.UserID;
+      this.currentUserName = this.authenticationDetails.UserName;
       this.PartnerID = this.authenticationDetails.UserName;
       this.currentUserRole = this.authenticationDetails.UserRole;
       // this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
@@ -84,7 +86,21 @@ export class SupportTicketComponent implements OnInit {
     this.GetSupportMasters();
     this.GetUsers();
   }
-
+  CreateAppUsage(): void {
+    const appUsage: AppUsage = new AppUsage();
+    appUsage.UserID = this.currentUserID;
+    appUsage.AppName = 'Support ticket';
+    appUsage.UsageCount = 1;
+    appUsage.CreatedBy = this.currentUserName;
+    appUsage.ModifiedBy = this.currentUserName;
+    this._masterService.CreateAppUsage(appUsage).subscribe(
+      (data) => {
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
   InitializeSupportTicketFormGroup(): void {
     this.SupportTicketFormGroup = this._formBuilder.group({
       ReasonCode: ['', Validators.required],

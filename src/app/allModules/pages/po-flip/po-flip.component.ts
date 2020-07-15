@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, ViewEncapsulation } from '@angular/core';
-import { AuthenticationDetails } from 'app/models/master';
+import { AuthenticationDetails, AppUsage } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { FormGroup, FormBuilder, Validators, AbstractControl, FormArray } from '@angular/forms';
@@ -18,6 +18,7 @@ import { POService } from 'app/services/po.service';
 import { BehaviorSubject } from 'rxjs';
 import { BPCInvoiceAttachment, BPCCurrencyMaster, BPCCountryMaster } from 'app/models/ASN';
 import { ASNService } from 'app/services/asn.service';
+import { MasterService } from 'app/services/master.service';
 @Component({
   selector: 'app-po-flip',
   templateUrl: './po-flip.component.html',
@@ -29,6 +30,7 @@ export class PoFlipComponent implements OnInit {
   menuItems: string[];
   authenticationDetails: AuthenticationDetails;
   currentUserID: Guid;
+  currentUserName: string;
   currentUserRole = '';
   notificationSnackBarComponent: NotificationSnackBarComponent;
   isProgressBarVisibile: boolean;
@@ -82,6 +84,7 @@ export class PoFlipComponent implements OnInit {
     private _poFlipService: POFlipService,
     private _poService: POService,
     private _ASNService: ASNService,
+    private _masterService: MasterService,
     private _router: Router,
     private _route: ActivatedRoute,
     public snackBar: MatSnackBar,
@@ -147,6 +150,7 @@ export class PoFlipComponent implements OnInit {
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
       this.currentUserID = this.authenticationDetails.UserID;
+      this.currentUserName = this.authenticationDetails.UserName;
       this.currentUserRole = this.authenticationDetails.UserRole;
       this.menuItems = this.authenticationDetails.MenuItemNames.split(',');
       if (this.menuItems.indexOf('Flip') < 0) {
@@ -154,6 +158,7 @@ export class PoFlipComponent implements OnInit {
         );
         this._router.navigate(['/auth/login']);
       }
+      this.CreateAppUsage();
       this.getFlipBasedOnCondition();
       this.initializeFlipFormGroup();
       this.initializeFlipCostFormGroup();
@@ -164,7 +169,21 @@ export class PoFlipComponent implements OnInit {
       this._router.navigate(['/auth/login']);
     }
   }
-
+  CreateAppUsage(): void {
+    const appUsage: AppUsage = new AppUsage();
+    appUsage.UserID = this.currentUserID;
+    appUsage.AppName = 'PO Flip';
+    appUsage.UsageCount = 1;
+    appUsage.CreatedBy = this.currentUserName;
+    appUsage.ModifiedBy = this.currentUserName;
+    this._masterService.CreateAppUsage(appUsage).subscribe(
+      (data) => {
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
   getFlipBasedOnCondition(): void {
     if (this.selectedDocNumber) {
       this.GetPOByDocAndPartnerID(this.selectedDocNumber);

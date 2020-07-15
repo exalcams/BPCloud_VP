@@ -2,15 +2,16 @@ import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef } from '@an
 import { fuseAnimations } from '@fuse/animations';
 import { MatTableDataSource, MatPaginator, MatSort, MatSnackBar, MatDialog, MatDialogConfig } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
-import { AuthenticationDetails, UserWithRole } from 'app/models/master';
+import { AuthenticationDetails, UserWithRole, AppUsage } from 'app/models/master';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
-import { FormBuilder, FormGroup, Validators, FormArray, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray, AbstractControl, ValidationErrors } from '@angular/forms';
 import { MasterService } from 'app/services/master.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Guid } from 'guid-typescript';
 import { ASNService } from 'app/services/asn.service';
 import { ShareParameterService } from 'app/services/share-parameters.service';
-import { BPCASNHeader, BPCASNItem, DocumentCenter, BPCASNView, BPCInvoiceAttachment, BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster, BPCASNPack } from 'app/models/ASN';
+import { BPCASNHeader, BPCASNItem, DocumentCenter, BPCASNView, BPCInvoiceAttachment, 
+    BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster, BPCASNPack } from 'app/models/ASN';
 import { BehaviorSubject } from 'rxjs';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { FuseConfigService } from '@fuse/services/config.service';
@@ -78,10 +79,10 @@ export class ASNComponent implements OnInit {
         'PackageID',
         'ReferenceNumber',
         'Dimension',
-        'GrossWeight',
-        'GrossWeightUOM',
         'NetWeight',
         'NetWeightUOM',
+        'GrossWeight',
+        'GrossWeightUOM',
         'VolumetricWeight',
         'VolumetricWeightUOM'
     ];
@@ -172,6 +173,7 @@ export class ASNComponent implements OnInit {
         this._route.queryParams.subscribe(params => {
             this.SelectedDocNumber = params['id'];
         });
+        this.CreateAppUsage();
         this.InitializeASNFormGroup();
         this.InitializeASNItemFormGroup();
         this.InitializeASNPackFormGroup();
@@ -182,7 +184,21 @@ export class ASNComponent implements OnInit {
         this.GetAllDocumentCenterMaster();
         this.GetASNBasedOnCondition();
     }
-
+    CreateAppUsage(): void {
+        const appUsage: AppUsage = new AppUsage();
+        appUsage.UserID = this.currentUserID;
+        appUsage.AppName = 'ASN';
+        appUsage.UsageCount = 1;
+        appUsage.CreatedBy = this.currentUserName;
+        appUsage.ModifiedBy = this.currentUserName;
+        this._masterService.CreateAppUsage(appUsage).subscribe(
+            (data) => {
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
     InitializeASNFormGroup(): void {
         this.ASNFormGroup = this._formBuilder.group({
             TransportMode: ['Road', Validators.required],
@@ -252,6 +268,7 @@ export class ASNComponent implements OnInit {
         this.SelectedASNView = new BPCASNView();
         this.SelectedASNNumber = '';
         this.ResetASNFormGroup();
+        this.ResetASNPacksFormGroup();
         this.SetInitialValueForASNFormGroup();
         this.ResetInvoiceDetailsFormGroup();
         this.ResetDocumentCenterFormGroup();
@@ -271,7 +288,11 @@ export class ASNComponent implements OnInit {
     ResetDocumentCenterFormGroup(): void {
         this.ResetFormGroup(this.DocumentCenterFormGroup);
     }
-
+    ResetASNPacksFormGroup(): void {
+        this.ResetFormGroup(this.ASNPackFormGroup);
+        this.ClearFormArray(this.ASNPackFormArray);
+        this.ASNPackDataSource.next(this.ASNPackFormArray.controls);
+    }
     ResetFormGroup(formGroup: FormGroup): void {
         formGroup.reset();
         Object.keys(formGroup.controls).forEach(key => {
@@ -807,12 +828,14 @@ export class ASNComponent implements OnInit {
             PackageID: [pack.PackageID, Validators.required],
             ReferenceNumber: [pack.ReferenceNumber, Validators.required],
             Dimension: [pack.Dimension, Validators.required],
-            GrossWeight: [pack.GrossWeight, [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
-            GrossWeightUOM: [pack.GrossWeightUOM, Validators.required],
             NetWeight: [pack.NetWeight, [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
             NetWeightUOM: [pack.NetWeightUOM, Validators.required],
+            GrossWeight: [pack.GrossWeight, [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
+            GrossWeightUOM: [pack.GrossWeightUOM, Validators.required],
             VolumetricWeight: [pack.VolumetricWeight, [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
             VolumetricWeightUOM: [pack.VolumetricWeightUOM, Validators.required],
+        }, {
+            validator: MustValid('NetWeight', 'GrossWeight')
         });
         this.ASNPackFormArray.push(row);
         this.ASNPackDataSource.next(this.ASNPackFormArray.controls);
@@ -933,30 +956,34 @@ export class ASNComponent implements OnInit {
     GetASNPacksValues(): void {
         this.SelectedASNView.ASNPacks = [];
         // const aSNPackFormArray = this.ASNItemFormGroup.get('ASNPacks') as FormArray;
-        this.ASNPackFormArray.controls.forEach((x, i) => {
-            const pack: BPCASNPack = new BPCASNPack();
-            pack.PackageID = x.get('PackageID').value;
-            pack.ReferenceNumber = x.get('ReferenceNumber').value;
-            pack.Dimension = x.get('Dimension').value;
-            pack.GrossWeight = x.get('GrossWeight').value;
-            pack.GrossWeightUOM = x.get('GrossWeightUOM').value;
-            pack.NetWeight = x.get('NetWeight').value;
-            pack.NetWeightUOM = x.get('NetWeightUOM').value;
-            pack.VolumetricWeight = x.get('VolumetricWeight').value;
-            pack.VolumetricWeightUOM = x.get('VolumetricWeightUOM').value;
-            if (this.SelectedDocNumber && this.PO) {
-                pack.Client = this.PO.Client;
-                pack.Company = this.PO.Company;
-                pack.Type = this.PO.Type;
-                pack.PatnerID = this.PO.PatnerID;
-            } else {
-                pack.Client = this.SelectedASNHeader.Client;
-                pack.Company = this.SelectedASNHeader.Company;
-                pack.Type = this.SelectedASNHeader.Type;
-                pack.PatnerID = this.SelectedASNHeader.PatnerID;
-            }
-            this.SelectedASNView.ASNPacks.push(pack);
-        });
+        if (this.ASNPackFormGroup.valid) {
+            this.ASNPackFormArray.controls.forEach((x, i) => {
+                const pack: BPCASNPack = new BPCASNPack();
+                pack.PackageID = x.get('PackageID').value;
+                pack.ReferenceNumber = x.get('ReferenceNumber').value;
+                pack.Dimension = x.get('Dimension').value;
+                pack.GrossWeight = x.get('GrossWeight').value;
+                pack.GrossWeightUOM = x.get('GrossWeightUOM').value;
+                pack.NetWeight = x.get('NetWeight').value;
+                pack.NetWeightUOM = x.get('NetWeightUOM').value;
+                pack.VolumetricWeight = x.get('VolumetricWeight').value;
+                pack.VolumetricWeightUOM = x.get('VolumetricWeightUOM').value;
+                if (this.SelectedDocNumber && this.PO) {
+                    pack.Client = this.PO.Client;
+                    pack.Company = this.PO.Company;
+                    pack.Type = this.PO.Type;
+                    pack.PatnerID = this.PO.PatnerID;
+                } else {
+                    pack.Client = this.SelectedASNHeader.Client;
+                    pack.Company = this.SelectedASNHeader.Company;
+                    pack.Type = this.SelectedASNHeader.Type;
+                    pack.PatnerID = this.SelectedASNHeader.PatnerID;
+                }
+                this.SelectedASNView.ASNPacks.push(pack);
+            });
+        } else {
+            this.ShowValidationErrors(this.ASNPackFormGroup);
+        }
     }
 
     CheckForNonZeroOpenQty(): boolean {
@@ -993,21 +1020,25 @@ export class ASNComponent implements OnInit {
         if (this.ASNFormGroup.valid) {
             if (!this.isWeightError) {
                 if (this.ASNItemFormGroup.valid) {
-                    if (this.InvoiceDetailsFormGroup.valid) {
-                        this.GetASNValues();
-                        this.GetASNItemValues();
-                        this.GetASNPacksValues();
-                        if (this.CheckForNonZeroOpenQty()) {
-                            this.GetInvoiceDetailValues();
-                            this.GetDocumentCenterValues();
-                            this.SelectedASNView.IsSubmitted = false;
-                            this.SetActionToOpenConfirmation('Save');
-                        } else {
-                            this.notificationSnackBarComponent.openSnackBar('There is no Open Qty', SnackBarStatus.danger);
-                        }
+                    if (this.ASNPackFormGroup.valid) {
+                        if (this.InvoiceDetailsFormGroup.valid) {
+                            this.GetASNValues();
+                            this.GetASNItemValues();
+                            this.GetASNPacksValues();
+                            if (this.CheckForNonZeroOpenQty()) {
+                                this.GetInvoiceDetailValues();
+                                this.GetDocumentCenterValues();
+                                this.SelectedASNView.IsSubmitted = false;
+                                this.SetActionToOpenConfirmation('Save');
+                            } else {
+                                this.notificationSnackBarComponent.openSnackBar('There is no Open Qty', SnackBarStatus.danger);
+                            }
 
+                        } else {
+                            this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
+                        }
                     } else {
-                        this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
+                        this.ShowValidationErrors(this.ASNPackFormGroup);
                     }
 
                 } else {
@@ -1023,20 +1054,24 @@ export class ASNComponent implements OnInit {
         if (this.ASNFormGroup.valid) {
             if (!this.isWeightError) {
                 if (this.ASNItemFormGroup.valid) {
-                    if (this.InvoiceDetailsFormGroup.valid) {
-                        this.GetASNValues();
-                        this.GetASNItemValues();
-                        this.GetASNPacksValues();
-                        if (this.CheckForNonZeroOpenQty()) {
-                            this.GetInvoiceDetailValues();
-                            this.GetDocumentCenterValues();
-                            this.SelectedASNView.IsSubmitted = true;
-                            this.SetActionToOpenConfirmation('Submit');
+                    if (this.ASNPackFormGroup.valid) {
+                        if (this.InvoiceDetailsFormGroup.valid) {
+                            this.GetASNValues();
+                            this.GetASNItemValues();
+                            this.GetASNPacksValues();
+                            if (this.CheckForNonZeroOpenQty()) {
+                                this.GetInvoiceDetailValues();
+                                this.GetDocumentCenterValues();
+                                this.SelectedASNView.IsSubmitted = true;
+                                this.SetActionToOpenConfirmation('Submit');
+                            } else {
+                                this.notificationSnackBarComponent.openSnackBar('There is no Open Qty', SnackBarStatus.danger);
+                            }
                         } else {
-                            this.notificationSnackBarComponent.openSnackBar('There is no Open Qty', SnackBarStatus.danger);
+                            this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
                         }
                     } else {
-                        this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
+                        this.ShowValidationErrors(this.ASNPackFormGroup);
                     }
 
                 } else {
@@ -1318,5 +1353,24 @@ export class ASNComponent implements OnInit {
         }
     }
 
+}
+
+export function MustValid(NetWeight: string, GrossWeight: string): ValidationErrors | null {
+    return (formGroup: FormGroup) => {
+        const NetWeightcontrol = formGroup.get(`${NetWeight}`);
+        const GrossWeightcontrol = formGroup.get(`${GrossWeight}`);
+
+        if (GrossWeightcontrol.errors && !GrossWeightcontrol.errors.mustValid) {
+            // return if another validator has already found an error on the matchingControl
+            return;
+        }
+        const NetWeightVAL = + NetWeightcontrol.value;
+        const GrossWeightVAL = +GrossWeightcontrol.value;
+        if (GrossWeightVAL < NetWeightVAL) {
+            GrossWeightcontrol.setErrors({ mustValid: true });
+        } else {
+            GrossWeightcontrol.setErrors(null);
+        }
+    };
 }
 

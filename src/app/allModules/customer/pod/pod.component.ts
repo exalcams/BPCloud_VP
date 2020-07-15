@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef } from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
-import { AuthenticationDetails, UserWithRole } from 'app/models/master';
+import { AuthenticationDetails, UserWithRole, AppUsage } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { BPCPODHeader, BPCPODView, BPCPODItem } from 'app/models/POD';
@@ -94,9 +94,24 @@ export class PODComponent implements OnInit {
     } else {
       this._router.navigate(['/auth/login']);
     }
+    this.CreateAppUsage();
     this.GetAllPODByPartnerID();
   }
-
+  CreateAppUsage(): void {
+    const appUsage: AppUsage = new AppUsage();
+    appUsage.UserID = this.currentUserID;
+    appUsage.AppName = 'POD';
+    appUsage.UsageCount = 1;
+    appUsage.CreatedBy = this.currentUserName;
+    appUsage.ModifiedBy = this.currentUserName;
+    this._masterService.CreateAppUsage(appUsage).subscribe(
+      (data) => {
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
   GetAllPODByPartnerID(): void {
     this.IsProgressBarVisibile = true;
     this._PODService.GetAllPODByPartnerID(this.currentUserName).subscribe(
