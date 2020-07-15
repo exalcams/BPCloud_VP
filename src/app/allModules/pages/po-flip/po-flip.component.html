@@ -60,7 +60,7 @@
                     <div fxFlex='40'>
                       <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="2px">
                         <div fxFlex="20" fxLayoutAlign="end center"> <span> PO NO : </span></div>
-                        <div fxFlex="80" fxLayoutAlign="start center"> <span> {{selectedDocNumber}}</span>
+                        <div fxFlex="80" fxLayoutAlign="start center"> <span>  {{selectedFlip?.DocNumber}}</span>
                         </div>
                       </div>
                     </div>
@@ -381,7 +381,7 @@
                 <form autocomplete="off" class="abnormal" fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto"
                   name="form" novalidate [formGroup]="flipItemFormGroup">
                   <div style="overflow-x:auto;">
-                    <!-- *ngIf="(poItems && poItems.length)|| (selectedFlipHeaderView?.FlipItems && selectedFlipHeaderView?.FlipItems?.length)" -->
+                    <!-- *ngIf="(poItems && poItems.length)|| (selectedFlipView?.FlipItems && selectedFlipView?.FlipItems?.length)" -->
                     <table class="table" mat-table [dataSource]="flipItemDataSource" formArrayName="flipItems">
                       <ng-container matColumnDef="Item">
                         <th mat-header-cell *matHeaderCellDef> Item </th>
@@ -547,7 +547,7 @@
                   </div>
                 </form>
                 <!-- <div flex
-                  *ngIf="(poItems && poItems.length)|| (selectedFlipHeaderView?.flipItems && selectedFlipHeaderView?.flipItems?.length)">
+                  *ngIf="(poItems && poItems.length)|| (selectedFlipView?.flipItems && selectedFlipView?.flipItems?.length)">
                   <mat-paginator [pageSizeOptions]="[10, 20, 30, 50, 75, 100]" showFirstLastButtons>
                   </mat-paginator>
                 </div> -->

@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { Observable, throwError } from 'rxjs';
 import { Guid } from 'guid-typescript';
 import { catchError } from 'rxjs/operators';
-import { BPCInvoice, BPCPayment, BPCInvoiceXLSX, BPCPaymentXLSX } from 'app/models/ReportModel';
+import { BPCInvoice, BPCPayment, BPCInvoiceXLSX, BPCPaymentXLSX, BPCReportOV } from 'app/models/ReportModel';
 
 @Injectable({
   providedIn: 'root'
@@ -63,7 +63,6 @@ export class ReportService {
     ).pipe(catchError(this.errorHandler));
   }
 
-  
   CreatePayments(Payments: BPCPaymentXLSX[]): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}reportapi/PaymentReport/CreatePayments`,
       Payments,
@@ -74,6 +73,14 @@ export class ReportService {
       // }
     ).pipe(catchError(this.errorHandler));
   }
+
+  // Overview Report
+  GetOverviewReports(PartnerID: string,): Observable<BPCReportOV[] | string> {
+    return this._httpClient.get<BPCReportOV[]>
+      (`${this.baseAddress}reportapi/Report/GetOverviewReports?PartnerID=${PartnerID}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
 
 
 }
