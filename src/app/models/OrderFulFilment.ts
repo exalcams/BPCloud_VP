@@ -107,6 +107,7 @@ export class BPCOFAIACT extends CommonClass {
     Status: string;
     Date: Date | string | null;
     Time: string;
+    HasSeen: boolean;
 }
 export class PODetails {
     PO: string;

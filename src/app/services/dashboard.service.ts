@@ -137,6 +137,27 @@ export class DashboardService {
       .pipe(catchError(this.errorHandler));
   }
 
+  GetActionsByPartnerID(PartnerID: string): Observable<BPCOFAIACT[] | string> {
+    return this._httpClient.get<BPCOFAIACT[]>(`${this.baseAddress}poapi/Dashboard/GetActionsByPartnerID?PartnerID=${PartnerID}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetNotificationsByPartnerID(PartnerID: string): Observable<BPCOFAIACT[] | string> {
+    return this._httpClient.get<BPCOFAIACT[]>(`${this.baseAddress}poapi/Dashboard/GetNotificationsByPartnerID?PartnerID=${PartnerID}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  UpdateNotification(notification: BPCOFAIACT): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}poapi/Dashboard/UpdateNotification`,
+      notification,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
   AcceptAIACT(AIACT: BPCOFAIACT): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}poapi/Dashboard/AcceptAIACT`,
       AIACT,

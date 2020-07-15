@@ -35,8 +35,10 @@ export class HomeComponent implements OnInit {
   facts: BPCFact[] = [];
   actions: BPCOFAIACT[] = [];
   notifications: BPCOFAIACT[] = [];
+  notificationCount: number;
   aIACTs: BPCOFAIACT[] = [];
   aIACTsView: BPCOFAIACT[] = [];
+  SetIntervalID: any;
   constructor(
     private _factService: FactService,
     private _dashboardService: DashboardService,
@@ -68,7 +70,12 @@ export class HomeComponent implements OnInit {
         this._router.navigate(['/auth/login']);
       }
       this.GetFactByPartnerIDAndType();
-      this.GetAIACTsByPartnerID(this.authenticationDetails.UserName);
+      // this.GetAIACTsByPartnerID(this.authenticationDetails.UserName);
+      this.GetActionsByPartnerID();
+      this.GetNotificationsByPartnerID();
+      this.SetIntervalID = setInterval(() => {
+        this.GetNotificationsByPartnerID();
+      }, 10000);
     } else {
       this._router.navigate(['/auth/login']);
     }
@@ -107,6 +114,51 @@ export class HomeComponent implements OnInit {
         // this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
       }
     );
+  }
+
+  GetActionsByPartnerID(): void {
+    this.isProgressBarVisibile = true;
+    this._dashboardService.GetActionsByPartnerID(this.authenticationDetails.UserName).subscribe(
+      (data) => {
+        if (data) {
+          this.actions = data as BPCOFAIACT[];
+        }
+        this.isProgressBarVisibile = false;
+      },
+      (err) => {
+        console.error(err);
+        this.isProgressBarVisibile = false;
+      }
+    );
+  }
+
+  GetNotificationsByPartnerID(): void {
+    this._dashboardService.GetNotificationsByPartnerID(this.authenticationDetails.UserName).subscribe(
+      (data) => {
+        if (data) {
+          this.notifications = data as BPCOFAIACT[];
+          console.log(this.notifications);
+          this.notificationCount = this.notifications.length;
+        }
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+
+  UpdateNotification(selectedNotification: BPCOFAIACT): void {
+    if (selectedNotification) {
+      selectedNotification.HasSeen = true;
+      this._dashboardService.UpdateNotification(selectedNotification).subscribe(
+        (data) => {
+          this.GetNotificationsByPartnerID();
+        },
+        (err) => {
+          console.error(err);
+        }
+      );
+    }
   }
 
   AcceptAIACT(): void {
