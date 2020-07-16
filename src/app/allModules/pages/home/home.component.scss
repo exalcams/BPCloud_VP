@@ -230,4 +230,21 @@
     .mat-tab-body-content {
         flex-direction: column !important;
     }
+    .action-div {
+        text-align: left;
+        display: table-cell;
+        cursor: pointer;
+        background: #fff;
+        line-height: 20px;
+        font-size: 13px;
+        width: 500px;
+    }
+    .confirm-btn {
+        float: right;
+        height: 32px;
+        background-color: #efb577;
+        color: white;
+        cursor: pointer;
+        // margin-top: -16px;
+    }
 }
