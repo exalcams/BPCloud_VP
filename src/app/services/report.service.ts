@@ -75,7 +75,7 @@ export class ReportService {
   }
 
   // Overview Report
-  GetOverviewReports(PartnerID: string,): Observable<BPCReportOV[] | string> {
+  GetOverviewReports(PartnerID: string): Observable<BPCReportOV[] | string> {
     return this._httpClient.get<BPCReportOV[]>
       (`${this.baseAddress}reportapi/Report/GetOverviewReports?PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));

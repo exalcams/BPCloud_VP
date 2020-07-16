@@ -11,8 +11,7 @@
       </div>
     </div>
     <div class="content-card1" fxLayoutGap="15px" style="background-color: #F1F1F6;">
-      <!-- <div fxLayout fxLayoutGap="15px" style="margin-top: 0px;background-color: #F1F1F6;"> -->
-      <!-- First Div -->
+      <!-- First Col -->
       <mat-card fxFlex="30" class="side-bar p-0">
         <div class="sidenav-content" fxFlex>
           <div fxLayout="column" fxLayoutGap="15px">
@@ -150,9 +149,9 @@
           </div>
         </mat-card-actions>
       </mat-card>
-      <!-- First Div -->
+      <!-- First Col -->
 
-      <!-- Second Div -->
+      <!-- Second Col -->
       <div fxFlex="40">
         <div fxLayout="column" fxLayoutGap="15px" style="height: 100%;padding-top: 15px;">
           <mat-card fxFlex="50%" style="padding: 10px;">
@@ -176,19 +175,15 @@
           </mat-card>
         </div>
       </div>
-      <!-- Second Div -->
+      <!-- Second Col -->
 
-      <!-- Third Div -->
+      <!-- Third Col -->
       <div fxFlex="30" style="height: 100%;background-color: white;">
         <div fxLayout="column" style="padding: 15px 15px 10px 15px;">
           <div fxFlex>
             <h2 style="font-weight: 500;margin: 0px;"><span style="margin:0px 5px 0px 0px;"><img style="width: 32px;
                 height: 32px; margin-top: 5px;" src="../../../../assets/images/bot.png"></span>
               Suggested Actions
-              <!-- <span>
-                <img src="../../../../assets/images/ellipsis.png"
-                  style="height: 25px;width: 40px;float: right;">
-              </span> -->
               <span>
                 <button style="height: 25px;width: 40px;float: right;" mat-icon-button [matMenuTriggerFor]="menu"
                   aria-label="Example icon-button with a menu">
@@ -198,10 +193,6 @@
                   <!-- <button mat-menu-item (click)="onAcceptAllButtonClicked()">
                     <mat-icon>done_all</mat-icon>
                     <span>Approve All</span>
-                  </button> -->
-                  <!-- <button mat-menu-item disabled>
-                    <mat-icon>voicemail</mat-icon>
-                    <span>Check voice mail</span>
                   </button> -->
                   <button mat-menu-item (click)="onClearAllButtonClicked()">
                     <mat-icon>notifications_off</mat-icon>
@@ -218,16 +209,41 @@
               <mat-tab label="Action ({{actions?.length}})">
                 <div class="mat-tab-body-content">
                   <mat-card *ngFor="let action of actions" fxFlex="100%" fxLayout="column" class="rightBorder"
-                    style="height: 80px;margin: 20px 5px 5px 2px;padding: 10px;border-color:#67c18b;">
+                    style="height:80px;margin: 20px 5px 5px 2px;padding: 10px;border-color:#67c18b;">
                     <mat-card-content>
-                      <h5 style="padding:5px 0px 5px 5px;">PO <strong>{{action.DocNumber}} </strong>
-                        <strong>{{getActionData(action,'actionFirstData')}} </strong>
-                        <span>{{getActionData(action,'actionSecondData')}}</span>
-                      </h5>
-                      <i
-                        style="padding:5px 0px 5px 5px;font-size: smaller;">{{action.Date | date:'dd/MM/yy'}},{{action.Date| date:'hh:MM a'}}</i>
-                      <button (click)="actionTextButtonClicked(action)" mat-raised-button
-                        style="float:right;height:32px;background-color:#efb577;color: white; cursor: pointer;">{{action.ActionText}}</button>
+                      <div fxFlex fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="start start"
+                        style="font-size: 13px;">
+                        <div fxFlex><span>PO <strong>{{action.DocNumber}} </strong> is available for
+                            <strong>{{getActionData(action,'actionFirstData')}}, </strong></span></div>
+                        <div fxFlex fxLayout="row" fxLayoutGap="5px">
+                          <!-- <div fxFlex="100">
+                            <label id="lblShipping">Do you want to <a
+                                (click)="actionTextButtonClicked(action)">Confirm</a> ? </label>
+                          </div> -->
+                          <div fxFlex="60">
+                            <label id="lblShipping">Do you want to </label>
+                          </div>
+                          <div fxFlex="40">
+                            <button class="confirm-btn" mat-raised-button
+                              (click)="actionTextButtonClicked(action)">Confirm</button>
+                          </div>
+                        </div>
+                        <div fxFlex>
+                          <label for=""><i
+                              style="font-size: smaller;">{{action.Date | date:'dd/MM/yy'}},{{action.Date| date:'hh:MM a'}}</i></label>
+                        </div>
+                      </div>
+                      <!-- <div class="action-div">
+                        <label id="lblItemPrice">PO <strong>{{action.DocNumber}} </strong> is available for
+                          <strong>{{getActionData(action,'actionFirstData')}} </strong></label>,
+                        <br />
+                        <label id="lblShipping">Do you want to </label>
+                        <br />
+                        <label for=""><i
+                            style="font-size: smaller;">{{action.Date | date:'dd/MM/yy'}},{{action.Date| date:'hh:MM a'}}</i></label>
+                        <button class="confirm-btn" mat-raised-button
+                          (click)="actionTextButtonClicked(action)">Confirm</button>
+                      </div> -->
                     </mat-card-content>
                   </mat-card>
                 </div>
@@ -251,6 +267,7 @@
           </div>
         </div>
       </div>
+      <!-- Third Col -->
     </div>
     <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
     </mat-progress-spinner>

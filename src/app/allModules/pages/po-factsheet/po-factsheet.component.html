@@ -9,6 +9,7 @@
         <span><img src="../../../../assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
       </div>
     </div>
+    <!-- Top Header -->
     <div fxLayout="row" style="margin-top: 20px !important;margin-top: 10px !important;">
       <div fxFlex="50" class="p-8">
         <div fxFlex="45" class="mx-8 mb-8 mt-0">
@@ -82,7 +83,9 @@
         </div>
       </div>
     </div>
+    <!-- Top Header -->
 
+    <!-- Tabs -->
     <div fxFlex class="mt-24" style="background-color: #fef8f1;">
       <div class="m-12" fxLayout fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px"
         fxLayoutGap.xs="10">
@@ -194,8 +197,12 @@
         </div>
       </div>
     </div>
-    <div>
+    <!-- Tabs -->
 
+    <!-- Tables -->
+    <div fxFlex>
+
+      <!-- Item -->
       <div class="content" fxLayout="column" *ngIf="tab1">
         <div fxFlex *ngIf="poStatus === 'DueForACK'">
           <div fxLayoutAlign="end" style="width: 85% !important;">
@@ -340,11 +347,12 @@
           </div>
         </form>
       </div>
+      <!-- Item -->
 
+      <!-- ASN -->
       <div class="content" fxLayout="column" *ngIf="tab2">
         <div class="p-12  mt-24">
-          <table *ngIf="asn?.length" style="width: 50% !important;" class="table" mat-table [dataSource]="asnDataSource"
-            matSort>
+          <table style="width: 50% !important;" class="table" mat-table [dataSource]="asnDataSource" matSort>
 
             <ng-container matColumnDef="ASN">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> ASN </th>
@@ -377,14 +385,15 @@
             <tr mat-row *matRowDef="let row; columns: asnDisplayedColumns;let even=even" style=" cursor: pointer;">
             </tr>
           </table>
-
         </div>
       </div>
+      <!-- ASN -->
 
+      <!-- GRN -->
       <div class="content" fxLayout="column" *ngIf="tab3">
         <div class="p-12  mt-24">
-          <table *ngIf="grn?.length" style="width: 50% !important;" class="table" mat-table [dataSource]="grnDataSource"
-            matSort>
+          <!-- *ngIf="grn?.length" -->
+          <table style="width: 50% !important;" class="table" mat-table [dataSource]="grnDataSource" matSort>
 
             <ng-container matColumnDef="Item">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Item </th>
@@ -402,7 +411,7 @@
             </ng-container>
 
             <ng-container matColumnDef="GRNDate">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>GRNDate</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>GRN Date</th>
               <td mat-cell *matCellDef="let element" style="text-align: left"> {{element.GRNDate| date :'dd/MM/yyyy'}}
               </td>
             </ng-container>
@@ -424,11 +433,12 @@
           </table>
         </div>
       </div>
+      <!-- GRN -->
 
+      <!-- QA -->
       <div class="content" fxLayout="column" *ngIf="tab4">
         <div class="p-12  mt-24">
-          <table *ngIf="qa?.length" style="width: 55% !important;" class="table" mat-table [dataSource]="qaDataSource"
-            matSort>
+          <table style="width: 55% !important;" class="table" mat-table [dataSource]="qaDataSource" matSort>
             <ng-container matColumnDef="Item">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Item </th>
               <td mat-cell *matCellDef="let element;let odd=odd" style="text-align: left" class="tableLeftBorder pl-0">
@@ -470,14 +480,14 @@
             <tr mat-row *matRowDef="let row; columns: qaDisplayedColumns;let even=even" style=" cursor: pointer;">
             </tr>
           </table>
-
         </div>
       </div>
+      <!-- QA -->
 
+      <!-- SL -->
       <div class="content" fxLayout="column" *ngIf="tab5">
         <div class="p-12  mt-24">
-          <table *ngIf="sl?.length" style="width: 55% !important;" class="table" mat-table [dataSource]="slDataSource"
-            matSort>
+          <table style="width: 55% !important;" class="table" mat-table [dataSource]="slDataSource" matSort>
 
             <ng-container matColumnDef="Item">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Item </th>
@@ -512,17 +522,22 @@
           </table>
         </div>
       </div>
+      <!-- SL -->
 
+      <!-- Document -->
       <div class="content" fxLayout="column" *ngIf="tab6">
 
       </div>
+      <!-- Document -->
 
+      <!-- Flip -->
       <div class="content" fxLayout="column" *ngIf="tab7">
 
       </div>
+      <!-- Flip -->
 
     </div>
-
+    <!-- Tables -->
     <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
     </mat-progress-spinner>
     <div id="overlay" *ngIf="isProgressBarVisibile"></div>

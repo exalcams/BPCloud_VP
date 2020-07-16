@@ -83,6 +83,7 @@ export class HomeComponent implements OnInit {
       this._router.navigate(['/auth/login']);
     }
   }
+
   CreateAppUsage(): void {
     const appUsage: AppUsage = new AppUsage();
     appUsage.UserID = this.currentUserID;
@@ -98,6 +99,7 @@ export class HomeComponent implements OnInit {
       }
     );
   }
+
   GetFactByPartnerIDAndType(): void {
     this._factService.GetFactByPartnerIDAndType(this.currentUserName, 'Vendor').subscribe(
       (data) => {
@@ -350,12 +352,12 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  getActionData(element: BPCOFAIACT, StatusFor: string): string {
-    switch (StatusFor) {
+  getActionData(element: BPCOFAIACT, actionDataFor: string): string {
+    switch (actionDataFor) {
       case 'actionFirstData':
-        return element.Status === 'DueForACK' ? 'Created' : element.Status === 'DueForASN' ? 'Acknowledged' :
-          element.Status === 'DueForGate' ? 'ASN Done' : element.Status === 'DueForGRN' ? 'Gate Done' :
-            element.Status === 'Accepted' ? 'Accepted' : element.Status === 'Rejected' ? 'Rejected' : '';
+        return element.Status === 'DueForACK' ? 'acknowledge' : element.Status === 'DueForASN' ? 'ASN' :
+          element.Status === 'DueForGate' ? 'GRN' : element.Status === 'DueForGRN' ? 'Gate' :
+            element.Status === 'Accepted' ? 'Accept' : element.Status === 'Rejected' ? 'Reject' : '';
       case 'actionSecondData':
         return element.Status === 'DueForACK' ? 'waiting for Acknowledgement ' : element.Status === 'DueForASN' ? 'waiting for ASN' :
           element.Status === 'DueForGate' ? 'waiting for Gate' : element.Status === 'DueForGRN' ? 'waiting for GRN' : '';
