@@ -448,7 +448,40 @@
     transform: translateY(-1.1em) scale(0.75);
     width: 133.33333%;
   }
+  .abnormal {
+    .mat-form-field-flex > .mat-form-field-infix {
+      padding: 0em 0px 0.6em !important;
+    }
+    .mat-form-field-appearance-outline {
+      .mat-form-field-suffix,
+      .mat-form-field-prefix {
+        top: 0.5em;
+        .mat-icon-button {
+          width: 1.5em;
+          height: 1.5em;
+        }
+      }
+    }
+    .mat-form-field-infix {
+      width: auto;
+    }
+    .mat-form-field-label-wrapper {
+      top: -1.5em;
+    }
+    .mat-form-field-wrapper {
+      margin: 0 0 0 0;
+      padding-bottom: 0em;
+    }
 
+    .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
+      transform: translateY(-1.1em) scale(0.75);
+      width: 133.33333%;
+    }
+    .mat-form-field-outline-start,
+    .mat-form-field-outline-end {
+      border-radius: 0 !important;
+    }
+  }
   .progress__svg {
     transform: rotate(-90deg);
   }
