@@ -64,6 +64,9 @@ import { ReturnComponent } from './return/return.component';
 import { AttachmentDialogComponent } from '../pages/attachment-dialog/attachment-dialog.component';
 import { PODComponent } from './pod/pod.component';
 import { PODDetailsComponent } from './poddetails/poddetails.component';
+import { SupportChatComponent } from './support-chat/support-chat.component';
+import { SupportDeskComponent } from './support-desk/support-desk.component';
+import { SupportTicketComponent } from './support-ticket/support-ticket.component';
 
 const routes = [
     {
@@ -97,6 +100,18 @@ const routes = [
     {
         path: 'poddetails',
         component: PODDetailsComponent
+    },
+    {
+        path: 'supportchat',
+        component: SupportChatComponent
+    },
+    {
+        path: 'supportdesk',
+        component: SupportDeskComponent
+    },
+    {
+        path: 'supportticket',
+        component: SupportTicketComponent
     },
     {
         path: '**',
@@ -161,7 +176,8 @@ const routes = [
     ],
     declarations: [CustomerDashboardComponent, CustomerFactComponent,
         CustomerOrderfulfilmentComponent, CustomerPolookupComponent,
-        PurchaseIndentComponent, ReturnComponent, PODComponent, PODDetailsComponent],
+        PurchaseIndentComponent, ReturnComponent, PODComponent, PODDetailsComponent,
+        SupportChatComponent, SupportDeskComponent, SupportTicketComponent],
     providers: [
         DecimalPipe
     ],

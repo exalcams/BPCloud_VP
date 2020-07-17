@@ -40,10 +40,14 @@ export class LoginComponent implements OnInit {
   action = true;
   setAutoHide = true;
   autoHide = 2000;
-
   addExtraClass: false;
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
+
+  SetIntervalID: any;
+  CurrentIndex: number;
+  AllTexts: string[] = [];
+  CurrentText: string;
 
   constructor(
     private _fuseNavigationService: FuseNavigationService,
@@ -75,6 +79,8 @@ export class LoginComponent implements OnInit {
 
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.IsProgressBarVisibile = false;
+    this.CurrentIndex = 0;
+    this.AllTexts = ['Scalability', 'Reliability'];
   }
 
   ngOnInit(): void {
@@ -82,8 +88,23 @@ export class LoginComponent implements OnInit {
       userName: ['', Validators.required],
       password: ['', Validators.required]
     });
-  }
 
+    this.SetCurrentText();
+    this.SetIntervalID = setInterval(() => {
+      this.SetCurrentText();
+    }, 2000);
+
+  }
+  // Getting Notification
+
+
+  SetCurrentText(): void {
+    if (this.CurrentIndex >= this.AllTexts.length) {
+      this.CurrentIndex = 0;
+    }
+    this.CurrentText = this.AllTexts[this.CurrentIndex];
+    this.CurrentIndex++;
+  }
   LoginClicked(): void {
     if (this.loginForm.valid) {
       this.IsProgressBarVisibile = true;
@@ -133,6 +154,9 @@ export class LoginComponent implements OnInit {
     }
     else if (data.UserRole === 'HelpDeskAdmin') {
       this._router.navigate(['pages/supportdesk']);
+    }
+    else if (data.UserRole === 'CustomerHelpDeskAdmin') {
+      this._router.navigate(['customer/supportdesk']);
     }
     else {
       this._router.navigate(['pages/dashboard']);
@@ -415,6 +439,20 @@ export class LoginComponent implements OnInit {
         }
       );
     }
+    if (this.MenuItems.indexOf('CustomerSupportDesk') >= 0) {
+      this.children.push(
+        {
+          id: 'custsupportdesk',
+          title: 'Support Desk',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          icon: 'supportIcon',
+          isSvgIcon: true,
+          // icon: 'dashboard',
+          url: '/customer/supportdesk',
+        }
+      );
+    }
     if (this.MenuItems.indexOf('Fact') >= 0) {
       this.children.push(
         {
@@ -609,7 +647,7 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    
+
     if (this.MenuItems.indexOf('App') >= 0 || this.MenuItems.indexOf('Role') >= 0 ||
       this.MenuItems.indexOf('User') >= 0) {
       this.children.push({

@@ -499,6 +499,9 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
       this._router.navigate(['/customer/polookup'], { queryParams: { id: so } });
     }
   }
+  goToSupportDesk(so: string): void {
+    this._router.navigate(['/customer/supportticket'], { queryParams: { id: so } });
+  }
   GotoPI(PINumber?: string): void {
     // alert(po);
     if (PINumber) {

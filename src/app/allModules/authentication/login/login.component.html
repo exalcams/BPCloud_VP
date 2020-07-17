@@ -1,15 +1,17 @@
 <div id="login" class="inner-scroll normal" fxLayout="row" fxLayoutAlign="start">
 
   <div id="login-intro" fxFlex fxHide fxShow.gt-xs>
-
+    <div *ngIf="CurrentText" class="description" [ngStyle]="{'color':'white'}" [@animate]="{value:'*',params:{x:'100%'}}">
+      Maximum <span>{{CurrentText}}</span>
+    </div>
   </div>
- 
+
   <div id="login-form-wrapper" [style.background-color]="'white'" fusePerfectScrollbar
     [@animate]="{value:'*',params:{delay:'300ms',x:'100%'}}">
     <div align="right" style="margin-bottom: -34px;">
       <span><img src="assets/images/logo.svg" style="height: 60px;padding: 4px 15px 2px 0px;"></span>
     </div>
-    <div id="login-form"> 
+    <div id="login-form">
       <div class="title">Sign In</div>
       <div class="border"></div>
 
@@ -34,7 +36,7 @@
         </mat-form-field>
 
         <div class="remember-forgot-password" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between center">
-          <span class="forgot-password"  style="cursor: pointer;" (click)="OpenForgetPasswordLinkDialog()">
+          <span class="forgot-password" style="cursor: pointer;" (click)="OpenForgetPasswordLinkDialog()">
             Forgot Password?
           </span>
         </div>
@@ -44,11 +46,11 @@
         </button>
         <!-- <a class="link" href="/#/register/vendor">Click here to regster</a> -->
       </form>
-      
+
     </div>
- 
-    <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent"
-    mode="indeterminate"></mat-progress-spinner>
+
+    <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
+    </mat-progress-spinner>
   </div>
-  
+
 </div>
