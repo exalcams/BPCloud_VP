@@ -211,15 +211,37 @@
                   <mat-card *ngFor="let action of actions" fxFlex="100%" fxLayout="column" class="rightBorder"
                     style="height:80px;margin: 20px 5px 5px 2px;padding: 10px;border-color:#67c18b;">
                     <mat-card-content>
-                      <div fxFlex fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="start start"
-                        style="font-size: 13px;">
+                      <div fxFlex fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="start" style="font-size: 13px;">
                         <div fxFlex><span>PO <strong>{{action.DocNumber}} </strong> is available for
-                            <strong>{{getActionData(action,'actionFirstData')}}, </strong></span></div>
-                        <div fxFlex fxLayout="row" fxLayoutGap="5px">
-                          <div fxFlex="100">
+                            <strong>{{getActionData(action,'actionFirstData')}},</strong></span></div>
+                        <div fxFlex>
+                          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+                            <div fxFlex="55">
+                              <label id="lblShipping">Do you want to <strong style="cursor: pointer;"
+                                  (click)="actionTextButtonClicked(action)">Confirm?</strong></label>
+                            </div>
+                            <div fxFlex="30">
+                              <button class="yes-btn" mat-raised-button
+                                (click)="actionTextButtonClicked(action)">Yes</button>
+                            </div>
+                            <div fxFlex="15">
+                              <button class="no-btn" mat-stroked-button (click)="noButtonClicked(action)">No</button>
+                            </div>
+                          </div>
+                          <!-- <div fxFlex fxLayout="row" fxLayoutGap="5px">
+                            <div fxFlex>
+                              <button class="yes-btn" mat-raised-button
+                                (click)="actionTextButtonClicked(action)">Yes</button>
+                            </div>
+                            <div fxFlex align="end">
+                              <button class="no-btn" mat-stroked-button
+                                (click)="actionTextButtonClicked(action)">No</button>
+                            </div>
+                          </div> -->
+                          <!-- <div fxFlex="100">
                             <label id="lblShipping">Do you want to <a style="cursor: pointer;"
                                 (click)="actionTextButtonClicked(action)">Confirm</a> ? </label>
-                          </div>
+                          </div> -->
                           <!-- <div fxFlex="60">
                             <label id="lblShipping">Do you want to </label>
                           </div>

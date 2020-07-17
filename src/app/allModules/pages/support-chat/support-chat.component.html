@@ -36,14 +36,11 @@
                         <div fxFlex style="text-align: right;">Assigned To : </div>
                         <div fxFlex style="font-weight: bold;text-align: left;  line-height: 19px;">
                           {{SupportHeader.AssignTo}}</div>
-                        <!-- Assigned To: <span style="font-weight: bold;">{{SupportHeader.AssignTo}}</span> -->
                       </div>
                       <div fxFlex="50" fxLayout="row" fxLayoutGap="5px" class=" p-4">
                         <div fxFlex style="text-align: right;">Reason Code : </div>
                         <div fxFlex style="font-weight: bold; text-align: left;  line-height: 19px;">
                           {{SupportHeader.ReasonCode}}</div>
-                        <!-- Reason Code: <span
-                          style="font-weight: bold;">{{SupportHeader.ReasonCode}}</span> -->
                       </div>
                     </div>
                   </div>
@@ -83,10 +80,8 @@
                     [style.border-color]="supportLog.Status==='Closed'?'#4FAB6D':supportLog.Status==='Pending'?' #EF8377':
                     supportLog.Status==='Open'?'#efb577':''">
                     <div fxFlex="10">
-                      <div [style.background-color]="supportLog.Status==='Closed'?'#4FAB6D':supportLog.Status==='Pending'?' #EF8377'
-                        :supportLog.Status==='Open'?'#efb577':''" style="text-orientation: upright; writing-mode: vertical-rl ; 
-                      color: white; font-size: 10px;
-                      padding: 2px;">
+                      <div class="left-status-container" [style.background-color]="supportLog.Status==='Closed'?'#4FAB6D':
+                      supportLog.Status==='Pending'?' #EF8377':supportLog.Status==='Open'?'#efb577':''">
                         {{supportLog.Status | uppercase}}</div>
                     </div>
                     <div fxFlex="75" fxLayout="column" fxLayoutAlign="space-evenly end" style="padding: 10px;">
@@ -104,7 +99,6 @@
                 </div>
               </div>
               <div fxFlex="5">
-                <!-- [style.padding-top]="first?'51px':''" -->
                 <div fxLayout="column" fxLayoutAlign="space-around center" [style.margin-top]="first?'51px':''">
                   <!-- <div *ngIf="!first" style="margin-top: -42px;"
                     [class]="supportLog.Status==='Closed'?'green-timeline':supportLog.Status==='Open'?'orange-timeline':''">
