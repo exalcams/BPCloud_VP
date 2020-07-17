@@ -247,4 +247,21 @@
         cursor: pointer;
         // margin-top: -16px;
     }
+    .yes-btn {
+        height: 32px;
+        width:74px;
+        min-width: 74px;
+        background-color: #67c18b;
+        color: white;
+        cursor: pointer;
+    }
+    .no-btn {
+        height: 32px;
+        width:32px;
+        min-width: 32px;
+        background-color: white;
+        color: #f17474;
+        cursor: pointer;
+        padding: 0 5px !important;
+    }
 }

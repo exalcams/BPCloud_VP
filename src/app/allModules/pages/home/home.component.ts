@@ -303,6 +303,10 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  noButtonClicked(aIACTByPartnerID: BPCOFAIACT): void {
+
+  }
+
   setActionToOpenConfirmation(actiontype: string): void {
     if (this.selectedFact.PatnerID) {
       const Actiontype = actiontype;
