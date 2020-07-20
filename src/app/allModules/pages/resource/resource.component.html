@@ -65,7 +65,7 @@
 
           </div> -->
         <!-- </div> -->
-        <mat-card fxFlex="50%" fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="20px"
+        <mat-card (click)="navigate()" fxFlex="50%" fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="20px"
           style="padding: 10px;">
           <!-- <mat-card-content class="staySafe"> -->
           <div fxFlex>
@@ -179,11 +179,11 @@
         </table>
       </div>
     </div> -->
- 
+
     <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
     </mat-progress-spinner>
     <div id="overlay" *ngIf="IsProgressBarVisibile">
     </div>
- 
+
   </div>
 </div>
