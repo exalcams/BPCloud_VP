@@ -10,8 +10,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Guid } from 'guid-typescript';
 import { ASNService } from 'app/services/asn.service';
 import { ShareParameterService } from 'app/services/share-parameters.service';
-import { BPCASNHeader, BPCASNItem, DocumentCenter, BPCASNView, BPCInvoiceAttachment, 
-    BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster, BPCASNPack } from 'app/models/ASN';
+import {
+    BPCASNHeader, BPCASNItem, DocumentCenter, BPCASNView, BPCInvoiceAttachment,
+    BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster, BPCASNPack
+} from 'app/models/ASN';
 import { BehaviorSubject } from 'rxjs';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { FuseConfigService } from '@fuse/services/config.service';
@@ -53,6 +55,8 @@ export class ASNComponent implements OnInit {
     SelectedASNHeader: BPCASNHeader;
     SelectedASNNumber: string;
     SelectedASNView: BPCASNView;
+    @ViewChild('noOfPacks') noOfPacks: ElementRef;
+    @ViewChild('volumetricWeight') volumetricWeight: ElementRef;
     ASNItems: BPCASNItem[] = [];
     ASNItemDisplayedColumns: string[] = [
         'Item',
@@ -80,7 +84,7 @@ export class ASNComponent implements OnInit {
         'ReferenceNumber',
         'Dimension',
         'NetWeight',
-        'NetWeightUOM',
+        // 'NetWeightUOM',
         'GrossWeight',
         'GrossWeightUOM',
         'VolumetricWeight',
@@ -206,14 +210,14 @@ export class ASNComponent implements OnInit {
             AWBNumber: ['', Validators.required],
             AWBDate: [new Date(), Validators.required],
             NetWeight: ['', [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
-            NetWeightUOM: ['KG', Validators.required],
+            // NetWeightUOM: ['KG', Validators.required],
             GrossWeight: ['', [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
             GrossWeightUOM: ['KG', Validators.required],
             VolumetricWeight: ['', [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
             VolumetricWeightUOM: [''],
             DepartureDate: [new Date(), Validators.required],
             ArrivalDate: [this.minDate, Validators.required],
-            NumberOfPacks: ['', [Validators.pattern('^[1-9][0-9]*$')]],
+            NumberOfPacks: ['1', [Validators.pattern('^[1-9][0-9]*$')]],
             CountryOfOrigin: ['IND', Validators.required],
             ShippingAgency: [''],
             BillOfLading: ['', Validators.required],
@@ -223,15 +227,18 @@ export class ASNComponent implements OnInit {
             ContactPersonNo: ['', [Validators.required, Validators.pattern('^(\\+91[\\-\\s]?)?[0]?(91)?[6789]\\d{9}$')]],
         });
         // this.DynamicallyAddAcceptedValidation();
+        this.RefreshPackages();
     }
     SetInitialValueForASNFormGroup(): void {
         this.ASNFormGroup.get('TransportMode').patchValue('Road');
         this.ASNFormGroup.get('AWBDate').patchValue(new Date());
-        this.ASNFormGroup.get('NetWeightUOM').patchValue('KG');
+        // this.ASNFormGroup.get('NetWeightUOM').patchValue('KG');
         this.ASNFormGroup.get('GrossWeightUOM').patchValue('KG');
         this.ASNFormGroup.get('DepartureDate').patchValue(new Date());
         this.ASNFormGroup.get('ArrivalDate').patchValue(this.minDate);
         this.ASNFormGroup.get('CountryOfOrigin').patchValue('IND');
+        this.ASNFormGroup.get('NumberOfPacks').patchValue('1');
+        this.RefreshPackages();
     }
     InitializeASNItemFormGroup(): void {
         this.ASNItemFormGroup = this._formBuilder.group({
@@ -311,13 +318,18 @@ export class ASNComponent implements OnInit {
         this.fileToUploadList = [];
         this.invoiceAttachment = null;
     }
-
+    NoOfPacksEnterKeyDown(): boolean {
+        this.noOfPacks.nativeElement.blur();
+        this.volumetricWeight.nativeElement.focus();
+        return true;
+    }
     RefreshPackages(): void {
         const NoOfPacks = +this.ASNFormGroup.get('NumberOfPacks').value;
         const Remaing = NoOfPacks - this.SelectedASNView.ASNPacks.length;
         if (Remaing > 0) {
             for (let i = 0; i < Remaing; i++) {
                 const pack: BPCASNPack = new BPCASNPack();
+                pack.PackageID = (this.SelectedASNView.ASNPacks.length + 1).toString();
                 this.SelectedASNView.ASNPacks.push(pack);
                 this.InsertASNPacksFormGroup(pack);
             }
@@ -739,7 +751,7 @@ export class ASNComponent implements OnInit {
         this.ASNFormGroup.get('GrossWeight').patchValue(this.SelectedASNHeader.GrossWeight);
         this.ASNFormGroup.get('GrossWeightUOM').patchValue(this.SelectedASNHeader.GrossWeightUOM);
         this.ASNFormGroup.get('NetWeight').patchValue(this.SelectedASNHeader.NetWeight);
-        this.ASNFormGroup.get('NetWeightUOM').patchValue(this.SelectedASNHeader.NetWeightUOM);
+        // this.ASNFormGroup.get('NetWeightUOM').patchValue(this.SelectedASNHeader.NetWeightUOM);
         this.ASNFormGroup.get('VolumetricWeight').patchValue(this.SelectedASNHeader.VolumetricWeight);
         this.ASNFormGroup.get('VolumetricWeightUOM').patchValue(this.SelectedASNHeader.VolumetricWeightUOM);
         this.ASNFormGroup.get('BillOfLading').patchValue(this.SelectedASNHeader.BillOfLading);
@@ -829,7 +841,7 @@ export class ASNComponent implements OnInit {
             ReferenceNumber: [pack.ReferenceNumber, Validators.required],
             Dimension: [pack.Dimension, Validators.required],
             NetWeight: [pack.NetWeight, [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
-            NetWeightUOM: [pack.NetWeightUOM, Validators.required],
+            NetWeightUOM: [pack.GrossWeightUOM],
             GrossWeight: [pack.GrossWeight, [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
             GrossWeightUOM: [pack.GrossWeightUOM, Validators.required],
             VolumetricWeight: [pack.VolumetricWeight, [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
@@ -876,7 +888,7 @@ export class ASNComponent implements OnInit {
         this.SelectedASNHeader.GrossWeight = this.SelectedASNView.GrossWeight = this.ASNFormGroup.get('GrossWeight').value;
         this.SelectedASNHeader.GrossWeightUOM = this.SelectedASNView.GrossWeightUOM = this.ASNFormGroup.get('GrossWeightUOM').value;
         this.SelectedASNHeader.NetWeight = this.SelectedASNView.NetWeight = this.ASNFormGroup.get('NetWeight').value;
-        this.SelectedASNHeader.NetWeightUOM = this.SelectedASNView.NetWeightUOM = this.ASNFormGroup.get('NetWeightUOM').value;
+        this.SelectedASNHeader.NetWeightUOM = this.SelectedASNView.NetWeightUOM = this.ASNFormGroup.get('GrossWeightUOM').value;
         this.SelectedASNHeader.VolumetricWeight = this.SelectedASNView.VolumetricWeight = this.ASNFormGroup.get('VolumetricWeight').value;
         this.SelectedASNHeader.VolumetricWeightUOM = this.SelectedASNView.VolumetricWeightUOM = this.ASNFormGroup.get('VolumetricWeightUOM').value;
         this.SelectedASNHeader.NumberOfPacks = this.SelectedASNView.NumberOfPacks = this.ASNFormGroup.get('NumberOfPacks').value;
@@ -965,7 +977,7 @@ export class ASNComponent implements OnInit {
                 pack.GrossWeight = x.get('GrossWeight').value;
                 pack.GrossWeightUOM = x.get('GrossWeightUOM').value;
                 pack.NetWeight = x.get('NetWeight').value;
-                pack.NetWeightUOM = x.get('NetWeightUOM').value;
+                pack.NetWeightUOM = x.get('GrossWeightUOM').value;
                 pack.VolumetricWeight = x.get('VolumetricWeight').value;
                 pack.VolumetricWeightUOM = x.get('VolumetricWeightUOM').value;
                 if (this.SelectedDocNumber && this.PO) {

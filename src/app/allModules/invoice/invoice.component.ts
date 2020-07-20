@@ -45,6 +45,11 @@ export class InvoiceComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   SearchFormGroup: FormGroup;
   isDateError: boolean;
+  DefaultFromDate: Date;
+  DefaultToDate: Date;
+  searchText: string;
+  SelectValue: string;
+  isExpanded: boolean;
   constructor(private _fuseConfigService: FuseConfigService,
     private _formBuilder: FormBuilder,
     private _router: Router,
@@ -58,6 +63,12 @@ export class InvoiceComponent implements OnInit {
     this.authenticationDetails = new AuthenticationDetails();
     this.IsProgressBarVisibile = false;
     this.isDateError = false;
+    this.searchText = '';
+    this.SelectValue = 'All';
+    this.isExpanded = false;
+    this.DefaultFromDate = new Date();
+    this.DefaultFromDate.setDate(this.DefaultFromDate.getDate() - 30);
+    this.DefaultToDate = new Date();
   }
 
   ngOnInit(): void {
@@ -80,7 +91,8 @@ export class InvoiceComponent implements OnInit {
     }
     this.CreateAppUsage();
     this.InitializeSearchFormGroup();
-    this.GetAllInvoicesByPartnerID();
+    // this.GetAllInvoicesByPartnerID();
+    this.SearchClicked();
   }
   CreateAppUsage(): void {
     const appUsage: AppUsage = new AppUsage();
@@ -99,8 +111,8 @@ export class InvoiceComponent implements OnInit {
   }
   InitializeSearchFormGroup(): void {
     this.SearchFormGroup = this._formBuilder.group({
-      FromDate: [''],
-      ToDate: [''],
+      FromDate: [this.DefaultFromDate],
+      ToDate: [this.DefaultToDate],
       PONumber: [''],
       InvoiceNumber: [''],
       Status: ['All'],
@@ -241,9 +253,16 @@ export class InvoiceComponent implements OnInit {
       };
       itemsShowedd.push(item);
     });
-    this._excelService.exportAsExcelFile(itemsShowedd, 'sample');
+    this._excelService.exportAsExcelFile(itemsShowedd, 'invoice');
     // const itemsShowed1 = this.TransDetailsTable.nativeElement;
     // this.excelService.exportTableToExcel(itemsShowed1, 'Sample');
+  }
+  expandClicked(): void {
+    this.isExpanded = !this.isExpanded;
+  }
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.InvoiceDataSource.filter = filterValue.trim().toLowerCase();
   }
 }
 

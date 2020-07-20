@@ -197,13 +197,26 @@
     }
 
     .mat-form-field-flex > .mat-form-field-infix {
-        padding: 0.3em 0px !important;
+        padding: 0em 0px 0.6em !important;
+    }
+    .mat-form-field-appearance-outline {
+        .mat-form-field-suffix,
+        .mat-form-field-prefix {
+            top: 0.5em;
+            .mat-icon-button {
+                width: 1.5em;
+                height: 1.5em;
+            }
+        }
+    }
+    .mat-form-field-infix {
+        width: auto;
     }
     .mat-form-field-label-wrapper {
         top: -1.5em;
     }
     .mat-form-field-wrapper {
-        margin: 1em 0 0 0;
+        margin: 0 0 0 0;
         padding-bottom: 1em;
     }
 
@@ -211,6 +224,11 @@
         transform: translateY(-1.1em) scale(0.75);
         width: 133.33333%;
     }
+    .mat-form-field-outline-start,
+    .mat-form-field-outline-end {
+        border-radius: 0 !important;
+    }
+
     .SaveBtn {
         background-color: #efb577;
         height: 40px;
@@ -222,15 +240,27 @@
         background-color: white;
         color: #efb577;
     }
+    .pdfLinkClass {
+        color: #1e8bed;
+        cursor: pointer;
+    }
+    .expandImg {
+        height: 36px;
+        margin-top: -16px;
+        cursor: pointer;
+    }
     .excelBtn {
+        margin-top: -16px;
+        min-width: 0px;
         background-color: white;
         color: rgb(46, 125, 50);
-        // &.mat-stroked-button {
-        //     border-radius: 5px;
-        // }
+        &.mat-stroked-button {
+            // border-radius: 5px;
+            padding: 0px 8px;
+        }
     }
     .excelImg {
-        margin: 4px 6px 4px 4px;
+        // margin: 4px 6px 4px 4px;
         height: 24px;
     }
     .excelText {
@@ -268,7 +298,7 @@
         margin-top: -16px;
         margin-left: 32px;
     }
-    .mat-paginator-page-size {
-        margin-top: -26px;
-    }
+    // .mat-paginator-page-size {
+    //     margin-top: -26px;
+    // }
 }
