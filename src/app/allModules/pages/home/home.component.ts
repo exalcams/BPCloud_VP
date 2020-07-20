@@ -73,12 +73,11 @@ export class HomeComponent implements OnInit {
       }
       this.CreateAppUsage();
       this.GetFactByPartnerIDAndType();
-      // this.GetAIACTsByPartnerID(this.authenticationDetails.UserName);
       this.GetActionsByPartnerID();
       this.GetNotificationsByPartnerID();
-      this.SetIntervalID = setInterval(() => {
-        this.GetNotificationsByPartnerID();
-      }, 10000);
+      // this.SetIntervalID = setInterval(() => {
+      //   this.GetNotificationsByPartnerID();
+      // }, 10000);
     } else {
       this._router.navigate(['/auth/login']);
     }

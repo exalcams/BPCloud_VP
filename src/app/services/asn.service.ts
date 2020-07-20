@@ -5,7 +5,10 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { BPCASNHeader, BPCASNView, BPCASNItem, DocumentCenter, BPCInvoiceAttachment, BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster, BPCASNPack } from 'app/models/ASN';
+import {
+    BPCASNHeader, BPCASNView, BPCASNItem, DocumentCenter, BPCInvoiceAttachment,
+    BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster, BPCASNPack
+} from 'app/models/ASN';
 
 @Injectable({
     providedIn: 'root'
@@ -164,7 +167,7 @@ export class ASNService {
         })
             .pipe(catchError(this.errorHandler));
     }
-    
+
     DowloandDocumentCenterAttachment(AttachmentName: string, ASNNumber: string): Observable<Blob | string> {
         return this._httpClient.get(`${this.baseAddress}poapi/ASN/DowloandDocumentCenterAttachment?AttachmentName=${AttachmentName}&ASNNumber=${ASNNumber}`, {
             responseType: 'blob',
@@ -190,5 +193,5 @@ export class ASNService {
         return this._httpClient.get<BPCDocumentCenterMaster[]>(`${this.baseAddress}poapi/Master/GetAllDocumentCenterMaster`)
             .pipe(catchError(this.errorHandler));
     }
-    
+
 }
