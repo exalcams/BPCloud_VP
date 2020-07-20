@@ -385,7 +385,7 @@
                 <form autocomplete="off" class="abnormal" fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto"
                   name="form" novalidate [formGroup]="flipItemFormGroup">
                   <div style="overflow-x:auto;"
-                    *ngIf="(poItems && poItems.length)|| (selectedFlipView?.FlipItems && selectedFlipView?.FlipItems?.length)">
+                    *ngIf="(poItems && poItems.length)|| (selectedFlipView?.FLIPItems && selectedFlipView?.FLIPItems?.length)">
                     <!-- *ngIf="(poItems && poItems.length)|| (selectedFlipView?.FlipItems && selectedFlipView?.FlipItems?.length)" -->
                     <table class="table" mat-table [dataSource]="flipItemDataSource" formArrayName="flipItems">
                       <ng-container matColumnDef="Item">
