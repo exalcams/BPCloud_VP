@@ -6,7 +6,7 @@ import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import {
     MatButtonModule, MatIconModule, MatSnackBar, MatSnackBarModule, MatDialogModule, MatToolbarModule,
-    MAT_DATE_LOCALE, MatProgressSpinnerModule, MatProgressBarModule
+    MAT_DATE_LOCALE, MatProgressSpinnerModule, MatProgressBarModule, MatExpansionModule
 } from '@angular/material';
 import { TranslateModule } from '@ngx-translate/core';
 import 'hammerjs';
@@ -95,7 +95,7 @@ const appRoutes: Routes = [
         NotificationDialogComponent,
         AttachmentDialogComponent,
         AttachmentViewDialogComponent,
-        InformationDialogComponent
+        InformationDialogComponent,
     ],
     imports: [
         BrowserModule,
@@ -116,6 +116,7 @@ const appRoutes: Routes = [
         MatSnackBarModule,
         MatDialogModule,
         MatToolbarModule,
+        MatExpansionModule,
 
         // Fuse modules
         FuseModule.forRoot(fuseConfig),

@@ -1,3 +1,4 @@
+import { FaqComponent } from "./faq/faq.component";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { FuseSidebarModule } from "@fuse/components";
@@ -58,15 +59,15 @@ import { PoFlipComponent } from "./po-flip/po-flip.component";
 import { ASNComponent } from "./asn/asn.component";
 import { HomeComponent } from "./home/home.component";
 import { PaymentComponent } from "./payment/payment.component";
-import { ResourceComponent } from './resource/resource.component';
-import { SupportDeskComponent } from './support-desk/support-desk.component';
-import { SupportTicketComponent } from './support-ticket/support-ticket.component';
-import { SupportChatComponent } from './support-chat/support-chat.component';
-import { DataMigrationComponent } from './data-migration/data-migration.component';
-import { PoFactsheetComponent } from './po-factsheet/po-factsheet.component';
-import { OrderFulFilmentCenterComponent } from './order-fulfilment-center/order-fulfilment-center.component';
-import { PerformanceComponent } from './performance/performance.component';
-import { NgImageSliderModule } from 'ng-image-slider';
+import { ResourceComponent } from "./resource/resource.component";
+import { SupportDeskComponent } from "./support-desk/support-desk.component";
+import { SupportTicketComponent } from "./support-ticket/support-ticket.component";
+import { SupportChatComponent } from "./support-chat/support-chat.component";
+import { DataMigrationComponent } from "./data-migration/data-migration.component";
+import { PoFactsheetComponent } from "./po-factsheet/po-factsheet.component";
+import { OrderFulFilmentCenterComponent } from "./order-fulfilment-center/order-fulfilment-center.component";
+import { PerformanceComponent } from "./performance/performance.component";
+import { NgImageSliderModule } from "ng-image-slider";
 
 // import 'chart.piecelabel.js';
 
@@ -120,6 +121,10 @@ const routes = [
         component: PerformanceComponent,
     },
     {
+        path: "faq",
+        component: FaqComponent,
+    },
+    {
         path: "**",
         redirectTo: "/auth/login",
     },
@@ -127,7 +132,6 @@ const routes = [
 
 @NgModule({
     imports: [
-        RouterModule.forChild(routes),
         // HttpClientModule,
         // TranslateModule,
         MatFormFieldModule,
@@ -192,7 +196,8 @@ const routes = [
             showInnerStroke: true,
             animationDuration: 300,
         }),
-        NgImageSliderModule
+        NgImageSliderModule,
+        RouterModule.forChild(routes),
     ],
     declarations: [
         OrderFulFilmentCenterComponent,
@@ -206,9 +211,10 @@ const routes = [
         SupportTicketComponent,
         SupportChatComponent,
         DataMigrationComponent,
-        PerformanceComponent
+        PerformanceComponent,
+        FaqComponent
     ],
     providers: [DecimalPipe],
     entryComponents: [],
 })
-export class PagesModule { }
+export class PagesModule {}
