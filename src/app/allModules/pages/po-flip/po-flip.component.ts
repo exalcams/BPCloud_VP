@@ -11,7 +11,7 @@ import { NotificationDialogComponent } from 'app/notifications/notification-dial
 import { AttachmentDialogComponent } from 'app/allModules/pages/attachment-dialog/attachment-dialog.component';
 import { AttachmentDetails } from 'app/models/task';
 import { fuseAnimations } from '@fuse/animations';
-import { BPCFLIPHeader, BPCFLIPHeaderView, BPCFLIPCost, BPCFLIPItem } from 'app/models/po-flip';
+import { BPCFLIPHeader, BPCFLIPHeaderView, BPCFLIPCost, BPCFLIPItem, BPCExpenseTypeMaster } from 'app/models/po-flip';
 import { POFlipService } from 'app/services/po-flip.service';
 import { BPCOFHeader, BPCOFItem } from 'app/models/OrderFulFilment';
 import { POService } from 'app/services/po.service';
@@ -76,6 +76,7 @@ export class PoFlipComponent implements OnInit {
   fileToUploadList: File[] = [];
   currencies: BPCCurrencyMaster[] = [];
   countries: BPCCountryMaster[] = [];
+  expenseTypes: BPCExpenseTypeMaster[] = [];
   states: string[] = [];
   invoiceTypes: string[] = [];
   math = Math;
@@ -165,6 +166,7 @@ export class PoFlipComponent implements OnInit {
       this.initializeFlipItemFormGroup();
       this.GetCurrencyMasters();
       this.GetCountryMasters();
+      this.GetExpenseTypeMasters();
     } else {
       this._router.navigate(['/auth/login']);
     }
@@ -199,8 +201,6 @@ export class PoFlipComponent implements OnInit {
     this._poService.GetPOByDocAndPartnerID(selectedDocNumber, this.authenticationDetails.UserName).subscribe(
       (data) => {
         this.poHeader = data as BPCOFHeader;
-        console.log("PO Header Details");
-        console.log(this.poHeader);
         this.selectedDocDate = this.poHeader.DocDate;
         if (this.selectedDocNumber && !this.selectedFlip.FLIPID) {
           this.GetPOItemsByDocAndPartnerID();
@@ -217,8 +217,6 @@ export class PoFlipComponent implements OnInit {
     this._poService.GetPOItemsByDocAndPartnerID(this.selectedDocNumber, this.authenticationDetails.UserName).subscribe(
       (data) => {
         this.poItems = data as BPCOFItem[];
-        console.log("PO Item Details");
-        console.log(this.poItems);
         this.clearFormArray(this.flipItemFormArray);
         if (this.poItems && this.poItems.length) {
           this.selectedFlip.Client = this.selectedFlipView.Client = this.poItems[0].Client;
@@ -242,8 +240,6 @@ export class PoFlipComponent implements OnInit {
       (data) => {
         this.flips = data as BPCFLIPHeader[];
         if (this.flips && this.flips.length) {
-          console.log("Flips Details By PartnerID");
-          console.log(this.flips);
           this.loadSelectedFlip(this.flips[0]);
         }
       },
@@ -258,8 +254,6 @@ export class PoFlipComponent implements OnInit {
       (data) => {
         this.flips = data as BPCFLIPHeader[];
         // if (this.flips && this.flips.length) {
-        //   console.log("Flips Details By Doc And PartnerID");
-        //   console.log(this.flips);
         //   this.loadSelectedFlip(this.flips[0]);
         // }
       },
@@ -288,8 +282,6 @@ export class PoFlipComponent implements OnInit {
     this._poFlipService.GetFLIPItemsByFLIPID(this.selectedFlip.FLIPID).subscribe(
       (data) => {
         this.selectedFlipView.FLIPItems = data as BPCFLIPItem[];
-        console.log("Flip Item Details");
-        console.log(this.selectedFlipView.FLIPItems);
         if (this.selectedFlipView.FLIPItems && this.selectedFlipView.FLIPItems.length) {
           this.clearFormArray(this.flipItemFormArray);
           this.selectedFlipView.FLIPItems.forEach(x => {
@@ -422,6 +414,18 @@ export class PoFlipComponent implements OnInit {
     );
   }
 
+  GetExpenseTypeMasters(): void {
+    this._poFlipService.GetExpenseTypeMasters().subscribe(
+      (data) => {
+        this.expenseTypes = data as BPCExpenseTypeMaster[];
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+
+
   initializeFlipFormGroup(): void {
     this.flipFormGroup = this._formBuilder.group({
       InvoiceNumber: ['', [Validators.minLength(1), Validators.maxLength(16)]],
@@ -532,8 +536,6 @@ export class PoFlipComponent implements OnInit {
 
   loadSelectedFlip(selectedFLIP: BPCFLIPHeader): void {
     this.selectedFlip = selectedFLIP;
-    console.log("Selected Flip Details");
-    console.log(this.selectedFlip);
     this.selectedFlipView.FLIPID = this.selectedFlip.FLIPID;
     this.selectedFLIPID = selectedFLIP.FLIPID;
     this.selectedDocDate = selectedFLIP.InvoiceDate;
@@ -653,8 +655,8 @@ export class PoFlipComponent implements OnInit {
       const openQty = x.get('OpenQty').value;
       const tax = x.get('Tax').value;
       const price = x.get('Price').value;
-      const amount = this.convertStringToNumber(openQty) * this.convertStringToNumber(tax)
-        * this.convertStringToNumber(price);
+      const amount = this.convertStringToNumber(openQty) *
+        this.convertStringToNumber(price) + this.convertStringToNumber(tax);
       if (openQty && tax && price) {
         x.get('InvoiceQty').patchValue(this.convertStringToNumber(openQty));
         x.get('Amount').patchValue(amount);
@@ -812,7 +814,7 @@ export class PoFlipComponent implements OnInit {
     const invoiceQty = fLIPItemFormArray.at(index).get('InvoiceQty').value;
     const tax = fLIPItemFormArray.at(index).get('Tax').value;
     const price = fLIPItemFormArray.at(index).get('Price').value;
-    const amount = this.convertStringToNumber(invoiceQty) * this.convertStringToNumber(tax) * this.convertStringToNumber(price);
+    const amount = this.convertStringToNumber(invoiceQty) * this.convertStringToNumber(price) + this.convertStringToNumber(tax);
     fLIPItemFormArray.at(index).get('Amount').patchValue(amount);
     // for (const x of fLIPItemFormArray.controls) {
     //   const invoiceQty = x.get('InvoiceQty').value;

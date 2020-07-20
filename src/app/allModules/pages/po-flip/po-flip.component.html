@@ -60,7 +60,7 @@
                     <div fxFlex='40'>
                       <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="2px">
                         <div fxFlex="20" fxLayoutAlign="end center"> <span> PO NO : </span></div>
-                        <div fxFlex="80" fxLayoutAlign="start center"> <span>  {{selectedFlip?.DocNumber}}</span>
+                        <div fxFlex="80" fxLayoutAlign="start center"> <span> {{selectedFlip?.DocNumber}}</span>
                         </div>
                       </div>
                     </div>
@@ -197,11 +197,11 @@
                   </div> -->
                   <div fxFlex="33.33" fxLayoutAlign="start center">
                     <mat-radio-group style="width: 100%;" formControlName="IsInvoiceOrCertified">
-                      <mat-radio-button value="1">Invoice</mat-radio-button>
-                      <mat-radio-button value="2" style="margin-left: 10px;">Certified</mat-radio-button>
+                      <mat-radio-button value="Credit Note">Credit Note</mat-radio-button>
+                      <mat-radio-button value="Debit Note" style="margin-left: 10px;">Debit Note</mat-radio-button>
                       <mat-error
                         *ngIf="flipFormGroup.get('IsInvoiceOrCertified').touched && flipFormGroup.get('IsInvoiceOrCertified').hasError('required')">
-                        Invoice/Certified is required
+                        Invoice CR/DB is required
                       </mat-error>
                     </mat-radio-group>
                   </div>
@@ -217,10 +217,14 @@
                   name="form" novalidate [formGroup]="flipCostFormGroup">
                   <div fxFlex="32">
                     <mat-form-field style="width: 100%;">
-                      <input matInput placeholder="Invoice Type" formControlName="ExpenceType">
+                      <mat-select placeholder="Expense Type" formControlName="ExpenceType">
+                        <mat-option *ngFor="let expenseType of expenseTypes" [value]="expenseType.ExpenseType">
+                          {{expenseType.ExpenseType}}
+                        </mat-option>
+                      </mat-select>
                       <mat-error
                         *ngIf="flipCostFormGroup.get('ExpenceType').touched && flipCostFormGroup.get('ExpenceType').hasError('required')">
-                        Invoice Type is required
+                        Expense Type is required
                       </mat-error>
                     </mat-form-field>
                   </div>
@@ -380,7 +384,8 @@
               <div fxFlex fxLayout="column">
                 <form autocomplete="off" class="abnormal" fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto"
                   name="form" novalidate [formGroup]="flipItemFormGroup">
-                  <div style="overflow-x:auto;">
+                  <div style="overflow-x:auto;"
+                    *ngIf="(poItems && poItems.length)|| (selectedFlipView?.FlipItems && selectedFlipView?.FlipItems?.length)">
                     <!-- *ngIf="(poItems && poItems.length)|| (selectedFlipView?.FlipItems && selectedFlipView?.FlipItems?.length)" -->
                     <table class="table" mat-table [dataSource]="flipItemDataSource" formArrayName="flipItems">
                       <ng-container matColumnDef="Item">
