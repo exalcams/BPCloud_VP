@@ -346,6 +346,9 @@ export class AttachmentViewDialogComponent implements OnInit {
       this.getFilteredUsers(supportMaster);
     }
     this.supportTicketView.Users = this.filteredUsers;
+    if (this.ofAttachmentData.Type) {
+      this.supportTicketView.Type = this.ofAttachmentData.Type;
+    }
     console.log(this.filteredUsers);
   }
 

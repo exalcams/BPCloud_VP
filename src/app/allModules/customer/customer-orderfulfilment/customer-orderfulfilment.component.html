@@ -230,11 +230,11 @@
 
         <ng-container matColumnDef="Document">
           <th mat-header-cell *matHeaderCellDef style="width: 80px;"> Document </th>
-          <td mat-cell *matCellDef="let element" (click)="viewOfAttachmentClicked(element)" style="text-align: center;">
+          <td mat-cell *matCellDef="let element" (click)="viewOfAttachmentClicked(element)" style="text-align: center;cursor: pointer;">
             <div style="margin-top: 3px; margin-left: 15px;">
               <span [matBadge]="element.DocCount" matBadgeColor="accent" matBadgeOverlap="false"></span>
             </div>
-            <img style="height: 30px" src="assets/images/attachment.png">
+            <img style="height: 30px;" src="assets/images/attachment.png">
           </td>
         </ng-container>
 
