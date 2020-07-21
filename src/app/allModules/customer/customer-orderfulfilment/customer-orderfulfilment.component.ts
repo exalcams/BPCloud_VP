@@ -5,7 +5,7 @@ import { NotificationSnackBarComponent } from 'app/notifications/notification-sn
 import { Task } from 'app/models/task';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { POSearch, PO, Status, DashboardGraphStatus, OTIFStatus, QualityStatus, FulfilmentStatus, Deliverystatus } from 'app/models/Dashboard';
-import { MatTableDataSource, MatPaginator, MatMenuTrigger, MatSort, MatSnackBar } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatMenuTrigger, MatSort, MatSnackBar, MatDialogConfig, MatDialog } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { Router } from '@angular/router';
@@ -17,6 +17,9 @@ import { fuseAnimations } from '@fuse/animations';
 import { SODetails } from 'app/models/customer';
 import { BPCKRA, CustomerBarChartData } from 'app/models/fact';
 import { MasterService } from 'app/services/master.service';
+import { OfAttachmentData } from 'app/models/OrderFulFilment';
+import { BPCInvoiceAttachment } from 'app/models/ASN';
+import { AttachmentViewDialogComponent } from 'app/allModules/pages/attachment-view-dialog/attachment-view-dialog.component';
 
 @Component({
   selector: 'app-customer-orderfulfilment',
@@ -72,7 +75,7 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
   { Value: 'Open', Name: 'Open' },
   { Value: 'Completed', Name: 'Completed' },
     // { Value: 'All', Name: 'All' },
-  ]
+  ];
   // foods: string[] = [
   //     {value: 'steak-0', viewValue: 'Steak'},
   //     {value: 'pizza-1', viewValue: 'Pizza'},
@@ -88,7 +91,7 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
   FulfilmentStatus: FulfilmentStatus = new FulfilmentStatus();
   dashboardDeliverystatus: Deliverystatus = new Deliverystatus();
   selectedPORow: PO = new PO();
-
+  ofAttachments: BPCInvoiceAttachment[] = [];
   // Circular Progress bar
   radius = 60;
   circumference = 2 * Math.PI * this.radius;
@@ -203,6 +206,7 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
     public _dashboardService: DashboardService,
     private _masterService: MasterService,
     private datePipe: DatePipe,
+    private dialog: MatDialog,
   ) {
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.authenticationDetails = new AuthenticationDetails();
@@ -659,5 +663,43 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
   }
   ClearClicked(): void {
     this.ShowAddBtn = true;
+  }
+  viewOfAttachmentClicked(element: SODetails): void {
+    // const attachments = this.ofAttachments.filter(x => x.AttachmentID.toString() === element.RefDoc);
+    this.GetOfAttachmentsByPartnerIDAndDocNumber(element.Document);
+  }
+
+  GetOfAttachmentsByPartnerIDAndDocNumber(docNumber: string): void {
+    this.IsProgressBarVisibile = true;
+    this._dashboardService.GetOfAttachmentsByPartnerIDAndDocNumber(this.authenticationDetails.UserName, docNumber)
+        .subscribe((data) => {
+            if (data) {
+                this.ofAttachments = data as BPCInvoiceAttachment[];
+                console.log(this.ofAttachments);
+                const ofAttachmentData = new OfAttachmentData();
+                ofAttachmentData.DocNumber = docNumber;
+                ofAttachmentData.OfAttachments = this.ofAttachments;
+                this.openAttachmentViewDialog(ofAttachmentData);
+            }
+            this.IsProgressBarVisibile = false;
+        },
+            (err) => {
+                console.error(err);
+                this.IsProgressBarVisibile = false;
+            });
+}
+
+  openAttachmentViewDialog(ofAttachmentData: OfAttachmentData): void {
+
+    const dialogConfig: MatDialogConfig = {
+      data: ofAttachmentData,
+      panelClass: 'attachment-view-dialog'
+    };
+    const dialogRef = this.dialog.open(AttachmentViewDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.GetSODetails();
+      }
+    });
   }
 }
