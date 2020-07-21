@@ -410,4 +410,7 @@ export class CustomerDashboardComponent implements OnInit {
   //     }
   //   });
   // }
+  onClearAllButtonClicked(): void {
+
+  }
 }

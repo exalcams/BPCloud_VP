@@ -239,14 +239,9 @@ export class DashboardService {
       .pipe(catchError(this.errorHandler));
   }
 
-  GetAllSOBasedOnDate(poSearch: OfOption): Observable<SODetails[] | string> {
-    return this._httpClient.post<SODetails[]>(`${this.baseAddress}poapi/Dashboard/GetAllSOBasedOnDate`,
-      poSearch,
-      {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json'
-        })
-      })
+  GetFilteredSODetailsByPartnerID(Type: string, PatnerID: string, FromDate: string, ToDate: string, Status: string): Observable<SODetails[] | string> {
+    return this._httpClient.get<SODetails[]>
+      (`${this.baseAddress}poapi/Dashboard/GetFilteredSODetailsByPartnerID?Type=${Type}&PartnerID=${PatnerID}&FromDate=${FromDate}&ToDate=${ToDate}&Status=${Status}`)
       .pipe(catchError(this.errorHandler));
   }
 

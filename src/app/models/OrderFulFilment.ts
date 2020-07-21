@@ -270,6 +270,7 @@ export class BPCOFQMXLSX {
 export class OfAttachmentData {
     DocNumber: string;
     OfAttachments: BPCInvoiceAttachment[];
+    Type: string | null;
 }
 
 

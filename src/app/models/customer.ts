@@ -114,4 +114,5 @@ export class SODetails {
     Document: string;
     Version: string;
     Currency: string;
+    DocCount: number;
 }
