@@ -3,7 +3,7 @@
     <div class="outer" fxLayout>
       <div class="bg"></div>
       <div>
-        <h3 style="margin: 0px;padding-left: 10px;"><b>Order Fulfilment Center</b></h3>
+        <h3 style="margin: 0px;padding-left: 10px;"><b>{{'ORDER_FULFILMENT_CENTER.HEADER_TITLE' | translate}}</b></h3>
       </div>
       <div fxFlex align="end">
         <span><img src="assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
@@ -12,7 +12,7 @@
     <div fxFlex fxLayout>
       <div class="tile mx-20" fxFlex="17" fxLayout="column" fxLayoutAlign="start">
         <div fxLayoutAlign="start center" class="pt-8">
-          <span class="boldClass orangeBorderBottom pl-8">On Time In Full (OTIF)</span>
+          <span class="boldClass orangeBorderBottom pl-8">{{'ORDER_FULFILMENT_CENTER.ON_TIME_IN_FULL_OTIF' | translate}}</span>
         </div>
         <div fxFlex fxLayoutAlign="center" class="pt-8">
           <svg height="140" width="140" viewBox="0 0 140 140" class="progress__svg">
@@ -233,7 +233,8 @@
                 <mat-option value="POFlip" (click)="goToPOFlipClicked(element.DocNumber)">PO Flip</mat-option>
                 <mat-option value="Subcon" *ngIf="(element.DocType | lowercase)==='subcon'"
                   (click)="goToSubconClicked(element.DocNumber)">Subcon</mat-option>
-                <mat-option value="SupportDesk" (click)="goToSupportDeskClicked(element.DocNumber)">Support Desk</mat-option>
+                <mat-option value="SupportDesk" (click)="goToSupportDeskClicked(element.DocNumber)">Support Desk
+                </mat-option>
                 <!-- <mat-option value="Acknowledge" (click)="Acknowledgement(element.DocNumber)">ACK</mat-option>
                 <mat-option value="POLookup" (click)="PurchaseOrder(element.DocNumber)">PO Factsheet</mat-option>
                 <mat-option value="ASN" (click)="AdvanceShipment(element.DocNumber)">ASN</mat-option>

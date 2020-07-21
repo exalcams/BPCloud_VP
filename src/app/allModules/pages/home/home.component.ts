@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit {
   notificationSnackBarComponent: NotificationSnackBarComponent;
   isProgressBarVisibile: boolean;
   searchText = '';
-  selectID: string;
+  selectedPartnerID: string;
   selection = new SelectionModel<any>(true, []);
   todayDate: any;
   selectedFact: BPCFact;
@@ -155,7 +155,6 @@ export class HomeComponent implements OnInit {
       (data) => {
         if (data) {
           this.notifications = data as BPCOFAIACT[];
-          console.log(this.notifications);
           this.notificationCount = this.notifications.length;
         }
       },
@@ -224,7 +223,6 @@ export class HomeComponent implements OnInit {
         this.aIACTsView.push(x);
       }
     });
-    console.log(this.aIACTsView);
     this.isProgressBarVisibile = true;
     this._dashboardService.AcceptAIACTs(this.aIACTsView).subscribe(
       (data) => {
@@ -240,8 +238,10 @@ export class HomeComponent implements OnInit {
   }
 
   loadSelectedFact(selectedBPCFact: BPCFact): void {
-    this.selectedFact = selectedBPCFact;
-    this.selectID = selectedBPCFact.PatnerID;
+    if (selectedBPCFact) {
+      this.selectedFact = selectedBPCFact;
+      this.selectedPartnerID = selectedBPCFact.PatnerID;
+    }
   }
 
   openConfirmationDialog(Actiontype: string, Catagory: string): void {
