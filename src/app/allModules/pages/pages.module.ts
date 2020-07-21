@@ -69,6 +69,7 @@ import { OrderFulFilmentCenterComponent } from "./order-fulfilment-center/order-
 import { PerformanceComponent } from "./performance/performance.component";
 import { NgImageSliderModule } from "ng-image-slider";
 import { TranslateModule } from '@ngx-translate/core';
+import { ImprovementComponent } from "./improvement/improvement.component";
 
 // import 'chart.piecelabel.js';
 
@@ -124,6 +125,10 @@ const routes = [
     {
         path: "faq",
         component: FaqComponent,
+    },
+    {
+        path: "improvement",
+        component: ImprovementComponent,
     },
     {
         path: "**",
@@ -214,7 +219,8 @@ const routes = [
         SupportChatComponent,
         DataMigrationComponent,
         PerformanceComponent,
-        FaqComponent
+        FaqComponent,
+        ImprovementComponent,
     ],
     providers: [DecimalPipe],
     entryComponents: [],
