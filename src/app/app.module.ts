@@ -8,7 +8,7 @@ import {
     MatButtonModule, MatIconModule, MatSnackBar, MatSnackBarModule, MatDialogModule, MatToolbarModule,
     MAT_DATE_LOCALE, MatProgressSpinnerModule, MatProgressBarModule, MatExpansionModule
 } from '@angular/material';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import 'hammerjs';
 
 import { FuseModule } from '@fuse/fuse.module';
@@ -137,7 +137,8 @@ const appRoutes: Routes = [
         WINDOW_PROVIDERS,
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
         { provide: MAT_DATE_LOCALE, useValue: 'en-IN' },
-        BnNgIdleService
+        BnNgIdleService,
+        TranslateService
     ],
     bootstrap: [
         AppComponent

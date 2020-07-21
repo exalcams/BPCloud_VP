@@ -68,6 +68,7 @@ import { PoFactsheetComponent } from "./po-factsheet/po-factsheet.component";
 import { OrderFulFilmentCenterComponent } from "./order-fulfilment-center/order-fulfilment-center.component";
 import { PerformanceComponent } from "./performance/performance.component";
 import { NgImageSliderModule } from "ng-image-slider";
+import { TranslateModule } from '@ngx-translate/core';
 
 // import 'chart.piecelabel.js';
 
@@ -198,6 +199,7 @@ const routes = [
         }),
         NgImageSliderModule,
         RouterModule.forChild(routes),
+        TranslateModule
     ],
     declarations: [
         OrderFulFilmentCenterComponent,

@@ -77,6 +77,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.sessionTimeOut = 300;
         this.isShowPopup = true;
         this.GetSessionMasterByProject();
+
         // Get default navigation
         this.navigation = navigation;
 
@@ -253,7 +254,6 @@ export class AppComponent implements OnInit, OnDestroy {
             }
         );
     }
-
 
     /**
      * On init

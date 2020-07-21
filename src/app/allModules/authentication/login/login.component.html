@@ -1,8 +1,9 @@
 <div id="login" class="inner-scroll normal" fxLayout="row" fxLayoutAlign="start">
 
   <div id="login-intro" fxFlex fxHide fxShow.gt-xs>
-    <div *ngIf="CurrentText" class="description" [ngStyle]="{'color':'white'}" [@animate]="{value:'*',params:{x:'100%'}}">
-      Maximum <span>{{CurrentText}}</span>
+    <div *ngIf="currentText" class="description" [ngStyle]="{'color':'white'}"
+      [@animate]="{value:'*',params:{x:'100%'}}">
+      Maximum <span>{{currentText}}</span>
     </div>
   </div>
 
@@ -36,12 +37,12 @@
         </mat-form-field>
 
         <div class="remember-forgot-password" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between center">
-          <span class="forgot-password" style="cursor: pointer;" (click)="OpenForgetPasswordLinkDialog()">
+          <span class="forgot-password" style="cursor: pointer;" (click)="openForgetPasswordLinkDialog()">
             Forgot Password?
           </span>
         </div>
 
-        <button mat-raised-button color="accent" class="submit-button" aria-label="LOGIN" (click)="LoginClicked()">
+        <button mat-raised-button color="accent" class="submit-button" aria-label="LOGIN" (click)="loginClicked()">
           <span class="loginButton">LOG IN </span>
         </button>
         <!-- <a class="link" href="/#/register/vendor">Click here to regster</a> -->
@@ -49,7 +50,7 @@
 
     </div>
 
-    <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
+    <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
     </mat-progress-spinner>
   </div>
 

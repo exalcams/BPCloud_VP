@@ -12,7 +12,7 @@ import { BPCFact } from 'app/models/fact';
 import { DashboardService } from 'app/services/dashboard.service';
 import { BPCOFAIACT } from 'app/models/OrderFulFilment';
 import { MasterService } from 'app/services/master.service';
-
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
