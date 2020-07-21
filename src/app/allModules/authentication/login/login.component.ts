@@ -1,16 +1,13 @@
-import { Component, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthService } from 'app/services/auth.service';
-// import { LoginService } from 'app/services/login.service';
-// import { UserDetails } from 'app/models/user-details';
 import { MatDialog, MatSnackBar, MatDialogConfig } from '@angular/material';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FuseNavigation } from '@fuse/types';
 import { MenuUpdataionService } from 'app/services/menu-update.service';
 import { AuthenticationDetails, ChangePassword, EMailModel } from 'app/models/master';
@@ -28,7 +25,7 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   navigation: FuseNavigation[] = [];
   authenticationDetails: AuthenticationDetails;
-  MenuItems: string[] = [];
+  menuItems: string[] = [];
   children: FuseNavigation[] = [];
   subChildren: FuseNavigation[] = [];
   reportSubChildren: FuseNavigation[] = [];
@@ -42,21 +39,18 @@ export class LoginComponent implements OnInit {
   autoHide = 2000;
   addExtraClass: false;
   notificationSnackBarComponent: NotificationSnackBarComponent;
-  IsProgressBarVisibile: boolean;
-
-  SetIntervalID: any;
-  CurrentIndex: number;
-  AllTexts: string[] = [];
-  CurrentText: string;
+  isProgressBarVisibile: boolean;
+  setIntervalID: any;
+  currentIndex: number;
+  allTexts: string[] = [];
+  currentText: string;
 
   constructor(
-    private _fuseNavigationService: FuseNavigationService,
     private _fuseConfigService: FuseConfigService,
     private _formBuilder: FormBuilder,
     private _router: Router,
     private _authService: AuthService,
     private _menuUpdationService: MenuUpdataionService,
-    // private _loginService: LoginService,
     public dialog: MatDialog,
     public snackBar: MatSnackBar
   ) {
@@ -78,9 +72,9 @@ export class LoginComponent implements OnInit {
     };
 
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
-    this.IsProgressBarVisibile = false;
-    this.CurrentIndex = 0;
-    this.AllTexts = ['Scalability', 'Reliability'];
+    this.isProgressBarVisibile = false;
+    this.currentIndex = 0;
+    this.allTexts = ['Scalability', 'Reliability'];
   }
 
   ngOnInit(): void {
@@ -89,45 +83,40 @@ export class LoginComponent implements OnInit {
       password: ['', Validators.required]
     });
 
-    this.SetCurrentText();
-    this.SetIntervalID = setInterval(() => {
-      this.SetCurrentText();
+    this.setCurrentText();
+    this.setIntervalID = setInterval(() => {
+      this.setCurrentText();
     }, 2000);
 
   }
-  // Getting Notification
 
-
-  SetCurrentText(): void {
-    if (this.CurrentIndex >= this.AllTexts.length) {
-      this.CurrentIndex = 0;
+  setCurrentText(): void {
+    if (this.currentIndex >= this.allTexts.length) {
+      this.currentIndex = 0;
     }
-    this.CurrentText = this.AllTexts[this.CurrentIndex];
-    this.CurrentIndex++;
+    this.currentText = this.allTexts[this.currentIndex];
+    this.currentIndex++;
   }
-  LoginClicked(): void {
+
+  loginClicked(): void {
     if (this.loginForm.valid) {
-      this.IsProgressBarVisibile = true;
+      this.isProgressBarVisibile = true;
       this._authService.login(this.loginForm.get('userName').value, this.loginForm.get('password').value).subscribe(
         (data) => {
-          this.IsProgressBarVisibile = false;
+          this.isProgressBarVisibile = false;
           const dat = data as AuthenticationDetails;
           if (data.isChangePasswordRequired === 'Yes') {
-            this.OpenChangePasswordDialog(dat);
+            this.openChangePasswordDialog(dat);
           } else {
             this.saveUserDetails(dat);
           }
         },
         (err) => {
-          this.IsProgressBarVisibile = false;
+          this.isProgressBarVisibile = false;
           console.error(err);
-          // console.log(err instanceof Object);
           this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
         }
       );
-      // this.UpdateMenu();
-      // this._router.navigate(['pages/asn']);
-      // this.notificationSnackBarComponent.openSnackBar('Logged in successfully', SnackBarStatus.success);
     } else {
       Object.keys(this.loginForm.controls).forEach(key => {
         const abstractControl = this.loginForm.get(key);
@@ -139,7 +128,7 @@ export class LoginComponent implements OnInit {
 
   saveUserDetails(data: AuthenticationDetails): void {
     localStorage.setItem('authorizationData', JSON.stringify(data));
-    this.UpdateMenu();
+    this.updateMenu();
     this.notificationSnackBarComponent.openSnackBar('Logged in successfully', SnackBarStatus.success);
     // if (data.userRole === 'Administrator') {
     //   this._router.navigate(['master/user']);
@@ -164,7 +153,7 @@ export class LoginComponent implements OnInit {
 
   }
 
-  OpenChangePasswordDialog(data: AuthenticationDetails): void {
+  openChangePasswordDialog(data: AuthenticationDetails): void {
     const dialogConfig: MatDialogConfig = {
       data: null,
       panelClass: 'change-password-dialog'
@@ -192,7 +181,7 @@ export class LoginComponent implements OnInit {
       });
   }
 
-  OpenForgetPasswordLinkDialog(): void {
+  openForgetPasswordLinkDialog(): void {
     const dialogConfig: MatDialogConfig = {
       data: null,
       panelClass: 'forget-password-link-dialog'
@@ -202,19 +191,19 @@ export class LoginComponent implements OnInit {
       result => {
         if (result) {
           const emailModel = result as EMailModel;
-          this.IsProgressBarVisibile = true;
+          this.isProgressBarVisibile = true;
           this._authService.SendResetLinkToMail(emailModel).subscribe(
             (data) => {
               const res = data as string;
               this.notificationSnackBarComponent.openSnackBar(res, SnackBarStatus.success);
               // this.notificationSnackBarComponent.openSnackBar(`Reset password link sent successfully to ${emailModel.EmailAddress}`, SnackBarStatus.success);
               // this.ResetControl();
-              this.IsProgressBarVisibile = false;
+              this.isProgressBarVisibile = false;
               // this._router.navigate(['auth/login']);
             },
             (err) => {
               console.error(err);
-              this.IsProgressBarVisibile = false;
+              this.isProgressBarVisibile = false;
               this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger); console.error(err);
             }
           );
@@ -222,19 +211,19 @@ export class LoginComponent implements OnInit {
       });
   }
 
-  UpdateMenu(): void {
+  updateMenu(): void {
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
-      this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
+      this.menuItems = this.authenticationDetails.MenuItemNames.split(',');
     } else {
     }
-    if (this.MenuItems.indexOf('Dashboard') >= 0) {
+    if (this.menuItems.indexOf('Dashboard') >= 0) {
       this.children.push(
         {
           id: 'dashboard',
           title: 'Dashboard',
-          translate: 'NAV.SAMPLE.TITLE',
+          translate: 'NAV.VENDOR.DASHBOARD',
           type: 'item',
           icon: 'dashboardIcon',
           isSvgIcon: true,
@@ -243,12 +232,12 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.MenuItems.indexOf('CustomerDashboard') >= 0) {
+    if (this.menuItems.indexOf('CustomerDashboard') >= 0) {
       this.children.push(
         {
           id: 'custdashboard',
           title: 'Dashboard',
-          translate: 'NAV.SAMPLE.TITLE',
+          translate: 'NAV.CUSTOMER.DASHBOARD',
           type: 'item',
           icon: 'dashboardIcon',
           isSvgIcon: true,
@@ -257,12 +246,12 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.MenuItems.indexOf('OrderFulFilmentCenter') >= 0) {
+    if (this.menuItems.indexOf('OrderFulFilmentCenter') >= 0) {
       this.children.push(
         {
           id: 'orderfulfilmentCenter',
           title: 'Order Fulfilment Center',
-          translate: 'NAV.SAMPLE.TITLE',
+          translate: 'NAV.VENDOR.ORDER_FULFILMENT_CENTER',
           type: 'item',
           icon: 'orderfulfilmentIcon',
           isSvgIcon: true,
@@ -271,12 +260,12 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.MenuItems.indexOf('CustomerOrderFulFilmentCenter') >= 0) {
+    if (this.menuItems.indexOf('CustomerOrderFulFilmentCenter') >= 0) {
       this.children.push(
         {
           id: 'custorderfulfilmentCenter',
           title: 'Order Fulfilment Center',
-          translate: 'NAV.SAMPLE.TITLE',
+          translate: 'NAV.CUSTOMER.ORDER_FULFILMENT_CENTER',
           type: 'item',
           icon: 'orderfulfilmentIcon',
           isSvgIcon: true,
@@ -285,12 +274,12 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.MenuItems.indexOf('ASN') >= 0) {
+    if (this.menuItems.indexOf('ASN') >= 0) {
       this.children.push(
         {
           id: 'asn',
           title: 'ASN',
-          translate: 'NAV.SAMPLE.TITLE',
+          translate: 'NAV.VENDOR.ASN',
           type: 'item',
           icon: 'asnIcon',
           isSvgIcon: true,
@@ -299,12 +288,12 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.MenuItems.indexOf('Flip') >= 0) {
+    if (this.menuItems.indexOf('Flip') >= 0) {
       this.children.push(
         {
           id: 'flip',
           title: 'Flip',
-          translate: 'NAV.SAMPLE.TITLE',
+          translate: 'NAV.VENDOR.FLIP',
           type: 'item',
           icon: 'flipIcon',
           isSvgIcon: true,
@@ -313,12 +302,12 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.MenuItems.indexOf('Invoice') >= 0) {
+    if (this.menuItems.indexOf('Invoice') >= 0) {
       this.children.push(
         {
           id: 'invoice',
           title: 'Invoice',
-          translate: 'NAV.SAMPLE.TITLE',
+          translate: 'NAV.VENDOR.INVOICE',
           type: 'item',
           icon: 'billIcon',
           isSvgIcon: true,
@@ -327,12 +316,12 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    // if (this.MenuItems.indexOf('Payment') >= 0) {
+    // if (this.menuItems.indexOf('Payment') >= 0) {
     //   this.children.push(
     //     {
     //       id: 'payment',
     //       title: 'Payment',
-    //       translate: 'NAV.SAMPLE.TITLE',
+    //       translate: 'NAV.VENDOR.PAYMENT',
     //       type: 'item',
     //       icon: 'paymentmethodIcon',
     //       isSvgIcon: true,
@@ -341,12 +330,12 @@ export class LoginComponent implements OnInit {
     //     }
     //   );
     // }
-    if (this.MenuItems.indexOf('PurchaseIndent') >= 0) {
+    if (this.menuItems.indexOf('PurchaseIndent') >= 0) {
       this.children.push(
         {
           id: 'fact',
           title: 'Purchase Indent',
-          translate: 'NAV.SAMPLE.TITLE',
+          translate: 'NAV.CUSTOMER.PURCHASE_INDENT',
           type: 'item',
           icon: 'lookupIcon',
           isSvgIcon: true,
@@ -355,12 +344,12 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.MenuItems.indexOf('Return') >= 0) {
+    if (this.menuItems.indexOf('Return') >= 0) {
       this.children.push(
         {
           id: 'fact',
           title: 'Return',
-          translate: 'NAV.SAMPLE.TITLE',
+          translate: 'NAV.CUSTOMER.RETURN',
           type: 'item',
           icon: 'assignment_return',
           // isSvgIcon: true,
@@ -369,12 +358,12 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.MenuItems.indexOf('POD') >= 0) {
+    if (this.menuItems.indexOf('POD') >= 0) {
       this.children.push(
         {
           id: 'pod',
           title: 'POD',
-          translate: 'NAV.SAMPLE.TITLE',
+          translate: 'NAV.CUSTOMER.POD',
           type: 'item',
           icon: 'podIcon',
           isSvgIcon: true,
@@ -383,7 +372,7 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    // if (this.MenuItems.indexOf('Subcon') >= 0) {
+    // if (this.menuItems.indexOf('Subcon') >= 0) {
     //   this.children.push(
     //     {
     //       id: 'subcon',
@@ -397,12 +386,12 @@ export class LoginComponent implements OnInit {
     //     }
     //   );
     // }
-    if (this.MenuItems.indexOf('Resource') >= 0) {
+    if (this.menuItems.indexOf('Resource') >= 0) {
       this.children.push(
         {
           id: 'resource',
           title: 'Resource',
-          translate: 'NAV.SAMPLE.TITLE',
+          translate: 'NAV.VENDOR.RESOURCE',
           type: 'item',
           icon: 'resourceIcon',
           isSvgIcon: true,
@@ -411,12 +400,12 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.MenuItems.indexOf('DataMigration') >= 0) {
+    if (this.menuItems.indexOf('DataMigration') >= 0) {
       this.children.push(
         {
           id: 'datamigration',
           title: 'Data Migration',
-          translate: 'NAV.SAMPLE.TITLE',
+          translate: 'NAV.VENDOR.DATA_MIGRATION',
           type: 'item',
           icon: 'receiptIcon',
           isSvgIcon: true,
@@ -425,12 +414,12 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.MenuItems.indexOf('SupportDesk') >= 0) {
+    if (this.menuItems.indexOf('SupportDesk') >= 0) {
       this.children.push(
         {
           id: 'supportdesk',
           title: 'Support Desk',
-          translate: 'NAV.SAMPLE.TITLE',
+          translate: 'NAV.VENDOR.SUPPORT_DESK',
           type: 'item',
           icon: 'supportIcon',
           isSvgIcon: true,
@@ -439,12 +428,12 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.MenuItems.indexOf('CustomerSupportDesk') >= 0) {
+    if (this.menuItems.indexOf('CustomerSupportDesk') >= 0) {
       this.children.push(
         {
           id: 'custsupportdesk',
           title: 'Support Desk',
-          translate: 'NAV.SAMPLE.TITLE',
+          translate: 'NAV.CUSTOMER.SUPPORT_DESK',
           type: 'item',
           icon: 'supportIcon',
           isSvgIcon: true,
@@ -453,12 +442,12 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.MenuItems.indexOf('Fact') >= 0) {
+    if (this.menuItems.indexOf('Fact') >= 0) {
       this.children.push(
         {
           id: 'fact',
           title: 'My details',
-          translate: 'NAV.SAMPLE.TITLE',
+          translate: 'NAV.VENDOR.MY_DETAILS',
           type: 'item',
           icon: 'detailsIcon',
           isSvgIcon: true,
@@ -467,12 +456,12 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.MenuItems.indexOf('CustomerFact') >= 0) {
+    if (this.menuItems.indexOf('CustomerFact') >= 0) {
       this.children.push(
         {
           id: 'custfact',
           title: 'My details',
-          translate: 'NAV.SAMPLE.TITLE',
+          translate: 'NAV.CUSTOMER.MY_DETAILS',
           type: 'item',
           icon: 'detailsIcon',
           isSvgIcon: true,
@@ -481,12 +470,12 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.MenuItems.indexOf('Performance') >= 0) {
+    if (this.menuItems.indexOf('Performance') >= 0) {
       this.children.push(
         {
           id: 'performance',
           title: 'Performance',
-          translate: 'NAV.SAMPLE.TITLE',
+          translate: 'NAV.VENDOR.PERFORMANCE',
           type: 'item',
           icon: 'resourceIcon',
           isSvgIcon: true,
@@ -495,7 +484,7 @@ export class LoginComponent implements OnInit {
       );
     }
 
-    // if (this.MenuItems.indexOf('InvoiceDetails') >= 0) {
+    // if (this.menuItems.indexOf('InvoiceDetails') >= 0) {
     //   this.children.push(
     //     {
     //       id: 'invoiceDetails',
@@ -510,7 +499,7 @@ export class LoginComponent implements OnInit {
     //   );
     // }
 
-    // if (this.MenuItems.indexOf('Invoice') >= 0) {
+    // if (this.menuItems.indexOf('Invoice') >= 0) {
     //   this.reportSubChildren.push(
     //     {
     //       id: 'invoice',
@@ -524,7 +513,7 @@ export class LoginComponent implements OnInit {
     //     }
     //   );
     // }
-    // if (this.MenuItems.indexOf('Payment') >= 0) {
+    // if (this.menuItems.indexOf('Payment') >= 0) {
     //   this.reportSubChildren.push(
     //     {
     //       id: 'payment',
@@ -539,7 +528,7 @@ export class LoginComponent implements OnInit {
     //   );
     // }
 
-    // if (this.MenuItems.indexOf('Reports') >= 0) {
+    // if (this.menuItems.indexOf('Reports') >= 0) {
     //   this.children.push(
     //     {
     //       id: 'reports',
@@ -553,7 +542,7 @@ export class LoginComponent implements OnInit {
     //     }
     //   );
     // }
-    if (this.MenuItems.indexOf('AccountStatement') >= 0) {
+    if (this.menuItems.indexOf('AccountStatement') >= 0) {
       this.paymentSubChildren.push(
         {
           id: 'accountStatement',
@@ -563,7 +552,7 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.MenuItems.indexOf('Payable') >= 0) {
+    if (this.menuItems.indexOf('Payable') >= 0) {
       this.paymentSubChildren.push(
         {
           id: 'payable',
@@ -573,7 +562,7 @@ export class LoginComponent implements OnInit {
         },
       );
     }
-    if (this.MenuItems.indexOf('Payments') >= 0) {
+    if (this.menuItems.indexOf('Payments') >= 0) {
       this.paymentSubChildren.push(
         {
           id: 'payments',
@@ -583,7 +572,7 @@ export class LoginComponent implements OnInit {
         },
       );
     }
-    if (this.MenuItems.indexOf('TDS') >= 0) {
+    if (this.menuItems.indexOf('TDS') >= 0) {
       this.paymentSubChildren.push(
         {
           id: 'tds',
@@ -593,7 +582,7 @@ export class LoginComponent implements OnInit {
         },
       );
     }
-    if (this.MenuItems.indexOf('Payment') >= 0) {
+    if (this.menuItems.indexOf('Payment') >= 0) {
       this.paymentSubChildren.push(
         {
           id: 'payment',
@@ -603,8 +592,8 @@ export class LoginComponent implements OnInit {
         },
       );
     }
-    if (this.MenuItems.indexOf('Payments') >= 0 || this.MenuItems.indexOf('Payable') >= 0 ||
-      this.MenuItems.indexOf('AccountStatement') >= 0 || this.MenuItems.indexOf('TDS') >= 0) {
+    if (this.menuItems.indexOf('Payments') >= 0 || this.menuItems.indexOf('Payable') >= 0 ||
+      this.menuItems.indexOf('AccountStatement') >= 0 || this.menuItems.indexOf('TDS') >= 0) {
       this.children.push({
         id: 'master',
         title: 'Financials',
@@ -617,7 +606,7 @@ export class LoginComponent implements OnInit {
       }
       );
     }
-    if (this.MenuItems.indexOf('App') >= 0) {
+    if (this.menuItems.indexOf('App') >= 0) {
       this.subChildren.push(
         {
           id: 'menuapp',
@@ -627,7 +616,7 @@ export class LoginComponent implements OnInit {
         },
       );
     }
-    if (this.MenuItems.indexOf('Role') >= 0) {
+    if (this.menuItems.indexOf('Role') >= 0) {
       this.subChildren.push(
         {
           id: 'role',
@@ -637,7 +626,7 @@ export class LoginComponent implements OnInit {
         },
       );
     }
-    if (this.MenuItems.indexOf('User') >= 0) {
+    if (this.menuItems.indexOf('User') >= 0) {
       this.subChildren.push(
         {
           id: 'user',
@@ -647,9 +636,8 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-
-    if (this.MenuItems.indexOf('App') >= 0 || this.MenuItems.indexOf('Role') >= 0 ||
-      this.MenuItems.indexOf('User') >= 0) {
+    if (this.menuItems.indexOf('App') >= 0 || this.menuItems.indexOf('Role') >= 0 ||
+      this.menuItems.indexOf('User') >= 0) {
       this.children.push({
         id: 'master',
         title: 'Master',
@@ -662,7 +650,7 @@ export class LoginComponent implements OnInit {
       }
       );
     }
-    if (this.MenuItems.indexOf('Doctype') >= 0) {
+    if (this.menuItems.indexOf('Doctype') >= 0) {
       this.configSubChildren.push(
         {
           id: 'doctype',
@@ -672,7 +660,7 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.MenuItems.indexOf('Session') >= 0) {
+    if (this.menuItems.indexOf('Session') >= 0) {
       this.configSubChildren.push(
         {
           id: 'session',
@@ -682,7 +670,7 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.MenuItems.indexOf('SupportDeskMaster') >= 0) {
+    if (this.menuItems.indexOf('SupportDeskMaster') >= 0) {
       this.configSubChildren.push(
         {
           id: 'supportmaster',
@@ -692,8 +680,8 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.MenuItems.indexOf('Doctype') >= 0 || this.MenuItems.indexOf('Session') >= 0 ||
-      this.MenuItems.indexOf('SupportDeskMaster') >= 0) {
+    if (this.menuItems.indexOf('Doctype') >= 0 || this.menuItems.indexOf('Session') >= 0 ||
+      this.menuItems.indexOf('SupportDeskMaster') >= 0) {
       this.children.push({
         id: 'configuration',
         title: 'Configuration',
@@ -706,7 +694,7 @@ export class LoginComponent implements OnInit {
       }
       );
     }
-    if (this.MenuItems.indexOf('LoginHistory') >= 0) {
+    if (this.menuItems.indexOf('LoginHistory') >= 0) {
       this.children.push(
         {
           id: 'loginHistory',
@@ -731,6 +719,7 @@ export class LoginComponent implements OnInit {
     // Update the service in order to update menu
     this._menuUpdationService.PushNewMenus(this.navigation);
   }
+
 }
 
 
