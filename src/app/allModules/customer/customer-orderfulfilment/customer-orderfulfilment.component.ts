@@ -71,7 +71,7 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
   Fulfilments: any[] = [];
   donutChartData: any[] = [];
   DeliveryStatus: any[] = [];
-  Status: Status[] = [{ Value: 'All', Name: 'All' },
+  AllStatus: Status[] = [{ Value: 'All', Name: 'All' },
   { Value: 'SO', Name: 'Due for Shipping' },
   { Value: 'Shipped', Name: 'Due for Billing' },
   { Value: 'Invoiced', Name: 'Due for Payment' },

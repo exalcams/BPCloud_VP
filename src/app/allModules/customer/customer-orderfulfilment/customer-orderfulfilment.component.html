@@ -110,7 +110,7 @@
             <mat-form-field>
               <mat-select style="width:180px" placeholder="Status" formControlName="Status">
                 <!-- <mat-option>None</mat-option> -->
-                <mat-option *ngFor="let doc1 of Status" [value]="doc1.Value">
+                <mat-option *ngFor="let doc1 of AllStatus" [value]="doc1.Value">
                   <span>{{doc1.Name}}</span>
                 </mat-option>
               </mat-select>
