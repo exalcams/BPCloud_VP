@@ -9,12 +9,16 @@ export const locale = {
                 'ASN': 'ASN',
                 'FLIP': 'Flip',
                 'INVOICE': 'Invoice',
-                'PAYMENT': 'Payment',
                 'RESOURCE': 'Resource',
                 'DATA_MIGRATION': 'Data Migration',
                 'SUPPORT_DESK': 'Support Desk',
                 'MY_DETAILS': 'My Details',
-                'PERFORMANCE': 'Performance'
+                'ACCOUNT_STATEMENT': 'Account Statement',
+                'PAYABLES': 'Payables',
+                'PAYMENTS': 'Payments',
+                'PAYMENT_ADVISE': 'Payment Advise',
+                'TDS': 'TDS',
+                'FINANCIALS': 'Financials'
             },
             'CUSTOMER': {
                 'DASHBOARD': 'Dashboard',
@@ -28,11 +32,18 @@ export const locale = {
                 'PAYMENT': 'Payment',
                 'RESOURCE': 'Resource',
             },
-            'REPORT': 'Report',
-            'MASTER': 'Master',
-            'USER': 'User',
-            'ROLE': 'Role',
-            'APP': 'App'
+            'ADMIN': {
+                'REPORT': 'Report',
+                'MASTER': 'Master',
+                'USER': 'User',
+                'ROLE': 'Role',
+                'APP': 'App',
+                'CONFIGURATION': 'Configuration',
+                'ASN_DOCTYPE': 'ASN Doctype',
+                'SESSION': 'Session',
+                'SUPPORT': 'Support',
+                'LOGIN_HISTORY': 'Login History'
+            },
         },
         'DASHBOARD': {
             'WELCOME': 'Welcome',
@@ -58,7 +69,31 @@ export const locale = {
             'RGATEWAY_ID': 'Reciever Gateway Id',
             'Between_Containers_Handled': '(26th to 25th)',
             'content1ShowName': 'content1ShowName'
-
+        },
+        'ORDER_FULFILMENT_CENTER': {
+            'HEADER_TITLE': 'Order Fulfilment Center',
+            'ON_TIME_IN_FULL_OTIF': 'On Time In Full (OTIF)',
+            'Available_Spaces': 'Available Spaces',
+            'Exceptions': 'Exceptions',
+            'Reserved': 'Reserved',
+            'Containers': 'Containers',
+            'Go_Back_To_Dashboard': 'Go Back To Dashboard',
+            'CONTAINER_NO': 'Container No',
+            'CONTAINER_SIZE': 'Container Size',
+            'LOCATION_ID': 'Location Id',
+            'EXCEPTION_MESSAGE': 'Exception Message',
+            'CUSTOMER_NAME': 'Customer Name',
+            'CUSTOMER_NO': 'Customer No',
+            'SALES_CONTRACT_NO': 'Sales Contract No',
+            'BOOKING_REFERENCE': 'Booking Ref No',
+            'CONTAINER_TYPE': 'Container Type',
+            'TYPE': 'Full/Empty',
+            'COLOR': 'Color',
+            'IS_DAMAGE': 'Is Damage',
+            'CLEAN_TYPE': 'Clean Type',
+            'RGATEWAY_ID': 'Reciever Gateway Id',
+            'Between_Containers_Handled': '(26th to 25th)',
+            'content1ShowName': 'content1ShowName'
         },
     }
 };

@@ -34,11 +34,11 @@
                       <div fxLayout="row" fxLayoutGap="20px" style="padding:10px 10px 10px 10px">
                         <div fxFlex>
                           <h2 style="font-weight: 500;color:#fea320 ;">
-                            ₹{{selectedFact.OutstandingAmount}}</h2>
+                            ₹{{selectedFact?.OutstandingAmount}}</h2>
                         </div>
                         <div fxFlex>
                           <h2 style="font-weight: 500;color:#29a747; padding-left: 25px;">
-                            ₹{{selectedFact.CreditBalance}}</h2>
+                            ₹{{selectedFact?.CreditBalance}}</h2>
                         </div>
                       </div>
                     </div>
@@ -55,11 +55,11 @@
                     <tr>
                       <td>
                         <h2 style="padding:5px 0px 0px 10px;font-weight: 500;color:#fea320 ;">
-                          ₹{{selectedFact.OutstandingAmount}}</h2>
+                          ₹{{selectedFact?.OutstandingAmount}}</h2>
                       </td>
                       <td style="text-align: left;">
                         <h2 style="padding:5px 10px 0px 10px;font-weight: 500;color:#29a747">
-                          ₹{{selectedFact.CreditBalance}}</h2>
+                          ₹{{selectedFact?.CreditBalance}}</h2>
                       </td>
                     </tr>
                   </table> -->
@@ -75,7 +75,7 @@
                     </tr>
                     <tr>
                       <td>
-                        <h2 style="padding:5px 0px 0px 8px;font-weight:500;">₹{{selectedFact.LastPayment}}</h2>
+                        <h2 style="padding:5px 0px 0px 8px;font-weight:500;">₹{{selectedFact?.LastPayment}}</h2>
                       </td>
                       <td style="text-align: right;">
                         <span>Payment on</span>
@@ -83,10 +83,10 @@
                     </tr>
                     <tr>
                       <td> <span style="padding-left: 8px;">Received for <span
-                            style="color:deepskyblue;">{{selectedFact.CreditAmount}}</span></span>
+                            style="color:deepskyblue;">{{selectedFact?.CreditAmount}}</span></span>
                       </td>
                       <td style="text-align: right;">
-                        <span><b>{{selectedFact.LastPaymentDate | date :'dd/MM/yy'}}</b></span>
+                        <span><b>{{selectedFact?.LastPaymentDate | date :'dd/MM/yy'}}</b></span>
                     </tr>
                   </table>
                 </div>
@@ -95,20 +95,20 @@
 
             <mat-card fxFlex="100%" style="padding: 10px;">
               <!-- <mat-card-content> -->
-              <h2 style="padding:0px 0px 5px 5px;"><strong>{{selectedFact.Company}}</strong></h2>
-              <h6 style="padding:5px 0px 5px 5px;">{{selectedFact.Email1}}</h6>
+              <h2 style="padding:0px 0px 5px 5px;"><strong>{{selectedFact?.Company}}</strong></h2>
+              <h6 style="padding:5px 0px 5px 5px;">{{selectedFact?.Email1}}</h6>
               <h5 style="padding:5px 0px 5px 5px;"> <span><img src="../../../../assets/images/phone-call.svg"> </span>
-                {{selectedFact.Phone1}}
+                {{selectedFact?.Phone1}}
               </h5>
               <h5 style="padding:5px 0px 5px 5px;"> <span><img
                     src="../../../../assets/images/noun_mobile phone_117228.svg"> </span>
-                {{selectedFact.Phone2}}
+                {{selectedFact?.Phone2}}
               </h5>
-              <h5 style="padding:5px 0px 5px 5px;">Vendor Type : <strong>{{selectedFact.Type}}</strong></h5>
+              <h5 style="padding:5px 0px 5px 5px;">Vendor Type : <strong>{{selectedFact?.Type}}</strong></h5>
               <hr>
               <h6 style="padding:5px 0px 5px 5px;"><strong> GST Information</strong></h6>
               <h5 style="padding:5px 0px 5px 5px;">GST Treatment : <strong>Registered Business - Regular</strong></h5>
-              <h5 style="padding:5px 0px 5px 5px;">Business GSTIN : <strong>{{selectedFact.TaxID1}}</strong></h5>
+              <h5 style="padding:5px 0px 5px 5px;">Business GSTIN : <strong>{{selectedFact?.TaxID1}}</strong></h5>
               <!-- </mat-card-content> -->
             </mat-card>
 

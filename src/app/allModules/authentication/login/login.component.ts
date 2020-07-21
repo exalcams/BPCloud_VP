@@ -218,6 +218,7 @@ export class LoginComponent implements OnInit {
       this.menuItems = this.authenticationDetails.MenuItemNames.split(',');
     } else {
     }
+    // Vendor Related Menu Items
     if (this.menuItems.indexOf('Dashboard') >= 0) {
       this.children.push(
         {
@@ -232,20 +233,6 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.menuItems.indexOf('CustomerDashboard') >= 0) {
-      this.children.push(
-        {
-          id: 'custdashboard',
-          title: 'Dashboard',
-          translate: 'NAV.CUSTOMER.DASHBOARD',
-          type: 'item',
-          icon: 'dashboardIcon',
-          isSvgIcon: true,
-          // icon: 'dashboard',
-          url: '/customer/dashboard',
-        }
-      );
-    }
     if (this.menuItems.indexOf('OrderFulFilmentCenter') >= 0) {
       this.children.push(
         {
@@ -257,20 +244,6 @@ export class LoginComponent implements OnInit {
           isSvgIcon: true,
           // icon: 'dashboard',
           url: '/pages/orderfulfilmentCenter',
-        }
-      );
-    }
-    if (this.menuItems.indexOf('CustomerOrderFulFilmentCenter') >= 0) {
-      this.children.push(
-        {
-          id: 'custorderfulfilmentCenter',
-          title: 'Order Fulfilment Center',
-          translate: 'NAV.CUSTOMER.ORDER_FULFILMENT_CENTER',
-          type: 'item',
-          icon: 'orderfulfilmentIcon',
-          isSvgIcon: true,
-          // icon: 'dashboard',
-          url: '/customer/orderfulfilment',
         }
       );
     }
@@ -316,76 +289,6 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    // if (this.menuItems.indexOf('Payment') >= 0) {
-    //   this.children.push(
-    //     {
-    //       id: 'payment',
-    //       title: 'Payment',
-    //       translate: 'NAV.VENDOR.PAYMENT',
-    //       type: 'item',
-    //       icon: 'paymentmethodIcon',
-    //       isSvgIcon: true,
-    //       // icon: 'dashboard',
-    //       url: '/pages/payment',
-    //     }
-    //   );
-    // }
-    if (this.menuItems.indexOf('PurchaseIndent') >= 0) {
-      this.children.push(
-        {
-          id: 'fact',
-          title: 'Purchase Indent',
-          translate: 'NAV.CUSTOMER.PURCHASE_INDENT',
-          type: 'item',
-          icon: 'lookupIcon',
-          isSvgIcon: true,
-          // icon: 'dashboard',
-          url: '/customer/purchaseindent',
-        }
-      );
-    }
-    if (this.menuItems.indexOf('Return') >= 0) {
-      this.children.push(
-        {
-          id: 'fact',
-          title: 'Return',
-          translate: 'NAV.CUSTOMER.RETURN',
-          type: 'item',
-          icon: 'assignment_return',
-          // isSvgIcon: true,
-          // icon: 'dashboard',
-          url: '/customer/return',
-        }
-      );
-    }
-    if (this.menuItems.indexOf('POD') >= 0) {
-      this.children.push(
-        {
-          id: 'pod',
-          title: 'POD',
-          translate: 'NAV.CUSTOMER.POD',
-          type: 'item',
-          icon: 'podIcon',
-          isSvgIcon: true,
-          // icon: 'dashboard',
-          url: '/customer/pod',
-        }
-      );
-    }
-    // if (this.menuItems.indexOf('Subcon') >= 0) {
-    //   this.children.push(
-    //     {
-    //       id: 'subcon',
-    //       title: 'Subcon',
-    //       translate: 'NAV.SAMPLE.TITLE',
-    //       type: 'item',
-    //       icon: 'podIcon',
-    //       isSvgIcon: true,
-    //       // icon: 'dashboard',
-    //       url: '/subcon',
-    //     }
-    //   );
-    // }
     if (this.menuItems.indexOf('Resource') >= 0) {
       this.children.push(
         {
@@ -428,20 +331,6 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.menuItems.indexOf('CustomerSupportDesk') >= 0) {
-      this.children.push(
-        {
-          id: 'custsupportdesk',
-          title: 'Support Desk',
-          translate: 'NAV.CUSTOMER.SUPPORT_DESK',
-          type: 'item',
-          icon: 'supportIcon',
-          isSvgIcon: true,
-          // icon: 'dashboard',
-          url: '/customer/supportdesk',
-        }
-      );
-    }
     if (this.menuItems.indexOf('Fact') >= 0) {
       this.children.push(
         {
@@ -453,6 +342,161 @@ export class LoginComponent implements OnInit {
           isSvgIcon: true,
           // icon: 'dashboard',
           url: '/fact',
+        }
+      );
+    }
+    if (this.menuItems.indexOf('AccountStatement') >= 0) {
+      this.paymentSubChildren.push(
+        {
+          id: 'accountStatement',
+          title: 'Account Statement',
+          translate: 'NAV.VENDOR.ACCOUNT_STATEMENT',
+          type: 'item',
+          url: '/payment/accountStatement'
+        }
+      );
+    }
+    if (this.menuItems.indexOf('Payable') >= 0) {
+      this.paymentSubChildren.push(
+        {
+          id: 'payable',
+          title: 'Payables',
+          translate: 'NAV.VENDOR.PAYABLES',
+          type: 'item',
+          url: '/payment/payable'
+        },
+      );
+    }
+    if (this.menuItems.indexOf('Payments') >= 0) {
+      this.paymentSubChildren.push(
+        {
+          id: 'payments',
+          title: 'Payments',
+          translate: 'NAV.VENDOR.PAYMENTS',
+          type: 'item',
+          url: '/payment/payments'
+        },
+      );
+    }
+    if (this.menuItems.indexOf('TDS') >= 0) {
+      this.paymentSubChildren.push(
+        {
+          id: 'tds',
+          title: 'TDS',
+          translate: 'NAV.VENDOR.TDS',
+          type: 'item',
+          url: '/payment/tds'
+        },
+      );
+    }
+    if (this.menuItems.indexOf('Payment') >= 0) {
+      this.paymentSubChildren.push(
+        {
+          id: 'payment',
+          title: 'Payment Advise',
+          translate: 'NAV.VENDOR.PAYMENT_ADVISE',
+          type: 'item',
+          url: '/pages/payment'
+        },
+      );
+    }
+    if (this.menuItems.indexOf('Payments') >= 0 || this.menuItems.indexOf('Payable') >= 0 ||
+      this.menuItems.indexOf('AccountStatement') >= 0 || this.menuItems.indexOf('TDS') >= 0 ||
+      this.menuItems.indexOf('Payment') >= 0) {
+      this.children.push({
+        id: 'master',
+        title: 'Financials',
+        translate: 'NAV.VENDOR.FINANCIALS',
+        type: 'collapsable',
+        icon: 'paymentmethodIcon',
+        isSvgIcon: true,
+        // icon: 'view_list',
+        children: this.paymentSubChildren
+      }
+      );
+    }
+    // Customer Related Menu Items
+    if (this.menuItems.indexOf('CustomerDashboard') >= 0) {
+      this.children.push(
+        {
+          id: 'custdashboard',
+          title: 'Dashboard',
+          translate: 'NAV.CUSTOMER.DASHBOARD',
+          type: 'item',
+          icon: 'dashboardIcon',
+          isSvgIcon: true,
+          // icon: 'dashboard',
+          url: '/customer/dashboard',
+        }
+      );
+    }
+    if (this.menuItems.indexOf('CustomerOrderFulFilmentCenter') >= 0) {
+      this.children.push(
+        {
+          id: 'custorderfulfilmentCenter',
+          title: 'Order Fulfilment Center',
+          translate: 'NAV.CUSTOMER.ORDER_FULFILMENT_CENTER',
+          type: 'item',
+          icon: 'orderfulfilmentIcon',
+          isSvgIcon: true,
+          // icon: 'dashboard',
+          url: '/customer/orderfulfilment',
+        }
+      );
+    }
+    if (this.menuItems.indexOf('PurchaseIndent') >= 0) {
+      this.children.push(
+        {
+          id: 'fact',
+          title: 'Purchase Indent',
+          translate: 'NAV.CUSTOMER.PURCHASE_INDENT',
+          type: 'item',
+          icon: 'lookupIcon',
+          isSvgIcon: true,
+          // icon: 'dashboard',
+          url: '/customer/purchaseindent',
+        }
+      );
+    }
+    if (this.menuItems.indexOf('Return') >= 0) {
+      this.children.push(
+        {
+          id: 'fact',
+          title: 'Return',
+          translate: 'NAV.CUSTOMER.RETURN',
+          type: 'item',
+          icon: 'assignment_return',
+          // isSvgIcon: true,
+          // icon: 'dashboard',
+          url: '/customer/return',
+        }
+      );
+    }
+    if (this.menuItems.indexOf('POD') >= 0) {
+      this.children.push(
+        {
+          id: 'pod',
+          title: 'POD',
+          translate: 'NAV.CUSTOMER.POD',
+          type: 'item',
+          icon: 'podIcon',
+          isSvgIcon: true,
+          // icon: 'dashboard',
+          url: '/customer/pod',
+        }
+      );
+    }
+    if (this.menuItems.indexOf('CustomerSupportDesk') >= 0) {
+      this.children.push(
+        {
+          id: 'custsupportdesk',
+          title: 'Support Desk',
+          translate: 'NAV.CUSTOMER.SUPPORT_DESK',
+          type: 'item',
+          icon: 'supportIcon',
+          isSvgIcon: true,
+          // icon: 'dashboard',
+          url: '/customer/supportdesk',
         }
       );
     }
@@ -470,147 +514,13 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.menuItems.indexOf('Performance') >= 0) {
-      this.children.push(
-        {
-          id: 'performance',
-          title: 'Performance',
-          translate: 'NAV.VENDOR.PERFORMANCE',
-          type: 'item',
-          icon: 'resourceIcon',
-          isSvgIcon: true,
-          url: '/pages/performance',
-        }
-      );
-    }
-
-    // if (this.menuItems.indexOf('InvoiceDetails') >= 0) {
-    //   this.children.push(
-    //     {
-    //       id: 'invoiceDetails',
-    //       title: 'Invoices',
-    //       translate: 'NAV.SAMPLE.TITLE',
-    //       type: 'item',
-    //       icon: 'receiptIcon',
-    //       isSvgIcon: true,
-    //       // icon: 'receipt',
-    //       url: '/pages/invoices',
-    //     }
-    //   );
-    // }
-
-    // if (this.menuItems.indexOf('Invoice') >= 0) {
-    //   this.reportSubChildren.push(
-    //     {
-    //       id: 'invoice',
-    //       title: 'Invoice',
-    //       translate: 'NAV.SAMPLE.TITLE',
-    //       type: 'item',
-    //       icon: 'billIcon',
-    //       isSvgIcon: true,
-    //       // icon: 'dashboard',
-    //       url: '/invoice',
-    //     }
-    //   );
-    // }
-    // if (this.menuItems.indexOf('Payment') >= 0) {
-    //   this.reportSubChildren.push(
-    //     {
-    //       id: 'payment',
-    //       title: 'Payment',
-    //       translate: 'NAV.SAMPLE.TITLE',
-    //       type: 'item',
-    //       icon: 'paymentIcon',
-    //       isSvgIcon: true,
-    //       // icon: 'dashboard',
-    //       url: '/payment',
-    //     }
-    //   );
-    // }
-
-    // if (this.menuItems.indexOf('Reports') >= 0) {
-    //   this.children.push(
-    //     {
-    //       id: 'reports',
-    //       title: 'Report',
-    //       translate: 'NAV.SAMPLE.TITLE',
-    //       type: 'collapsable',
-    //       icon: 'reportIcon',
-    //       isSvgIcon: true,
-    //       // icon: 'assignment',
-    //       children: this.reportSubChildren
-    //     }
-    //   );
-    // }
-    if (this.menuItems.indexOf('AccountStatement') >= 0) {
-      this.paymentSubChildren.push(
-        {
-          id: 'accountStatement',
-          title: 'Account Statement',
-          type: 'item',
-          url: '/payment/accountStatement'
-        }
-      );
-    }
-    if (this.menuItems.indexOf('Payable') >= 0) {
-      this.paymentSubChildren.push(
-        {
-          id: 'payable',
-          title: 'Payables',
-          type: 'item',
-          url: '/payment/payable'
-        },
-      );
-    }
-    if (this.menuItems.indexOf('Payments') >= 0) {
-      this.paymentSubChildren.push(
-        {
-          id: 'payments',
-          title: 'Payments',
-          type: 'item',
-          url: '/payment/payments'
-        },
-      );
-    }
-    if (this.menuItems.indexOf('TDS') >= 0) {
-      this.paymentSubChildren.push(
-        {
-          id: 'tds',
-          title: 'TDS',
-          type: 'item',
-          url: '/payment/tds'
-        },
-      );
-    }
-    if (this.menuItems.indexOf('Payment') >= 0) {
-      this.paymentSubChildren.push(
-        {
-          id: 'payment',
-          title: 'Payment Advise',
-          type: 'item',
-          url: '/pages/payment'
-        },
-      );
-    }
-    if (this.menuItems.indexOf('Payments') >= 0 || this.menuItems.indexOf('Payable') >= 0 ||
-      this.menuItems.indexOf('AccountStatement') >= 0 || this.menuItems.indexOf('TDS') >= 0) {
-      this.children.push({
-        id: 'master',
-        title: 'Financials',
-        // translate: 'NAV.DASHBOARDS',
-        type: 'collapsable',
-        icon: 'paymentmethodIcon',
-        isSvgIcon: true,
-        // icon: 'view_list',
-        children: this.paymentSubChildren
-      }
-      );
-    }
+    // Admin Related Menu Items
     if (this.menuItems.indexOf('App') >= 0) {
       this.subChildren.push(
         {
           id: 'menuapp',
           title: 'App',
+          translate: 'NAV.ADMIN.APP',
           type: 'item',
           url: '/master/menuApp'
         },
@@ -621,6 +531,7 @@ export class LoginComponent implements OnInit {
         {
           id: 'role',
           title: 'Role',
+          translate: 'NAV.ADMIN.ROLE',
           type: 'item',
           url: '/master/role'
         },
@@ -631,6 +542,7 @@ export class LoginComponent implements OnInit {
         {
           id: 'user',
           title: 'User',
+          translate: 'NAV.ADMIN.USER',
           type: 'item',
           url: '/master/user'
         }
@@ -641,7 +553,7 @@ export class LoginComponent implements OnInit {
       this.children.push({
         id: 'master',
         title: 'Master',
-        // translate: 'NAV.DASHBOARDS',
+        translate: 'NAV.ADMIN.MASTER',
         type: 'collapsable',
         icon: 'menuwithdotsIcon',
         isSvgIcon: true,
@@ -655,6 +567,7 @@ export class LoginComponent implements OnInit {
         {
           id: 'doctype',
           title: 'ASN Doctype',
+          translate: 'NAV.ADMIN.ASN_DOCTYPE',
           type: 'item',
           url: '/configuration/doctype'
         }
@@ -665,6 +578,7 @@ export class LoginComponent implements OnInit {
         {
           id: 'session',
           title: 'Session',
+          translate: 'NAV.ADMIN.SESSION',
           type: 'item',
           url: '/configuration/session'
         }
@@ -675,6 +589,7 @@ export class LoginComponent implements OnInit {
         {
           id: 'supportmaster',
           title: 'Support',
+          translate: 'NAV.ADMIN.SUPPORT',
           type: 'item',
           url: '/configuration/supportmaster'
         }
@@ -685,7 +600,7 @@ export class LoginComponent implements OnInit {
       this.children.push({
         id: 'configuration',
         title: 'Configuration',
-        // translate: 'NAV.DASHBOARDS',
+        translate: 'NAV.ADMIN.CONFIGURATION',
         type: 'collapsable',
         icon: 'settings',
         isSvgIcon: false,
@@ -699,7 +614,7 @@ export class LoginComponent implements OnInit {
         {
           id: 'loginHistory',
           title: 'Login History',
-          translate: 'NAV.SAMPLE.TITLE',
+          translate: 'NAV.ADMIN.LOGIN_HISTORY',
           type: 'item',
           icon: 'history',
           isSvgIcon: false,
