@@ -56,9 +56,9 @@ export const locale = {
         },
         'DASHBOARD': {
             'WELCOME': 'Welcome',
-            'Containers_Handled': 'Containers Handled',
-            'Available_Spaces': 'Available Spaces',
-            'Exceptions': 'Exceptions',
+            'SUGGESTED_ACTIONS': 'Suggested Actions',
+            'CLEAR_ALL': 'Clear All',
+            'VIEW_MORE_DETAILS': 'View more details/Change',
             'Reserved': 'Reserved',
             'Containers': 'Containers',
             'Go_Back_To_Dashboard': 'Go Back To Dashboard',

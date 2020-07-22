@@ -130,7 +130,7 @@
         <mat-card-actions class="m-0 card-actions">
           <div fxFlex fxLayout>
             <div fxFlex="75" fxLayoutAlign="start center">
-              <span class="view-more-details">View more details/Change</span>
+              <span class="view-more-details">{{'DASHBOARD.VIEW_MORE_DETAILS' | translate}}</span>
             </div>
             <div fxFlex="25" fxLayoutAlign="end center">
               <!-- <span><img src="../../../../assets/images/ellipsis.png" style="height: 25px;width: 40px;"></span> -->
@@ -183,7 +183,7 @@
           <div fxFlex>
             <h2 style="font-weight: 500;margin: 0px;"><span style="margin:0px 5px 0px 0px;"><img style="width: 32px;
                 height: 32px; margin-top: 5px;" src="../../../../assets/images/bot.png"></span>
-              Suggested Actions
+              {{'DASHBOARD.SUGGESTED_ACTIONS' | translate}}
               <span>
                 <button style="height: 25px;width: 40px;float: right;" mat-icon-button [matMenuTriggerFor]="menu"
                   aria-label="Example icon-button with a menu">
@@ -196,7 +196,7 @@
                   </button> -->
                   <button mat-menu-item (click)="onClearAllButtonClicked()">
                     <mat-icon>notifications_off</mat-icon>
-                    <span>Clear All</span>
+                    <span>{{'DASHBOARD.CLEAR_ALL' | translate}}</span>
                   </button>
                 </mat-menu>
               </span>

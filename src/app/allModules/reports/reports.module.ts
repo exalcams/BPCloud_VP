@@ -58,12 +58,12 @@ import { NgImageSliderModule } from "ng-image-slider";
 import { TranslateModule } from '@ngx-translate/core';
 import { PPMComponent } from './ppm/ppm.component';
 import { ReportComponent } from './report/report.component';
-import { DOLComponent } from './dol/dol.component';
 import { VendorRatingComponent } from './vendor-rating/vendor-rating.component';
-import { FGChildPartStockComponent } from './fg-child-part-stock/fg-child-part-stock.component';
 import { OverviewComponent } from './overview/overview.component';
-import { GRReceiptsComponent } from './gr-receipts/gr-receipts.component';
+import { DOLComponent } from './dol/dol.component';
+import { FGChildPartStockComponent } from './fg-child-part-stock/fg-child-part-stock.component';
 import { InspectionPlanComponent } from './inspection-plan/inspection-plan.component';
+import { GRReceiptsComponent } from './gr-receipts/gr-receipts.component';
 // import 'chart.piecelabel.js';
 
 const routes = [
