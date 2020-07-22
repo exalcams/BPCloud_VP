@@ -7,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class VendorRatingComponent implements OnInit {
 
+  isProgressBarVisibile: boolean;
   constructor() { }
 
   ngOnInit(): void {

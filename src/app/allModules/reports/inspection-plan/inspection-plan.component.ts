@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./inspection-plan.component.scss']
 })
 export class InspectionPlanComponent implements OnInit {
-
+  isProgressBarVisibile: boolean;
   constructor() { }
 
   ngOnInit(): void {

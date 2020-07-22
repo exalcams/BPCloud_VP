@@ -12,6 +12,7 @@ import { BPCReportDOL } from 'app/models/ReportModel';
 })
 export class DOLComponent implements OnInit {
 
+  isProgressBarVisibile: boolean;
   // selected = 'option2';
   // employeesDataSource: MatTableDataSource<any>;
   // employeesDisplayColumns: string[] = ['material', 'materialtext'];

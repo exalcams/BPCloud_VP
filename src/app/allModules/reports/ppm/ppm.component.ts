@@ -10,6 +10,7 @@ import { toDate } from '@angular/common/src/i18n/format_date';
   styleUrls: ['./ppm.component.scss']
 })
 export class PPMComponent implements OnInit {
+  isProgressBarVisibile: boolean;
   dataSource: MatTableDataSource<BPCReportPPMHeader>;
   dataSource2: MatTableDataSource<BPCReportPPMHeader>;
   PPMoptionData = new PPMReportOption();
