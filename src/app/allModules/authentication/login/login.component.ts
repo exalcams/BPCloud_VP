@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, OnDestroy, Compiler } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
@@ -10,9 +10,10 @@ import { NotificationSnackBarComponent } from 'app/notifications/notification-sn
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { FuseNavigation } from '@fuse/types';
 import { MenuUpdataionService } from 'app/services/menu-update.service';
-import { AuthenticationDetails, ChangePassword, EMailModel } from 'app/models/master';
+import { AuthenticationDetails, ChangePassword, EMailModel, UserPreference } from 'app/models/master';
 import { ChangePasswordDialogComponent } from '../change-password-dialog/change-password-dialog.component';
 import { ForgetPasswordLinkDialogComponent } from '../forget-password-link-dialog/forget-password-link-dialog.component';
+import { Guid } from 'guid-typescript';
 
 @Component({
   selector: 'login',
@@ -44,6 +45,7 @@ export class LoginComponent implements OnInit {
   currentIndex: number;
   allTexts: string[] = [];
   currentText: string;
+  fuseConfig: any;
 
   constructor(
     private _fuseConfigService: FuseConfigService,
@@ -51,9 +53,16 @@ export class LoginComponent implements OnInit {
     private _router: Router,
     private _authService: AuthService,
     private _menuUpdationService: MenuUpdataionService,
+    private _compiler: Compiler,
+    // private _loginService: LoginService,
     public dialog: MatDialog,
     public snackBar: MatSnackBar
   ) {
+    localStorage.removeItem('authorizationData');
+    localStorage.removeItem('menuItemsData');
+    localStorage.removeItem('userPreferenceData');
+    this._compiler.clearCache();
+
     this._fuseConfigService.config = {
       layout: {
         navbar: {
@@ -101,8 +110,25 @@ export class LoginComponent implements OnInit {
   loginClicked(): void {
     if (this.loginForm.valid) {
       this.isProgressBarVisibile = true;
+     console.log(new Date().getTimezoneOffset());
       this._authService.login(this.loginForm.get('userName').value, this.loginForm.get('password').value).subscribe(
         (data) => {
+          // this._authService.GetUserPreferenceByUserID(data.userID as Guid).subscribe(
+          //   data1 => {
+          //       let userPre = data1 as UserPreference;
+          //       console.log(userPre);
+          //       if (!userPre) {
+          //           userPre = new UserPreference();
+          //           userPre.NavbarPrimaryBackground = 'fuse-navy-700';
+          //           userPre.NavbarSecondaryBackground = 'fuse-navy-700';
+          //           userPre.ToolbarBackground = 'blue-800';
+          //       }
+          //       localStorage.setItem('userPreferenceData', JSON.stringify(userPre));
+          //       console.log(userPre.ToolbarBackground);
+          //       this.UpdateUserPreference();
+          //   },
+            
+          //   );
           this.isProgressBarVisibile = false;
           const dat = data as AuthenticationDetails;
           if (data.isChangePasswordRequired === 'Yes') {
@@ -125,6 +151,41 @@ export class LoginComponent implements OnInit {
     }
 
   }
+  UpdateUserPreference(): void {
+    this._fuseConfigService.config
+        //   .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe(config => {
+            this.fuseConfig = config;
+            // Retrive user preference from Local Storage
+            const userPre = localStorage.getItem('userPreferenceData');
+            if (userPre) {
+                const userPrefercence: UserPreference = JSON.parse(userPre) as UserPreference;
+                if (userPrefercence.NavbarPrimaryBackground && userPrefercence.NavbarPrimaryBackground !== '-') {
+                    this.fuseConfig.layout.navbar.primaryBackground = userPrefercence.NavbarPrimaryBackground;
+                } else {
+                    this.fuseConfig.layout.navbar.primaryBackground = 'fuse-navy-700';
+                }
+                if (userPrefercence.NavbarSecondaryBackground && userPrefercence.NavbarSecondaryBackground !== '-') {
+                    this.fuseConfig.layout.navbar.secondaryBackground = userPrefercence.NavbarSecondaryBackground;
+                } else {
+                    this.fuseConfig.layout.navbar.secondaryBackground = 'fuse-navy-700';
+                }
+                if (userPrefercence.ToolbarBackground && userPrefercence.ToolbarBackground !== '-') {
+                    this.fuseConfig.layout.toolbar.background = userPrefercence.ToolbarBackground;
+                    this.fuseConfig.layout.toolbar.customBackgroundColor = true;
+                } else {
+                    this.fuseConfig.layout.toolbar.background = 'blue-800';
+                    this.fuseConfig.layout.toolbar.customBackgroundColor = true;
+                }
+            } else {
+                this.fuseConfig.layout.navbar.primaryBackground = 'fuse-navy-700';
+                this.fuseConfig.layout.navbar.secondaryBackground = 'fuse-navy-700';
+                this.fuseConfig.layout.toolbar.background = 'blue-800';
+                this.fuseConfig.layout.toolbar.customBackgroundColor = true;
+            }
+        });
+    this._fuseConfigService.config = this.fuseConfig;
+}
 
   saveUserDetails(data: AuthenticationDetails): void {
     localStorage.setItem('authorizationData', JSON.stringify(data));
@@ -690,6 +751,27 @@ export class LoginComponent implements OnInit {
           translate: 'NAV.ADMIN.SESSION',
           type: 'item',
           url: '/configuration/session'
+        }
+      );
+    }
+
+    if (this.menuItems.indexOf('UserPreferences') >= 0) {
+      this.configSubChildren.push(
+        {
+          id: 'userpreferences',
+          title: 'User Preferences',
+          type: 'item',
+          url: '/master/userpreferences'
+        }
+      );
+    }
+    if (this.menuItems.indexOf('ExpenseType') >= 0) {
+      this.configSubChildren.push(
+        {
+          id: 'expensetype',
+          title: 'Expense Type',
+          type: 'item',
+          url: '/master/expensetype'
         }
       );
     }

@@ -4,9 +4,10 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { MenuApp, RoleWithApp, UserWithRole, UserNotification, Reason, UserView, VendorUser, SessionMaster, UserLoginHistory, LoginHistoryFilter, AppUsage, AppUsageView } from 'app/models/master';
+import { MenuApp, RoleWithApp, UserWithRole, UserNotification, Reason, UserView, VendorUser, SessionMaster, UserLoginHistory, LoginHistoryFilter, AppUsage, AppUsageView,UserPreference } from 'app/models/master';
 import { BPCDocumentCenterMaster } from 'app/models/ASN';
 import { Guid } from 'guid-typescript';
+import { BPCExpenseTypeMaster } from 'app/models/POD';
 
 @Injectable({
   providedIn: 'root'
@@ -295,6 +296,79 @@ export class MasterService {
     return this._httpClient.get<UserWithRole[]>(`${this.baseAddress}authenticationapi/Master/GetSupportDeskUsersByRoleName?RoleName=${RoleName}`)
       .pipe(catchError(this.errorHandler));
   }
+  //UserPreferences
+  CreateUserPreference(role: UserPreference): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}authenticationapi/Master/CreateUserPreference`,
+      role,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      });
+  }
+
+  GetAllUserPreferences(): Observable<UserPreference[] | string> {
+    return this._httpClient.get<UserPreference[]>(`${this.baseAddress}authenticationapi/Master/GetAllUserPrefercences`)
+      .pipe(catchError(this.errorHandler));
+  }
+  GetUserPreferenceByUserID(UserID: Guid): Observable<UserPreference | string> {
+    return this._httpClient.get<UserPreference>(`${this.baseAddress}authenticationapi/Master/GetUserPreferenceByUserID?UserID=${UserID}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  UpdateUserPreference(role: UserPreference): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}authenticationapi/Master/UpdateUserPreference`,
+      role,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  DeleteUserPreference(role: UserPreference): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}authenticationapi/Master/DeleteUserPreference`,
+      role,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+  GetAllExpenseType(): Observable<BPCExpenseTypeMaster[] | string> {
+    return this._httpClient.get<BPCExpenseTypeMaster[]>(`${this.baseAddress}poapi/Master/GetExpenseTypeMasters`)
+        .pipe(catchError(this.errorHandler));
+}
+CreateExpenseType(role: BPCExpenseTypeMaster): Observable<any> {
+  return this._httpClient.post<any>(`${this.baseAddress}poapi/Master/CreateExpenseTypeMaster`,
+    role,
+    {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    });
+}
+UpdateExpenseType(role: BPCExpenseTypeMaster): Observable<any> {
+  return this._httpClient.post<any>(`${this.baseAddress}poapi/Master/UpdateExpenseTypeMaster`,
+    role,
+    {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    });
+}
+DeleteExpenseType(role: BPCExpenseTypeMaster): Observable<any> {
+  return this._httpClient.post<any>(`${this.baseAddress}poapi/Master/DeleteExpenseTypeMaster`,
+    role,
+    {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    });
+}
+
 
   GetAllDocumentCenterMaster(): Observable<BPCDocumentCenterMaster[] | string> {
     return this._httpClient.get<BPCDocumentCenterMaster[]>(`${this.baseAddress}poapi/Master/GetAllDocumentCenterMaster`)
