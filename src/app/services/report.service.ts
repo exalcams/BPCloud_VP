@@ -4,7 +4,12 @@ import { AuthService } from './auth.service';
 import { Observable, throwError } from 'rxjs';
 import { Guid } from 'guid-typescript';
 import { catchError } from 'rxjs/operators';
-import { BPCInvoice, BPCPayment, BPCInvoiceXLSX, BPCPaymentXLSX, BPCReportOV } from 'app/models/ReportModel';
+import {
+  BPCInvoice, BPCPayment, BPCInvoiceXLSX, BPCPaymentXLSX,
+  OverviewReportOption, BPCReportPPMHeader, PPMReportOption,
+  BPCReportOV, BPCReportVR,
+  BPCReportDOL
+} from 'app/models/ReportModel';
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +42,8 @@ export class ReportService {
   }
   GetFilteredInvoicesByPartnerID(PartnerID: string, InvoiceNo: string, PoReference: string, FromDate: string, ToDate: string, Status: string): Observable<BPCInvoice[] | string> {
     return this._httpClient.get<BPCInvoice[]>
-      (`${this.baseAddress}reportapi/InvoiceReport/GetFilteredInvoicesByPartnerID?PartnerID=${PartnerID}&InvoiceNo=${InvoiceNo}&PoReference=${PoReference}&FromDate=${FromDate}&ToDate=${ToDate}&Status=${Status}`)
+      (`${this.baseAddress}reportapi/InvoiceReport/GetFilteredInvoicesByPartnerID?
+      PartnerID=${PartnerID}&InvoiceNo=${InvoiceNo}&PoReference=${PoReference}&FromDate=${FromDate}&ToDate=${ToDate}&Status=${Status}`)
       .pipe(catchError(this.errorHandler));
   }
 
@@ -74,13 +80,62 @@ export class ReportService {
     ).pipe(catchError(this.errorHandler));
   }
 
-  // Overview Report
-  GetOverviewReports(PartnerID: string): Observable<BPCReportOV[] | string> {
-    return this._httpClient.get<BPCReportOV[]>
-      (`${this.baseAddress}reportapi/Report/GetOverviewReports?PartnerID=${PartnerID}`)
+  // PPM
+
+  GetPPMReports(PartnerId: string): Observable<any> {
+    return this._httpClient.get<BPCReportPPMHeader[]>(`${this.baseAddress}reportapi/Report/GetPPMReports?PartnerID=${PartnerId}`)
       .pipe(catchError(this.errorHandler));
   }
 
+  GetPPMReportByDate(data: PPMReportOption): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}reportapi/Report/GetPPMReportByDate`, data)
+      .pipe(catchError(this.errorHandler));
+  }
+  GetPPMReportByStatus(data: PPMReportOption): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}reportapi/Report/GetPPMReportByStatus`, data)
+      .pipe(catchError(this.errorHandler));
+  }
+  GetPPMItemReportByPeriod(PartnerId: string, period: Date): Observable<any> {
+    const data = [];
+    const temp = {
+      "PartnerID": PartnerId,
+      "Period": period
+    };
+    data.push(temp);
+    return this._httpClient.post<any>(`${this.baseAddress}reportapi/Report/GetPPMItemReportByPeriod?PartnerID=${PartnerId}&period=${period}`
+      , data).pipe(catchError(this.errorHandler));
+  }
 
+
+  // Overview
+
+  GetOverviewReports(PartnerId: string): Observable<any> {
+    return this._httpClient.get<BPCReportOV[]>(`${this.baseAddress}reportapi/Report/GetOverviewReports?PartnerID=${PartnerId}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetOverviewReportByOption(overViewData: OverviewReportOption): Observable<any> {
+    return this._httpClient.post<OverviewReportOption>(`${this.baseAddress}reportapi/Report/GetOverviewReportByOption`, overViewData)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetOverviewReportByStatus(overViewData: OverviewReportOption): Observable<any> {
+    return this._httpClient.post<OverviewReportOption>(`${this.baseAddress}reportapi/Report/GetOverviewReportByStatus`, overViewData)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetOverviewReportByDate(overViewData: OverviewReportOption): Observable<any> {
+    return this._httpClient.post<OverviewReportOption>(`${this.baseAddress}reportapi/Report/GetOverviewReportByDate`, overViewData)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetVendorRatingReports(PartnerId: string): Observable<any> {
+    return this._httpClient.get<BPCReportVR[]>(`${this.baseAddress}reportapi/Report/GetVendorRatingReports?PartnerID=${PartnerId}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAllReportDOLByPartnerID(PartnerId: string): Observable<any> {
+    return this._httpClient.get<BPCReportDOL[]>(`${this.baseAddress}reportapi/Report/GetAllReportDOLByPartnerID?PartnerID=${PartnerId}`);
+  }
 
 }

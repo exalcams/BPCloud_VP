@@ -20,8 +20,7 @@ export class BPCInvoice extends CommonClass {
     PODConfirmedBy: string;
 }
 
-export class BPCInvoiceItem extends CommonClass
-{
+export class BPCInvoiceItem extends CommonClass {
     ID: number;
     Client: string;
     Company: string;
@@ -53,7 +52,7 @@ export class BPCPayment extends CommonClass {
     Attachment: string;
 }
 
-export class BPCInvoiceXLSX  {
+export class BPCInvoiceXLSX {
     Company: string;
     Patnerid: string;
     Fiscalyear: string;
@@ -63,7 +62,7 @@ export class BPCInvoiceXLSX  {
     Dateofpayment: string;
     Poddate: string;
 }
-export class BPCPaymentXLSX  {
+export class BPCPaymentXLSX {
     Company: string;
     Type: string;
     Patnerid: string;
@@ -73,6 +72,105 @@ export class BPCPaymentXLSX  {
     Amount: number;
     Currency: string;
 }
-export class BPCReportOV extends CommonClass{
-
+export class BPCReportPPMHeader extends CommonClass {
+    Id: number;
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
+    Period: Date | string | null;
+    Material: string;
+    MaterialText: string;
+    ReceiptQty: number;
+    RejectedQty: number;
+    PPM: number;
 }
+export class BPCReportPPMItem extends CommonClass {
+    Id: number;
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
+    Period: Date | string | null;
+    Material: string;
+    MaterialText: string;
+    ReceiptQty: number;
+    RejectedQty: number;
+    PPM: number;
+}
+export class BPCReportOV extends CommonClass {
+    ID: number;
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
+    Material: string;
+    MaterialText: string;
+    InputQty: number;
+    AccpetQty: number;
+    RejQty: number;
+    RejPercentage: number;
+    Status: string;
+}
+export class PPMReportOption extends CommonClass {
+    PartnerID: string;
+    Material: string;
+    PO: string;
+    Status: string;
+    FromDate: Date | string | null;
+    ToDate: Date | string | null;
+}
+export class OverviewReportOption extends CommonClass {
+    PartnerID: string;
+    Material: string;
+    PO: string;
+    Status: string;
+    FromDate: Date | string | null;
+    ToDate: Date | string | null;
+}
+export class BPCReportVR extends CommonClass {
+    Material: string;
+    MaterialText: string;
+    OrderQty: number;
+    ReceivedQty: number;
+    RejectedPPM: number;
+    ReworkQty: number;
+}
+export class BPCReportDOL extends CommonClass {
+    Material: string;
+    MaterialText: string;
+    OrderQty: number;
+    ReceivedQty: number;
+    RejectedPPM: number;
+    ReworkQty: number;
+}
+export class BPCReportFGCPS extends CommonClass {
+    Plant: string ;
+    Material: string ;
+    MaterialText: string ;
+    StickQty: any ;
+    UOM: string ;
+    Batch: string ;
+    Price: any;
+}
+export class BPCReportIP extends CommonClass {
+    Material: string;
+    MaterialText: string;
+    OrderQty: number;
+    ReceivedQty: number;
+    RejectedPPM: number;
+    ReworkQty: number;
+}
+export class BPCReportGRR extends CommonClass {
+    Material: string;
+    MaterialText: string;
+    OrderQty: number;
+    ReceivedQty: number;
+    RejectedPPM: number;
+    ReworkQty: number;
+}
+
+
+
+
+

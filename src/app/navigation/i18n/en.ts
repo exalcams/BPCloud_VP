@@ -18,7 +18,16 @@ export const locale = {
                 'PAYMENTS': 'Payments',
                 'PAYMENT_ADVISE': 'Payment Advise',
                 'TDS': 'TDS',
-                'FINANCIALS': 'Financials'
+                'FINANCIALS': 'Financials',
+                'IMPROVEMENT': 'Improvement',
+                'REPORTS': 'Reports',
+                'PPM': 'PPM',
+                'DOL': 'DOL',
+                'OVERVIEW': 'Overview',
+                'VENDOR_RATING': 'Vendor Rating',
+                'INSPECTION_PLAN': 'Inspection Plan',
+                'FG_CHILD_PART_STOCK': 'FG Child Part Stock',
+                'GR_RECEIPTS': 'GR Receipts'
             },
             'CUSTOMER': {
                 'DASHBOARD': 'Dashboard',

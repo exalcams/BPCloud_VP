@@ -345,6 +345,20 @@ export class LoginComponent implements OnInit {
         }
       );
     }
+    if (this.menuItems.indexOf('Improvement') >= 0) {
+      this.children.push(
+        {
+          id: 'improvement',
+          title: 'Improvement',
+          translate: 'NAV.VENDOR.IMPROVEMENT',
+          type: 'item',
+          icon: 'flipIcon',
+          isSvgIcon: true,
+          // icon: 'dashboard',
+          url: '/pages/improvement',
+        }
+      );
+    }
     if (this.menuItems.indexOf('AccountStatement') >= 0) {
       this.paymentSubChildren.push(
         {
@@ -412,6 +426,101 @@ export class LoginComponent implements OnInit {
         isSvgIcon: true,
         // icon: 'view_list',
         children: this.paymentSubChildren
+      }
+      );
+    }
+    // Report Related Menu Items
+    if (this.menuItems.indexOf('PPM') >= 0) {
+      this.reportSubChildren.push(
+        {
+          id: 'ppm',
+          title: 'PPM',
+          translate: 'NAV.VENDOR.PPM',
+          type: 'item',
+          url: '/reports/ppm'
+        }
+      );
+    }
+    if (this.menuItems.indexOf('DOL') >= 0) {
+      this.reportSubChildren.push(
+        {
+          id: 'dol',
+          title: 'DOL',
+          translate: 'NAV.VENDOR.DOL',
+          type: 'item',
+          url: '/reports/dol'
+        }
+      );
+    }
+    if (this.menuItems.indexOf('VendorRating') >= 0) {
+      this.reportSubChildren.push(
+        {
+          id: 'vendorRating',
+          title: 'Vendor Rating',
+          translate: 'NAV.VENDOR.VENDOR_RATING',
+          type: 'item',
+          url: '/reports/vendorRating'
+        }
+      );
+    }
+    if (this.menuItems.indexOf('Overview') >= 0) {
+      this.reportSubChildren.push(
+        {
+          id: 'overview',
+          title: 'Overview',
+          translate: 'NAV.VENDOR.OVERVIEW',
+          type: 'item',
+          url: '/reports/overview'
+        }
+      );
+    }
+    if (this.menuItems.indexOf('InspectionPlan') >= 0) {
+      this.reportSubChildren.push(
+        {
+          id: 'inspectionPlan',
+          title: 'Inspection Plan',
+          translate: 'NAV.VENDOR.INSPECTION_PLAN',
+          type: 'item',
+          url: '/reports/inspectionPlan'
+        }
+      );
+    }
+    if (this.menuItems.indexOf('FGChildPartStock') >= 0) {
+      this.reportSubChildren.push(
+        {
+          id: 'fgChildPartStock',
+          title: 'FG Child Part Stock',
+          translate: 'NAV.VENDOR.FG_CHILD_PART_STOCK',
+          type: 'item',
+          url: '/reports/fgChildPartStock'
+        }
+      );
+    }
+    if (this.menuItems.indexOf('GRReceipts') >= 0) {
+      this.reportSubChildren.push(
+        {
+          id: 'grReceipts',
+          title: 'GR Receipts',
+          translate: 'NAV.VENDOR.GR_RECEIPTS',
+          type: 'item',
+          url: '/reports/grReceipts'
+        }
+      );
+    }
+
+    if (this.menuItems.indexOf('PPM') >= 0 || this.menuItems.indexOf('DOL') >= 0 ||
+      this.menuItems.indexOf('VendorRating') >= 0 || this.menuItems.indexOf('Overview') >= 0 ||
+      this.menuItems.indexOf('InspectionPlan') >= 0 || this.menuItems.indexOf('FGChildPartStock') >= 0
+      || this.menuItems.indexOf('GRReciepts') >= 0) {
+      this.children.push({
+        id: 'reports',
+        title: 'Reports',
+        translate: 'NAV.VENDOR.REPORTS',
+        type: 'collapsable',
+        icon: 'reportIcon',
+        isSvgIcon: true,
+        // icon: 'view_list',
+        children: this.reportSubChildren
       }
       );
     }
@@ -619,20 +728,6 @@ export class LoginComponent implements OnInit {
           icon: 'history',
           isSvgIcon: false,
           url: '/audit/loginHistory',
-        }
-      );
-    }
-    if (this.MenuItems.indexOf('Improvement') >= 0) {
-      this.children.push(
-        {
-          id: 'improvement',
-          title: 'Improvement',
-          translate: 'NAV.SAMPLE.TITLE',
-          type: 'item',
-          icon: 'flipIcon',
-          isSvgIcon: true,
-          // icon: 'dashboard',
-          url: '/pages/improvement',
         }
       );
     }
