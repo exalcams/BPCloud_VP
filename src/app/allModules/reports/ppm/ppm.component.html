@@ -1,0 +1,136 @@
+<mat-card class="cl_contentCard">
+  <div>
+    <mat-toolbar class="cl_headerToolbar">
+      <p class="cl_title">
+        PPM
+      </p>
+      <span class="spacer">
+      </span>
+      <img src="assets/images/logo.png" width="38px">
+    </mat-toolbar>
+  </div>
+  <div style="padding: 20px 20px; margin-top: 20px;" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="none"
+    fxLayoutGap="20px">
+    <div fxFlex="60" fxFlex.sm="60">
+      <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <!-- Period Column -->
+        <ng-container matColumnDef="Period">
+          <mat-header-cell *matHeaderCellDef class="cl_Period"> Period </mat-header-cell>
+          <mat-cell *matCellDef="let element ;index as i">
+            <p class="cl_box" [ngStyle]="{'background-color': i%2==0 ? '#d87e39':'#6f52ed'}"></p>
+            <p class="cl_Period_label">{{element.Period | date}} </p>
+          </mat-cell>
+        </ng-container>
+
+        <!-- ReceiptQty Column -->
+        <ng-container matColumnDef="ReceiptQty">
+          <mat-header-cell *matHeaderCellDef class="cl_ReceiptQty"> Receipt Qty </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <p class="cl_ReceiptQty_label">{{element.ReceiptQty}} </p>
+          </mat-cell>
+        </ng-container>
+
+        <!-- RejectionQty Column -->
+        <ng-container matColumnDef="RejectionQty">
+          <mat-header-cell *matHeaderCellDef class="cl_RejectionQty"> Rejection Qty </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <p class="cl_RejectionQty_label">{{element.RejectedQty}}</p>
+          </mat-cell>
+        </ng-container>
+
+        <!-- PPM Column -->
+        <ng-container matColumnDef="PPM">
+          <mat-header-cell *matHeaderCellDef class="cl_PPM"> PPM </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <p class="cl_PPM_label">{{element.PPM}} </p>
+          </mat-cell>
+        </ng-container>
+
+        <!-- OverallPPM Column -->
+        <ng-container matColumnDef="OverallPPM">
+          <mat-header-cell *matHeaderCellDef class="cl_OverallPPM"> Overall PPM </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <p class="cl_OverallPPM_label"> {{element.TotalPPM}}</p>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="GetPPMItemReportByPeriod(row)"></mat-row>
+      </mat-table>
+    </div>
+    <div fxFlex="40" fxFlex.sm="40">
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <div fxFlex.sm="column" fxFlex.sm="40" fxFlex="45">
+          <mat-label class="cl_fromDate">From Date:</mat-label>
+          <mat-form-field floatLabel="never">
+            <input matInput type="text" [matDatepicker]="picker" [(ngModel)]="fromdate"
+              (keydown.enter)="GetPPMReportByDate()">
+
+            <img matSuffix src="assets/images/calendar.png" (click)="picker.open()" class="cl_calendarImg">
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div fxFlex.sm="column" fxFlex.sm="40" fxFlex="45">
+          <mat-label class="cl_toDate">To Date:</mat-label>
+          <mat-form-field floatLabel="never">
+            <input matInput type="text" [matDatepicker]="picker2" [(ngModel)]="todate"
+              (keydown.enter)="GetPPMReportByDate()">
+            <img matSuffix src="assets/images/calendar.png" (click)="picker2.open()" class="cl_calendarImg">
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <mat-table [dataSource]="dataSource2" class="mat-elevation-z8 cl_Table2">
+        <!-- Position Column -->
+        <ng-container matColumnDef="Material">
+          <mat-header-cell *matHeaderCellDef class="cl_Period cl_Period2"> Material </mat-header-cell>
+          <mat-cell *matCellDef="let element; index as i">
+            <p class="cl_box" [ngStyle]="{'background-color': i%2==0 ? '#0000fe':'#41754e'}"></p>
+            <p class="cl_table2_Period_label">{{element.Material}} </p>
+          </mat-cell>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="MatDesc">
+          <mat-header-cell *matHeaderCellDef class="cl_ReceiptQty cl_ReceiptQty2"> Mat.Desc </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <p class="cl_table2_mattext_label">{{element.MaterialText}} </p>
+          </mat-cell>
+        </ng-container>
+
+        <!-- Weight Column -->
+        <ng-container matColumnDef="ReceiptQty">
+          <mat-header-cell *matHeaderCellDef class="cl_RejectionQty ">
+            <p class="cl_RejectionQty2">Receipt Qty</p>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <p class="cl_table2_RecepitQty_label">{{element.ReceiptQty}}</p>
+          </mat-cell>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="RejQty">
+          <mat-header-cell *matHeaderCellDef class="cl_PPM ">
+            <p class="cl_PPM2"> Rej.Qty</p>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <p class="cl_table2_Rej_label">{{element.RejectedQty}} </p>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="PPM">
+          <mat-header-cell *matHeaderCellDef class="cl_OverallPPM ">
+            <p class="cl_OverallPPM2"> PPM </p>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <p class="cl_table2_PPM_label"> {{element.PPM}}</p>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns2"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns2;"></mat-row>
+      </mat-table>
+    </div>
+  </div>
+
+</mat-card>

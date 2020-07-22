@@ -1,7 +1,6 @@
-import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { FuseSidebarModule } from '@fuse/components';
-
+import { NgModule } from "@angular/core";
+import { RouterModule } from "@angular/router";
+import { FuseSidebarModule } from "@fuse/components";
 import {
     MatFormFieldModule,
     MatAutocompleteModule,
@@ -38,36 +37,75 @@ import {
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
-    MatTreeModule
-} from '@angular/material';
-
-import { NgxChartsModule } from '@swimlane/ngx-charts';
+    MatTreeModule,
+} from "@angular/material";
+import { NgxChartsModule } from "@swimlane/ngx-charts";
+import { NgxDonutChartModule } from "ngx-doughnut-chart";
 import {
     FuseCountdownModule,
     FuseHighlightModule,
     FuseMaterialColorPickerModule,
-    FuseWidgetModule
-} from '@fuse/components';
-
-import { FuseSharedModule } from '@fuse/shared.module';
-import { FormsModule } from '@angular/forms';
-import { DecimalPipe } from '@angular/common';
-import { ReportComponent } from './report.component';
+    FuseWidgetModule,
+} from "@fuse/components";
+import { FuseSharedModule } from "@fuse/shared.module";
+import { FormsModule } from "@angular/forms";
+import { DecimalPipe } from "@angular/common";
+import { NgCircleProgressModule } from "ng-circle-progress";
+import { ChartsModule } from "ng2-charts";
+import "chartjs-plugin-labels";
+import "chartjs-plugin-annotation";
+import { NgImageSliderModule } from "ng-image-slider";
+import { TranslateModule } from '@ngx-translate/core';
+import { PPMComponent } from './ppm/ppm.component';
+import { ReportComponent } from './report/report.component';
+import { DOLComponent } from './dol/dol.component';
+import { VendorRatingComponent } from './vendor-rating/vendor-rating.component';
+import { FGChildPartStockComponent } from './fg-child-part-stock/fg-child-part-stock.component';
+import { OverviewComponent } from './overview/overview.component';
+import { GRReceiptsComponent } from './gr-receipts/gr-receipts.component';
+import { InspectionPlanComponent } from './inspection-plan/inspection-plan.component';
+// import 'chart.piecelabel.js';
 
 const routes = [
     {
-        path: '',
-        component: ReportComponent
+        path: "report",
+        component: ReportComponent,
     },
     {
-        path: '**',
-        redirectTo: '/auth/login'
-    }
+        path: "ppm",
+        component: PPMComponent,
+    },
+    {
+        path: "dol",
+        component: DOLComponent,
+    },
+    {
+        path: "vendorRating",
+        component: VendorRatingComponent,
+    },
+    {
+        path: "overview",
+        component: OverviewComponent,
+    },
+    {
+        path: "fgChildPartStock",
+        component: FGChildPartStockComponent,
+    },
+    {
+        path: "inspectionPlan",
+        component: InspectionPlanComponent,
+    },
+    {
+        path: "grReceipts",
+        component: GRReceiptsComponent,
+    },
+    {
+        path: "**",
+        redirectTo: "/auth/login",
+    },
 ];
-
 @NgModule({
     imports: [
-        RouterModule.forChild(routes),
         // HttpClientModule,
         // TranslateModule,
         MatFormFieldModule,
@@ -108,6 +146,9 @@ const routes = [
         MatTreeModule,
 
         NgxChartsModule,
+        NgxDonutChartModule,
+
+        ChartsModule,
 
         FuseSharedModule,
         FuseSidebarModule,
@@ -116,13 +157,36 @@ const routes = [
         FuseHighlightModule,
         FuseMaterialColorPickerModule,
         FuseWidgetModule,
+        // NgMultiSelectDropDownModule,
 
-        FormsModule
+        FormsModule,
+        NgCircleProgressModule.forRoot({
+            // set defaults here
+            radius: 60,
+            outerStrokeWidth: 5,
+            innerStrokeWidth: 2,
+            outerStrokeColor: "#f3705a",
+            innerStrokeColor: "#f3705a",
+            showInnerStroke: true,
+            animationDuration: 300,
+        }),
+        NgImageSliderModule,
+        RouterModule.forChild(routes),
+        TranslateModule
     ],
-    declarations: [ReportComponent],
-    providers: [
-        DecimalPipe
+    declarations: [
+        ReportComponent,
+        PPMComponent,
+        DOLComponent,
+        VendorRatingComponent,
+        OverviewComponent,
+        FGChildPartStockComponent,
+        InspectionPlanComponent,
+        GRReceiptsComponent
+
     ],
-    entryComponents: []
+    providers: [DecimalPipe],
+    entryComponents: [],
 })
 export class ReportsModule { }
+

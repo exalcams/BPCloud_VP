@@ -1,0 +1,326 @@
+.spacer {
+    flex: 1 1 auto;
+}
+.cl_contentCard {
+    width: 100% !important;
+}
+.mat-card {
+    transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+    display: block;
+    position: relative;
+    padding: 0px;
+    border-radius: 0px;
+}
+.cl_calendarImg {
+    width: 20px;
+
+    margin-bottom: 6px;
+}
+.mat-form-field {
+    display: block;
+    position: relative;
+    flex: auto;
+    min-width: 0;
+    width: auto !important;
+    font-size: 13px !important;
+}
+input.mat-input-element {
+    margin-top: -0.0625em;
+    /* margin-top: 10px; */
+    position: absolute;
+}
+.cl_fromDate {
+    margin-top: -2px;
+    position: absolute;
+    font-size: 13px;
+    opacity: 0.7;
+}
+.cl_toDate {
+    margin-top: -2px;
+    position: absolute;
+    font-size: 13px;
+    opacity: 0.7;
+}
+
+mat-header-row {
+    min-height: 36px !important;
+    background-color: #343436 !important;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 1;
+}
+mat-row {
+    min-height: 56px;
+}
+.cl_Period {
+    color: white !important;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    font-family: "Segoe UI";
+    margin-left: 36px;
+}
+.cl_ReceiptQty {
+    color: white !important;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    font-family: "Segoe UI";
+}
+.cl_RejectionQty {
+    color: white !important;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    font-family: "Segoe UI";
+}
+.cl_PPM {
+    color: white !important;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    font-family: "Segoe UI";
+}
+.cl_OverallPPM {
+    color: white !important;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    font-family: "Segoe UI";
+}
+.cl_box {
+    position: absolute;
+    height: 23px;
+    width: 7px;
+    margin-left: -24px;
+    opacity: 0.7;
+    margin-top: 1px;
+}
+.cl_headerToolbar {
+    // background-color: transparent !important;
+    background-image: url("/assets/images/Backgroundheader.png") !important;
+    height: 45px;
+    border-bottom: 1px solid #f6e0e0;
+}
+.cl_title {
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    margin-left: 4px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+.cl_Period_label {
+    font-size: 11.5px;
+    margin-left: 34px;
+    font-weight: 500;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+.cl_ReceiptQty_label {
+    font-size: 12px;
+    margin-left: 26px;
+    font-weight: 400;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+.cl_RejectionQty_label {
+    font-size: 12px;
+    font-weight: 400;
+    margin-left: 22px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+.cl_PPM_label {
+    font-size: 11.5px;
+    margin-left: 15px;
+    font-weight: 500;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+.cl_OverallPPM_label {
+    font-size: 11.5px;
+    margin-left: 8px;
+    font-weight: 400;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+.mat-elevation-z8 {
+    box-shadow: none !important;
+    /* opacity: 0.43; */
+    border: solid 1px #dccfcf;
+    border-bottom: none !important;
+}
+.mat-form-field {
+    padding: 9px 0 !important;
+}
+.cl_Table2 .mat-row {
+    min-height: 46px !important;
+}
+
+.cl_table2_Period_label {
+    font-size: 11.5px;
+    margin-left: 34px;
+    font-weight: 500;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+.cl_table2_mattext_label {
+    font-size: 11.5px;
+    margin-left: 26px;
+    font-weight: 400;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+.cl_table2_RecepitQty_label {
+    font-size: 12px;
+    margin-left: 31px;
+    font-weight: 400;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+.cl_table2_Rej_label {
+    font-size: 12px;
+    margin-left: 31px;
+
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+.cl_table2_PPM_label {
+    font-size: 12px;
+    margin-left: 26px;
+
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+mat-cell:last-child,
+mat-footer-cell:last-child,
+mat-header-cell:last-child {
+    padding-right: 0px !important;
+}
+
+// table 2
+.cl_OverallPPM2{
+    margin-left: 14px;
+}
+.cl_PPM2{
+    margin-left: 14px;
+}
+.cl_RejectionQty2{
+    margin-left: 7px;
+}
+@media screen and (max-width: 768px) {
+    .cl_Period {
+        color: white !important;
+        font-size: 10px;
+        letter-spacing: 0.5px;
+        font-family: "Segoe UI";
+        margin-left: 5px;
+    }
+    .cl_Period_label {
+        font-size: 11px;
+        margin-left: 6px;
+        font-weight: 500;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        position: absolute;
+        margin-top: 0px;
+    }
+    .cl_ReceiptQty {
+        color: white !important;
+        font-size: 10px;
+        letter-spacing: 0.5px;
+        font-family: "Segoe UI";
+        margin-left: 10px;
+    }
+    .cl_RejectionQty[_ngcontent-c32] {
+        color: white !important;
+        font-size: 10px;
+        letter-spacing: 0.5px;
+        font-family: "Segoe UI";
+        flex: 0 0 25%;
+        margin-left: -2px;
+    }
+    .cl_PPM[_ngcontent-c32] {
+        color: white !important;
+        font-size: 10px;
+        letter-spacing: 0.5px;
+        font-family: "Segoe UI";
+        margin-left: -13px;
+    }
+    .cl_OverallPPM[_ngcontent-c32] {
+        color: white !important;
+        font-size: 10px;
+        letter-spacing: 0.5px;
+        font-family: "Segoe UI";
+        margin-left: -15px;
+    }
+    .cl_PPM_label[_ngcontent-c32] {
+        font-size: 11.5px;
+        margin-left: 22px;
+        font-weight: 500;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .cl_RejectionQty_label[_ngcontent-c32] {
+        font-size: 12px;
+        font-weight: 400;
+        margin-left: 14px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .cl_ReceiptQty_label[_ngcontent-c32] {
+        font-size: 12px;
+        margin-left: 19px;
+        font-weight: 400;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    
+}
+@media screen and (max-width: 1100px) {
+    // Table 2
+    .cl_Period2[_ngcontent-c32] {
+        color: white !important;
+        font-size: 10px;
+        letter-spacing: 0.5px;
+        font-family: "Segoe UI";
+        margin-left: -7px;
+    }
+    .cl_table2_Period_label[_ngcontent-c32][_ngcontent-c32] {
+        font-size: 11.5px;
+        margin-left: -6px;
+        font-weight: 500;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .cl_ReceiptQty2[_ngcontent-c32] {
+        color: white !important;
+        font-size: 10px;
+        letter-spacing: 0.5px;
+        font-family: "Segoe UI";
+        margin-left: 10px;
+        flex: 0 0 25%;
+    }
+    .cl_PPM2[_ngcontent-c32][_ngcontent-c32] {
+        color: white !important;
+        font-size: 10px;
+        letter-spacing: 0.5px;
+        font-family: "Segoe UI";
+        margin-left: 4px;
+    }
+    .cl_OverallPPM2 {
+        margin-left: 14px;
+    }
+    .cl_RejectionQty2[_ngcontent-c32][_ngcontent-c32] {
+        color: white !important;
+        font-size: 10px;
+        letter-spacing: 0.5px;
+        font-family: "Segoe UI";
+        flex: 0 0 25%;
+        margin-left: -6px;
+        position: absolute;
+        margin-top: 11px;
+    }
+    .cl_table2_mattext_label[_ngcontent-c32] {
+        font-size: 11.5px;
+        margin-left: 0px;
+        font-weight: 400;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        position: absolute;
+        margin-top: 11px;
+    }
+    .cl_table2_PPM_label[_ngcontent-c32] {
+        font-size: 12px;
+        margin-left: 20px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .cl_table2_RecepitQty_label[_ngcontent-c32] {
+        font-size: 12px;
+        margin-left: 35px;
+        font-weight: 400;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }    
+}
