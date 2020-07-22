@@ -7,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GRReceiptsComponent implements OnInit {
 
+  isProgressBarVisibile: boolean;
   constructor() { }
 
   ngOnInit(): void {
