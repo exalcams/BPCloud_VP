@@ -47,7 +47,7 @@ export class PurchaseIndentComponent implements OnInit {
     InvoiceDetailsFormGroup: FormGroup;
     DocumentCenterFormGroup: FormGroup;
     AllUserWithRoles: UserWithRole[] = [];
-    SelectedPINumber: string;
+    SelectedPIRNumber: string;
     PO: BPCOFHeader;
     POItems: BPCOFItem[] = [];
     SelectedPurchaseIndentHeader: BPCPIHeader;
@@ -60,8 +60,8 @@ export class PurchaseIndentComponent implements OnInit {
         // 'MaterialText',
         'HSN',
         'OrderQty',
-        'DeliveryDate',
         'UOM',
+        'DeliveryDate',
         'Action'
     ];
     PurchaseIndentItemDataSource: MatTableDataSource<BPCPIItem>;
@@ -135,7 +135,7 @@ export class PurchaseIndentComponent implements OnInit {
             this._router.navigate(['/auth/login']);
         }
         this._route.queryParams.subscribe(params => {
-            this.SelectedPINumber = params['id'];
+            this.SelectedPIRNumber = params['id'];
         });
         this.CreateAppUsage();
         this.InitializePurchaseIndentFormGroup();
@@ -162,17 +162,17 @@ export class PurchaseIndentComponent implements OnInit {
     }
     InitializePurchaseIndentFormGroup(): void {
         this.PurchaseIndentFormGroup = this._formBuilder.group({
-            PINumber: [''],
-            DocDate: [new Date(), Validators.required],
+            PIRNumber: [''],
+            Date: [new Date(), Validators.required],
             ReferenceDoc: ['', Validators.required],
-            Currency: ['', Validators.required],
             NetAmount: ['', [Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
             GrossAmount: ['', [Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
+            Currency: ['', Validators.required],
             Status: [''],
         });
     }
     // SetInitialValueForPurchaseIndentFormGroup(): void {
-    //     this.PurchaseIndentFormGroup.get('DocDate').patchValue('Road');
+    //     this.PurchaseIndentFormGroup.get('Date').patchValue('Road');
     //     this.PurchaseIndentFormGroup.get('AWBDate').patchValue(new Date());
     //     this.PurchaseIndentFormGroup.get('NetAmountUOM').patchValue('KG');
     //     this.PurchaseIndentFormGroup.get('GrossAmountUOM').patchValue('KG');
@@ -234,12 +234,12 @@ export class PurchaseIndentComponent implements OnInit {
     }
 
     GetPurchaseIndentBasedOnCondition(): void {
-        if (this.SelectedPINumber) {
+        if (this.SelectedPIRNumber) {
             this.GetPurchaseIndentByPIAndPartnerID();
         }
     }
 
-    DocDateSelected(event): void {
+    DateSelected(event): void {
         const selectedType = event.value;
         if (event.value) {
             // this.SelectedTask.Type = event.value;
@@ -396,7 +396,7 @@ export class PurchaseIndentComponent implements OnInit {
     // }
 
     GetPurchaseIndentByPIAndPartnerID(): void {
-        this._CustomerService.GetPurchaseIndentByPIAndPartnerID(this.SelectedPINumber, this.currentUserName).subscribe(
+        this._CustomerService.GetPurchaseIndentByPIAndPartnerID(this.SelectedPIRNumber, this.currentUserName).subscribe(
             (data) => {
                 this.SelectedPurchaseIndentHeader = data as BPCPIHeader;
                 if (this.SelectedPurchaseIndentHeader) {
@@ -411,14 +411,14 @@ export class PurchaseIndentComponent implements OnInit {
 
     LoadSelectedPurchaseIndent(seletedPurchaseIndent: BPCPIHeader): void {
         this.SelectedPurchaseIndentHeader = seletedPurchaseIndent;
-        this.SelectedPurchaseIndentView.PINumber = this.SelectedPurchaseIndentHeader.PINumber;
-        this.SelectedPurchaseIndentNumber = this.SelectedPurchaseIndentHeader.PINumber;
+        this.SelectedPurchaseIndentView.PIRNumber = this.SelectedPurchaseIndentHeader.PIRNumber;
+        this.SelectedPurchaseIndentNumber = this.SelectedPurchaseIndentHeader.PIRNumber;
         this.SetPurchaseIndentHeaderValues();
         this.GetPurchaseIndentItemsByPI();
     }
 
     GetPurchaseIndentItemsByPI(): void {
-        this._CustomerService.GetPurchaseIndentItemsByPI(this.SelectedPurchaseIndentHeader.PINumber).subscribe(
+        this._CustomerService.GetPurchaseIndentItemsByPI(this.SelectedPurchaseIndentHeader.PIRNumber).subscribe(
             (data) => {
                 const dt = data as BPCPIItem[];
                 if (dt && dt.length && dt.length > 0) {
@@ -433,28 +433,28 @@ export class PurchaseIndentComponent implements OnInit {
     }
 
     SetPurchaseIndentHeaderValues(): void {
-        this.PurchaseIndentFormGroup.get('PINumber').patchValue(this.SelectedPurchaseIndentHeader.PINumber);
-        this.PurchaseIndentFormGroup.get('DocDate').patchValue(this.SelectedPurchaseIndentHeader.DocDate);
+        this.PurchaseIndentFormGroup.get('PIRNumber').patchValue(this.SelectedPurchaseIndentHeader.PIRNumber);
+        this.PurchaseIndentFormGroup.get('Date').patchValue(this.SelectedPurchaseIndentHeader.Date);
         this.PurchaseIndentFormGroup.get('ReferenceDoc').patchValue(this.SelectedPurchaseIndentHeader.ReferenceDoc);
         this.PurchaseIndentFormGroup.get('GrossAmount').patchValue(this.SelectedPurchaseIndentHeader.GrossAmount);
         this.PurchaseIndentFormGroup.get('NetAmount').patchValue(this.SelectedPurchaseIndentHeader.NetAmount);
-        this.PurchaseIndentFormGroup.get('PINumber').patchValue(this.SelectedPurchaseIndentHeader.PINumber);
+        this.PurchaseIndentFormGroup.get('PIRNumber').patchValue(this.SelectedPurchaseIndentHeader.PIRNumber);
         this.PurchaseIndentFormGroup.get('Currency').patchValue(this.SelectedPurchaseIndentHeader.Currency);
         this.PurchaseIndentFormGroup.get('Status').patchValue(this.SelectedPurchaseIndentHeader.Status);
     }
 
     GetPurchaseIndentValues(): void {
-        const depDate = this.PurchaseIndentFormGroup.get('DocDate').value;
+        const depDate = this.PurchaseIndentFormGroup.get('Date').value;
         if (depDate) {
-            this.SelectedPurchaseIndentHeader.DocDate = this.SelectedPurchaseIndentView.DocDate = this._datePipe.transform(depDate, 'yyyy-MM-dd HH:mm:ss');
+            this.SelectedPurchaseIndentHeader.Date = this.SelectedPurchaseIndentView.Date = this._datePipe.transform(depDate, 'yyyy-MM-dd HH:mm:ss');
         } else {
-            this.SelectedPurchaseIndentHeader.DocDate = this.SelectedPurchaseIndentView.DocDate = this.PurchaseIndentFormGroup.get('DocDate').value;
+            this.SelectedPurchaseIndentHeader.Date = this.SelectedPurchaseIndentView.Date = this.PurchaseIndentFormGroup.get('Date').value;
         }
         this.SelectedPurchaseIndentHeader.ReferenceDoc = this.SelectedPurchaseIndentView.ReferenceDoc = this.PurchaseIndentFormGroup.get('ReferenceDoc').value;
         this.SelectedPurchaseIndentHeader.GrossAmount = this.SelectedPurchaseIndentView.GrossAmount = this.PurchaseIndentFormGroup.get('GrossAmount').value;
         this.SelectedPurchaseIndentHeader.NetAmount = this.SelectedPurchaseIndentView.NetAmount = this.PurchaseIndentFormGroup.get('NetAmount').value;
         this.SelectedPurchaseIndentHeader.Currency = this.SelectedPurchaseIndentView.Currency = this.PurchaseIndentFormGroup.get('Currency').value;
-        if (this.SelectedPINumber) {
+        if (this.SelectedPIRNumber) {
             // this.SelectedPurchaseIndentHeader.Client = this.SelectedPurchaseIndentView.Client = this.PO.Client;
             // this.SelectedPurchaseIndentHeader.Company = this.SelectedPurchaseIndentView.Company = this.PO.Company;
             // this.SelectedPurchaseIndentHeader.Type = this.SelectedPurchaseIndentView.Type = this.PO.Type;
@@ -537,7 +537,7 @@ export class PurchaseIndentComponent implements OnInit {
         }
     }
     DeleteClicked(): void {
-        if (this.SelectedPurchaseIndentHeader.PINumber) {
+        if (this.SelectedPurchaseIndentHeader.PIRNumber) {
             const Actiontype = 'Delete';
             const Catagory = 'PurchaseIndent';
             this.OpenConfirmationDialog(Actiontype, Catagory);
@@ -568,7 +568,7 @@ export class PurchaseIndentComponent implements OnInit {
             result => {
                 if (result) {
                     if (Actiontype === 'Save' || Actiontype === 'Submit') {
-                        if (this.SelectedPurchaseIndentHeader.PINumber) {
+                        if (this.SelectedPurchaseIndentHeader.PIRNumber) {
                             this.UpdatePurchaseIndent(Actiontype);
                         } else {
                             this.CreatePurchaseIndent(Actiontype);
@@ -588,7 +588,7 @@ export class PurchaseIndentComponent implements OnInit {
         this.IsProgressBarVisibile = true;
         this._CustomerService.CreatePurchaseIndent(this.SelectedPurchaseIndentView).subscribe(
             (data) => {
-                this.SelectedPurchaseIndentHeader.PINumber = (data as BPCPIHeader).PINumber;
+                this.SelectedPurchaseIndentHeader.PIRNumber = (data as BPCPIHeader).PIRNumber;
                 this.ResetControl();
                 this.notificationSnackBarComponent.openSnackBar(`PurchaseIndent ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
                 this.IsProgressBarVisibile = false;
@@ -613,7 +613,7 @@ export class PurchaseIndentComponent implements OnInit {
     }
 
     // AddInvoiceAttachment(Actiontype: string): void {
-    //     this._CustomerService.AddInvoiceAttachment(this.SelectedPurchaseIndentHeader.PINumber, this.currentUserID.toString(), this.invoiceAttachment).subscribe(
+    //     this._CustomerService.AddInvoiceAttachment(this.SelectedPurchaseIndentHeader.PIRNumber, this.currentUserID.toString(), this.invoiceAttachment).subscribe(
     //         (dat) => {
     //             if (this.fileToUploadList && this.fileToUploadList.length) {
     //                 this.AddDocumentCenterAttachment(Actiontype);
@@ -656,7 +656,7 @@ export class PurchaseIndentComponent implements OnInit {
         this.IsProgressBarVisibile = true;
         this._CustomerService.UpdatePurchaseIndent(this.SelectedPurchaseIndentView).subscribe(
             (data) => {
-                this.SelectedPurchaseIndentHeader.PINumber = (data as BPCPIHeader).PINumber;
+                this.SelectedPurchaseIndentHeader.PIRNumber = (data as BPCPIHeader).PIRNumber;
                 this.ResetControl();
                 this.notificationSnackBarComponent.openSnackBar(`PurchaseIndent ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
                 this.IsProgressBarVisibile = false;

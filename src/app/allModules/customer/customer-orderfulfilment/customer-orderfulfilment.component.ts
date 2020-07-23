@@ -46,10 +46,10 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
   AllEscalatedTasksCount: number;
   AllReworkTasksCount: number;
   SODisplayedColumns: string[] = [
+    'PIRNumber',
     'SO',
     // 'Version',
-    'PINumber',
-    'RetReqID',
+    'PIRType',
     'SODate',
     'Status',
     'Document',
@@ -512,18 +512,26 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
   goToSupportDesk(so: string): void {
     this._router.navigate(['/customer/supportticket'], { queryParams: { id: so } });
   }
-  GotoPI(PINumber?: string): void {
+  GotoPIR(PIRNumber: string, PIRType: string): void {
     // alert(po);
-    if (PINumber) {
-      this._router.navigate(['/customer/purchaseindent'], { queryParams: { id: PINumber } });
+    if (PIRNumber) {
+      if (PIRType) {
+        const type = PIRType.toLowerCase();
+        if (type === "pi") {
+          this._router.navigate(['/customer/purchaseindent'], { queryParams: { id: PIRNumber } });
+        }
+        else if (type === "return") {
+          this._router.navigate(['/customer/return'], { queryParams: { id: PIRNumber } });
+        }
+      }
     } else {
       this._router.navigate(['/customer/purchaseindent']);
     }
   }
-  GotoReturn(RetReqID?: string): void {
+  GotoReturn(PIRType?: string): void {
     // alert(po);
-    if (RetReqID) {
-      this._router.navigate(['/customer/return'], { queryParams: { id: RetReqID } });
+    if (PIRType) {
+      this._router.navigate(['/customer/return'], { queryParams: { id: PIRType } });
     } else {
       this._router.navigate(['/customer/return']);
     }

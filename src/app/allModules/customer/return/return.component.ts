@@ -21,7 +21,7 @@ import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notific
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { AttachmentDetails } from 'app/models/task';
 import { AttachmentDialogComponent } from 'app/allModules/pages/attachment-dialog/attachment-dialog.component';
-import { BPCRetHeader, BPCRetView, BPCRetItem, BPCProd } from 'app/models/customer';
+import { BPCPIHeader, BPCPIView, BPCPIItem, BPCProd } from 'app/models/customer';
 
 @Component({
   selector: 'app-return',
@@ -37,19 +37,19 @@ export class ReturnComponent implements OnInit {
   MenuItems: string[];
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
-  AllReturnHeaders: BPCRetHeader[] = [];
+  AllReturnHeaders: BPCPIHeader[] = [];
   ReturnFormGroup: FormGroup;
   ReturnItemFormGroup: FormGroup;
   InvoiceDetailsFormGroup: FormGroup;
   // ReturnItemFormGroup: FormGroup;
   AllUserWithRoles: UserWithRole[] = [];
-  SelectedRetReqID: string;
+  SelectedPIRNumber: string;
   PO: BPCOFHeader;
   POItems: BPCOFItem[] = [];
-  SelectedReturnHeader: BPCRetHeader;
+  SelectedReturnHeader: BPCPIHeader;
   SelectedReturnNumber: string;
-  SelectedReturnView: BPCRetView;
-  AllReturnItems: BPCRetItem[] = [];
+  SelectedReturnView: BPCPIView;
+  AllReturnItems: BPCPIItem[] = [];
   ReturnItemDisplayedColumns: string[] = [
     'Item',
     'ProdcutID',
@@ -57,11 +57,12 @@ export class ReturnComponent implements OnInit {
     'OrderQty',
     'RetQty',
     // 'DeliveryDate',
+    // 'UOM',
     'ReasonText',
     'FileName',
     'Action'
   ];
-  ReturnItemDataSource: MatTableDataSource<BPCRetItem>;
+  ReturnItemDataSource: MatTableDataSource<BPCPIItem>;
   @ViewChild(MatPaginator) ReturnItemPaginator: MatPaginator;
   @ViewChild(MatSort) ReturnItemSort: MatSort;
   invoiceAttachment: File;
@@ -101,9 +102,9 @@ export class ReturnComponent implements OnInit {
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.IsProgressBarVisibile = false;
     this.PO = new BPCOFHeader();
-    this.SelectedReturnHeader = new BPCRetHeader();
+    this.SelectedReturnHeader = new BPCPIHeader();
     this.SelectedReturnHeader.Status = 'Open';
-    this.SelectedReturnView = new BPCRetView();
+    this.SelectedReturnView = new BPCPIView();
     this.SelectedReturnNumber = '';
     this.invAttach = new BPCInvoiceAttachment();
     this.minDate = new Date();
@@ -132,7 +133,7 @@ export class ReturnComponent implements OnInit {
       this._router.navigate(['/auth/login']);
     }
     this._route.queryParams.subscribe(params => {
-      this.SelectedRetReqID = params['id'];
+      this.SelectedPIRNumber = params['id'];
     });
     this.CreateAppUsage();
     this.InitializeReturnFormGroup();
@@ -159,9 +160,9 @@ export class ReturnComponent implements OnInit {
   }
   InitializeReturnFormGroup(): void {
     this.ReturnFormGroup = this._formBuilder.group({
-      RetReqID: [''],
+      PIRNumber: [''],
       Date: [new Date(), Validators.required],
-      InvoiceDoc: ['', Validators.required],
+      ReferenceDoc: ['', Validators.required],
       Text: ['', Validators.required],
       Status: [''],
     });
@@ -182,6 +183,7 @@ export class ReturnComponent implements OnInit {
       MaterialText: [''],
       RetQty: ['', [Validators.required, Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,2})?$')]],
       OrderQty: ['', [Validators.required, Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,2})?$')]],
+      // UOM: ['', Validators.required],
       // DeliveryDate: ['', Validators.required],
       ReasonText: [''],
       FileName: ['']
@@ -189,9 +191,9 @@ export class ReturnComponent implements OnInit {
   }
 
   ResetControl(): void {
-    this.SelectedReturnHeader = new BPCRetHeader();
+    this.SelectedReturnHeader = new BPCPIHeader();
     this.SelectedReturnHeader.Status = 'Open';
-    this.SelectedReturnView = new BPCRetView();
+    this.SelectedReturnView = new BPCPIView();
     this.SelectedReturnNumber = '';
     this.ResetReturnFormGroup();
     // this.SetInitialValueForReturnFormGroup();
@@ -230,7 +232,7 @@ export class ReturnComponent implements OnInit {
   }
 
   GetReturnBasedOnCondition(): void {
-    if (this.SelectedRetReqID) {
+    if (this.SelectedPIRNumber) {
       this.GetReturnByRetAndPartnerID();
     }
   }
@@ -307,13 +309,14 @@ export class ReturnComponent implements OnInit {
 
   AddReturnItemToTable(): void {
     if (this.ReturnItemFormGroup.valid) {
-      const PIItem = new BPCRetItem();
+      const PIItem = new BPCPIItem();
       PIItem.Item = this.ReturnItemFormGroup.get('Item').value;
       PIItem.ProdcutID = this.ReturnItemFormGroup.get('ProdcutID').value;
       PIItem.MaterialText = this.ReturnItemFormGroup.get('MaterialText').value;
       PIItem.RetQty = this.ReturnItemFormGroup.get('RetQty').value;
       PIItem.OrderQty = this.ReturnItemFormGroup.get('OrderQty').value;
       // PIItem.DeliveryDate = this.ReturnItemFormGroup.get('DeliveryDate').value;
+      // PIItem.UOM = this.ReturnItemFormGroup.get('UOM').value;
       PIItem.ReasonText = this.ReturnItemFormGroup.get('ReasonText').value;
       // PIItem.FileName = this.ReturnItemFormGroup.get('FileName').value;
       if (this.fileToUpload) {
@@ -333,7 +336,7 @@ export class ReturnComponent implements OnInit {
     }
   }
 
-  RemoveReturnItemFromTable(doc: BPCRetItem): void {
+  RemoveReturnItemFromTable(doc: BPCPIItem): void {
     const index: number = this.AllReturnItems.indexOf(doc);
     if (index > -1) {
       this.AllReturnItems.splice(index, 1);
@@ -381,7 +384,7 @@ export class ReturnComponent implements OnInit {
   // GetAllReturnByPartnerID(): void {
   //     this._CustomerService.GetAllReturnByPartnerID(this.currentUserName).subscribe(
   //         (data) => {
-  //             this.AllReturnHeaders = data as BPCRetHeader[];
+  //             this.AllReturnHeaders = data as BPCPIHeader[];
   //             if (this.AllReturnHeaders && this.AllReturnHeaders.length) {
   //                 this.LoadSelectedReturn(this.AllReturnHeaders[0]);
   //             }
@@ -393,9 +396,9 @@ export class ReturnComponent implements OnInit {
   // }
 
   GetReturnByRetAndPartnerID(): void {
-    this._CustomerService.GetReturnByRetAndPartnerID(this.SelectedRetReqID, this.currentUserName).subscribe(
+    this._CustomerService.GetReturnByRetAndPartnerID(this.SelectedPIRNumber, this.currentUserName).subscribe(
       (data) => {
-        this.SelectedReturnHeader = data as BPCRetHeader;
+        this.SelectedReturnHeader = data as BPCPIHeader;
         if (this.SelectedReturnHeader) {
           this.LoadSelectedReturn(this.SelectedReturnHeader);
         }
@@ -406,20 +409,20 @@ export class ReturnComponent implements OnInit {
     );
   }
 
-  LoadSelectedReturn(seletedReturn: BPCRetHeader): void {
+  LoadSelectedReturn(seletedReturn: BPCPIHeader): void {
     this.SelectedReturnHeader = seletedReturn;
-    this.SelectedReturnView.RetReqID = this.SelectedReturnHeader.RetReqID;
-    this.SelectedReturnNumber = this.SelectedReturnHeader.RetReqID;
+    this.SelectedReturnView.PIRNumber = this.SelectedReturnHeader.PIRNumber;
+    this.SelectedReturnNumber = this.SelectedReturnHeader.PIRNumber;
     this.SetReturnHeaderValues();
     this.GetReturnItemsByRet();
   }
 
   GetReturnItemsByRet(): void {
-    this._CustomerService.GetReturnItemsByRet(this.SelectedReturnHeader.RetReqID).subscribe(
+    this._CustomerService.GetReturnItemsByRet(this.SelectedReturnHeader.PIRNumber).subscribe(
       (data) => {
-        const dt = data as BPCRetItem[];
+        const dt = data as BPCPIItem[];
         if (dt && dt.length && dt.length > 0) {
-          this.AllReturnItems = data as BPCRetItem[];
+          this.AllReturnItems = data as BPCPIItem[];
           this.ReturnItemDataSource = new MatTableDataSource(this.AllReturnItems);
         }
       },
@@ -430,10 +433,10 @@ export class ReturnComponent implements OnInit {
   }
 
   SetReturnHeaderValues(): void {
-    this.ReturnFormGroup.get('RetReqID').patchValue(this.SelectedReturnHeader.RetReqID);
+    this.ReturnFormGroup.get('PIRNumber').patchValue(this.SelectedReturnHeader.PIRNumber);
     this.ReturnFormGroup.get('Date').patchValue(this.SelectedReturnHeader.Date);
-    this.ReturnFormGroup.get('InvoiceDoc').patchValue(this.SelectedReturnHeader.InvoiceDoc);
-    this.ReturnFormGroup.get('RetReqID').patchValue(this.SelectedReturnHeader.RetReqID);
+    this.ReturnFormGroup.get('ReferenceDoc').patchValue(this.SelectedReturnHeader.ReferenceDoc);
+    this.ReturnFormGroup.get('PIRNumber').patchValue(this.SelectedReturnHeader.PIRNumber);
     this.ReturnFormGroup.get('Text').patchValue(this.SelectedReturnHeader.Text);
     this.ReturnFormGroup.get('Status').patchValue(this.SelectedReturnHeader.Status);
   }
@@ -445,9 +448,9 @@ export class ReturnComponent implements OnInit {
     } else {
       this.SelectedReturnHeader.Date = this.SelectedReturnView.Date = this.ReturnFormGroup.get('Date').value;
     }
-    this.SelectedReturnHeader.InvoiceDoc = this.SelectedReturnView.InvoiceDoc = this.ReturnFormGroup.get('InvoiceDoc').value;
+    this.SelectedReturnHeader.ReferenceDoc = this.SelectedReturnView.ReferenceDoc = this.ReturnFormGroup.get('ReferenceDoc').value;
     this.SelectedReturnHeader.Text = this.SelectedReturnView.Text = this.ReturnFormGroup.get('Text').value;
-    if (this.SelectedRetReqID) {
+    if (this.SelectedPIRNumber) {
       // this.SelectedReturnHeader.Client = this.SelectedReturnView.Client = this.PO.Client;
       // this.SelectedReturnHeader.Company = this.SelectedReturnView.Company = this.PO.Company;
       // this.SelectedReturnHeader.Type = this.SelectedReturnView.Type = this.PO.Type;
@@ -530,7 +533,7 @@ export class ReturnComponent implements OnInit {
     }
   }
   DeleteClicked(): void {
-    if (this.SelectedReturnHeader.RetReqID) {
+    if (this.SelectedReturnHeader.PIRNumber) {
       const Actiontype = 'Delete';
       const Catagory = 'Return';
       this.OpenConfirmationDialog(Actiontype, Catagory);
@@ -561,7 +564,7 @@ export class ReturnComponent implements OnInit {
       result => {
         if (result) {
           if (Actiontype === 'Save' || Actiontype === 'Submit') {
-            if (this.SelectedReturnHeader.RetReqID) {
+            if (this.SelectedReturnHeader.PIRNumber) {
               this.UpdateReturn(Actiontype);
             } else {
               this.CreateReturn(Actiontype);
@@ -581,7 +584,7 @@ export class ReturnComponent implements OnInit {
     this.IsProgressBarVisibile = true;
     this._CustomerService.CreateReturn(this.SelectedReturnView).subscribe(
       (data) => {
-        this.SelectedReturnHeader.RetReqID = (data as BPCRetHeader).RetReqID;
+        this.SelectedReturnHeader.PIRNumber = (data as BPCPIHeader).PIRNumber;
         if (this.fileToUploadList && this.fileToUploadList.length) {
           this.AddReturnItemAttachment(Actiontype);
         } else {
@@ -597,7 +600,7 @@ export class ReturnComponent implements OnInit {
   }
 
   // AddInvoiceAttachment(Actiontype: string): void {
-  //     this._CustomerService.AddInvoiceAttachment(this.SelectedReturnHeader.RetReqID, this.currentUserID.toString(), this.invoiceAttachment).subscribe(
+  //     this._CustomerService.AddInvoiceAttachment(this.SelectedReturnHeader.PIRNumber, this.currentUserID.toString(), this.invoiceAttachment).subscribe(
   //         (dat) => {
   //             if (this.fileToUploadList && this.fileToUploadList.length) {
   //                 this.AddReturnItemAttachment(Actiontype);
@@ -613,47 +616,47 @@ export class ReturnComponent implements OnInit {
   //         });
   // }
   AddReturnItemAttachment(Actiontype: string): void {
-      this._CustomerService.AddReturnItemAttachment(this.SelectedReturnHeader.RetReqID, this.currentUserID.toString(), this.fileToUploadList).subscribe(
-          (dat) => {
-              this.ResetControl();
-              this.notificationSnackBarComponent.openSnackBar(`Return ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
-              this.IsProgressBarVisibile = false;
-              this.GetReturnBasedOnCondition();
-          },
-          (err) => {
-              this.showErrorNotificationSnackBar(err);
-          }
-      );
+    this._CustomerService.AddReturnItemAttachment(this.SelectedReturnHeader.PIRNumber, this.currentUserID.toString(), this.fileToUploadList).subscribe(
+      (dat) => {
+        this.ResetControl();
+        this.notificationSnackBarComponent.openSnackBar(`Return ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
+        this.IsProgressBarVisibile = false;
+        this.GetReturnBasedOnCondition();
+      },
+      (err) => {
+        this.showErrorNotificationSnackBar(err);
+      }
+    );
   }
 
   GetReturnItemAttachment(fileName: string): void {
     const file = this.fileToUploadList.filter(x => x.name === fileName)[0];
     if (file && file.size) {
-        const blob = new Blob([file], { type: file.type });
-        this.OpenAttachmentDialog(fileName, blob);
+      const blob = new Blob([file], { type: file.type });
+      this.OpenAttachmentDialog(fileName, blob);
     } else {
-        this.IsProgressBarVisibile = true;
-        this._CustomerService.DowloandReturnItemAttachment(fileName, this.SelectedReturnHeader.RetReqID).subscribe(
-            data => {
-                if (data) {
-                    let fileType = 'image/jpg';
-                    fileType = fileName.toLowerCase().includes('.jpg') ? 'image/jpg' :
-                        fileName.toLowerCase().includes('.jpeg') ? 'image/jpeg' :
-                            fileName.toLowerCase().includes('.png') ? 'image/png' :
-                                fileName.toLowerCase().includes('.gif') ? 'image/gif' :
-                                    fileName.toLowerCase().includes('.pdf') ? 'application/pdf' : '';
-                    const blob = new Blob([data], { type: fileType });
-                    this.OpenAttachmentDialog(fileName, blob);
-                }
-                this.IsProgressBarVisibile = false;
-            },
-            error => {
-                console.error(error);
-                this.IsProgressBarVisibile = false;
-            }
-        );
+      this.IsProgressBarVisibile = true;
+      this._CustomerService.DowloandReturnItemAttachment(fileName, this.SelectedReturnHeader.PIRNumber).subscribe(
+        data => {
+          if (data) {
+            let fileType = 'image/jpg';
+            fileType = fileName.toLowerCase().includes('.jpg') ? 'image/jpg' :
+              fileName.toLowerCase().includes('.jpeg') ? 'image/jpeg' :
+                fileName.toLowerCase().includes('.png') ? 'image/png' :
+                  fileName.toLowerCase().includes('.gif') ? 'image/gif' :
+                    fileName.toLowerCase().includes('.pdf') ? 'application/pdf' : '';
+            const blob = new Blob([data], { type: fileType });
+            this.OpenAttachmentDialog(fileName, blob);
+          }
+          this.IsProgressBarVisibile = false;
+        },
+        error => {
+          console.error(error);
+          this.IsProgressBarVisibile = false;
+        }
+      );
     }
-}
+  }
 
   showErrorNotificationSnackBar(err: any): void {
     console.error(err);
@@ -669,7 +672,7 @@ export class ReturnComponent implements OnInit {
     this.IsProgressBarVisibile = true;
     this._CustomerService.UpdateReturn(this.SelectedReturnView).subscribe(
       (data) => {
-        this.SelectedReturnHeader.RetReqID = (data as BPCRetHeader).RetReqID;
+        this.SelectedReturnHeader.PIRNumber = (data as BPCPIHeader).PIRNumber;
         if (this.fileToUploadList && this.fileToUploadList.length) {
           this.AddReturnItemAttachment(Actiontype);
         } else {

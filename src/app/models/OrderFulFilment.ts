@@ -74,7 +74,7 @@ export class BPCOFGRGI extends CommonClass {
     Item: string;
     Material: string;
     MaterialText: string;
-    DelDate?: Date;
+    DeliveryDate?: Date;
     GRGIQty: number;
     ShippingPartner: string;
     ShippingDoc: string;
@@ -272,6 +272,13 @@ export class OfAttachmentData {
     OfAttachments: BPCInvoiceAttachment[];
     Type: string | null;
 }
-
-
-
+export class SOItemCount {
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
+    DocNumber: string;
+    ItemCount: number;
+    GRGICount: number;
+    PODCount: number;
+}
