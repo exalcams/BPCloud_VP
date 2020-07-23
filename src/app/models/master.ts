@@ -15,6 +15,18 @@ export class UserWithRole {
     ModifiedBy: string;
     DisplayName: string;
 }
+export class UserPreference {
+    ID: number;
+    UserID: Guid;
+    NavbarPrimaryBackground: string;
+    NavbarSecondaryBackground: string;
+    ToolbarBackground: string;
+    IsActive: boolean;
+    CreatedOn: Date;
+    CreatedBy: string;
+    ModifiedOn?: Date;
+    ModifiedBy: string;
+}
 export class UserView {
     UserID: Guid;
     UserName: string;
@@ -145,3 +157,4 @@ export class LoginHistoryFilter {
     ToDate: string;
     UserName: string;
 }
+

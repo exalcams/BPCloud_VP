@@ -61,3 +61,12 @@ export class BPCReasonMaster extends CommonClass {
     ReasonCode: string;
     ReasonText: string;
 }
+export class  BPCExpenseTypeMaster extends CommonClass{
+    ID:number;
+    Client:string;
+    Company:string;
+    Type:string;
+    PatnerID:string;
+    ExpenseType:string;
+    MaxAmount:string;
+}

@@ -14,6 +14,10 @@ import { MenuAppComponent } from './menu-app/menu-app.component';
 import { RoleComponent } from './role/role.component';
 import { UserComponent } from './user/user.component';
 import { ReasonComponent } from './reason/reason.component';
+import { UserPreferencesComponent } from './user-preferences/user-preferences.component';
+import { FuseMaterialColorPickerModule } from '@fuse/components';
+import { ExpenseTypeComponent } from './expense-type/expense-type.component';
+
 
 const menuRoutes: Routes = [
     {
@@ -32,6 +36,14 @@ const menuRoutes: Routes = [
         path: 'reason',
         component: ReasonComponent,
     },
+    {
+        path:'userpreferences',
+        component:UserPreferencesComponent
+    },
+    {
+        path:'expensetype',
+        component:ExpenseTypeComponent
+    }
 ];
 @NgModule({
     declarations: [
@@ -39,6 +51,8 @@ const menuRoutes: Routes = [
         RoleComponent,
         MenuAppComponent,
         ReasonComponent,
+        UserPreferencesComponent,
+        ExpenseTypeComponent
     ],
     imports: [
         MatButtonModule,
@@ -60,6 +74,7 @@ const menuRoutes: Routes = [
         MatTooltipModule,
         FuseSharedModule,
         FileUploadModule,
+        FuseMaterialColorPickerModule,
         RouterModule.forChild(menuRoutes)
     ],
     providers: [
