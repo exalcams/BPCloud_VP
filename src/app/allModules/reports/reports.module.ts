@@ -39,7 +39,6 @@ import {
     MatTooltipModule,
     MatTreeModule,
 } from "@angular/material";
-import { GaugeChartModule } from 'angular-gauge-chart'
 import { NgxChartsModule } from "@swimlane/ngx-charts";
 import { NgxDonutChartModule } from "ngx-doughnut-chart";
 import {
@@ -109,7 +108,7 @@ const routes = [
     imports: [
         // HttpClientModule,
         // TranslateModule,
-        GaugeChartModule,
+        // GaugeChartModule,
         MatFormFieldModule,
         MatAutocompleteModule,
         MatBadgeModule,

@@ -20,8 +20,8 @@ export class ReportService {
     private _httpClient: HttpClient,
     private _authService: AuthService
   ) {
-    // this.baseAddress = _authService.baseAddress;
-    this.baseAddress = 'http://192.168.0.28:7010/';
+    this.baseAddress = _authService.baseAddress;
+    // this.baseAddress = 'http://192.168.0.28:7010/';
   }
   // Error Handler
   errorHandler(error: HttpErrorResponse): Observable<string> {
