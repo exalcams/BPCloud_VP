@@ -731,6 +731,20 @@ export class LoginComponent implements OnInit {
         }
       );
     }
+    if (this.menuItems.indexOf('Improvement') >= 0) {
+      this.children.push(
+        {
+          id: 'improvement',
+          title: 'Improvement',
+          translate: 'NAV.SAMPLE.TITLE',
+          type: 'item',
+          icon: 'flipIcon',
+          isSvgIcon: true,
+          // icon: 'dashboard',
+          url: '/pages/improvement',
+        }
+      );
+    }
     this.navigation.push({
       id: 'applications',
       title: '',
