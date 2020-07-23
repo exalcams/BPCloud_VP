@@ -142,7 +142,7 @@ export class OverviewComponent implements OnInit {
     );
   }
   // tslint:disable-next-line:typedef
-  GetOverviewReportByStatus(name: string) {
+  GetOverviewReportByStatus() {
     this.overdata.PartnerID = this.Temp[0].PatnerID;
     this.overdata.Material = this.Temp[0].Material;
     this.overdata.FromDate = new Date();

@@ -34,6 +34,12 @@ export class InspectionPlanComponent implements OnInit {
       }
     );
   }
+  GetOverviewReportByOption1(): void {
+
+  }
+  GetOverviewReportByOption2(): void {
+
+  }
   // tslint:disable-next-line:typedef
   GetFilteredReportIPByPartnerID() {
     this.reportservice.GetFilteredReportIPByPartnerID("Visu", this.material, this.inspectionMethod).subscribe(
@@ -44,6 +50,6 @@ export class InspectionPlanComponent implements OnInit {
   }
   applyfilter(filterValue: string) {
     this.TabledataSource.filter = filterValue.trim().toLowerCase();
- 
+
   }
 }
