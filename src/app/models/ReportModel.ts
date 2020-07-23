@@ -128,14 +128,7 @@ export class OverviewReportOption extends CommonClass {
     FromDate: Date | string | null;
     ToDate: Date | string | null;
 }
-export class BPCReportVR extends CommonClass {
-    Material: string;
-    MaterialText: string;
-    OrderQty: number;
-    ReceivedQty: number;
-    RejectedPPM: number;
-    ReworkQty: number;
-}
+
 export class BPCReportDOL extends CommonClass {
     Material: string;
     MaterialText: string;
@@ -145,21 +138,30 @@ export class BPCReportDOL extends CommonClass {
     ReworkQty: number;
 }
 export class BPCReportFGCPS extends CommonClass {
-    Plant: string ;
-    Material: string ;
-    MaterialText: string ;
-    StickQty: any ;
-    UOM: string ;
-    Batch: string ;
+    Plant: string;
+    Material: string;
+    MaterialText: string;
+    StickQty: any;
+    UOM: string;
+    Batch: string;
     Price: any;
 }
 export class BPCReportIP extends CommonClass {
+    ID: number;
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
     Material: string;
     MaterialText: string;
-    OrderQty: number;
-    ReceivedQty: number;
-    RejectedPPM: number;
-    ReworkQty: number;
+    MaterialChar: string;
+    Desc: string;
+    LowerLimit: number;
+    UpperLimit: number;
+    UOM: string;
+    Method: string;
+    ModRule: string;
+    Status: string;
 }
 export class BPCReportGRR extends CommonClass {
     Material: string;
@@ -172,5 +174,19 @@ export class BPCReportGRR extends CommonClass {
 
 
 
+export class BPCReportVR extends CommonClass {
+    ID: number;
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
+    Material: string;
+    MaterialText: string;
+    OrderQty: number;
+    ReceivedQty: number;
+    RejectedPPM: number;
+    ReworkQty: number;
+    Status: string;
 
+}
 

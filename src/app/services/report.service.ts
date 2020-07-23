@@ -20,7 +20,8 @@ export class ReportService {
     private _httpClient: HttpClient,
     private _authService: AuthService
   ) {
-    this.baseAddress = _authService.baseAddress;
+    // this.baseAddress = _authService.baseAddress;
+    this.baseAddress = 'http://192.168.0.28:7010/';
   }
   // Error Handler
   errorHandler(error: HttpErrorResponse): Observable<string> {
@@ -129,13 +130,24 @@ export class ReportService {
       .pipe(catchError(this.errorHandler));
   }
 
-  GetVendorRatingReports(PartnerId: string): Observable<any> {
-    return this._httpClient.get<BPCReportVR[]>(`${this.baseAddress}reportapi/Report/GetVendorRatingReports?PartnerID=${PartnerId}`)
-      .pipe(catchError(this.errorHandler));
-  }
+  
 
   GetAllReportDOLByPartnerID(PartnerId: string): Observable<any> {
     return this._httpClient.get<BPCReportDOL[]>(`${this.baseAddress}reportapi/Report/GetAllReportDOLByPartnerID?PartnerID=${PartnerId}`);
   }
 
+  // Inspection
+  GetAllReportIPByPartnerID(PartnerId: string): Observable<any> {
+    return this._httpClient.get<BPCReportOV[]>(`${this.baseAddress}reportapi/Report/GetAllReportIPByPartnerID?PartnerID=${PartnerId}`)
+      .pipe(catchError(this.errorHandler));
+  }
+  GetFilteredReportIPByPartnerID(PartnerId: string, material: string, method: string): Observable<any> {
+    return this._httpClient.get<BPCReportOV[]>(`${this.baseAddress}reportapi/Report/GetFilteredReportIPByPartnerID?PartnerID=${PartnerId}&Material=${material}&Method=${method}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+   GetVendorRatingReports(PartnerId: string): Observable<any> {
+    return this._httpClient.get<BPCReportVR[]>(`${this.baseAddress}reportapi/Report/GetVendorRatingReports?PartnerID=${PartnerId}`)
+      .pipe(catchError(this.errorHandler));
+  }
 }

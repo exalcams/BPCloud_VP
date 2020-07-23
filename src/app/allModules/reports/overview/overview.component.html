@@ -10,6 +10,158 @@
       </div>
     </div>
 
+    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="40px" class="cl_ChartContent">
+      <div fxFlex="33">
+        <mat-card class="chartCard2">
+          <mat-card-title class="acp_rej_title">
+            Accepted / Rejected
+            <p class="underline1" fxFlex="33.5"></p>
+          </mat-card-title>
+          <mat-card-content>
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+              <canvas id="doughnut" fxFlex="70" fxFlex.ms="100" fxFlex.sm="100" class="dounutchart"></canvas>
+              <div fxLayout="column" fxLayoutAlign="center center">
+                <div fxLayout="row" fxLayoutAlign="space-evenly center">
+                  <p class="accpetCircle"></p>
+                  <p>Accepted Quality</p>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="space-between center">
+                  <p class="rejCircle"></p>
+                  <p>Rejected Quality</p>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div fxFlex="33">
+        <mat-card class="chartCard2">
+          <mat-card-title class="rejLabel_title">
+            Top 5 rejected Material
+            <p class="underline2" fxFlex="36"></p>
+          </mat-card-title>
+          <mat-card-content>
+
+            <canvas id="barChart" fxFlex="80" fxFlex.ms="100" fxFlex.sm="100"></canvas>
+
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div fxFlex="33">
+        <div fxLayout="column" fxLayoutGap="10px">
+
+          <div class="cl_materialDiv" fxFlex="70">
+            <img src="assets/images/search.png" class="cl_search2">
+            <input matInput placeholder="Material" class="cl_materailInput" [(ngModel)]="material">
+          </div>
+          <div fxLayout="row" fxLayoutGap="10px">
+            <p class="leftDivider" fxFlex="49.5"></p>
+            <div fxFlex="1">
+              <p class="DividerCircle"></p>
+            </div>
+            <p class="rightDivider" fxFlex="49.5"></p>
+          </div>
+          <div class="cl_materialDiv" fxFlex="70">
+            <img src="assets/images/search.png" class="cl_search2">
+            <input matInput placeholder="Po Number" class="cl_materailInput" [(ngModel)]="PoNumer">
+          </div>
+          <mat-toolbar style="background-color: transparent;">
+            <span class="Spacer"></span>
+            <button mat-flat-button class="cl_searchBtn" fxFlex="40" (click)="GetOverviewReportByStatus()"><span
+                class="searchBtn_label">Search</span></button>
+          </mat-toolbar>
+        </div>
+      </div>
+    </div>
+
+
+    <mat-toolbar class="cl_searchBar_toolbar">
+      <div class="cl_searchBarDiv">
+        <img src="assets/images/search.png" class="cl_searchImg">
+        <input matInput placeholder="Search" class="cl_InputSearch" (keyup)="applyFilter($event)" #input>
+      </div>
+      <span class="Spacer"></span>
+      <!-- <mat-form-field appearance="fill"> -->
+      <mat-select fxFlex.ms="40" class="reports_overview_Select">
+        <mat-option value="option1" (click)="GetOverviewReport()">All</mat-option>
+        <mat-option value="option2" (click)="GetOverviewReportByOption2()">Po Number</mat-option>
+        <mat-option value="option3" (click)="GetOverviewReportByOption1()">Material</mat-option>
+      </mat-select>
+      <!-- </mat-form-field> -->
+      <div class="cl_excelDiv">
+        <img src="assets/images/excel.png" class="cl_ExcelImg" (click)="exportAsExcel()">
+      </div>
+      <div>
+        <img src="assets/images/expand.png" class="cl_expandImg">
+      </div>
+    </mat-toolbar>
+
+    <table class="table" mat-table [dataSource]="TabledataSource" class="mat-elevation-z8">
+
+
+      <ng-container matColumnDef="Material">
+        <th mat-header-cell *matHeaderCellDef >
+          <p class="cl_material_column"> Material</p>
+        </th>
+        <td mat-cell *matCellDef="let element; index as i" align="center">
+          <p class="cl_box" [ngStyle]="{'background-color': i%2==0 ? '#d87e39':'#6f52ed'}"></p>
+          <p class="cl_material_label">{{element.Material}}</p>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="MaterialText" class="cl_materialText_container">
+        <th mat-header-cell *matHeaderCellDef>
+          <p>MaterialText</p>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <p class="cl_MaterialText_column">{{element.MaterialText}}</p>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="InputQuantity">
+        <th mat-header-cell *matHeaderCellDef>
+          <p>Input Quantity</p>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <p class="cl_inputQty_column">{{element.InputQty}} </p>
+        </td>
+      </ng-container>
+
+
+      <ng-container matColumnDef="AcceptedQuantity">
+        <th mat-header-cell *matHeaderCellDef>
+          <p> Accepted Quantity</p>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <p class="AccptQty"> {{element.AccQty}} </p>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="RejectedQuantity">
+        <th mat-header-cell *matHeaderCellDef>
+          <p> Rejected Quantity </p>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <p class="cl_RejQty_column"> {{element.RejQty}}</p>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="RejectedPercentage">
+        <th mat-header-cell *matHeaderCellDef >
+          <p> Rejected Percentage</p>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <p class="cl_rejPer_column">-</p>
+        </td>
+
+      </ng-container>
+
+
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
     <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
     </mat-progress-spinner>
     <div id="overlay" *ngIf="isProgressBarVisibile"></div>

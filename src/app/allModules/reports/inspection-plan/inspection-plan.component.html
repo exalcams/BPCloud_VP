@@ -10,6 +10,155 @@
       </div>
     </div>
 
+    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="40px" class="cl_ChartContent">
+      <div fxFlex="33">
+        <mat-card class="chartCard">
+          <mat-card-title class="acp_rej_title">
+            Material Count
+            <!-- <p class="underline1" fxFlex="33.5"></p> -->
+          </mat-card-title>
+          <mat-card-content>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div fxFlex="33">
+        <mat-card class="chartCard">
+          <mat-card-title class="rejLabel_title">
+            Inspection Method
+            <!-- <p class="underline2" fxFlex="34"></p> -->
+          </mat-card-title>
+          <mat-card-content>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div fxFlex="33">
+        <div fxLayout="column" fxLayoutGap="10px">
+
+          <div class="cl_materialDiv" fxFlex="70">
+            <img src="assets/images/search.png" class="cl_search2">
+            <input matInput placeholder="Material" class="cl_materailInput"
+              (keydown.enter)="GetFilteredReportIPByPartnerID()" [(ngModel)]="material">
+          </div>
+          <div fxLayout="row" fxLayoutGap="10px">
+            <p class="leftDivider" fxFlex="49.5"></p>
+            <div fxFlex="1">
+              <p class="DividerCircle"></p>
+            </div>
+            <p class="rightDivider" fxFlex="49.5"></p>
+          </div>
+          <div class="cl_materialDiv" fxFlex="70">
+            <img src="assets/images/search.png" class="cl_search2">
+            <input matInput placeholder="Inspection Method" class="cl_materailInput"
+              (keydown.enter)="GetFilteredReportIPByPartnerID()" [(ngModel)]="inspectionMethod">
+          </div>
+          <mat-toolbar style="background-color: transparent;">
+            <span class="Spacer"></span>
+            <button mat-flat-button class="cl_searchBtn" fxFlex="40" (click)="GetFilteredReportIPByPartnerID()"><span
+                class="searchBtn_label">Search</span></button>
+          </mat-toolbar>
+        </div>
+      </div>
+    </div>
+
+
+    <mat-toolbar class="cl_searchBar_toolbar">
+      <div class="cl_searchBarDiv">
+        <img src="assets/images/search.png" class="cl_searchImg">
+        <input matInput placeholder="Search" class="cl_InputSearch" (keyup)="applyfilter($event.target.value)"  #input>
+      </div>
+      <span class="Spacer"></span>
+      <!-- <mat-form-field appearance="fill"> -->
+      <mat-select fxFlex.ms="40" class="reports_overview_Select">
+        <mat-option value="option1" (click)="GetAllReportIPByPartnerID()">All</mat-option>
+        <mat-option value="option2" (click)="GetOverviewReportByOption2()">Inspection Method</mat-option>
+        <mat-option value="option3" (click)="GetOverviewReportByOption1()">Material</mat-option>
+      </mat-select>
+      <!-- </mat-form-field> -->
+      <div class="cl_excelDiv">
+        <img src="assets/images/excel.png" class="cl_ExcelImg" >
+      </div>
+      <div>
+        <img src="assets/images/expand.png" class="cl_expandImg">
+      </div>
+    </mat-toolbar>
+
+
+    <mat-table  [dataSource]="TabledataSource" class="cl_table" #exceltable id="exceltable" >
+      <!-- Material Column -->
+      <ng-container matColumnDef="Material">
+        <mat-header-cell *matHeaderCellDef class="cl_material"> Material </mat-header-cell>
+        <mat-cell *matCellDef="let element ;index as i">
+          <p class="cl_box" [ngStyle]="{'background-color': i%2==0 ? '#d87e39':'#6f52ed'}"></p>
+          <p class="cl_materialLabel">{{element.Material}} </p>
+        </mat-cell>
+      </ng-container>
+
+      <!-- MaterialText Column -->
+      <ng-container matColumnDef="MaterialDesc">
+        <mat-header-cell *matHeaderCellDef class="cl_matDesc"> Material Desc </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <p class="cl_matDesc_label">{{element.MaterialText}} </p>
+        </mat-cell>
+      </ng-container>
+
+      <!-- cl_RejectionQty Column -->
+      <ng-container matColumnDef="MaterialCharacteristics" fxFlex="30">
+        <mat-header-cell *matHeaderCellDef class="cl_matChar"> Material Characteristics </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <p class="cl_matChar_label">{{element.MaterialChar}}</p>
+        </mat-cell>
+      </ng-container>
+
+      <!-- AcceptedQuantity Column -->
+      <ng-container matColumnDef="Description">
+        <mat-header-cell *matHeaderCellDef class="cl_Descprition"> Description </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <p class="cl_Descprition_label">{{element.Desc}} </p>
+        </mat-cell>
+      </ng-container>
+
+      <!-- RejectedQuantity Column -->
+      <ng-container matColumnDef="LowerLimit">
+        <mat-header-cell *matHeaderCellDef class="cl_lowerLimi"> LowerLimit </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <p class="cl_lowerLimit_label"> {{element.LowerLimit}}</p>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="UpperLimit">
+        <mat-header-cell *matHeaderCellDef class="cl_UpperLimit"> Upper Limit </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <p class="cl_UpperLimit_Label">{{element.UpperLimit}}</p>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="UOM">
+        <mat-header-cell *matHeaderCellDef class="cl_uom"> UOM </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <p class="cl_uom_label">{{element.UOM}}</p>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="InspecMethod">
+        <mat-header-cell *matHeaderCellDef class="cl_inspc"> Inspec. Method </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <p class="cl_inspc_label">{{element.Method}}</p>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="ModRule">
+        <mat-header-cell *matHeaderCellDef class="cl_mod"> Mod Rule </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <p class="cl_mod_label">{{element.ModRule}}</p>
+        </mat-cell>
+      </ng-container>
+
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+    </mat-table>
+    
     <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
     </mat-progress-spinner>
     <div id="overlay" *ngIf="isProgressBarVisibile"></div>
