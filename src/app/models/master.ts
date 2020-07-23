@@ -134,7 +134,6 @@ export class VendorUser {
     Email: string;
     Phone: string;
 }
-<<<<<<< HEAD
 export class SessionMaster {
     ID: number;
     ProjectName: string;
@@ -158,6 +157,4 @@ export class LoginHistoryFilter {
     ToDate: string;
     UserName: string;
 }
-=======
 
->>>>>>> my(madhav) changes
