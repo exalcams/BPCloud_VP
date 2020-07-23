@@ -10,9 +10,11 @@ import { DashboardService } from 'app/services/dashboard.service';
 import { DatePipe } from '@angular/common';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { fuseAnimations } from '@fuse/animations';
-import { BPCOFItem } from 'app/models/OrderFulFilment';
+import { BPCOFItem, BPCOFGRGI, SOItemCount } from 'app/models/OrderFulFilment';
 import { POService } from 'app/services/po.service';
 import { MasterService } from 'app/services/master.service';
+import { BPCPODHeader } from 'app/models/POD';
+import { PODService } from 'app/services/pod.service';
 
 @Component({
   selector: 'app-customer-polookup',
@@ -27,13 +29,14 @@ export class CustomerPolookupComponent implements OnInit {
   public tab2: boolean;
   public tab3: boolean;
   public ItemCount: number;
-  public ASNCount: number;
-  public GRNCount: number;
-  public QACount: number;
+  public GRGICount: number;
+  public PODCount: number;
   public DocumentCount: number;
   public FlipCount: number;
 
   IsProgressBarVisibile: boolean;
+  sOItemCount: SOItemCount;
+  SOtems: BPCOFItem[] = [];
   SOItemDisplayedColumns: string[] = [
     'Item',
     'Material',
@@ -43,9 +46,30 @@ export class CustomerPolookupComponent implements OnInit {
     'OpenQty',
     'UOM'
   ];
-
   SOItemDataSource: MatTableDataSource<BPCOFItem>;
-  SOtems: BPCOFItem[] = [];
+  SOGRGIs: BPCOFGRGI[] = [];
+  SOGRGIDisplayedColumns: string[] = [
+    'Item',
+    'Material',
+    'MaterialText',
+    'DeliveryDate',
+    'GRGIQty',
+    'ShippingPartner',
+    'ShippingDoc'
+  ];
+  SOGRGIDataSource: MatTableDataSource<BPCOFGRGI>;
+  AllPODHeaders: BPCPODHeader[] = [];
+  PODDisplayedColumns: string[] = [
+    'InvoiceNumber',
+    'InvoiceDate',
+    'Amount',
+    'Currency',
+    'TruckNumber',
+    'Transporter',
+    'VessleNumber',
+    'Status',
+  ];
+  PODataSource = new MatTableDataSource<BPCPODHeader>([]);
   OrderFulfilmentDetails: OrderFulfilmentDetails = new OrderFulfilmentDetails();
   DocNumber: string;
   ACKFormGroup: FormGroup;
@@ -72,6 +96,7 @@ export class CustomerPolookupComponent implements OnInit {
     private route: ActivatedRoute,
     public _dashboardService: DashboardService,
     public _POService: POService,
+    public _PODService: PODService,
     private _masterService: MasterService,
     private _router: Router,
     private formBuilder: FormBuilder,
@@ -104,6 +129,7 @@ export class CustomerPolookupComponent implements OnInit {
     this.ACKFormGroup = this.formBuilder.group({
       Proposeddeliverydate: ['', Validators.required]
     });
+    this.sOItemCount = new SOItemCount();
     this.tab1 = true;
     this.tab2 = false;
     this.tab3 = false;
@@ -112,6 +138,7 @@ export class CustomerPolookupComponent implements OnInit {
 
   ngOnInit(): void {
     this.CreateAppUsage();
+    this.GetSOItemCountByDocAndPartnerID();
     this.tabone();
   }
   CreateAppUsage(): void {
@@ -140,6 +167,7 @@ export class CustomerPolookupComponent implements OnInit {
     this.tab1 = false;
     this.tab2 = true;
     this.tab3 = false;
+    this.GetPOGRGIByDocAndPartnerID();
     // this.getallasn();
     // this.ResetControl();
   }
@@ -147,18 +175,58 @@ export class CustomerPolookupComponent implements OnInit {
     this.tab1 = false;
     this.tab2 = false;
     this.tab3 = true;
+    this.GetPODsByDocAndPartnerID();
     // this.getallgrn();
     // this.ResetControl();
+  }
+
+
+  GetSOItemCountByDocAndPartnerID(): void {
+    this._POService.GetSOItemCountByDocAndPartnerID(this.DocNumber, this.PartnerID).subscribe(
+      (data) => {
+        this.sOItemCount = data as SOItemCount;
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
   }
 
   GetPOItemsByDocAndPartnerID(): void {
     this._POService.GetPOItemsByDocAndPartnerID(this.DocNumber, this.PartnerID).subscribe(
       (data) => {
         this.SOtems = data as BPCOFItem[];
-        this.ItemCount = this.SOtems.length;
+        this.sOItemCount.ItemCount = this.SOtems.length;
         this.SOItemDataSource = new MatTableDataSource(this.SOtems);
       },
       (err) => {
+        console.error(err);
+      }
+    );
+  }
+  GetPOGRGIByDocAndPartnerID(): void {
+    this._POService.GetPOGRGIByDocAndPartnerID(this.DocNumber, this.PartnerID).subscribe(
+      (data) => {
+        this.SOGRGIs = data as BPCOFGRGI[];
+        this.sOItemCount.GRGICount = this.SOtems.length;
+        this.SOGRGIDataSource = new MatTableDataSource(this.SOGRGIs);
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+  GetPODsByDocAndPartnerID(): void {
+    this.IsProgressBarVisibile = true;
+    this._PODService.GetPODsByDocAndPartnerID(this.DocNumber, this.PartnerID).subscribe(
+      (data) => {
+        this.AllPODHeaders = data as BPCPODHeader[];
+        this.sOItemCount.PODCount = this.AllPODHeaders.length;
+        this.PODataSource = new MatTableDataSource(this.AllPODHeaders);
+        this.IsProgressBarVisibile = false;
+      },
+      (err) => {
+        this.IsProgressBarVisibile = false;
         console.error(err);
       }
     );

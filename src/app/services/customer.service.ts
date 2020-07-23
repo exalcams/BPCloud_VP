@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { Observable, throwError } from 'rxjs';
 import { Guid } from 'guid-typescript';
 import { catchError } from 'rxjs/operators';
-import { BPCPIView, BPCPIHeader, BPCRetView, BPCRetHeader, BPCProd, BPCPIItem, BPCRetItem } from 'app/models/customer';
+import { BPCPIView, BPCPIHeader, BPCProd, BPCPIItem } from 'app/models/customer';
 
 @Injectable({
     providedIn: 'root'
@@ -76,7 +76,7 @@ export class CustomerService {
 
     // Return
 
-    CreateReturn(Return: BPCRetView): Observable<any> {
+    CreateReturn(Return: BPCPIView): Observable<any> {
         return this._httpClient.post<any>(`${this.baseAddress}poapi/Return/CreateReturn`,
             Return,
             {
@@ -87,7 +87,7 @@ export class CustomerService {
             .pipe(catchError(this.errorHandler));
     }
 
-    UpdateReturn(Return: BPCRetView): Observable<any> {
+    UpdateReturn(Return: BPCPIView): Observable<any> {
         return this._httpClient.post<any>(`${this.baseAddress}poapi/Return/UpdateReturn`,
             Return,
             {
@@ -98,7 +98,7 @@ export class CustomerService {
             .pipe(catchError(this.errorHandler));
     }
 
-    DeleteReturn(Return: BPCRetHeader): Observable<any> {
+    DeleteReturn(Return: BPCPIHeader): Observable<any> {
         return this._httpClient.post<any>(`${this.baseAddress}poapi/Return/DeleteReturn`,
             Return,
             {
@@ -134,22 +134,22 @@ export class CustomerService {
         })
             .pipe(catchError(this.errorHandler));
     }
-    GetAllReturns(): Observable<BPCRetHeader[] | string> {
-        return this._httpClient.get<BPCRetHeader[]>(`${this.baseAddress}poapi/Return/GetAllReturns`)
+    GetAllReturns(): Observable<BPCPIHeader[] | string> {
+        return this._httpClient.get<BPCPIHeader[]>(`${this.baseAddress}poapi/Return/GetAllReturns`)
             .pipe(catchError(this.errorHandler));
     }
 
-    GetAllReturnsByPartnerID(PartnerID: string): Observable<BPCRetHeader[] | string> {
-        return this._httpClient.get<BPCRetHeader[]>(`${this.baseAddress}poapi/Return/GetAllReturnsByPartnerID?PartnerID=${PartnerID}`)
+    GetAllReturnsByPartnerID(PartnerID: string): Observable<BPCPIHeader[] | string> {
+        return this._httpClient.get<BPCPIHeader[]>(`${this.baseAddress}poapi/Return/GetAllReturnsByPartnerID?PartnerID=${PartnerID}`)
             .pipe(catchError(this.errorHandler));
     }
 
-    GetReturnByRetAndPartnerID(RetReqID: string, PartnerID: string): Observable<BPCRetHeader | string> {
-        return this._httpClient.get<BPCRetHeader>(`${this.baseAddress}poapi/Return/GetReturnByRetAndPartnerID?RetReqID=${RetReqID}&PartnerID=${PartnerID}`)
+    GetReturnByRetAndPartnerID(RetReqID: string, PartnerID: string): Observable<BPCPIHeader | string> {
+        return this._httpClient.get<BPCPIHeader>(`${this.baseAddress}poapi/Return/GetReturnByRetAndPartnerID?RetReqID=${RetReqID}&PartnerID=${PartnerID}`)
             .pipe(catchError(this.errorHandler));
     }
-    GetReturnItemsByRet(RetReqID: string): Observable<BPCRetItem[] | string> {
-        return this._httpClient.get<BPCRetItem[]>(`${this.baseAddress}poapi/Return/GetReturnItemsByRet?RetReqID=${RetReqID}`)
+    GetReturnItemsByRet(RetReqID: string): Observable<BPCPIItem[] | string> {
+        return this._httpClient.get<BPCPIItem[]>(`${this.baseAddress}poapi/Return/GetReturnItemsByRet?RetReqID=${RetReqID}`)
             .pipe(catchError(this.errorHandler));
     }
     // Products
