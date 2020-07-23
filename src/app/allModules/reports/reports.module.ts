@@ -108,7 +108,7 @@ const routes = [
     imports: [
         // HttpClientModule,
         // TranslateModule,
-        GaugeChartModule,
+        // GaugeChartModule,
         MatFormFieldModule,
         MatAutocompleteModule,
         MatBadgeModule,
