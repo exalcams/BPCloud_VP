@@ -440,4 +440,471 @@
         left: 52%;
         transform: translate(-50%);
     }
+
+    // My Scss////////////////////////////////////////////////////////////////
+    .Spacer {
+        flex: 1 1 auto;
+    }
+    .cl_poNumberDiv {
+        border: 1px solid #c3c3c3 !important;
+        padding: 6px 19px;
+        width: 327px;
+        margin-top: -70px;
+        border-radius: 3px;
+        font-size: 10px;
+        height: 35px;
+        margin-left: 56px;
+    }
+    .cl_materialDiv {
+        border: 1px solid #c3c3c3 !important;
+        height: 27px;
+        padding: 11px 14px;
+        border-radius: 3px;
+    }
+    .cl_AccpectRejectCard {
+        height: 205px;
+        width: 415px;
+        margin-left: 30px;
+        margin-top: 28px;
+        padding: 0px;
+    }
+    .cl_top5RejectedMaterialCard {
+        width: 408px;
+        height: 206px;
+        margin-top: 25px;
+        padding: 0px;
+        margin-left: 63px;
+    }
+    .cl_searchBar_toolbar {
+        background-color: transparent !important;
+        margin-left: 13px;
+        margin-top: 10px;
+    }
+    .cl_box {
+        position: absolute;
+        height: 18px;
+        width: 7px;
+        margin-left: -25px;
+        opacity: 0.7;
+        margin-top: 16px;
+    }
+    .cl_searchImg {
+        width: 13px;
+        margin-top: 7px;
+        margin-left: 16px;
+    }
+    .cl_InputSearch {
+        font-size: 11px !important;
+        margin-left: 13px;
+        margin-top: 7px !important;
+        position: absolute;
+        width: 400px !important;
+    }
+    .cl_searchBarDiv {
+        border: 1px solid #c3c3c3;
+        width: 49%;
+        height: 28px;
+    }
+    .cl_expandImg {
+        width: 26px;
+        margin-top: 2px;
+        margin-right: 28px;
+    }
+    .cl_excelDiv {
+        border: 1.5px solid #2e7d32;
+        height: 25.9px;
+        margin-top: -1px;
+        padding: 1px 5px;
+        border-radius: 2px;
+        margin-right: 8px;
+        margin-left: 14px;
+    }
+    .cl_ExcelImg {
+        width: 14px;
+        margin-top: 4px;
+    }
+    //  select {
+    //     text-transform: none;
+    //     margin-right: 13px;
+    //     border: 1px solid #c3c3c3;
+    //     border-radius: 3px;
+    // }
+
+    .cl_circle {
+        border: 1px solid #cbcbcb;
+        height: 3px;
+        width: 3px;
+        margin-top: 18px;
+        position: absolute;
+        margin-left: 219px;
+        border-radius: 66px;
+    }
+    .cl_searchBtn {
+        background-color: #f4cda4 !important;
+        height: 32px;
+    }
+    .searchBtn_label {
+        margin-top: -18px;
+        position: absolute;
+        margin-left: -17px;
+        font-size: 11px;
+        letter-spacing: 0.5px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .cl_search1 {
+        width: 12px;
+        margin-left: -6px;
+        margin-top: 4px;
+    }
+    .cl_poInput {
+        margin-left: 13px !important;
+        margin-top: 4px !important;
+        position: absolute;
+    }
+    .cl_search2 {
+        width: 12px;
+        margin-left: -7px;
+        margin-top: 4px;
+    }
+    .cl_materailInput {
+        font-size: 11px;
+        margin-left: 15px;
+        /* margin-top: -3px; */
+        position: absolute;
+        margin-top: 0px;
+        margin-top: 3px;
+    }
+    .cl_table {
+        margin-left: 30px;
+        margin-right: 30px;
+        margin-top: 11px;
+        box-shadow: none;
+        // border: 1px solid black;
+        border-left: 1px solid #e0d7d7;
+        border-right: 1.5px solid #d4d1d1;
+    }
+    mat-header-row {
+        min-height: 35px;
+        background-color: black !important;
+        padding: none;
+        padding: 0px !important;
+        width: 100.2%;
+        margin-left: -1px;
+    }
+
+    .cl_Material_label {
+        margin-left: 28px;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.1px;
+    }
+    .cl_MaterialText_label {
+        font-size: 11px;
+    }
+    .cl_InputQuantity_label {
+        font-size: 11px;
+        font-weight: 500;
+        margin-left: -8px;
+        position: absolute;
+        margin-top: 2px;
+    }
+    .cl_AcceptedQuantity_label {
+        font-size: 11px;
+        position: absolute;
+        margin-top: 1px;
+        margin-left: -11px;
+        margin-left: 14px;
+    }
+    .cl_RejectedQuantity_label {
+        font-size: 11px;
+        margin-left: 14px;
+    }
+    .cl_RejectedPercentage_label {
+        font-size: 11px;
+        margin-left: 11px;
+    }
+    .cl_card_title_1 {
+        font-size: 13px;
+        margin-top: 17px;
+        position: absolute;
+        margin-left: 13px;
+        font-weight: 500;
+    }
+    .cl_card_title_2 {
+        font-size: 13px;
+        position: absolute;
+        margin-top: 17px;
+        margin-left: 13px;
+        font-weight: 500;
+    }
+    .charContainer {
+        position: absolute;
+        margin-top: -13px !important;
+        margin-left: -83px;
+    }
+    .cl_accQty_Container {
+        width: 153px;
+        margin-left: -99px;
+        margin-top: 63px;
+        font-size: 12px;
+        font-weight: 400;
+        letter-spacing: 0.5px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .cl_RejQty_Container {
+        width: 153px;
+        margin-left: -91px;
+        margin-top: -13px;
+        font-size: 12px;
+        letter-spacing: 0.5px;
+        font-weight: 400;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .cl_circleAccpet {
+        border: 1px solid #fb9e61;
+        width: 10px;
+        height: 10px;
+        border-radius: 16px;
+        position: absolute;
+        margin-top: 17px;
+        margin-left: -20px;
+        background-color: #fb9e61;
+    }
+    .cl_circleRej {
+        border: 1px solid #3c9cdf;
+        width: 10px;
+        height: 10px;
+        border-radius: 18px;
+        position: absolute;
+        margin-top: 15px;
+        margin-left: -24px;
+        background-color: #3c9cdf;
+    }
+    .leftDivider {
+        border-bottom: 1px solid #e1d0d0;
+    }
+    .rightDivider {
+        border-bottom: 1px solid #e1d0d0;
+    }
+    .DividerCircle {
+        border: 1px solid #e1d0d0;
+        border-radius: 32px;
+        width: 3px;
+        height: 3px;
+    }
+    .acp_rej_title {
+        font-size: 12px;
+        margin-left: -1px !important;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        letter-spacing: 0.2px;
+        font-weight: 600;
+    }
+    .underline1 {
+        border-bottom: 1.5px solid #fb863a;
+        position: initial;
+        margin-top: 22px;
+        margin-left: -123px;
+    }
+    .rejLabel_title {
+        font-size: 12px;
+        margin-left: -2px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        letter-spacing: 0.2px;
+        font-weight: 600;
+    }
+    .underline2 {
+        border-bottom: 1.5px solid #ffd15c;
+        margin-top: 22px;
+        margin-left: -138px;
+    }
+    .chartCard {
+        transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+        display: block;
+        position: relative;
+        padding: 11px;
+        border-radius: 4px;
+        box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.16) !important;
+        border: solid 1px #e2e2e2;
+    }
+    .mat-select {
+        display: inline-block;
+        width: 9%;
+        outline: 0;
+        font-size: 11px;
+        font-weight: 400;
+        border: 1px solid #c3c3c3;
+        height: 25px;
+    }
+    .mat-select-value {
+        display: table-cell;
+        max-width: 0;
+        width: 100%;
+
+        position: relative;
+        left: 6px;
+    }
+
+    // Table HeaderColumn Design
+    .cl_material {
+        color: white !important;
+        letter-spacing: 0.4px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin-left: 15px;
+        font-size: 10.5px;
+    }
+    .cl_matDesc {
+        color: white !important;
+        letter-spacing: 0.4px;
+        flex: 0 0 18%;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin-left: 12px;
+        font-size: 10.5px;
+    }
+
+    .cl_matChar {
+        color: white !important;
+        letter-spacing: 0.4px;
+        flex: 0 0 15%;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 10.5px;
+    }
+    .cl_Descprition {
+        color: white !important;
+        letter-spacing: 0.4px;
+        font-size: 10.5px;
+
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .cl_lowerLimi {
+        color: white !important;
+        letter-spacing: 0.4px;
+        font-size: 10.5px;
+
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .cl_UpperLimit {
+        color: white !important;
+        letter-spacing: 0.4px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 10.5px;
+    }
+    .cl_uom {
+        color: white !important;
+        letter-spacing: 0.4px;
+        font-size: 10px;
+
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin-left: 20px;
+    }
+    .cl_inspc {
+        color: white !important;
+        letter-spacing: 0.4px;
+        font-size: 10.5px;
+
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin-right: 31px;
+    }
+    .cl_mod {
+        color: white !important;
+        letter-spacing: 0.4px;
+        font-size: 10.5px;
+
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    mat-cell:last-child,
+    mat-footer-cell:last-child,
+    mat-header-cell:last-child {
+        padding-right: 0px !important;
+    }
+
+    // Table Data
+
+    .cl_materialLabel {
+        margin-left: 13px;
+        font-size: 11px;
+        letter-spacing: 0.3px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-weight: 500;
+    }
+    .cl_matDesc_label {
+        margin-left: -5px;
+        position: absolute;
+        font-size: 11px;
+        letter-spacing: 0.3px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .cl_matChar_label {
+        font-weight: 500;
+
+        margin-left: 88px;
+        font-size: 11px;
+        letter-spacing: 0.3px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .cl_Descprition_label {
+        margin-left: 137px;
+        position: absolute;
+        font-size: 11px;
+        letter-spacing: 0.3px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .cl_lowerLimit_label {
+        margin-left: 109px;
+        font-size: 11px;
+        letter-spacing: 0.3px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .cl_UpperLimit_Label {
+        margin-left: 77px;
+        font-size: 11px;
+        letter-spacing: 0.3px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .cl_uom_label {
+        margin-left: 66px;
+        font-size: 11px;
+        letter-spacing: 0.3px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .cl_inspc_label {
+        margin-left: 33px;
+        font-size: 11px;
+        letter-spacing: 0.3px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-weight: 500;
+    }
+    .cl_mod_label {
+        margin-left: 33px;
+        font-size: 11px;
+        letter-spacing: 0.3px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .cl_ChartContent {
+        // margin-left: 30px !important;
+        // margin-right: 31px !important;
+        // margin-top: 20px;
+        padding: 28px !important;
+    }
+    .mat-select-arrow {
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid;
+        margin: 0 4px;
+        position: relative;
+        margin-top: -6px !important;
+        margin-right: 9px !important;
+        color: #c3c3c3 !important;
+      }
+       .mat-select-value {
+        display: table-cell;
+        max-width: 0;
+        width: 100%;
+      
+        position: relative;
+        left: 6px;
+        bottom: 4px;
+        font-weight: 500;
+      }
 }
