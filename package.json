@@ -68,6 +68,7 @@
     "ng2-charts-schematics": "0.1.7",
     "ng2-file-upload": "1.3.0",
     "ngrx-store-freeze": "0.2.4",
+    "ngx-ckeditor": "8.0.0",
     "ngx-color-picker": "6.6.0",
     "ngx-cookie-service": "1.0.10",
     "ngx-doughnut-chart": "0.0.4",
