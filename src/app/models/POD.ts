@@ -1,7 +1,6 @@
 import { CommonClass } from './common';
 
-export class BPCPODHeader extends CommonClass
-{
+export class BPCPODHeader extends CommonClass {
     ID: number;
     Client: string;
     Company: string;
@@ -18,8 +17,7 @@ export class BPCPODHeader extends CommonClass
     Status: string;
 }
 
-export class BPCPODItem extends CommonClass
-{
+export class BPCPODItem extends CommonClass {
     ID: number;
     Client: string;
     Company: string;
@@ -37,9 +35,10 @@ export class BPCPODItem extends CommonClass
     AcceptedQty: number | null;
     Reason: string;
     Remarks: string;
+    AttachmentName: string;
+    AttachmentReferenceNo: string;
 }
-export class BPCPODView extends CommonClass
-{
+export class BPCPODView extends CommonClass {
     ID: number;
     Client: string;
     Company: string;
@@ -61,12 +60,12 @@ export class BPCReasonMaster extends CommonClass {
     ReasonCode: string;
     ReasonText: string;
 }
-export class  BPCExpenseTypeMaster extends CommonClass{
-    ID:number;
-    Client:string;
-    Company:string;
-    Type:string;
-    PatnerID:string;
-    ExpenseType:string;
-    MaxAmount:string;
+export class BPCExpenseTypeMaster extends CommonClass {
+    ID: number;
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
+    ExpenseType: string;
+    MaxAmount: string;
 }

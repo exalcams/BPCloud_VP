@@ -72,10 +72,11 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
   donutChartData: any[] = [];
   DeliveryStatus: any[] = [];
   AllStatus: Status[] = [{ Value: 'All', Name: 'All' },
+  { Value: 'Open', Name: 'Due for Sales order' },
   { Value: 'SO', Name: 'Due for Shipping' },
   { Value: 'Shipped', Name: 'Due for Billing' },
   { Value: 'Invoiced', Name: 'Due for Payment' },
-  { Value: 'Receipt', Name: 'Payment done' },
+  { Value: 'Receipt', Name: 'Payment completed' },
     // { Value: 'All', Name: 'All' },
   ];
   // foods: string[] = [
@@ -507,12 +508,18 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
     // alert(po);
     if (so) {
       this._router.navigate(['/customer/polookup'], { queryParams: { id: so } });
+    } else {
+      this.notificationSnackBarComponent.openSnackBar('Sales order not yet created', SnackBarStatus.danger);
     }
   }
   goToSupportDesk(so: string): void {
-    this._router.navigate(['/customer/supportticket'], { queryParams: { id: so } });
+    if (so) {
+      this._router.navigate(['/customer/supportticket'], { queryParams: { id: so } });
+    } else {
+      this.notificationSnackBarComponent.openSnackBar('Sales order not yet created', SnackBarStatus.danger);
+    }
   }
-  GotoPIR(PIRNumber: string, PIRType: string): void {
+  GotoPIR(PIRNumber?: string, PIRType?: string): void {
     // alert(po);
     if (PIRNumber) {
       if (PIRType) {
@@ -680,7 +687,11 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
   }
   viewOfAttachmentClicked(element: SODetails): void {
     // const attachments = this.ofAttachments.filter(x => x.AttachmentID.toString() === element.RefDoc);
-    this.GetOfAttachmentsByPartnerIDAndDocNumber(element.SO);
+    if (element.SO) {
+      this.GetOfAttachmentsByPartnerIDAndDocNumber(element.SO);
+    } else {
+      this.notificationSnackBarComponent.openSnackBar('Sales order not yet created', SnackBarStatus.danger);
+    }
   }
 
   GetOfAttachmentsByPartnerIDAndDocNumber(docNumber: string): void {

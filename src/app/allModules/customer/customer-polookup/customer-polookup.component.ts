@@ -208,7 +208,7 @@ export class CustomerPolookupComponent implements OnInit {
     this._POService.GetPOGRGIByDocAndPartnerID(this.DocNumber, this.PartnerID).subscribe(
       (data) => {
         this.SOGRGIs = data as BPCOFGRGI[];
-        this.sOItemCount.GRGICount = this.SOtems.length;
+        this.sOItemCount.GRGICount = this.SOGRGIs.length;
         this.SOGRGIDataSource = new MatTableDataSource(this.SOGRGIs);
       },
       (err) => {

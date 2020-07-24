@@ -54,6 +54,7 @@ import { FormsModule } from '@angular/forms';
 import { ChartsModule } from "ng2-charts";
 import "chartjs-plugin-labels";
 import "chartjs-plugin-annotation";
+import { CKEditorModule } from 'ngx-ckeditor';
 import { DecimalPipe } from '@angular/common';
 import { CustomerDashboardComponent } from './customer-dashboard/customer-dashboard.component';
 import { CustomerFactComponent } from './customer-fact/customer-fact.component';
@@ -67,6 +68,8 @@ import { PODDetailsComponent } from './poddetails/poddetails.component';
 import { SupportChatComponent } from './support-chat/support-chat.component';
 import { SupportDeskComponent } from './support-desk/support-desk.component';
 import { SupportTicketComponent } from './support-ticket/support-ticket.component';
+import { NotesDialogComponent } from './notes-dialog/notes-dialog.component';
+import { PODItemAttachmentDialogComponent } from './poditem-attachment-dialog/poditem-attachment-dialog.component';
 
 const routes = [
     {
@@ -172,15 +175,16 @@ const routes = [
         FuseWidgetModule,
 
         FormsModule,
-        ChartsModule
+        ChartsModule,
+        CKEditorModule
     ],
     declarations: [CustomerDashboardComponent, CustomerFactComponent,
         CustomerOrderfulfilmentComponent, CustomerPolookupComponent,
         PurchaseIndentComponent, ReturnComponent, PODComponent, PODDetailsComponent,
-        SupportChatComponent, SupportDeskComponent, SupportTicketComponent],
+        SupportChatComponent, SupportDeskComponent, SupportTicketComponent, NotesDialogComponent, PODItemAttachmentDialogComponent],
     providers: [
         DecimalPipe
     ],
-    entryComponents: []
+    entryComponents: [NotesDialogComponent, PODItemAttachmentDialogComponent]
 })
 export class CustomerModule { }

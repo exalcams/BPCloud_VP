@@ -107,4 +107,34 @@ export class PODService {
         return this._httpClient.get<BPCReasonMaster[]>(`${this.baseAddress}poapi/Master/GetAllReasonMaster`)
             .pipe(catchError(this.errorHandler));
     }
+
+    AddPODItemAttachment(DocNumber: string, InvoiceNumber: string, CreatedBy: string, selectedFiles: File[]): Observable<any> {
+        const formData: FormData = new FormData();
+        if (selectedFiles && selectedFiles.length) {
+            selectedFiles.forEach(x => {
+                formData.append(x.name, x, x.name);
+            });
+        }
+        formData.append('DocNumber', DocNumber);
+        formData.append('InvoiceNumber', InvoiceNumber);
+        // formData.append('Item', Item);
+        formData.append('CreatedBy', CreatedBy.toString());
+
+        return this._httpClient.post<any>(`${this.baseAddress}poapi/POD/AddPODItemAttachment`,
+            formData,
+            // {
+            //   headers: new HttpHeaders({
+            //     'Content-Type': 'application/json'
+            //   })
+            // }
+        ).pipe(catchError(this.errorHandler));
+    }
+
+    DowloandPODItemAttachment(AttachmentName: string): Observable<Blob | string> {
+        return this._httpClient.get(`${this.baseAddress}poapi/POD/DowloandPODItemAttachment?AttachmentName=${AttachmentName}`, {
+            responseType: 'blob',
+            headers: new HttpHeaders().append('Content-Type', 'application/json')
+        })
+            .pipe(catchError(this.errorHandler));
+    }
 }
