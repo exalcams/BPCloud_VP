@@ -1,4 +1,3 @@
-
 <div id="vendorrating" class="page-layout carded" fusePerfectScrollbar>
   <div class="center" fxLayout="column" fxLayoutGap="10px">
     <div class="outer" fxLayout>
@@ -11,11 +10,140 @@
       </div>
     </div>
 
+    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="40px" class="cl_ChartContent">
+      <div fxFlex="33">
+        <mat-card class="chartCard2">
+          <mat-card-title class="Delivery_title">
+            Overall Delivery
+            <p class="underline1" fxFlex="28.5"></p>
+          </mat-card-title>
+          <mat-card-content>
+            <div fxLayout="row" fxLayoutAlign="center">
+              <rg-gauge-chart style="margin-top: -30px;" [canvasWidth]="canvasWidth" [needleValue]="needleValue"
+                [centralLabel]="centralLabel" [options]="options" [bottomLabel]="bottomLabel">
+              </rg-gauge-chart>
+
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div fxFlex="33">
+        <mat-card class="chartCard2">
+          <mat-card-title class="Quality_title">
+            Overall Quality
+            <p class="underline2" fxFlex="27"></p>
+          </mat-card-title>
+          <mat-card-content>
+            <div fxLayout="row" fxLayoutAlign="center">
+              <rg-gauge-chart style="margin-top: -30px;" [canvasWidth]="canvasWidth2" [needleValue]="needleValue2"
+                [centralLabel]="centralLabel2" [options]="options2" [bottomLabel]="bottomLabel2">
+              </rg-gauge-chart>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div fxFlex="33">
+        <mat-card class="chartCard2">
+          <mat-card-title class="Score_title">
+            Overall Score
+            <p class="underline3" fxFlex="24.5"></p>
+          </mat-card-title>
+          <mat-card-content>
+            <div fxLayout="row" fxLayoutAlign="center">
+              <rg-gauge-chart style="margin-top: -30px;" [canvasWidth]="canvasWidth1" [needleValue]="needleValue1"
+                [centralLabel]="centralLabel1" [options]="options1" [bottomLabel]="bottomLabel1">
+              </rg-gauge-chart>
+
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+      </div>
+    </div>
+    <div fxLayout="row">
+      <div class="cl_searchBarDiv">
+        <img src="assets/images/search.png" class="cl_searchImg">
+        <input matInput placeholder="Search" class="cl_InputSearch" (keyup)="applyFilter($event)" #input>
+      </div>
+      <span class="Spacer"></span>
+      <mat-select fxFlex.ms="40" class="reports_overview_Select">
+        <mat-option value="option1">All</mat-option>
+        <mat-option value="option3">Material</mat-option>
+      </mat-select>
+      <div class="cl_excelDiv">
+        <img src="assets/images/excel.png" class="cl_ExcelImg" (click)="exportAsExcel()">
+      </div>
+      <div>
+        <img src="assets/images/expand.png" class="cl_expandImg">
+      </div>
+    </div>
+    <div class="table-responsive" style="margin-left: 50px; overflow-x: auto;">
+      <table mat-table id="excel-table"
+        style="width:-webkit-fill-available;margin-top: -8px; box-shadow: none;border-bottom:1px solid grey;"
+        [dataSource]="DataReport" class="table  mat-elevation-z8">
+
+        <ng-container matColumnDef="rectanglebox">
+          <th mat-header-cell style="border-right: none;max-width: 20px;" *matHeaderCellDef> </th>
+          <td mat-cell style="border-right: none;max-width: 20px;" *matCellDef="let element;index as i">
+            <div fxLayout="row" fxLayoutAlign="space-evenly center">
+              <div class="cl_box" [ngStyle]="{'background-color':i%2==0 ?'#d87e39' : '#6f52ed'}"> </div>
+              <span>{{element.paydoc}}</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="material">
+          <th mat-header-cell *matHeaderCellDef="let element; index as i" align="center"
+            style="font-size: 11px;border: none; color: white;">
+
+            Material </th>
+          <td mat-cell style="border-right: none;" *matCellDef="let element">
+            {{element.Material}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="materialtext">
+          <th mat-header-cell *matHeaderCellDef style="font-size: 11px;border: none;color: white;"> MaterialText </th>
+          <td mat-cell style="border-right: none;" *matCellDef="let element"> {{element.MaterialText}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="orderqty">
+          <th mat-header-cell *matHeaderCellDef style="font-size: 11px;border: none;color: white;"> OrderQty </th>
+          <td mat-cell style="border-right: none;" *matCellDef="let element"> {{element.OrderQty}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="receivedqty">
+          <th mat-header-cell *matHeaderCellDef style="font-size: 11px;border: none;color: white;"> ReceivedQty </th>
+          <td mat-cell style="border-right: none;" *matCellDef="let element"> {{element.ReceivedQty}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="rejectedqty">
+          <th mat-header-cell *matHeaderCellDef style="font-size: 11px;border: none;color: white;"> RejectedPPM </th>
+          <td mat-cell style="border-right: none;" *matCellDef="let element"> {{element.RejectedPPM}} </td>
+        </ng-container>
+        <ng-container matColumnDef="reworkqty">
+          <th mat-header-cell *matHeaderCellDef style="font-size: 11px; border: none;color: white;"> ReworkQty </th>
+          <td mat-cell style="border-right: none;" *matCellDef="let element"> {{element.ReworkQty}} </td>
+        </ng-container>
+
+
+        <tr mat-header-row style="background-color: #343436;border: none; height: 45px !important;"
+          *matHeaderRowDef="ReportColumn ; "></tr>
+        <tr mat-row style="height: 59px;" *matRowDef="let row; columns: ReportColumn;"></tr>
+
+      </table>
+    </div>
+
+
+
+
+
+
     <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
     </mat-progress-spinner>
     <div id="overlay" *ngIf="isProgressBarVisibile"></div>
   </div>
 </div>
-
-
-
