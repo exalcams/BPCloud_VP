@@ -4,6 +4,8 @@ import { BPCReportOV, OverviewReportOption } from 'app/models/ReportModel';
 import { MatTableDataSource } from '@angular/material/table';
 import { Chart } from 'chart.js';
 import * as XLSX from 'xlsx';
+import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
+import { colorSets } from '@swimlane/ngx-charts/release/utils';
 
 @Component({
   selector: 'app-overview',
@@ -21,62 +23,74 @@ export class OverviewComponent implements OnInit {
   Temp: any[];
   material = '';
   PoNumer = '';
-
+  fileName = 'OverViewData.xlsx';
+  NoDataRow: boolean;
   // overViewData: OverviewReportOption;
   TabledataSource: MatTableDataSource<BPCReportOV>;
+  // Doughnut chart
+  public lineChartData: Array<number> = [33, 33];
+
+  public labelMFL: Array<any> = [
+    {
+      data: this.lineChartData,
+    }
+  ];
+  public lineChartOptions: any = {
+    maintainAspectRatio: false,
+    responsive: false,
+    legend: false,
+    cutoutPercentage: 65,
+
+    plugins: {
+      deferred: false
+    },
+
+  };
+  public doughnutChartColors: Array<any> = [{
+    backgroundColor: ['#fb9e61', '#3c9cdf']
+  }];
+
+  public ChartType = 'doughnut';
+
+  // Bar char
+  public barChartColors: Array<any> = [{
+    backgroundColor: ['#3c9cdf', '#3c9cdf', '#3c9cdf', '#3c9cdf', '#3c9cdf']
+  }];
+  public barChartOptions: ChartOptions = {
+    responsive: false,
+    maintainAspectRatio: false,
+
+    scales: {
+      xAxes: [{
+        gridLines: {
+          drawTicks: false,
+          display: false
+        },
+      }], yAxes: [{
+
+      }]
+    },
+
+  };
+  public barChartLabels: any[] = ['2006', '2007', '2008', '2009', '2010'];
+  public barChartType: ChartType = 'bar';
+  public barChartLegend = false;
+
+  public barChartData: ChartDataSets[] = [
+    {
+      data: [11, 12, 80, 81, 56], label: 'Rejected Material',
+      barPercentage: 0.5,
+    }
+
+  ];
+
+
 
   constructor(private reportservice: ReportService) {
-
-
   }
 
   // tslint:disable-next-line:typedef
   ngOnInit() {
-    this.BarChart.push(new Chart('barChart', {
-      type: 'bar',
-      data: {
-        labels: [10, 20, 30, 40, 50],
-        datasets: [{
-          barPercentage: 0.5,
-          data: [9, 7, 3, 5, 2],
-          backgroundColor: ["#3c9cdf", "#3c9cdf", "#3c9cdf", "#3c9cdf", "#3c9cdf"],
-          borderWidth: 1,
-        }]
-      },
-      options: {
-        legend: {
-          display: false
-        },
-        responsive: false,
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            }
-          }]
-        }
-      }
-    }));
-    this.dounutChart.push(new Chart('doughnut', {
-      type: 'doughnut',
-      data: {
-        datasets: [
-          {
-
-            data: [1, 1],
-            backgroundColor: ['	rgb(251, 158, 97)', 'rgb(60, 156, 223)'],
-            fill: false
-          },
-        ]
-      },
-      options: {
-        cutoutPercentage: 60,
-        responsive: true,
-        tooltips: {
-          enabled: false,
-        }
-      }
-    }));
     this.GetOverviewReport();
   }
   // tslint:disable-next-line:typedef
@@ -84,7 +98,7 @@ export class OverviewComponent implements OnInit {
     this.reportservice.GetOverviewReports('Visu').subscribe(
       (data) => {
         // this.BPCReportOVData = data;
-        this.TabledataSource = data;
+        this.TabledataSource = new MatTableDataSource(data);
         this.Temp = data;
       }
     );
@@ -109,7 +123,7 @@ export class OverviewComponent implements OnInit {
     this.reportservice.GetOverviewReportByOption(this.overdata).subscribe(
       (data) => {
         // this.dataSource = data;
-        this.TabledataSource = data;
+        this.TabledataSource = new MatTableDataSource(data);
         console.log("GetOverviewReportByOption1", data);
 
       }
@@ -178,14 +192,25 @@ export class OverviewComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.TabledataSource.filter = filterValue.trim().toLowerCase();
+    if (this.TabledataSource._filterData.length === 0) {
+      this.NoDataRow = true;
+    }
+    else {
+      this.NoDataRow = false;
+    }
   }
 
   // tslint:disable-next-line:typedef
-  exportAsExcel() {
-    const workSheet = XLSX.utils.json_to_sheet(this.TabledataSource.data);
-    const workBook: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workBook, workSheet, 'SheetName');
-    XLSX.writeFile(workBook, 'filename.xlsx');
+  exportexcel(): void {
+
+    const element = document.getElementById('exceltable');
+
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    /* save to file */
+    XLSX.writeFile(wb, this.fileName);
   }
 
 }

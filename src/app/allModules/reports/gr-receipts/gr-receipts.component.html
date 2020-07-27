@@ -10,6 +10,162 @@
       </div>
     </div>
 
+    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="60px" style="margin-left:3%;margin-right:2%;margin-top:30px">
+
+      <div fxFlex="33">
+  
+          <mat-card style="height: 184px;">
+              <p class="grnhead">GRN Count</p>
+              <mat-divider style="width:91px" class="cl_matdividerflex"></mat-divider>
+              <!-- <div    class="chart" > -->
+  
+              <canvas id="doughnut1" class="doughnout">
+  
+              </canvas>
+              <p class="chartnum">957</p>
+              <p class="txtchart">GRN Count</p>
+              <!-- </div> -->
+          </mat-card>
+      </div>
+      <div fxFlex="35">
+          <mat-card style="height: 184px;">
+              <p class="grnhead">OnTime / Delayed</p>
+              <mat-divider style="width:130px" class="cl_matdividerflex1"> </mat-divider>
+              <div class="barchart">
+                  <!-- <p class="blue"></p> -->
+                  <!-- <p class="actual">Actual</p> -->
+                  <canvas style="height: 128px;margin-top: 22px;width: 394px" baseChart [chartType]="'bar'"
+                      [datasets]="chartData" [labels]="labels" [options]="chartOptions" [legend]="false"
+                      [colors]="colors">
+                  </canvas>
+              </div>
+          </mat-card>
+      </div>
+      <div fxFlex="23" class="last_martcard" >
+          <!-- <mat-card > -->
+              <input type="text"  style="background-image:  url('../../assets/goodsimages/search.png');" class="search textbox3" placeholder="Material"  [(ngModel)]="searchterm2"  >
+              <div class="raisedbutton">
+              <button mat-raised-button class="matbuttonraised2" style="color:white" (click) = "applyfilter(searchterm2)">Search</button>
+          </div>
+          <!-- </mat-card> -->
+      </div>
+  </div>
+  <div fxLayout="row" fxLayout.xs="column"  style="margin-left:3%;margin-right:3%;margin-top:30px" >
+      <div fxFlex="100" fxFlex.xs="100" fxFlex.lt.xl="30" >
+          <div fxFlex="40" fxFlex.xs="38" fxFlex.lt.xl="48">
+  
+          <input type="text" style="background-image: url('../../assets/goodsimages/search.png');" class="search_textBox1 search_textbox2 search_align"  placeholder="  Search"  (keyup) = "applyfilter($event.target.value)" /> 
+      </div>
+      <div fxFlex="10" fxFlex.xs="38" fxFlex.lt.xl="48"  class="layoutgap" >
+          <select matNativeControl required class="select_color" >
+              <option value="All">All</option>
+              <option value="none">none</option>
+          </select>
+          <div class="excel1">
+              <div class="excelinner1" >
+          <img src="assets/goodsimages/excel.png" class="excelinner1" (click)="exportexcel()"> 
+      </div>
+      </div>
+      <div  class="expand" > 
+          <div fxFlex="3px"  class="expand_inner2" >
+  
+          <img src="assets/goodsimages/expand.png" class="expand_inner2"> 
+         </div> 
+          </div>        
+            
+      </div>
+  
+      </div>
+      <!-- <div fxFlex="100" fxFlex.xs="20" fxFlex.lt.xl="30" style="margin-left:3%;margin-right:3%;margin-top:30px">
+          
+          <select matNativeControl required class="select_color" >
+              <option value="All">All</option>
+              <option value="none">none</option>
+          </select>
+  
+      </div> -->
+  
+  </div>
+  <div class="table-responsive" style="margin-top:10px;margin-left:15px;margin-right:20px;">
+      <table mat-table id="excel-table" [dataSource]="DataSource" class="table">
+    
+    
+        <ng-container matColumnDef="ID">
+          <th mat-header-cell *matHeaderCellDef>ID</th>
+          <td mat-cell *matCellDef="let element">  
+          <span>{{element.ID}}
+            <div *ngIf="(element.ID=='1');then content else other_content">here is ignored</div> 
+    
+            <ng-template #content> <p class="orangebox1"></p></ng-template>
+            <ng-template #other_content> <p class="blue1"></p></ng-template>
+          </span>
+        </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="Client">
+          <th mat-header-cell *matHeaderCellDef>Client</th>
+          <td mat-cell *matCellDef="let element"> {{element.Client}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="Company">
+          <th mat-header-cell *matHeaderCellDef>Company</th>
+          <td mat-cell *matCellDef="let element"> {{element.Company}} </td>
+        </ng-container>
+    
+    
+        <ng-container matColumnDef="Type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let element"> {{element.Type}} </td>
+        </ng-container>
+    
+    
+        <ng-container matColumnDef="PatnerID">
+          <th mat-header-cell *matHeaderCellDef>PatnerID</th>
+          <td mat-cell *matCellDef="let element"> {{element.PatnerID}} </td>
+        </ng-container>
+    
+    
+    
+        <ng-container matColumnDef="Material">
+          <th mat-header-cell *matHeaderCellDef> Material </th>
+          <td mat-cell *matCellDef="let element" style="font-weight:700;"> {{element.Material}}
+          </td>
+        
+        </ng-container>
+    
+        <ng-container matColumnDef="MaterialText">
+          <th mat-header-cell *matHeaderCellDef>Material Desc</th>
+          <td mat-cell *matCellDef="let element"> {{element.MaterialText}} </td>
+        </ng-container>
+        <ng-container matColumnDef="OrderQty">
+          <th mat-header-cell *matHeaderCellDef>Order Qty</th>
+          <td mat-cell *matCellDef="let element"> {{element.OrderQty}} </td>
+        </ng-container>
+        <ng-container matColumnDef="ReceivedQty">
+          <th mat-header-cell *matHeaderCellDef>Rework Qty</th>
+          <td mat-cell *matCellDef="let element"> {{element.ReceivedQty}} </td>
+        </ng-container>
+    
+    
+        <ng-container matColumnDef="RejectedPPM">
+          <th mat-header-cell *matHeaderCellDef>Received Qty</th>
+          <td mat-cell *matCellDef="let element"> {{element.RejectedPPM}} </td>
+        </ng-container>
+        <ng-container matColumnDef="ReworkQty">
+          <th mat-header-cell *matHeaderCellDef>Rejected PPM</th>
+          <td mat-cell *matCellDef="let element"> {{element.ReworkQty}} </td>
+        </ng-container>
+       
+        <ng-container matColumnDef="Status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let element"> {{element.Status}} </td>
+        </ng-container>
+    
+        <tr mat-header-row *matHeaderRowDef="DisplayColumns" class="headerheight "> </tr>
+        <tr mat-row *matRowDef="let row; columns: DisplayColumns;"> </tr>
+      </table>
+    </div>
+    
     <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
     </mat-progress-spinner>
     <div id="overlay" *ngIf="isProgressBarVisibile"></div>

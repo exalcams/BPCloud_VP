@@ -10,6 +10,200 @@
       </div>
     </div>
 
+    <form [formGroup]="form">
+
+      <div class="flexbox-container" fxLayout="row" fxLayoutAlign="space-around none" style="margin-top: 1%;">
+
+
+        <div class="flexbox-item flexbox-item1" >
+          <div class="text" fxLayout="row" fxLayoutAlign=" space-around none">No of Item</div>
+          <hr class="orangeborderbottom" fxLayout="row" fxLayoutAlign="center start" >
+          <!-- <img class="imagecircle" src="../../assets/images/stock/circle.jpg"> -->
+          <div class="relative" style="margin-right: 3%;margin-left: 3%;margin-top: 3%;margin-bottom: 10%;padding-bottom: 1%;
+          margin-top: -3%;">
+            <canvas id="myChart" width="348px" height="166px"></canvas>
+            <div class="absolute-center text-center">
+              <p style="font-weight: bold;">957</p>
+              <p style="color: red;">No of Item</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flexbox-item flexbox-item2">
+          <div class="text1" fxLayout="row" fxLayoutAlign=" space-around none">Value of Item</div>
+          <hr class="orangeborderbottom1" fxLayout="row" fxLayoutAlign=" space-around none">
+          <!-- <img class="imagecircle1" src="../../assets/images/stock/circle1.jpg"> -->
+          <!-- <canvas id="myChart1" width="250" height="110"></canvas> -->
+          <!-- <div style="width: 350px; height: 310px; float: left; position: relative;margin-left: 7%;">
+            <div
+              style="width: 100%; height: 40px; position: absolute; top: 26%; left: 0; margin-top: -20px; line-height:19px; text-align: center; z-index: 999999999999999">
+              957<Br />
+              <p style="font-size: xx-small;color: red;">Value of Item</p>
+            </div>
+            <canvas id="myChart1" width="250" height="110"></canvas>
+          </div> -->
+
+          <div class="relative" style="margin-right: 3%;margin-left: 3%;margin-top: 3%;margin-bottom: 10%;padding-bottom: 1%;
+          margin-top: -3%;">
+            <canvas id="myChart1" width="348px" height="166px"></canvas>
+            <div class="absolute-center text-center">
+              <p style="font-weight: bold;">957</p>
+              <p style="color: red;">Value of Item</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+
+          <div class="flexbox-item flexbox-item3" fxLayout="row" fxLayoutAlign=" center" fxLayoutGap="3%">
+            <div style="margin-left: 2%;"></div>
+            <img src="../../assets/images/stock/search.png" style="height: 65%;">
+            <input matInput style="font-size: small;" placeholder="FG Material" formControlName="fgmaterial">
+          </div>
+          <div fxLayout="row" fxLayoutAlign="space-evenly center">
+            <hr class="line">
+            <div class="round"></div>
+            <hr class="line1">
+          </div>
+          <div class="flexbox-item flexbox-item4" fxLayout="row" fxLayoutAlign=" center" fxLayoutGap="3%">
+            <div style="margin-left: 2%;"></div>
+            <img src="../../assets/images/stock/search.png" style="height: 65%;">
+            <input matInput style="font-size: small;" placeholder="Child Material" formControlName="childmaterial">
+          </div>
+          <button mat-raised-button class="searchbutton" (click)="search()">Search</button>
+
+        </div>
+
+
+      </div>
+
+
+
+      <div style="margin-top: 3%;" class="flexbox-container1" fxLayout="row" fxLayoutAlign="space-evenly center">
+
+
+        <div fxLayout="row" fxLayoutAlign=" center" fxLayoutGap="3%" class="cl_s">
+          <div style="margin-left: 2%;"></div>
+          <img src="../../assets/images/stock/search.png" style="height: 65%;">
+          <input type="text" (keyup)="applyfilter($event.target.value)" placeholder="Search" style="font-size: small;">
+        </div>
+
+        <div class="drop" fxLayout="row" fxLayoutAlign="space-around center">
+          <mat-select [(value)]="selected" style="font-size: small;margin-left: -25%;">
+            <mat-option>None</mat-option>
+            <mat-option value="option1">Option 1</mat-option>
+            <mat-option value="All">All</mat-option>
+            <mat-option value="option3">Option 3</mat-option>
+          </mat-select>
+        </div>
+
+        <div class="drop1" fxLayout="row" fxLayoutAlign="space-around center">
+          <div style="font-size: 14px;"> filter</div>
+          <img src="../../assets/images/stock/adjust.png" width="8%" style="margin-left: 2%;">
+        </div>
+
+        <div class="drop2" fxLayout="row" fxLayoutAlign="space-evenly center">
+          <img src="../../assets/images/stock/close (1).png" width="14%" style="margin-left: 2%;">
+          <div class="reset">Reset Filter</div>
+        </div>
+
+
+      </div>
+
+
+
+      <div class="flex-container table-responsive">
+        <table mat-table [dataSource]="tableDataSource" class="mat-elevation-z8" matSort
+          style="margin-left: 3%;width: 94.4%;margin-top: 5%;">
+
+          <div>
+            <!-- Plant Column -->
+            <ng-container matColumnDef="plant">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="border-right: none;border-bottom: none;">
+                Plant </th>
+              <td mat-cell *matCellDef="let element;index as i"
+                style="border-bottom: 1px solid rgba(0, 0, 0, 0.12);text-align: center">
+                <div fxLayout="row">
+                  <div class="vertical" [ngStyle]="{'background-color':i%2==0? '#d87e39' : '#6f52ed'}"></div>
+                  <div style="margin-left: 15%;">
+                    {{element.Plant}}</div>
+                </div>
+              </td>
+            </ng-container>
+
+          </div>
+
+
+          <div>
+            <!-- Material Column -->
+            <ng-container matColumnDef="material">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Material</th>
+              <td mat-cell *matCellDef="let element"> {{element.Material}}</td>
+            </ng-container>
+
+          </div>
+
+
+          <div>
+            <!-- materialtext Column -->
+            <ng-container matColumnDef="materialtext">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> MaterialText </th>
+              <td mat-cell *matCellDef="let element">{{element.MaterialText}} </td>
+            </ng-container>
+
+          </div>
+
+
+          <div>
+            <!-- stickqty Column -->
+            <ng-container matColumnDef="stickqty">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Stick Qty </th>
+              <td mat-cell *matCellDef="let element"> {{element.StickQty}} </td>
+            </ng-container>
+
+          </div>
+
+
+          <div>
+            <!-- UOM Column -->
+            <ng-container matColumnDef="UOM">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>UOM</th>
+              <td mat-cell *matCellDef="let element"> {{element.UOM}} </td>
+            </ng-container>
+
+          </div>
+
+
+          <div>
+            <!-- batch Column -->
+            <ng-container matColumnDef="batch">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Batch</th>
+              <td mat-cell *matCellDef="let element"> {{element.Batch}} </td>
+            </ng-container>
+
+          </div>
+
+
+          <div>
+            <!-- price Column -->
+            <ng-container matColumnDef="price">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
+              <td mat-cell *matCellDef="let element"> {{element.Price}} </td>
+            </ng-container>
+
+          </div>
+
+
+          <tr mat-header-row *matHeaderRowDef="tableDisplayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: tableDisplayedColumns;"></tr>
+
+        </table>
+
+      </div>
+      <div style="margin-left: 43%;font-weight: bold;font-style: italic;margin-top: 2%;font-size: medium;"
+        *ngIf="tableDataSource && tableDataSource.data.length === 0">No records found</div>
+    </form>
+    
     <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
     </mat-progress-spinner>
     <div id="overlay" *ngIf="isProgressBarVisibile"></div>
