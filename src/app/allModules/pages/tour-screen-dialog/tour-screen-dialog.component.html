@@ -1,0 +1,88 @@
+<div class="dialog-content-wrapper">
+  <mat-toolbar class="toolBg m-0">
+    <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+      <span class="title dialog-title">Tour App</span>
+      <div>
+        <!-- <button mat-icon-button (click)="downloadFile()">
+          <mat-icon>arrow_downward</mat-icon>
+        </button> -->
+        <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div mat-dialog-content>
+    <div fxLayout style="height: 80vh;width:50%">
+      <div fxFlex="99.9" class="role-side-bar">
+        <div fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto">
+          <!-- <mat-card fxLayout="row" style="padding: 0px !important">
+            <div fxFlex fxLayout="column">
+              <div fxFlex fxLayout="row" fxLayoutAlign="center center "
+                style="background-color: #e9e7e7;  padding: 50px 0px 0px 0px;">
+                <div fxFlex="5" fxLayoutAlign="center center">
+
+                  <img style="cursor: pointer;" src="assets/tourscreenimages/arrowleft.png" (click)="goToPrev()">
+
+                </div>
+                <div fxFlex="90">
+                  <ngb-carousel *ngIf="images" #ngcarousel [showNavigationArrows]="false"
+                    [showNavigationIndicators]="true" interval="false" [keyboard]="true" [pauseOnHover]="true"
+                    [wrap]="true">
+
+                    <ng-template ngbSlide id="one">
+                      <div>
+                        <img [src]="images[0]" class="image">
+                      </div>
+                    </ng-template>
+                    <ng-template ngbSlide id="two">
+                      <div>
+                        <img [src]="images[1]" class="image">
+                      </div>
+                    </ng-template>
+                    <ng-template ngbSlide id="three">
+                      <div>
+                        <img [src]="images[2]" class="image">
+                      </div>
+                    </ng-template>
+                    <ng-template ngbSlide id="four">
+                      <div>
+                        <img [src]="images[3]" class="image">
+                      </div>
+                    </ng-template>
+                    <ng-template ngbSlide id="five">
+                      <div>
+                        <img [src]="images[4]" class="image">
+                      </div>
+                    </ng-template>
+                  </ngb-carousel>
+                </div>
+                <div fxFlex="5" fxLayoutAlign="center center">
+                  <img style="cursor: pointer;" src="assets/tourscreenimages/arrowright.png" (click)="goToNext()">
+                </div>
+              </div>
+            </div>
+          </mat-card>
+          <div fxFlex
+            style="padding: 0px 24px 24px 24px !important; background-color:white; font-size: 23px; color: #717172; font-style: normal;">
+            <div fxLayout="column" fxFlex>
+              <div fxFlex style="font-size: 24px;">
+                <p class="footer-text">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                <p class="footer-text1">Lorem Ipsum has been the industry's standard dummy.</p>
+              </div>
+              <div fxLayout="row">
+                <button mat-raised-button class="next-button" (click)="goToNext()">Next</button>
+              </div>
+            </div>
+          </div> -->
+        </div>
+      </div>
+      <div fxFlex="0.01"></div>
+    </div>
+  </div>
+
+  <mat-dialog-actions class="m-0 p-16" align="end">
+    <button mat-button type="button" (click)="closeDialogClicked()">Close</button>
+  </mat-dialog-actions>
+</div>

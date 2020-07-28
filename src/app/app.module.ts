@@ -31,6 +31,7 @@ import { AttachmentViewDialogComponent } from './allModules/pages/attachment-vie
 // import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { BnNgIdleService } from 'bn-ng-idle';
 import { InformationDialogComponent } from './notifications/information-dialog/information-dialog.component';
+import { TourScreenDialogComponent } from './allModules/pages/tour-screen-dialog/tour-screen-dialog.component';
 // import { AuditModule } from './allModules/audit/audit.module';
 
 const appRoutes: Routes = [
@@ -96,6 +97,7 @@ const appRoutes: Routes = [
         AttachmentDialogComponent,
         AttachmentViewDialogComponent,
         InformationDialogComponent,
+        TourScreenDialogComponent
     ],
     imports: [
         BrowserModule,
@@ -147,7 +149,8 @@ const appRoutes: Routes = [
         NotificationDialogComponent,
         AttachmentDialogComponent,
         AttachmentViewDialogComponent,
-        InformationDialogComponent
+        InformationDialogComponent,
+        TourScreenDialogComponent
     ]
 })
 export class AppModule {
