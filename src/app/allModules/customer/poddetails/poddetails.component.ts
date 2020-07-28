@@ -166,7 +166,14 @@ export class PODDetailsComponent implements OnInit {
       Transporter: [''],
       Status: [''],
     });
-    this.PODFormGroup.get('Status').disable();
+    // this.PODFormGroup.get('InvoiceNumber').disable();
+    // this.PODFormGroup.get('InvoiceDate').disable();
+    // this.PODFormGroup.get('TruckNumber').disable();
+    // this.PODFormGroup.get('VessleNumber').disable();
+    // this.PODFormGroup.get('Amount').disable();
+    // this.PODFormGroup.get('Currency').disable();
+    // this.PODFormGroup.get('Transporter').disable();
+    // this.PODFormGroup.get('Status').disable();
     // this.DynamicallyAddAcceptedValidation();
   }
 
@@ -383,8 +390,8 @@ export class PODDetailsComponent implements OnInit {
     this.PODFormGroup.get('Amount').patchValue(this.SelectedPODHeader.Amount);
     this.PODFormGroup.get('Currency').patchValue(this.SelectedPODHeader.Currency);
     this.PODFormGroup.get('Status').patchValue(this.SelectedPODHeader.Status);
-    this.PODFormGroup.get('Status').disable();
-    // this.PODFormGroup.enable();
+    // this.PODFormGroup.get('Status').disable();
+    this.PODFormGroup.disable();
   }
 
 
@@ -479,6 +486,7 @@ export class PODDetailsComponent implements OnInit {
 
 
   SaveClicked(): void {
+    this.PODFormGroup.enable();
     if (this.PODFormGroup.valid) {
       if (!this.isWeightError) {
         if (this.PODItemFormGroup.valid) {
@@ -498,6 +506,7 @@ export class PODDetailsComponent implements OnInit {
     }
   }
   SubmitClicked(): void {
+    this.PODFormGroup.enable();
     if (this.PODFormGroup.valid) {
       if (!this.isWeightError) {
         if (this.PODItemFormGroup.valid) {
@@ -556,7 +565,12 @@ export class PODDetailsComponent implements OnInit {
           } else if (Actiontype === 'Delete') {
             this.DeletePOD();
           }
+        } else {
+          this.PODFormGroup.disable();
         }
+      },
+      () => {
+        this.PODFormGroup.disable();
       });
   }
 
