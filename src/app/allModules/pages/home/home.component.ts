@@ -13,6 +13,7 @@ import { DashboardService } from 'app/services/dashboard.service';
 import { BPCOFAIACT } from 'app/models/OrderFulFilment';
 import { MasterService } from 'app/services/master.service';
 import { TranslateService, TranslatePipe } from "@ngx-translate/core";
+import { TourScreenDialogComponent } from '../tour-screen-dialog/tour-screen-dialog.component';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -78,9 +79,22 @@ export class HomeComponent implements OnInit {
       // this.SetIntervalID = setInterval(() => {
       //   this.GetNotificationsByPartnerID();
       // }, 10000);
+      // this.openTourScreenDialog();
     } else {
       this._router.navigate(['/auth/login']);
     }
+  }
+
+  openTourScreenDialog(): void {
+    const dialogConfig: MatDialogConfig = {
+      data: "tourscreendata",
+      panelClass: 'tour-screen-dialog'
+    };
+    const dialogRef = this.dialog.open(TourScreenDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+      }
+    });
   }
 
   CreateAppUsage(): void {

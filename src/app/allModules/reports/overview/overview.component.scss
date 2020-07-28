@@ -1,12 +1,6 @@
 @import "src/@fuse/scss/fuse";
 #overview {
     background-color: white;
-    .topbarClass {
-        background: url("/assets/images/backgrounds/header 2.png") no-repeat;
-        background-repeat: no-repeat;
-        background-size: cover;
-    }
-
     .progressBarPostion {
         position: absolute !important;
         top: 350px;
@@ -45,16 +39,13 @@
     .boldClass {
         font-weight: bold;
     }
-
     .boldItalicClass {
         @extend .boldClass;
         font-style: italic;
     }
-
     .semiBoldClass {
         font-weight: 500;
     }
-
     .subTitle {
         @extend .semiBoldClass;
         font-size: 12px;
@@ -63,110 +54,40 @@
     .headerMargin {
         margin-top: -28px;
     }
-    // .tableData {
-    //   overflow: auto;
-    //   height: 60vh !important;
-    //   min-height: 60vh !important;
-    //   // max-height: 33vh !important;
-    //   .table {
-    //     width: 150vw;
-    //     max-width: 100%;
-    //     overflow: auto;
-    //     margin-bottom: 10px;
-    //     display: table;
-    //     border-collapse: collapse;
-    //     margin: 0px;
-    //     // background-color: rgb(238, 238, 238);
-    //   }
-    //   .row,
-    //   .header-row {
-    //     display: table-row;
-    //     min-height: 36px !important;
-    //   }
-    //   .mat-row:hover {
-    //     background-color: lightgrey;
-    //   }
-    //   .cell,
-    //   .header-cell {
-    //     word-wrap: initial;
-    //     display: table-cell;
-    //     padding: 0px 5px;
-    //     line-break: unset;
-    //     width: fit-content;
-    //     white-space: nowrap;
-    //     overflow: hidden;
-    //     vertical-align: middle;
-    //     text-align: center;
-    //   }
-    //   .header-row,
-    //   .header-cell {
-    //     margin: 0 auto;
-    //     min-height: 100px !important;
-    //     text-align: center;
-    //     vertical-align: middle;
-    //     align-self: center;
-    //   }
-    //   .mat-card {
-    //     min-width: max-content;
-    //     max-width: max-content;
-    //   }
-    //   .sort-header {
-    //     display: flex;
-    //     align-content: center;
-    //     text-align: center;
-    //     justify-content: center;
-    //     font-size: 12pt;
-    //   }
-    //   .header-cell {
-    //     font-weight: bold;
-    //   }
-    // }
-
     @mixin TableBorderRight($color) {
         border-right: 1px solid $color;
     }
-
     .TableCommon {
-        padding: 0px 10px;
+        padding: 5px 10px;
         font-size: 14px;
         min-width: 50px !important;
         white-space: nowrap;
     }
-    .mat-table {
-        background: white;
-        margin-right: 30px;
-        margin-left: 27px;
-        border-left: 1px solid #f1e8e8;
-        border-right: 1px solid #f1e8e8;
-    }
     table {
+        width: 100%;
+
         th {
-            // @include TableBorderRight(gray);
+            @include TableBorderRight(gray);
             @extend .TableCommon;
             // min-width: max-content !important;
             color: white;
             background-color: #121214;
-            font-size: 10.5px;
-            letter-spacing: 0.5px;
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            .mat-header-cell:first-child {
-                padding-left: 39px !important; 
-            }
         }
 
         td {
-            // @include TableBorderRight(rgba(0, 0, 0, 0.12));
+            @include TableBorderRight(rgba(0, 0, 0, 0.12));
             @extend .TableCommon;
             // min-width: max-content !important;
-            padding: 4px 10px !important;
-            font-size: 11px;
-            min-width: 50px !important;
-            white-space: nowrap;
-            letter-spacing: 0.3px;
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            &.QtyClass {
+                text-align: right;
+            }
+            .mat-form-field-underline {
+                display: none;
+            }
         }
+
         tr {
-            height: 36px !important;
+            height: 40px;
         }
 
         .mat-sort-header-container {
@@ -174,8 +95,7 @@
             justify-content: flex-start;
         }
     }
-    
-    
+
     // td.mat-cell {
     //   /* row padding */
     //   padding: 16px 0;
@@ -300,11 +220,9 @@
             border: none;
         }
     }
-
     .tableLeftBorder {
         border-left: 1px solid rgba(0, 0, 0, 0.12);
     }
-
     .roundCommon {
         height: 20px;
         width: 20px;
@@ -312,7 +230,6 @@
         border-width: 3px;
         border-style: solid;
     }
-
     .round {
         @extend .roundCommon;
         background-color: white;
@@ -350,7 +267,6 @@
         background-color: #e8ffeb;
         padding: 4px;
     }
-
     .mat-form-field-flex > .mat-form-field-infix {
         padding: 0em 0px 0.6em !important;
     }
@@ -374,7 +290,6 @@
         margin: 0 0 0 0;
         padding-bottom: 1em;
     }
-
     .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
         transform: translateY(-1.1em) scale(0.75);
         width: 133.33333%;
@@ -382,12 +297,6 @@
     .mat-form-field-outline-start,
     .mat-form-field-outline-end {
         border-radius: 0 !important;
-    }
-    .DateError {
-        color: #f44336;
-        font-size: 12px;
-        margin-top: -16px;
-        // margin-left: 32px;
     }
     .calendarImg {
         height: 20px;
@@ -407,10 +316,6 @@
         width: 2px;
         border-radius: 1px;
         background-color: rgba(0, 0, 0, 0.12);
-    }
-    .pdfLinkClass {
-        color: #1e8bed;
-        cursor: pointer;
     }
     .expandImg {
         height: 36px;
@@ -434,392 +339,28 @@
     .excelText {
         color: black;
     }
-    .SectionTitle {
-        display: inline-block;
-        position: relative;
-        font-size: 18px;
-    }
-
-    .SectionTitle strong:after {
-        content: "";
-        height: 3px;
-        width: 90%;
-        background-color: #efb577;
-        position: absolute;
-        bottom: -0.2em;
-        left: 52%;
-        transform: translate(-50%);
-    }
-
-    // My Scss///////////////
-    //Table
-    th.mat-header-cell {
-        text-align: center;
-    }
-    .cl_MaterialText_column {
-        margin-left: 41px;
-        font-weight: 400;
-    }
-    .cl_inputQty_column {
-        margin-left: 50px;
-        font-weight: 500;
-    }
-    .AccptQty {
-        margin-left: 61px;
-        font-weight: 400;
-    }
-    .cl_RejQty_column {
-        margin-left: 61px;
-        font-weight: 400;
-    }
-    .cl_rejPer_column {
-        margin-left: 72px;
-        font-weight: 500;
-    }
-    @media screen and (max-width: 768px) {
-        table th {
-            color: white;
-            background-color: #121214;
-            font-size: 10px;
-            letter-spacing: 0.5px;
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            padding: 0px;
-        }
-        .cl_MaterialText_column {
-            margin-left: 6px;
-            font-weight: 400;
-        }
-        .cl_inputQty_column {
-            margin-left: 11px;
-            font-weight: 500;
-        }
-        .AccptQty {
-            margin-left: 14px;
-            font-weight: 400;
-        }
-        .cl_RejQty_column {
-            margin-left: 16px;
-            font-weight: 400;
-        }
-        .cl_rejPer_column {
-            margin-left: 19px;
-            font-weight: 500;
-        }
-    }
-    //////////////////////////
-    .cl_poNumberDiv {
-        border: 1px solid #c3c3c3 !important;
-        padding: 6px 19px;
-        width: 327px;
-        margin-top: -70px;
-        border-radius: 3px;
-        font-size: 10px;
-        height: 35px;
-        margin-left: 56px;
-    }
-    .cl_materialDiv {
-        border: 1px solid #c3c3c3 !important;
-        height: 27px;
-        padding: 11px 14px;
-        border-radius: 3px;
-    }
-    .cl_AccpectRejectCard {
-        height: 205px;
-        width: 415px;
-        margin-left: 30px;
-        margin-top: 28px;
-        padding: 0px;
-    }
-    .cl_top5RejectedMaterialCard {
-        width: 408px;
-        height: 206px;
-        margin-top: 25px;
-        padding: 0px;
-        margin-left: 63px;
-    }
-    .cl_searchBar_toolbar {
-        background-color: transparent !important;
-        margin-left: 13px;
-        margin-top: 10px;
-    }
-    .cl_box {
-        position: absolute;
-        height: 18px;
-        width: 7px;
-        margin-left: -10px;
-        opacity: 0.7;
-        margin-top: 13px;
-    }
-    .cl_searchImg {
-        width: 13px;
-        margin-top: 7px;
-        margin-left: 16px;
-    }
-    .cl_InputSearch {
-        font-size: 11px !important;
-        margin-left: 13px;
-        margin-top: 7px !important;
-        width: auto !important;
-        position: absolute;
-    }
-    .cl_searchBarDiv {
-        border: 1px solid #c3c3c3;
-        width: 49%;
-        height: 28px;
-    }
-    .cl_expandImg {
-        width: 26px;
-        margin-top: 2px;
-        margin-right: 28px;
-    }
-    .cl_excelDiv {
-        border: 1.5px solid #2e7d32;
-        height: 25.9px;
-        margin-top: -1px;
-        padding: 1px 5px;
-        border-radius: 2px;
-        margin-right: 8px;
-        margin-left: 14px;
-        width: 27px;
-    }
-    .cl_ExcelImg {
-        width: 14px;
-        margin-top: 4px;
-    }
-    //  select {
-    //     text-transform: none;
-    //     margin-right: 13px;
-    //     border: 1px solid #c3c3c3;
-    //     border-radius: 3px;
-    // }
-
-    .cl_circle {
-        border: 1px solid #cbcbcb;
-        height: 3px;
-        width: 3px;
-        margin-top: 18px;
-        position: absolute;
-        margin-left: 219px;
-        border-radius: 66px;
-    }
-    .cl_searchBtn {
-        background-color: #f4cda4 !important;
-        height: 32px;
-    }
-    .searchBtn_label {
-        margin-top: -18px;
-        position: absolute;
-        margin-left: -17px;
-        font-size: 11px;
-        letter-spacing: 0.5px;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    }
-    .cl_search1 {
-        width: 12px;
-        margin-left: -6px;
-        margin-top: 4px;
-    }
-    .cl_poInput {
-        margin-left: 13px !important;
-        margin-top: 4px !important;
-        position: absolute;
-    }
-    .cl_search2 {
-        width: 12px;
-        margin-left: -7px;
-        margin-top: 4px;
-    }
-    .cl_materailInput {
-        font-size: 11px;
-        margin-left: 15px;
-        /* margin-top: -3px; */
-        position: absolute;
-        margin-top: 0px;
-        margin-top: 3px;
-    }
-
-    .cl_card_title_1 {
-        font-size: 13px;
-        margin-top: 17px;
-        position: absolute;
-        margin-left: 13px;
-        font-weight: 500;
-    }
-    .cl_card_title_2 {
-        font-size: 13px;
-        position: absolute;
-        margin-top: 17px;
-        margin-left: 13px;
-        font-weight: 500;
-    }
-    .charContainer {
-        position: absolute;
-        margin-top: -13px !important;
-        margin-left: -83px;
-    }
-    .cl_accQty_Container {
-        width: 153px;
-        margin-left: -99px;
-        margin-top: 63px;
+    .DateError {
+        color: #f44336;
         font-size: 12px;
-        font-weight: 400;
-        letter-spacing: 0.5px;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin-top: -16px;
+        // margin-left: 32px;
     }
-    .cl_RejQty_Container {
-        width: 153px;
-        margin-left: -91px;
-        margin-top: -13px;
-        font-size: 12px;
-        letter-spacing: 0.5px;
-        font-weight: 400;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    }
-    .cl_circleAccpet {
-        border: 1px solid #fb9e61;
-        width: 10px;
-        height: 10px;
-        border-radius: 16px;
-        position: absolute;
-        margin-top: 17px;
-        margin-left: -20px;
-        background-color: #fb9e61;
-    }
-    .cl_circleRej {
-        border: 1px solid #3c9cdf;
-        width: 10px;
-        height: 10px;
-        border-radius: 18px;
-        position: absolute;
-        margin-top: 15px;
-        margin-left: -24px;
-        background-color: #3c9cdf;
-    }
-    .leftDivider {
-        border-bottom: 1px solid #e1d0d0;
-    }
-    .rightDivider {
-        border-bottom: 1px solid #e1d0d0;
-    }
-    .DividerCircle {
-        border: 1px solid #e1d0d0;
-        border-radius: 32px;
-        width: 3px;
-        height: 3px;
-    }
-    .acp_rej_title {
-        font-size: 12px;
-        margin-left: -1px !important;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        letter-spacing: 0.2px;
-        font-weight: 600;
-    }
-    .underline1 {
-        border-bottom: 1.5px solid #fb863a;
-        position: initial;
-        margin-top: 22px;
-        margin-left: -123px;
-    }
-    .rejLabel_title {
-        font-size: 12px;
-        margin-left: -2px;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        letter-spacing: 0.2px;
-        font-weight: 600;
-    }
-    .underline2 {
-        border-bottom: 1.5px solid #ffd15c;
-        margin-top: 22px;
-        margin-left: -138px;
-    }
-    .chartCard {
-        transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
-        display: block;
+    .doughnutChartPosition {
+        margin-bottom: 8px;
         position: relative;
-        padding: 11px;
-        border-radius: 4px;
-        box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.16) !important;
-        border: solid 1px #e2e2e2;
+        left: 54%;
     }
-    .chartCard2 {
-        transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
-        display: block;
-        position: relative;
-        padding: 11px;
-        border-radius: 4px;
-        box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.16) !important;
-        border: solid 1px #e2e2e2;
-        height: 200px !important;
+    #doughnutChart {
+        canvas {
+            // width: 200px !important;
+            height: 140px !important;
+        }
     }
-    .cl_barChart{
-        margin-top: -14px;
-        height: 150px !important;
-        width: 355px !important;
-    }
-    .mat-select {
-        display: inline-block;
-        width: 9%;
-        outline: 0;
-        font-size: 11px;
-        font-weight: 400;
-        border: 1px solid #c3c3c3;
-        height: 25px;
-    }
-    .mat-select-value {
-        display: table-cell;
-        max-width: 0;
-        width: 100%;
-
-        position: relative;
-        left: 6px;
-    }
-    .accpetCircle {
-        border: 1px solid #fb9e61;
-        width: 9px;
-        height: 9px;
-        border-radius: 43px;
-        background-color: #fb9e61;
-        margin-right: 1px;
-    }
-
-    .rejCircle {
-        border: 1px solid #3c9cdf;
-        width: 9px;
-        height: 9px;
-        border-radius: 43px;
-        background-color: #3c9cdf;
-        margin-right: 1px;
-    }
-    .Spacer {
-        flex: 1 1 auto;
-    }
-    .cl_ChartContent {
-        // margin-left: 30px !important;
-        // margin-right: 31px !important;
-        // margin-top: 20px;
-        padding: 28px !important;
-    }
-    .mat-select-arrow {
-        width: 0;
-        height: 0;
-        border-left: 5px solid transparent;
-        border-right: 5px solid transparent;
-        border-top: 5px solid;
-        margin: 0 4px;
-        position: relative;
-        margin-top: -6px !important;
-        margin-right: 9px !important;
-        color: #c3c3c3 !important;
-    }
-    .mat-select-value {
-        display: table-cell;
-        max-width: 0;
-        width: 100%;
-
-        position: relative;
-        left: 6px;
-        bottom: 4px;
-        font-weight: 500;
+    #barChart {
+        canvas {
+            // width: 200px !important;
+            height: 170px !important;
+        }
     }
     .circle1 {
         height: 10px;
@@ -834,119 +375,5 @@
         background-color: #fb9e61 !important;
         border-radius: 50%;
         margin-top: 19px;
-    }
-    .cl_Preproduction_label {
-        margin-left: 15px;
-        letter-spacing: 0.3px;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        font-weight: 400;
-    }
-    .cl_inline_label {
-        margin-left: 15px;
-        letter-spacing: 0.3px;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        font-weight: 400;
-    }
-    .cl_chartLabels {
-        margin-top: 27px;
-        margin-left: 13px;
-    }
-    .cl_canvas {
-        margin-top: -16px;
-        padding: 7px;
-    }
-    @media screen and (max-width: 1100px) {
-        .cl_barChart {
-            margin-top: -14px;
-            height: 150px !important;
-            width: 252px !important;
-        }
-        
-        
-        .cl_accpetDiv {
-            width: 127px !important;
-        }
-        .cl_chartLabels {
-            margin-top: 11px;
-            margin-left: 7px;
-        }
-        .cl_canvas {
-            height: 120px !important;
-            width: 150px !important;
-            margin-left: -19px !important;
-
-            margin-top: -17px;
-        }
-        .circle1 {
-            height: 8px;
-            width: 8px;
-            background-color: #3c9cdf;
-            border-radius: 50%;
-            margin-top: 18px;
-            position: absolute;
-        }
-        .circle3 {
-            height: 8px;
-            width: 8px;
-            background-color: #fb9e61;
-            border-radius: 50%;
-            margin-top: 16px;
-        }
-        .cl_Preproduction_label {
-            margin-left: 19px;
-            letter-spacing: 0.3px;
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            font-weight: 500;
-            font-size: 12px;
-        }
-        .cl_inline_label {
-            margin-left: 10px;
-            letter-spacing: 0.3px;
-            margin-top: 16px;
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            font-weight: 500;
-            font-size: 12px;
-        }
-    }
-    @media screen and (max-width: 800px) {
-        .cl_barChart {
-            margin-top: -14px;
-            height: 150px !important;
-            width: 214px !important;
-        }
-        .cl_chartLabels {
-            margin-top: 17px !important;
-            margin-left: -9px !important;
-        }
-        .circle3 {
-            height: 8px;
-            width: 8px;
-            background-color: #fb9e61;
-            border-radius: 50%;
-            margin-top: 19px;
-        }
-        .cl_inline_label {
-            margin-left: 6px;
-            letter-spacing: 0.3px;
-            margin-top: 16px;
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            font-weight: 500;
-            font-size: 10px;
-        }
-        .cl_Preproduction_label {
-            margin-left: 13px;
-            letter-spacing: 0.3px;
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            font-weight: 500;
-            font-size: 10px;
-        }
-        .circle1 {
-            height: 8px;
-            width: 8px;
-            background-color: #3c9cdf;
-            border-radius: 50%;
-            margin-top: 13px;
-            position: absolute;
-        }
     }
 }

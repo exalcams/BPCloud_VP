@@ -107,7 +107,7 @@ export class BPCReportOV extends CommonClass {
     Material: string;
     MaterialText: string;
     InputQty: number;
-    AccpetQty: number;
+    AccQty: number;
     RejQty: number;
     RejPercentage: number;
     Status: string;
