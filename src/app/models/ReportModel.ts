@@ -62,6 +62,7 @@ export class BPCInvoiceXLSX {
     Dateofpayment: string;
     Poddate: string;
 }
+
 export class BPCPaymentXLSX {
     Company: string;
     Type: string;
@@ -72,19 +73,21 @@ export class BPCPaymentXLSX {
     Amount: number;
     Currency: string;
 }
+
 export class BPCReportPPMHeader extends CommonClass {
     Id: number;
     Client: string;
     Company: string;
     Type: string;
     PatnerID: string;
-    Period: Date | string | null;
+    Period: Date;
     Material: string;
     MaterialText: string;
     ReceiptQty: number;
     RejectedQty: number;
     PPM: number;
 }
+
 export class BPCReportPPMItem extends CommonClass {
     Id: number;
     Client: string;
@@ -98,6 +101,7 @@ export class BPCReportPPMItem extends CommonClass {
     RejectedQty: number;
     PPM: number;
 }
+
 export class BPCReportOV extends CommonClass {
     ID: number;
     Client: string;
@@ -112,6 +116,7 @@ export class BPCReportOV extends CommonClass {
     RejPercentage: number;
     Status: string;
 }
+
 export class PPMReportOption extends CommonClass {
     PartnerID: string;
     Material: string;
@@ -120,6 +125,7 @@ export class PPMReportOption extends CommonClass {
     FromDate: Date | string | null;
     ToDate: Date | string | null;
 }
+
 export class OverviewReportOption extends CommonClass {
     PartnerID: string;
     Material: string;
@@ -137,21 +143,23 @@ export class BPCReportDOL extends CommonClass {
     RejectedPPM: number;
     ReworkQty: number;
 }
+
 export class BPCReportFGCPS extends CommonClass {
     ID: number;
     Client: string;
     Company: string;
     Type: string;
     PatnerID: string;
-    Plant: string ;
-    Material: string ;
-    MaterialText: string ;
-    StickQty: any ;
-    UOM: string ;
-    Batch: string ;
+    Plant: string;
+    Material: string;
+    MaterialText: string;
+    StickQty: any;
+    UOM: string;
+    Batch: string;
     Price: any;
     Status: string;
 }
+
 export class BPCReportIP extends CommonClass {
     ID: number;
     Client: string;
@@ -169,6 +177,7 @@ export class BPCReportIP extends CommonClass {
     ModRule: string;
     Status: string;
 }
+
 export class BPCReportGRR extends CommonClass {
     ID: Number;
     Client: String;
@@ -184,8 +193,6 @@ export class BPCReportGRR extends CommonClass {
     Status: String;
 }
 
-
-
 export class BPCReportVR extends CommonClass {
     ID: number;
     Client: string;
@@ -200,4 +207,13 @@ export class BPCReportVR extends CommonClass {
     ReworkQty: number;
     Status: string;
 
+}
+
+export class VendorRatingReportOption extends CommonClass {
+    PartnerID: string;
+    Material: string;
+    PO: string;
+    Status: string;
+    FromDate: Date | string | null;
+    ToDate: Date | string | null;
 }

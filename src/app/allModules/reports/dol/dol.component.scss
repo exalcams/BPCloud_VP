@@ -1,12 +1,6 @@
 @import "src/@fuse/scss/fuse";
 #dol {
     background-color: white;
-    .topbarClass {
-        background: url("/assets/images/backgrounds/header 2.png") no-repeat;
-        background-repeat: no-repeat;
-        background-size: cover;
-    }
-
     .progressBarPostion {
         position: absolute !important;
         top: 350px;
@@ -45,16 +39,13 @@
     .boldClass {
         font-weight: bold;
     }
-
     .boldItalicClass {
         @extend .boldClass;
         font-style: italic;
     }
-
     .semiBoldClass {
         font-weight: 500;
     }
-
     .subTitle {
         @extend .semiBoldClass;
         font-size: 12px;
@@ -63,76 +54,15 @@
     .headerMargin {
         margin-top: -28px;
     }
-    // .tableData {
-    //   overflow: auto;
-    //   height: 60vh !important;
-    //   min-height: 60vh !important;
-    //   // max-height: 33vh !important;
-    //   .table {
-    //     width: 150vw;
-    //     max-width: 100%;
-    //     overflow: auto;
-    //     margin-bottom: 10px;
-    //     display: table;
-    //     border-collapse: collapse;
-    //     margin: 0px;
-    //     // background-color: rgb(238, 238, 238);
-    //   }
-    //   .row,
-    //   .header-row {
-    //     display: table-row;
-    //     min-height: 36px !important;
-    //   }
-    //   .mat-row:hover {
-    //     background-color: lightgrey;
-    //   }
-    //   .cell,
-    //   .header-cell {
-    //     word-wrap: initial;
-    //     display: table-cell;
-    //     padding: 0px 5px;
-    //     line-break: unset;
-    //     width: fit-content;
-    //     white-space: nowrap;
-    //     overflow: hidden;
-    //     vertical-align: middle;
-    //     text-align: center;
-    //   }
-    //   .header-row,
-    //   .header-cell {
-    //     margin: 0 auto;
-    //     min-height: 100px !important;
-    //     text-align: center;
-    //     vertical-align: middle;
-    //     align-self: center;
-    //   }
-    //   .mat-card {
-    //     min-width: max-content;
-    //     max-width: max-content;
-    //   }
-    //   .sort-header {
-    //     display: flex;
-    //     align-content: center;
-    //     text-align: center;
-    //     justify-content: center;
-    //     font-size: 12pt;
-    //   }
-    //   .header-cell {
-    //     font-weight: bold;
-    //   }
-    // }
-
     @mixin TableBorderRight($color) {
         border-right: 1px solid $color;
     }
-
     .TableCommon {
         padding: 5px 10px;
-        font-size: 14px;
+        font-size: 12px;
         min-width: 50px !important;
         white-space: nowrap;
     }
-
     table {
         width: 100%;
 
@@ -290,11 +220,9 @@
             border: none;
         }
     }
-
     .tableLeftBorder {
         border-left: 1px solid rgba(0, 0, 0, 0.12);
     }
-
     .roundCommon {
         height: 20px;
         width: 20px;
@@ -302,7 +230,6 @@
         border-width: 3px;
         border-style: solid;
     }
-
     .round {
         @extend .roundCommon;
         background-color: white;
@@ -340,7 +267,6 @@
         background-color: #e8ffeb;
         padding: 4px;
     }
-
     .mat-form-field-flex > .mat-form-field-infix {
         padding: 0em 0px 0.6em !important;
     }
@@ -364,7 +290,6 @@
         margin: 0 0 0 0;
         padding-bottom: 1em;
     }
-
     .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
         transform: translateY(-1.1em) scale(0.75);
         width: 133.33333%;
@@ -372,12 +297,6 @@
     .mat-form-field-outline-start,
     .mat-form-field-outline-end {
         border-radius: 0 !important;
-    }
-    .DateError {
-        color: #f44336;
-        font-size: 12px;
-        margin-top: -16px;
-        // margin-left: 32px;
     }
     .calendarImg {
         height: 20px;
@@ -397,10 +316,6 @@
         width: 2px;
         border-radius: 1px;
         background-color: rgba(0, 0, 0, 0.12);
-    }
-    .pdfLinkClass {
-        color: #1e8bed;
-        cursor: pointer;
     }
     .expandImg {
         height: 36px;
@@ -424,20 +339,41 @@
     .excelText {
         color: black;
     }
-    .SectionTitle {
-        display: inline-block;
-        position: relative;
-        font-size: 18px;
+    .DateError {
+        color: #f44336;
+        font-size: 12px;
+        margin-top: -16px;
+        // margin-left: 32px;
     }
-
-    .SectionTitle strong:after {
-        content: "";
-        height: 3px;
-        width: 90%;
-        background-color: #efb577;
-        position: absolute;
-        bottom: -0.2em;
-        left: 52%;
-        transform: translate(-50%);
+    .doughnutChartPosition {
+        margin-bottom: 8px;
+        position: relative;
+        left: 54%;
+    }
+    #doughnutChart {
+        canvas {
+            // width: 200px !important;
+            height: 140px !important;
+        }
+    }
+    #barChart {
+        canvas {
+            // width: 200px !important;
+            height: 170px !important;
+        }
+    }
+    .circle1 {
+        height: 10px;
+        width: 10px;
+        background-color: #3c9cdf;
+        border-radius: 50%;
+        margin-top: 18px;
+    }
+    .circle3 {
+        height: 10px;
+        width: 10px;
+        background-color: #fb9e61 !important;
+        border-radius: 50%;
+        margin-top: 19px;
     }
 }

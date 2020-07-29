@@ -110,7 +110,7 @@ export class LoginComponent implements OnInit {
   loginClicked(): void {
     if (this.loginForm.valid) {
       this.isProgressBarVisibile = true;
-     console.log(new Date().getTimezoneOffset());
+      console.log(new Date().getTimezoneOffset());
       this._authService.login(this.loginForm.get('userName').value, this.loginForm.get('password').value).subscribe(
         (data) => {
           // this._authService.GetUserPreferenceByUserID(data.userID as Guid).subscribe(
@@ -127,7 +127,7 @@ export class LoginComponent implements OnInit {
           //       console.log(userPre.ToolbarBackground);
           //       this.UpdateUserPreference();
           //   },
-            
+
           //   );
           this.isProgressBarVisibile = false;
           const dat = data as AuthenticationDetails;
@@ -153,39 +153,39 @@ export class LoginComponent implements OnInit {
   }
   UpdateUserPreference(): void {
     this._fuseConfigService.config
-        //   .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe(config => {
-            this.fuseConfig = config;
-            // Retrive user preference from Local Storage
-            const userPre = localStorage.getItem('userPreferenceData');
-            if (userPre) {
-                const userPrefercence: UserPreference = JSON.parse(userPre) as UserPreference;
-                if (userPrefercence.NavbarPrimaryBackground && userPrefercence.NavbarPrimaryBackground !== '-') {
-                    this.fuseConfig.layout.navbar.primaryBackground = userPrefercence.NavbarPrimaryBackground;
-                } else {
-                    this.fuseConfig.layout.navbar.primaryBackground = 'fuse-navy-700';
-                }
-                if (userPrefercence.NavbarSecondaryBackground && userPrefercence.NavbarSecondaryBackground !== '-') {
-                    this.fuseConfig.layout.navbar.secondaryBackground = userPrefercence.NavbarSecondaryBackground;
-                } else {
-                    this.fuseConfig.layout.navbar.secondaryBackground = 'fuse-navy-700';
-                }
-                if (userPrefercence.ToolbarBackground && userPrefercence.ToolbarBackground !== '-') {
-                    this.fuseConfig.layout.toolbar.background = userPrefercence.ToolbarBackground;
-                    this.fuseConfig.layout.toolbar.customBackgroundColor = true;
-                } else {
-                    this.fuseConfig.layout.toolbar.background = 'blue-800';
-                    this.fuseConfig.layout.toolbar.customBackgroundColor = true;
-                }
-            } else {
-                this.fuseConfig.layout.navbar.primaryBackground = 'fuse-navy-700';
-                this.fuseConfig.layout.navbar.secondaryBackground = 'fuse-navy-700';
-                this.fuseConfig.layout.toolbar.background = 'blue-800';
-                this.fuseConfig.layout.toolbar.customBackgroundColor = true;
-            }
-        });
+      //   .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe(config => {
+        this.fuseConfig = config;
+        // Retrive user preference from Local Storage
+        const userPre = localStorage.getItem('userPreferenceData');
+        if (userPre) {
+          const userPrefercence: UserPreference = JSON.parse(userPre) as UserPreference;
+          if (userPrefercence.NavbarPrimaryBackground && userPrefercence.NavbarPrimaryBackground !== '-') {
+            this.fuseConfig.layout.navbar.primaryBackground = userPrefercence.NavbarPrimaryBackground;
+          } else {
+            this.fuseConfig.layout.navbar.primaryBackground = 'fuse-navy-700';
+          }
+          if (userPrefercence.NavbarSecondaryBackground && userPrefercence.NavbarSecondaryBackground !== '-') {
+            this.fuseConfig.layout.navbar.secondaryBackground = userPrefercence.NavbarSecondaryBackground;
+          } else {
+            this.fuseConfig.layout.navbar.secondaryBackground = 'fuse-navy-700';
+          }
+          if (userPrefercence.ToolbarBackground && userPrefercence.ToolbarBackground !== '-') {
+            this.fuseConfig.layout.toolbar.background = userPrefercence.ToolbarBackground;
+            this.fuseConfig.layout.toolbar.customBackgroundColor = true;
+          } else {
+            this.fuseConfig.layout.toolbar.background = 'blue-800';
+            this.fuseConfig.layout.toolbar.customBackgroundColor = true;
+          }
+        } else {
+          this.fuseConfig.layout.navbar.primaryBackground = 'fuse-navy-700';
+          this.fuseConfig.layout.navbar.secondaryBackground = 'fuse-navy-700';
+          this.fuseConfig.layout.toolbar.background = 'blue-800';
+          this.fuseConfig.layout.toolbar.customBackgroundColor = true;
+        }
+      });
     this._fuseConfigService.config = this.fuseConfig;
-}
+  }
 
   saveUserDetails(data: AuthenticationDetails): void {
     localStorage.setItem('authorizationData', JSON.stringify(data));
@@ -513,17 +513,6 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.menuItems.indexOf('VendorRating') >= 0) {
-      this.reportSubChildren.push(
-        {
-          id: 'vendorRating',
-          title: 'Vendor Rating',
-          translate: 'NAV.VENDOR.VENDOR_RATING',
-          type: 'item',
-          url: '/reports/vendorRating'
-        }
-      );
-    }
     if (this.menuItems.indexOf('Overview') >= 0) {
       this.reportSubChildren.push(
         {
@@ -532,6 +521,17 @@ export class LoginComponent implements OnInit {
           translate: 'NAV.VENDOR.OVERVIEW',
           type: 'item',
           url: '/reports/overview'
+        }
+      );
+    }
+    if (this.menuItems.indexOf('VendorRating') >= 0) {
+      this.reportSubChildren.push(
+        {
+          id: 'vendorRating',
+          title: 'Vendor Rating',
+          translate: 'NAV.VENDOR.VENDOR_RATING',
+          type: 'item',
+          url: '/reports/vendorRating'
         }
       );
     }
