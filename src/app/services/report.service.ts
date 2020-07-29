@@ -34,15 +34,18 @@ export class ReportService {
     return this._httpClient.get<BPCInvoice[]>(`${this.baseAddress}reportapi/InvoiceReport/GetAllInvoices`)
       .pipe(catchError(this.errorHandler));
   }
+
   GetAllInvoicesByPartnerID(PartnerID: string): Observable<BPCInvoice[] | string> {
     return this._httpClient.get<BPCInvoice[]>(`${this.baseAddress}reportapi/InvoiceReport/GetAllInvoicesByPartnerID?PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));
   }
+
   GetFilteredInvoices(InvoiceNo: string, PoReference: string, FromDate: string, ToDate: string, Status: string): Observable<BPCInvoice[] | string> {
     return this._httpClient.get<BPCInvoice[]>
       (`${this.baseAddress}reportapi/InvoiceReport/GetFilteredInvoices?InvoiceNo=${InvoiceNo}&PoReference=${PoReference}&FromDate=${FromDate}&ToDate=${ToDate}&Status=${Status}`)
       .pipe(catchError(this.errorHandler));
   }
+
   GetFilteredInvoicesByPartnerID(PartnerID: string, InvoiceNo: string, PoReference: string, FromDate: string, ToDate: string, Status: string): Observable<BPCInvoice[] | string> {
     return this._httpClient.get<BPCInvoice[]>
       (`${this.baseAddress}reportapi/InvoiceReport/GetFilteredInvoicesByPartnerID?
@@ -50,11 +53,11 @@ export class ReportService {
       .pipe(catchError(this.errorHandler));
   }
 
-
   GetAllPayments(): Observable<BPCPayment[] | string> {
     return this._httpClient.get<BPCPayment[]>(`${this.baseAddress}reportapi/PaymentReport/GetAllPayments`)
       .pipe(catchError(this.errorHandler));
   }
+
   GetFilteredPayments(FromDate: string, ToDate: string): Observable<BPCPayment[] | string> {
     return this._httpClient.get<BPCPayment[]>
       (`${this.baseAddress}reportapi/PaymentReport/GetFilteredPayments?FromDate=${FromDate}&ToDate=${ToDate}`)
@@ -94,10 +97,12 @@ export class ReportService {
     return this._httpClient.post<any>(`${this.baseAddress}reportapi/Report/GetPPMReportByDate`, data)
       .pipe(catchError(this.errorHandler));
   }
+
   GetPPMReportByStatus(data: PPMReportOption): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}reportapi/Report/GetPPMReportByStatus`, data)
       .pipe(catchError(this.errorHandler));
   }
+
   GetPPMItemReportByPeriod(PartnerId: string, period: Date): Observable<any> {
     const data = [];
     const temp = {
@@ -108,7 +113,6 @@ export class ReportService {
     return this._httpClient.post<any>(`${this.baseAddress}reportapi/Report/GetPPMItemReportByPeriod?PartnerID=${PartnerId}&period=${period}`
       , data).pipe(catchError(this.errorHandler));
   }
-
 
   // Overview
 
@@ -132,22 +136,31 @@ export class ReportService {
       .pipe(catchError(this.errorHandler));
   }
 
+  // DOL
+
+  GetAllReportDOLByPartnerID(PartnerId: string): Observable<any> {
+    return this._httpClient.get<BPCReportDOL[]>(`${this.baseAddress}reportapi/Report/GetAllReportDOLByPartnerID?PartnerID=${PartnerId}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  // Vendor Rating
+  GetVendorRatingReports(PartnerId: string): Observable<any> {
+    return this._httpClient.get<BPCReportVR[]>(`${this.baseAddress}reportapi/Report/GetVendorRatingReports?PartnerID=${PartnerId}`)
+      .pipe(catchError(this.errorHandler));
+  }
 
   // Inspection
   GetAllReportIPByPartnerID(PartnerId: string): Observable<any> {
     return this._httpClient.get<BPCReportOV[]>(`${this.baseAddress}reportapi/Report/GetAllReportIPByPartnerID?PartnerID=${PartnerId}`)
       .pipe(catchError(this.errorHandler));
   }
+
   GetFilteredReportIPByPartnerID(PartnerId: string, material: string, method: string): Observable<any> {
     return this._httpClient.get<BPCReportOV[]>(`${this.baseAddress}reportapi/Report/GetFilteredReportIPByPartnerID?PartnerID=${PartnerId}&Material=${material}&Method=${method}`)
       .pipe(catchError(this.errorHandler));
   }
 
-  GetVendorRatingReports(PartnerId: string): Observable<any> {
-    return this._httpClient.get<BPCReportVR[]>(`${this.baseAddress}reportapi/Report/GetVendorRatingReports?PartnerID=${PartnerId}`)
-      .pipe(catchError(this.errorHandler));
-  }
-  ////// Gr
+  // GRR
 
   GetAllReportGRRByPartnerID(PartnerId: any): Observable<any> {
     return this._httpClient.get<BPCReportGRR[]>(`${this.baseAddress}reportapi/Report/GetAllReportGRRByPartnerID?PartnerID=${PartnerId}`)
@@ -155,25 +168,22 @@ export class ReportService {
   }
 
   // Fg Child
-  GetAllReportDOLByPartnerID(): Observable<BPCReportDOL[] | string> {
-    return this._httpClient.get<BPCReportDOL[]>(`${this.baseAddress}/reportapi/Report/GetAllReportDOLByPartnerID?PartnerID=Visu`)
-     .pipe(catchError(this.errorHandler));
-  }
+
   GetAllReportFGCPSByPartnerID(): Observable<BPCReportFGCPS[] | string> {
     return this._httpClient.get<BPCReportFGCPS[]>(`${this.baseAddress}/reportapi/Report/GetAllReportFGCPSByPartnerID?PartnerID=Visu`)
-     .pipe(catchError(this.errorHandler));
+      .pipe(catchError(this.errorHandler));
   }
-  getData(fg: string, child: string): Observable<BPCReportFGCPS | string>{
+  getData(fg: string, child: string): Observable<BPCReportFGCPS | string> {
     return this._httpClient.get<BPCReportFGCPS>(this.baseAddress + '/reportapi/Report/GetFilteredReportFGCPSByPartnerID?PartnerID=Visu&&Material=' + fg + '&MaterialText=' + child)
-    .pipe(catchError(this.errorHandler));
-  
+      .pipe(catchError(this.errorHandler));
+
   }
-  getfgmaterial(fg: string ): Observable<BPCReportFGCPS | string>{
-    return this._httpClient.get<BPCReportFGCPS>(this.baseAddress + '/reportapi/Report/GetFilteredReportFGCPSByPartnerID?PartnerID=Visu&Material=' + fg )
-    .pipe(catchError(this.errorHandler));
+  getfgmaterial(fg: string): Observable<BPCReportFGCPS | string> {
+    return this._httpClient.get<BPCReportFGCPS>(this.baseAddress + '/reportapi/Report/GetFilteredReportFGCPSByPartnerID?PartnerID=Visu&Material=' + fg)
+      .pipe(catchError(this.errorHandler));
   }
-  getchildmaterial(child: string ): Observable<BPCReportFGCPS | string>{
-    return this._httpClient.get<BPCReportFGCPS>(this.baseAddress + '/reportapi/Report/GetFilteredReportFGCPSByPartnerID?PartnerID=Visu&MaterialText=' + child )
-    .pipe(catchError(this.errorHandler));
+  getchildmaterial(child: string): Observable<BPCReportFGCPS | string> {
+    return this._httpClient.get<BPCReportFGCPS>(this.baseAddress + '/reportapi/Report/GetFilteredReportFGCPSByPartnerID?PartnerID=Visu&MaterialText=' + child)
+      .pipe(catchError(this.errorHandler));
   }
 }

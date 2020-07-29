@@ -100,7 +100,7 @@ export class OverviewComponent implements OnInit {
   ];
 
   constructor(
-    private _reportservice: ReportService,
+    private _reportService: ReportService,
     private formBuilder: FormBuilder,
     private _router: Router,
     public snackBar: MatSnackBar,
@@ -137,6 +137,7 @@ export class OverviewComponent implements OnInit {
     } else {
       this._router.navigate(['/auth/login']);
     }
+    this.CreateAppUsage();
     this.GetOverviewReports();
     this.initializeSearchForm();
     // this.searchButtonClicked();
@@ -160,7 +161,7 @@ export class OverviewComponent implements OnInit {
 
   GetOverviewReports(): void {
     this.isProgressBarVisibile = true;
-    this._reportservice.GetOverviewReports(this.currentUserName).subscribe(
+    this._reportService.GetOverviewReports(this.currentUserName).subscribe(
       (data) => {
         this.overviewReports = data as BPCReportOV[];
         this.overviewReportDataSource = new MatTableDataSource(this.overviewReports);
@@ -177,7 +178,7 @@ export class OverviewComponent implements OnInit {
 
   GetOverviewReportByOption(overviewReportOption: OverviewReportOption): void {
     this.isProgressBarVisibile = true;
-    this._reportservice.GetOverviewReportByOption(overviewReportOption).subscribe(
+    this._reportService.GetOverviewReportByOption(overviewReportOption).subscribe(
       (data) => {
         this.overviewReports = data as BPCReportOV[];
         this.overviewReportDataSource = new MatTableDataSource(this.overviewReports);
@@ -194,7 +195,7 @@ export class OverviewComponent implements OnInit {
 
   GetOverviewReportByStatus(overviewReportOption: OverviewReportOption): void {
     this.isProgressBarVisibile = true;
-    this._reportservice.GetOverviewReportByStatus(overviewReportOption).subscribe(
+    this._reportService.GetOverviewReportByStatus(overviewReportOption).subscribe(
       (data) => {
         this.overviewReports = data as BPCReportOV[];
         this.overviewReportDataSource = new MatTableDataSource(this.overviewReports);
@@ -211,7 +212,7 @@ export class OverviewComponent implements OnInit {
 
   GetOverviewReportByDate(overviewReportOption: OverviewReportOption): void {
     this.isProgressBarVisibile = true;
-    this._reportservice.GetOverviewReportByDate(overviewReportOption).subscribe(
+    this._reportService.GetOverviewReportByDate(overviewReportOption).subscribe(
       (data) => {
         this.overviewReports = data as BPCReportOV[];
         this.overviewReportDataSource = new MatTableDataSource(this.overviewReports);
