@@ -1,192 +1,446 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { BPCReportFGCPS } from 'app/models/ReportModel';
+import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { ReportService } from 'app/services/report.service';
+import { BPCReportFGCPS } from 'app/models/ReportModel';
+import { MatTableDataSource } from '@angular/material/table';
 import * as Chart from 'chart.js';
-import { title } from 'process';
-
+import * as XLSX from 'xlsx';
+import { colorSets } from '@swimlane/ngx-charts/release/utils';
+import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
+import { AuthenticationDetails, AppUsage } from 'app/models/master';
+import { Guid } from 'guid-typescript';
+import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { MatPaginator, MatMenuTrigger, MatSort, MatSnackBar, MatDialog } from '@angular/material';
+import { Router } from '@angular/router';
+import { DatePipe } from '@angular/common';
+import { ExcelService } from 'app/services/excel.service';
+import { MasterService } from 'app/services/master.service';
+import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
+import { fuseAnimations } from '@fuse/animations';
+import { ChartType } from 'chart.js';
 @Component({
   selector: 'app-fg-child-part-stock',
   templateUrl: './fg-child-part-stock.component.html',
-  styleUrls: ['./fg-child-part-stock.component.scss']
+  styleUrls: ['./fg-child-part-stock.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  animations: fuseAnimations,
 })
 export class FGChildPartStockComponent implements OnInit {
-
+  authenticationDetails: AuthenticationDetails;
+  currentUserID: Guid;
+  currentUserName: string;
+  currentUserRole: string;
+  menuItems: string[];
+  notificationSnackBarComponent: NotificationSnackBarComponent;
   isProgressBarVisibile: boolean;
-  selected = 'All';
-  tableDataSource: MatTableDataSource<any>;
-  tableDisplayedColumns: string[] = ['plant', 'material', 'materialtext', 'stickqty', 'UOM', 'batch', 'price'];
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  form: FormGroup;
-  constructor(private formbuilder: FormBuilder, private _reportService: ReportService) {
-    this.form = this.formbuilder.group({
-      fgmaterial: ['', Validators.required],
-      childmaterial: ['', Validators.required]
-    });
+  searchFormGroup: FormGroup;
+  isDateError: boolean;
+  searchText: string;
+  selectValue: string;
+  isExpanded: boolean;
+  defaultFromDate: Date;
+  defaultToDate: Date;
+  fgChildPartStockReportDisplayedColumns: string[] = ['Plant', 'Material', 'MaterialText', 'StickQty', 'UOM', 'Batch', 'Price'];
+  fgChildPartStockReportDataSource: MatTableDataSource<BPCReportFGCPS>;
+  fgChildPartStockReports: BPCReportFGCPS[] = [];
+  @ViewChild(MatPaginator) fgChildPartStockPaginator: MatPaginator;
+  @ViewChild(MatSort) fgChildPartStockSort: MatSort;
+  @ViewChild(MatMenuTrigger) matMenuTrigger: MatMenuTrigger;
+
+  // DoughnutChart1
+  public doughnutChart1DataSets: Array<any> = [{
+    // label: '# of Votes',
+    data: [60, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    backgroundColor:
+      ["#6dd7d3", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey",
+        "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey",
+        "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey",
+        "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey"],
+    hoverBackgroundColor: ["#6dd7d3"],
+    // borderColor: [
+    //   'rgba(255, 99, 132, 1)',
+    //   'rgba(54, 162, 235, 1)',
+    //   'rgba(255, 206, 86, 1)',
+    //   'rgba(75, 192, 192, 1)',
+    //   'rgba(153, 102, 255, 1)',
+    //   'rgba(255, 159, 64, 1)'
+    // ],
+    borderWidth: 2
+  }, {
+    data: [100],
+    backgroundColor: ["white"],
+
+  }, {
+    data: [90],
+    // hoverBackgroundColor: ["#6dd7d3"],
+    borderColor: ["#6dd7d3"],
+    // borderWidth: 5
+  }];
+  public doughnutChart1Options: any = {
+    responsive: true,
+    cutoutPercentage: 50,
+    plugins: {
+      labels: false
+    },
+    tooltips: {
+      enabled: false
+    },
+    legend: {
+      display: false
+    },
+    animation: {
+      animateRotate: true,
+      animateScale: true
+    },
+    // scales: {
+    //   yAxes: [{
+    //     ticks: {
+    //       beginAtZero: true
+    //     }
+    //   }]
+    // }
+  };
+  // public doughnutChart1Colors: Array<any> = [{
+  //   backgroundColor: ['#fb9e61', '#3c9cdf']
+  // }];
+  public doughnutChart1Type: ChartType = 'doughnut';
+  public doughnutChart1Legend = false;
+
+  // DoughnutChart2
+  public doughnutChart2DataSets: Array<any> = [{
+    // label: '# of Votes',
+    data: [30, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    backgroundColor:
+      ["#6dd7d3", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey",
+        "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey",
+        "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey",
+        "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey"],
+    hoverBackgroundColor: ["#6dd7d3"],
+    // borderColor: [
+    //   'rgba(255, 99, 132, 1)',
+    //   'rgba(54, 162, 235, 1)',
+    //   'rgba(255, 206, 86, 1)',
+    //   'rgba(75, 192, 192, 1)',
+    //   'rgba(153, 102, 255, 1)',
+    //   'rgba(255, 159, 64, 1)'
+    // ],
+    borderWidth: 2
+  }, {
+    data: [100],
+    backgroundColor: ["white"],
+
+  }, {
+    data: [90],
+    // hoverBackgroundColor: ["#6dd7d3"],
+    borderColor: ["#6dd7d3"],
+    // borderWidth: 5
+  }];
+  public doughnutChart2Options: any = {
+    responsive: true,
+    cutoutPercentage: 50,
+    plugins: {
+      labels: false
+    },
+    tooltips: {
+      enabled: false
+    },
+    legend: {
+      display: false
+    },
+    animation: {
+      animateRotate: true,
+      animateScale: true
+    },
+    // scales: {
+    //   yAxes: [{
+    //     ticks: {
+    //       beginAtZero: true
+    //     }
+    //   }]
+    // }
+  };
+  // public doughnutChart2Colors: Array<any> = [{
+  //   backgroundColor: ['#fb9e61', '#3c9cdf']
+  // }];
+  public doughnutChart2Type: ChartType = 'doughnut';
+  public doughnutChart2Legend = false;
+
+  constructor(
+    private _reportService: ReportService,
+    private formBuilder: FormBuilder,
+    private _router: Router,
+    public snackBar: MatSnackBar,
+    private dialog: MatDialog,
+    private _masterService: MasterService,
+    private _datePipe: DatePipe,
+    private _excelService: ExcelService) {
+    this.authenticationDetails = new AuthenticationDetails();
+    this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
+    this.isProgressBarVisibile = false;
+    this.isDateError = false;
+    this.searchText = '';
+    this.selectValue = 'All';
+    this.isExpanded = false;
+    this.defaultFromDate = new Date();
+    this.defaultFromDate.setDate(this.defaultFromDate.getDate() - 30);
+    this.defaultToDate = new Date();
   }
 
   ngOnInit(): void {
+    // Retrive authorizationData
+    const retrievedObject = localStorage.getItem('authorizationData');
+    if (retrievedObject) {
+      this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+      this.currentUserID = this.authenticationDetails.UserID;
+      this.currentUserName = this.authenticationDetails.UserName;
+      this.currentUserRole = this.authenticationDetails.UserRole;
+      this.menuItems = this.authenticationDetails.MenuItemNames.split(',');
+      if (this.menuItems.indexOf('FGChildPartStock') < 0) {
+        this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
+        );
+        this._router.navigate(['/auth/login']);
+      }
+    } else {
+      this._router.navigate(['/auth/login']);
+    }
+    this.CreateAppUsage();
+    this.GetFGChildPartStockReports();
+    // this.initializeSearchForm();
+    // this.searchButtonClicked();
+  }
 
-      // tslint:disable-next-line:label-position
-      // Public: title : String;
-    const myChart = new Chart("myChart", {
-      type: 'doughnut',
-      data: {
-        // labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [{
-          // label: '# of Votes',
-          data: [60, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-          backgroundColor:
-            ["#6dd7d3", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey",
-              "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey",
-              "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey",
-              "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey"],
-              hoverBackgroundColor: ["#6dd7d3"],
-          // borderColor: [
-          //   'rgba(255, 99, 132, 1)',
-          //   'rgba(54, 162, 235, 1)',
-          //   'rgba(255, 206, 86, 1)',
-          //   'rgba(75, 192, 192, 1)',
-          //   'rgba(153, 102, 255, 1)',
-          //   'rgba(255, 159, 64, 1)'
-          // ],
-          borderWidth: 2
-        }, {
-          data: [100],
-          backgroundColor: ["white"],
-
-        }, {
-          data: [90],
-          // hoverBackgroundColor: ["#6dd7d3"],
-          borderColor: ["#6dd7d3"],
-          // borderWidth: 5
-        }]
+  CreateAppUsage(): void {
+    const appUsage: AppUsage = new AppUsage();
+    appUsage.UserID = this.currentUserID;
+    appUsage.AppName = 'FGChildPartStock';
+    appUsage.UsageCount = 1;
+    appUsage.CreatedBy = this.currentUserName;
+    appUsage.ModifiedBy = this.currentUserName;
+    this._masterService.CreateAppUsage(appUsage).subscribe(
+      (data) => {
       },
-      options: {
-        responsive: true,
-        cutoutPercentage: 50,
-        plugins: {
-          labels: false
-        },
-        tooltips: {
-          enabled: false
-        },
-        legend: {
-          display: false
-        },
-        animation: {
-          animateRotate: true,
-          animateScale: true
-        },
-        // scales: {
-        //   yAxes: [{
-        //     ticks: {
-        //       beginAtZero: true
-        //     }
-        //   }]
-        // }
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+
+  GetFGChildPartStockReports(): void {
+    this.isProgressBarVisibile = true;
+    this._reportService.GetAllReportFGCPSByPartnerID(this.currentUserName).subscribe(
+      (data) => {
+        this.fgChildPartStockReports = data as BPCReportFGCPS[];
+        this.fgChildPartStockReportDataSource = new MatTableDataSource(this.fgChildPartStockReports);
+        this.fgChildPartStockReportDataSource.paginator = this.fgChildPartStockPaginator;
+        this.fgChildPartStockReportDataSource.sort = this.fgChildPartStockSort;
+        this.isProgressBarVisibile = false;
+      },
+      (err) => {
+        console.error(err);
+        this.isProgressBarVisibile = false;
+      }
+    );
+  }
+
+  GetFilteredReportFGCPSByPartnerID(material: string, materialText: string): void {
+    this.isProgressBarVisibile = true;
+    this._reportService.GetFilteredReportFGCPSByPartnerID(this.currentUserName, material, materialText).subscribe(
+      (data) => {
+        this.fgChildPartStockReports = data as BPCReportFGCPS[];
+        this.fgChildPartStockReportDataSource = new MatTableDataSource(this.fgChildPartStockReports);
+        this.fgChildPartStockReportDataSource.paginator = this.fgChildPartStockPaginator;
+        this.fgChildPartStockReportDataSource.sort = this.fgChildPartStockSort;
+        this.isProgressBarVisibile = false;
+      },
+      (err) => {
+        console.error(err);
+        this.isProgressBarVisibile = false;
+      }
+    );
+  }
+
+  // GetFGChildPartStockReportByOption(fgChildPartStockReportOption: FGChildPartStockReportOption): void {
+  //   this.isProgressBarVisibile = true;
+  //   this._reportService.GetFGChildPartStockReportByOption(fgChildPartStockReportOption).subscribe(
+  //     (data) => {
+  //       this.fgChildPartStockReports = data as BPCReportFGCPS[];
+  //       this.fgChildPartStockReportDataSource = new MatTableDataSource(this.fgChildPartStockReports);
+  //       this.fgChildPartStockReportDataSource.paginator = this.fgChildPartStockPaginator;
+  //       this.fgChildPartStockReportDataSource.sort = this.fgChildPartStockSort;
+  //       this.isProgressBarVisibile = false;
+  //     },
+  //     (err) => {
+  //       console.error(err);
+  //       this.isProgressBarVisibile = false;
+  //     }
+  //   );
+  // }
+
+  // GetFGChildPartStockReportByStatus(fgChildPartStockReportOption: FGChildPartStockReportOption): void {
+  //   this.isProgressBarVisibile = true;
+  //   this._reportService.GetFGChildPartStockReportByStatus(fgChildPartStockReportOption).subscribe(
+  //     (data) => {
+  //       this.fgChildPartStockReports = data as BPCReportFGCPS[];
+  //       this.fgChildPartStockReportDataSource = new MatTableDataSource(this.fgChildPartStockReports);
+  //       this.fgChildPartStockReportDataSource.paginator = this.fgChildPartStockPaginator;
+  //       this.fgChildPartStockReportDataSource.sort = this.fgChildPartStockSort;
+  //       this.isProgressBarVisibile = false;
+  //     },
+  //     (err) => {
+  //       console.error(err);
+  //       this.isProgressBarVisibile = false;
+  //     }
+  //   );
+  // }
+
+  // GetFGChildPartStockReportByDate(fgChildPartStockReportOption: FGChildPartStockReportOption): void {
+  //   this.isProgressBarVisibile = true;
+  //   this._reportService.GetFGChildPartStockReportByDate(fgChildPartStockReportOption).subscribe(
+  //     (data) => {
+  //       this.fgChildPartStockReports = data as BPCReportFGCPS[];
+  //       this.fgChildPartStockReportDataSource = new MatTableDataSource(this.fgChildPartStockReports);
+  //       this.fgChildPartStockReportDataSource.paginator = this.fgChildPartStockPaginator;
+  //       this.fgChildPartStockReportDataSource.sort = this.fgChildPartStockSort;
+  //       this.isProgressBarVisibile = false;
+  //     },
+  //     (err) => {
+  //       console.error(err);
+  //       this.isProgressBarVisibile = false;
+  //     }
+  //   );
+  // }
+
+  initializeSearchForm(): void {
+    this.searchFormGroup = this.formBuilder.group({
+      // PONumber: [''],
+      Material: ['']
+      // FromDate: [this.defaultFromDate],
+      // ToDate: [this.defaultToDate]
+    });
+  }
+
+  resetControl(): void {
+    this.fgChildPartStockReports = [];
+    this.resetFormGroup(this.searchFormGroup);
+  }
+
+  resetFormGroup(formGroup: FormGroup): void {
+    formGroup.reset();
+    Object.keys(formGroup.controls).forEach(key => {
+      formGroup.get(key).enable();
+      formGroup.get(key).markAsUntouched();
+    });
+  }
+
+  // dateSelected(): void {
+  //   const FROMDATEVAL = this.searchFormGroup.get('FromDate').value as Date;
+  //   const TODATEVAL = this.searchFormGroup.get('ToDate').value as Date;
+  //   if (FROMDATEVAL && TODATEVAL && FROMDATEVAL > TODATEVAL) {
+  //     this.isDateError = true;
+  //   } else {
+  //     this.isDateError = false;
+  //   }
+  // }
+
+  searchButtonClicked(): void {
+    if (this.searchFormGroup.valid) {
+      // if (!this.isDateError) {
+      // const FrDate = this.searchFormGroup.get('FromDate').value;
+      // let FromDate = '';
+      // if (FrDate) {
+      //   FromDate = this._datePipe.transform(FrDate, 'yyyy-MM-dd');
+      // }
+      // const TDate = this.searchFormGroup.get('ToDate').value;
+      // let ToDate = '';
+      // if (TDate) {
+      //   ToDate = this._datePipe.transform(TDate, 'yyyy-MM-dd');
+      // }
+      // const poNumber = this.searchFormGroup.get('PONumber').value;
+      const material = this.searchFormGroup.get('Material').value;
+      const materialText = this.searchFormGroup.get('MaterialText').value;
+      // const fgChildPartStockReportOption = new FGChildPartStockReportOption();
+      // fgChildPartStockReportOption.Material = material;
+      // fgChildPartStockReportOption.PO = poNumber;
+      // fgChildPartStockReportOption.FromDate = FromDate;
+      // fgChildPartStockReportOption.ToDate = ToDate;
+      // fgChildPartStockReportOption.PartnerID = this.currentUserName;
+      this.GetFilteredReportFGCPSByPartnerID(material, materialText);
+      // }
+    } else {
+      this.showValidationErrors(this.searchFormGroup);
+    }
+  }
+
+  showValidationErrors(formGroup: FormGroup): void {
+    Object.keys(formGroup.controls).forEach(key => {
+      if (!formGroup.get(key).valid) {
+        console.log(key);
+      }
+      formGroup.get(key).markAsTouched();
+      formGroup.get(key).markAsDirty();
+      if (formGroup.get(key) instanceof FormArray) {
+        const FormArrayControls = formGroup.get(key) as FormArray;
+        Object.keys(FormArrayControls.controls).forEach(key1 => {
+          if (FormArrayControls.get(key1) instanceof FormGroup) {
+            const FormGroupControls = FormArrayControls.get(key1) as FormGroup;
+            Object.keys(FormGroupControls.controls).forEach(key2 => {
+              FormGroupControls.get(key2).markAsTouched();
+              FormGroupControls.get(key2).markAsDirty();
+              if (!FormGroupControls.get(key2).valid) {
+                console.log(key2);
+              }
+            });
+          } else {
+            FormArrayControls.get(key1).markAsTouched();
+            FormArrayControls.get(key1).markAsDirty();
+          }
+        });
       }
     });
 
+  }
 
-
-
-    const myChart1 = new Chart("myChart1", {
-      type: 'doughnut',
-      data: {
-        // labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [{
-          // label: '# of Votes',
-          data: [30, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-          backgroundColor:
-            ["#6dd7d3", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey",
-              "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey",
-              "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey",
-              "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey"],
-              hoverBackgroundColor: ["#6dd7d3"],
-          // borderColor: [
-          //   'rgba(255, 99, 132, 1)',
-          //   'rgba(54, 162, 235, 1)',
-          //   'rgba(255, 206, 86, 1)',
-          //   'rgba(75, 192, 192, 1)',
-          //   'rgba(153, 102, 255, 1)',
-          //   'rgba(255, 159, 64, 1)'
-          // ],
-          borderWidth: 2
-        }, {
-          data: [100],
-          backgroundColor: ["white"],
-
-        }, {
-          data: [90],
-          // hoverBackgroundColor: ["#6dd7d3"],
-          borderColor: ["#6dd7d3"],
-          // borderWidth: 5
-        }]
-      },
-      options: {
-        responsive: true,
-        cutoutPercentage: 50,
-        plugins: {
-          labels: false
-        },
-        tooltips: {
-          enabled: false
-        },
-        legend: {
-          display: false
-        },
-        animation: {
-          animateRotate: true,
-          animateScale: true
-        },
-        // scales: {
-        //   yAxes: [{
-        //     ticks: {
-        //       beginAtZero: true
-        //     }
-        //   }]
-        // }
-      }
+  exportAsXLSX(): void {
+    const currentPageIndex = this.fgChildPartStockReportDataSource.paginator.pageIndex;
+    const PageSize = this.fgChildPartStockReportDataSource.paginator.pageSize;
+    const startIndex = currentPageIndex * PageSize;
+    const endIndex = startIndex + PageSize;
+    const itemsShowed = this.fgChildPartStockReports.slice(startIndex, endIndex);
+    const itemsShowedd = [];
+    itemsShowed.forEach(x => {
+      const item = {
+        'Plant': x.Plant,
+        'Material': x.Material,
+        // 'Material': x.InvoiceDate ? this._datePipe.transform(x.InvoiceDate, 'dd-MM-yyyy') : '',
+        // 'Posted on': x.PostedOn ? this._datePipe.transform(x.PostedOn, 'dd-MM-yyyy') : '',
+        'Material Desc': x.MaterialText,
+        'Stick Quantity': x.StickQty,
+        'UOM': x.UOM,
+        'Batch': x.Batch,
+        'Price': x.Price,
+      };
+      itemsShowedd.push(item);
     });
-
-
-
-    this._reportService.GetAllReportFGCPSByPartnerID().subscribe(
-      (data: BPCReportFGCPS[]) => {
-        console.log(data);
-        this.tableDataSource = new MatTableDataSource(data);
-      });
+    this._excelService.exportAsExcelFile(itemsShowedd, 'fgChildPartStock');
   }
 
-  search(): void {
-    console.log(this.form.value);
-    const fgmaterial = this.form.get('fgmaterial').value;
-    const childmaterial = this.form.get('childmaterial').value;
-    if (fgmaterial !== null && childmaterial !== null) {
-      this._reportService.getData(fgmaterial, childmaterial).subscribe((data: any) => {
-        console.log(data);
-        this.tableDataSource = new MatTableDataSource(data);
-      });
-    }
-    if (fgmaterial !== null) {
-      this._reportService.getfgmaterial(fgmaterial).subscribe((data: any) => {
-        console.log(data);
-        this.tableDataSource = new MatTableDataSource(data);
-      });
-    }
-    else if (childmaterial != null) {
-      this._reportService.getchildmaterial(childmaterial).subscribe((data: any) => {
-        console.log(data);
-        this.tableDataSource = new MatTableDataSource(data);
-      });
-    }
+  expandClicked(): void {
+    this.isExpanded = !this.isExpanded;
   }
 
-  applyfilter(filterValue: string): void {
-    this.tableDataSource.filter = filterValue.trim().toLowerCase();
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.fgChildPartStockReportDataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  filterClicked(): void {
+
+  }
+
+  resetFilterClicked(): void {
+
   }
 
 }
+
+
+
