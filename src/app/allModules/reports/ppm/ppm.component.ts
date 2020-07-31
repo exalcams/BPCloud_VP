@@ -98,7 +98,7 @@ export class PPMComponent implements OnInit {
   CreateAppUsage(): void {
     const appUsage: AppUsage = new AppUsage();
     appUsage.UserID = this.currentUserID;
-    appUsage.AppName = 'Payables';
+    appUsage.AppName = 'PPM';
     appUsage.UsageCount = 1;
     appUsage.CreatedBy = this.currentUserName;
     appUsage.ModifiedBy = this.currentUserName;

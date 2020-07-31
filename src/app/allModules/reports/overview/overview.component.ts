@@ -17,7 +17,6 @@ import { ExcelService } from 'app/services/excel.service';
 import { MasterService } from 'app/services/master.service';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { fuseAnimations } from '@fuse/animations';
-
 @Component({
   selector: 'app-overview',
   templateUrl: './overview.component.html',
@@ -146,7 +145,7 @@ export class OverviewComponent implements OnInit {
   CreateAppUsage(): void {
     const appUsage: AppUsage = new AppUsage();
     appUsage.UserID = this.currentUserID;
-    appUsage.AppName = 'Payables';
+    appUsage.AppName = 'Overview';
     appUsage.UsageCount = 1;
     appUsage.CreatedBy = this.currentUserName;
     appUsage.ModifiedBy = this.currentUserName;
