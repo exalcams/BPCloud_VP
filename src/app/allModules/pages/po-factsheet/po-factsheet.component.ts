@@ -159,6 +159,7 @@ export class PoFactsheetComponent implements OnInit {
         this.initializeACKFormGroup();
         this.initializePOItemFormGroup();
     }
+
     CreateAppUsage(): void {
         const appUsage: AppUsage = new AppUsage();
         appUsage.UserID = this.currentUserID;
@@ -174,6 +175,7 @@ export class PoFactsheetComponent implements OnInit {
             }
         );
     }
+
     GetOfDetailsByPartnerIDAndDocNumber(): void {
         this.isProgressBarVisibile = true;
         this._dashboardService.GetOrderFulfilmentDetails(this.PO, this.partnerID).subscribe(
@@ -350,7 +352,7 @@ export class PoFactsheetComponent implements OnInit {
         this.tab5 = false;
         this.tab6 = false;
         this.tab7 = false;
-        this.getASNs();
+        this.getSLs();
         this.tabCount = 2;
         // this.ResetControl();
     }
@@ -363,7 +365,7 @@ export class PoFactsheetComponent implements OnInit {
         this.tab5 = false;
         this.tab6 = false;
         this.tab7 = false;
-        this.getGRNs();
+        this.getASNs();
         this.tabCount = 3;
         // this.ResetControl();
     }
@@ -376,7 +378,7 @@ export class PoFactsheetComponent implements OnInit {
         this.tab5 = false;
         this.tab6 = false;
         this.tab7 = false;
-        this.getQAs();
+        this.getGRNs();
         this.tabCount = 4;
         // this.ResetControl();
     }
@@ -389,7 +391,7 @@ export class PoFactsheetComponent implements OnInit {
         this.tab5 = true;
         this.tab6 = false;
         this.tab7 = false;
-        this.getSLs();
+        this.getQAs();
         this.tabCount = 5;
         // this.ResetControl();
     }
