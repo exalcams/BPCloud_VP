@@ -2,6 +2,7 @@ import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { ReportService } from 'app/services/report.service';
 import { BPCReportFGCPS } from 'app/models/ReportModel';
 import { MatTableDataSource } from '@angular/material/table';
+import { ChartOptions, ChartDataSets } from 'chart.js';
 import * as Chart from 'chart.js';
 import * as XLSX from 'xlsx';
 import { colorSets } from '@swimlane/ngx-charts/release/utils';
@@ -39,6 +40,7 @@ export class FGChildPartStockComponent implements OnInit {
   isExpanded: boolean;
   defaultFromDate: Date;
   defaultToDate: Date;
+  data: any[];
   fgChildPartStockReportDisplayedColumns: string[] = ['Plant', 'Material', 'MaterialText', 'StickQty', 'UOM', 'Batch', 'Price'];
   fgChildPartStockReportDataSource: MatTableDataSource<BPCReportFGCPS>;
   fgChildPartStockReports: BPCReportFGCPS[] = [];
@@ -46,124 +48,170 @@ export class FGChildPartStockComponent implements OnInit {
   @ViewChild(MatSort) fgChildPartStockSort: MatSort;
   @ViewChild(MatMenuTrigger) matMenuTrigger: MatMenuTrigger;
 
-  // DoughnutChart1
-  public doughnutChart1DataSets: Array<any> = [{
-    // label: '# of Votes',
-    data: [60, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    backgroundColor:
-      ["#6dd7d3", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey",
-        "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey",
-        "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey",
-        "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey"],
-    hoverBackgroundColor: ["#6dd7d3"],
-    // borderColor: [
-    //   'rgba(255, 99, 132, 1)',
-    //   'rgba(54, 162, 235, 1)',
-    //   'rgba(255, 206, 86, 1)',
-    //   'rgba(75, 192, 192, 1)',
-    //   'rgba(153, 102, 255, 1)',
-    //   'rgba(255, 159, 64, 1)'
-    // ],
-    borderWidth: 2
-  }, {
-    data: [100],
-    backgroundColor: ["white"],
+  // // DoughnutChart1
+  // public doughnutChart1DataSets: Array<any> = [{
+  //   // label: '# of Votes',
+  //   data: [60, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  //   backgroundColor:
+  //     ["#6dd7d3", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey",
+  //       "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey",
+  //       "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey",
+  //       "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey"],
+  //   hoverBackgroundColor: ["#6dd7d3"],
+  //   // borderColor: [
+  //   //   'rgba(255, 99, 132, 1)',
+  //   //   'rgba(54, 162, 235, 1)',
+  //   //   'rgba(255, 206, 86, 1)',
+  //   //   'rgba(75, 192, 192, 1)',
+  //   //   'rgba(153, 102, 255, 1)',
+  //   //   'rgba(255, 159, 64, 1)'
+  //   // ],
+  //   borderWidth: 2
+  // }, {
+  //   data: [100],
+  //   backgroundColor: ["white"],
 
-  }, {
-    data: [90],
-    // hoverBackgroundColor: ["#6dd7d3"],
-    borderColor: ["#6dd7d3"],
-    // borderWidth: 5
-  }];
-  public doughnutChart1Options: any = {
-    responsive: true,
-    cutoutPercentage: 50,
-    plugins: {
-      labels: false
+  // }, {
+  //   data: [90],
+  //   // hoverBackgroundColor: ["#6dd7d3"],
+  //   borderColor: ["#6dd7d3"],
+  //   // borderWidth: 5
+  // }];
+  // public doughnutChart1Options: any = {
+  //   responsive: true,
+  //   cutoutPercentage: 50,
+  //   plugins: {
+  //     labels: false
+  //   },
+  //   tooltips: {
+  //     enabled: false
+  //   },
+  //   legend: {
+  //     display: false
+  //   },
+  //   animation: {
+  //     animateRotate: true,
+  //     animateScale: true
+  //   },
+  //   // scales: {
+  //   //   yAxes: [{
+  //   //     ticks: {
+  //   //       beginAtZero: true
+  //   //     }
+  //   //   }]
+  //   // }
+  // };
+  // // public doughnutChart1Colors: Array<any> = [{
+  // //   backgroundColor: ['#fb9e61', '#3c9cdf']
+  // // }];
+  // public doughnutChart1Type: ChartType = 'doughnut';
+  // public doughnutChart1Legend = false;
+
+  // // DoughnutChart2
+  // public doughnutChart2DataSets: Array<any> = [{
+  //   // label: '# of Votes',
+  //   data: [30, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  //   backgroundColor:
+  //     ["#6dd7d3", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey",
+  //       "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey",
+  //       "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey",
+  //       "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey"],
+  //   hoverBackgroundColor: ["#6dd7d3"],
+  //   // borderColor: [
+  //   //   'rgba(255, 99, 132, 1)',
+  //   //   'rgba(54, 162, 235, 1)',
+  //   //   'rgba(255, 206, 86, 1)',
+  //   //   'rgba(75, 192, 192, 1)',
+  //   //   'rgba(153, 102, 255, 1)',
+  //   //   'rgba(255, 159, 64, 1)'
+  //   // ],
+  //   borderWidth: 2
+  // }, {
+  //   data: [100],
+  //   backgroundColor: ["white"],
+
+  // }, {
+  //   data: [90],
+  //   // hoverBackgroundColor: ["#6dd7d3"],
+  //   borderColor: ["#6dd7d3"],
+  //   // borderWidth: 5
+  // }];
+  // public doughnutChart2Options: any = {
+  //   responsive: true,
+  //   cutoutPercentage: 50,
+  //   plugins: {
+  //     labels: false
+  //   },
+  //   tooltips: {
+  //     enabled: false
+  //   },
+  //   legend: {
+  //     display: false
+  //   },
+  //   animation: {
+  //     animateRotate: true,
+  //     animateScale: true
+  //   },
+  //   // scales: {
+  //   //   yAxes: [{
+  //   //     ticks: {
+  //   //       beginAtZero: true
+  //   //     }
+  //   //   }]
+  //   // }
+  // };
+  // // public doughnutChart2Colors: Array<any> = [{
+  // //   backgroundColor: ['#fb9e61', '#3c9cdf']
+  // // }];
+  // public doughnutChart2Type: ChartType = 'doughnut';
+  // public doughnutChart2Legend = false;
+
+  // Left Side Chart
+  public ChartType: ChartType = 'doughnut';
+  public DoughnutChartData1: ChartDataSets[] = [
+    { data: this.randomize() }
+  ];
+  public DoughnutChartOptions1: ChartOptions = {
+    responsive: false,
+    maintainAspectRatio: false,
+    legend: {
+      display: false
     },
     tooltips: {
       enabled: false
     },
-    legend: {
-      display: false
-    },
-    animation: {
-      animateRotate: true,
-      animateScale: true
-    },
-    // scales: {
-    //   yAxes: [{
-    //     ticks: {
-    //       beginAtZero: true
-    //     }
-    //   }]
-    // }
-  };
-  // public doughnutChart1Colors: Array<any> = [{
-  //   backgroundColor: ['#fb9e61', '#3c9cdf']
-  // }];
-  public doughnutChart1Type: ChartType = 'doughnut';
-  public doughnutChart1Legend = false;
-
-  // DoughnutChart2
-  public doughnutChart2DataSets: Array<any> = [{
-    // label: '# of Votes',
-    data: [30, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    backgroundColor:
-      ["#6dd7d3", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey",
-        "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey",
-        "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey",
-        "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey", "lightgrey"],
-    hoverBackgroundColor: ["#6dd7d3"],
-    // borderColor: [
-    //   'rgba(255, 99, 132, 1)',
-    //   'rgba(54, 162, 235, 1)',
-    //   'rgba(255, 206, 86, 1)',
-    //   'rgba(75, 192, 192, 1)',
-    //   'rgba(153, 102, 255, 1)',
-    //   'rgba(255, 159, 64, 1)'
-    // ],
-    borderWidth: 2
-  }, {
-    data: [100],
-    backgroundColor: ["white"],
-
-  }, {
-    data: [90],
-    // hoverBackgroundColor: ["#6dd7d3"],
-    borderColor: ["#6dd7d3"],
-    // borderWidth: 5
-  }];
-  public doughnutChart2Options: any = {
-    responsive: true,
-    cutoutPercentage: 50,
     plugins: {
       labels: false
     },
-    tooltips: {
-      enabled: false
-    },
-    legend: {
-      display: false
-    },
-    animation: {
-      animateRotate: true,
-      animateScale: true
-    },
-    // scales: {
-    //   yAxes: [{
-    //     ticks: {
-    //       beginAtZero: true
-    //     }
-    //   }]
-    // }
+    showLines: false,
+    cutoutPercentage: 70,
   };
-  // public doughnutChart2Colors: Array<any> = [{
-  //   backgroundColor: ['#fb9e61', '#3c9cdf']
-  // }];
-  public doughnutChart2Type: ChartType = 'doughnut';
-  public doughnutChart2Legend = false;
+  public doughnutChartColors1: Array<any> = [{
+    backgroundColor: ['#6dd7d3']
+  }];
 
+   // Left Side Chart
+   public DoughnutChartData2: ChartDataSets[] = [
+     { data: this.randomize() }
+   ];
+   public DoughnutChartOptions2: ChartOptions = {
+     responsive: false,
+     maintainAspectRatio: false,
+     legend: {
+       display: false
+     },
+     tooltips: {
+       enabled: false
+     },
+     plugins: {
+       labels: false
+     },
+     showLines: false,
+     cutoutPercentage: 70,
+   };
+   public doughnutChartColors2: Array<any> = [{
+     backgroundColor: ['#6dd7d3']
+   }];
   constructor(
     private _reportService: ReportService,
     private formBuilder: FormBuilder,
@@ -439,7 +487,14 @@ export class FGChildPartStockComponent implements OnInit {
   resetFilterClicked(): void {
 
   }
-
+  randomize(): any[] {
+    this.data = [];
+    this.data.push(80);
+    for (let i = 81; i <= 100; i++) {
+      this.data.push(1);
+    }
+    return this.data;
+  }
 }
 
 

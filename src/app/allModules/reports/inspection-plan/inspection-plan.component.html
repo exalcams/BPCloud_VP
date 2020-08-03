@@ -15,10 +15,24 @@
         <div fxLayoutAlign="start center" class="pt-8">
           <span class="boldClass orangeBorderBottom pl-8"> Material Count </span>
         </div>
-        <div id="doughnutChart" fxFlex fxLayoutAlign="start" class="pt-8 pl-8 pr-4">
+        <!-- <div id="doughnutChart" fxFlex fxLayoutAlign="start" class="pt-8 pl-8 pr-4">
           <canvas baseChart [datasets]="DoughnutChartData2" [options]="DoughnutChartOptions2" [chartType]="ChartType"
             [colors]="doughnutChartColors1">
           </canvas>
+        </div> -->
+        <div fxLayout="row" fxLayoutAlign="center center">
+          <div>
+            <canvas class="leftsideCanvas" id="leftsidechart" baseChart [datasets]="DoughnutChartData2"
+              [options]="DoughnutChartOptions2" [chartType]="ChartType"
+              [colors]="doughnutChartColors1">
+            </canvas>
+          </div>
+          <div class="Chart_Circle">
+            <div fxLayout="column" class="circle_content">
+              <span class="cl_materialValue">957</span>
+              <span class="cl_materialCount">Material Count</span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="tile mx-20" fxFlex="40" fxLayout="column" fxLayoutAlign="start">

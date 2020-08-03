@@ -10,39 +10,67 @@
       </div>
     </div>
 
-    <div fxFlex fxLayout *ngIf="!isExpanded" @expandCollapse>
-      <div class="tile mx-20" fxFlex="40" fxLayout="column" fxLayoutAlign="start">
+    <div fxFlex fxLayout="row" *ngIf="!isExpanded" @expandCollapse>
+      <div class="tile mx-20" fxFlex="33" fxLayout="column" fxLayoutAlign="start">
         <div fxLayoutAlign="start" class="pt-8">
           <span class="boldClass orangeBorderBottom pl-8">No of Item</span>
         </div>
-        <div fxFlex fxLayoutAlign="start" class="pt-0 px-8">
+        <!-- <div fxFlex fxLayoutAlign="start" class="pt-0 px-8">
           <div class="relative" style="margin-right: 3%;margin-left: 3%;margin-top: 3%;margin-bottom: 10%;padding-bottom: 1%;
-            margin-top: -3%;">
+            margin-top: -3%;"> -->
             <!-- <canvas id="myChart" width="348px" height="166px"></canvas> -->
-            <canvas id="myChart" baseChart width="348px" height="166px" [datasets]="doughnutChartData1Sets"
+            <!-- <canvas id="myChart" baseChart width="348px" height="166px" [datasets]="doughnutChartData1Sets"
               [legend]="doughnutChart1Legend" [options]="doughnutChart1Options"
               [chartType]="doughnutChart1Type"></canvas>
             <div class="absolute-center text-center">
               <p style="font-weight: bold;">957</p>
               <p style="color: red;">No of Item</p>
             </div>
+          </div> -->
+        <!-- </div> -->
+        <div fxLayout="row" fxLayoutAlign="center center">
+          <div>
+            <canvas class="ChartCanvas" id="leftsidechart" baseChart [datasets]="DoughnutChartData1"
+              [options]="DoughnutChartOptions1" [chartType]="ChartType"
+              [colors]="doughnutChartColors1">
+            </canvas>
+          </div>
+          <div class="Chart_Circle">
+            <div fxLayout="column" class="circle_content">
+              <span class="cl_materialValue">957</span>
+              <span class="cl_NoOfItem">No.of.Item</span>
+            </div>
           </div>
         </div>
       </div>
-      <div class="tile mx-20" fxFlex="40" fxLayout="column" fxLayoutAlign="start">
+      <div class="tile mx-20" fxFlex="33" fxLayout="column" fxLayoutAlign="start">
         <div fxLayoutAlign="start center" class="pt-8">
           <span class="boldClass orangeBorderBottom pl-8">Value of Item</span>
         </div>
-        <div fxFlex fxLayoutAlign="start" class="pt-8 pl-8 pr-4">
+        <!-- <div fxFlex fxLayoutAlign="start" class="pt-8 pl-8 pr-4">
           <div class="relative" style="margin-right: 3%;margin-left: 3%;margin-top: 3%;margin-bottom: 10%;padding-bottom: 1%;
-          margin-top: -3%;">
+          margin-top: -3%;"> -->
             <!-- <canvas id="myChart1" width="348px" height="166px"></canvas> -->
-            <canvas id="myChart1" baseChart width="348px" height="166px" [datasets]="doughnutChartData2Sets"
+            <!-- <canvas id="myChart1" baseChart width="348px" height="166px" [datasets]="doughnutChartData2Sets"
               [legend]="doughnutChart2Legend" [options]="doughnutChart2Options"
               [chartType]="doughnutChart2Type"></canvas>
             <div class="absolute-center text-center">
               <p style="font-weight: bold;">957</p>
               <p style="color: red;">Value of Item</p>
+            </div>
+          </div>
+        </div> -->
+        <div fxLayout="row" fxLayoutAlign="center center">
+          <div>
+            <canvas class="ChartCanvas" id="leftsidechart" baseChart [datasets]="DoughnutChartData2"
+              [options]="DoughnutChartOptions2" [chartType]="ChartType"
+              [colors]="doughnutChartColors2">
+            </canvas>
+          </div>
+          <div class="Chart_Circle">
+            <div fxLayout="column" class="circle_content">
+              <span class="cl_materialValue">957</span>
+              <span class="cl_materialCount">Value of Item</span>
             </div>
           </div>
         </div>
@@ -116,11 +144,11 @@
         <div fxFlex fxLayoutAlign="end center">
           <button (click)="filterClicked()" class="filterBtn mr-24" mat-stroked-button>
             Filter
-            <img class="filterImg" src="assets/images/excel.png">
+            <img class="filterImg" src="assets/images/adjust.png">
           </button>
-          <button (click)="resetFilterClicked()" class="resetFilterBtn" mat-stroked-button>
-            Reset Filter
-            <img class="resetFilterImg" src="assets/images/excel.png">
+          <button (click)="resetFilterClicked()" matSuffix class="resetFilterBtn" mat-stroked-button>
+            <span style="color:#080808">Reset Filter</span>
+            <img class="resetFilterImg"   src="assets/images/close.png">
           </button>
           <!-- <img class="expandImg" src="assets/images/expand.png" (click)="expandClicked()"> -->
         </div>

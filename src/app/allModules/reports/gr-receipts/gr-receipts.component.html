@@ -15,27 +15,19 @@
         <div fxLayoutAlign="start" class="pt-8">
           <span class="boldClass orangeBorderBottom pl-8">GRN Count</span>
         </div>
-        <div id="doughnutChart" fxFlex fxLayoutAlign="start" class="pt-0 px-8">
-          <div fxFlex="100">
-            <canvas id="doughnut1" class="doughnout">
+        <div fxLayout="row" fxLayoutAlign="center center">
+          <div>
+            <canvas class="leftsideCanvas" id="leftsidechart" baseChart [datasets]="DoughnutChartData2"
+              [options]="DoughnutChartOptions2" [chartType]="ChartType"
+              [colors]="doughnutChartColors1">
             </canvas>
           </div>
-          <!-- <div fxFlex="40" class="boldClass" fxLayout fxLayoutAlign="end center">
-            <div fxFlex fxLayout="column">
-              <div fxFlex fxLayout="row" fxLayoutGap="5px" style="margin-bottom: -18px;">
-                <span>
-                  <p class="circle1"></p>
-                </span>
-                <p class="boldClass">Received Qty</p>
-              </div>
-              <div fxFlex fxLayout="row" fxLayoutGap="5px">
-                <span>
-                  <p class="circle3"></p>
-                </span>
-                <p class="boldClass">Rejected PPM</p>
-              </div>
+          <div class="Chart_Circle">
+            <div fxLayout="column" class="circle_content">
+              <span class="cl_materialValue">957</span>
+              <span class="cl_materialCount">GRN Count</span>
             </div>
-          </div> -->
+          </div>
         </div>
       </div>
       <div class="tile mx-20" fxFlex="35" fxLayout="column" fxLayoutAlign="start">

@@ -383,4 +383,33 @@
         border-radius: 50%;
         margin-top: 19px;
     }
+    .Chart_Circle {
+        border: 2px solid #58dfa7;
+        position: absolute;
+        height: 85px;
+        width: 85px;
+        border-radius: 50%;
+        margin-top: 1px;
+        margin-left: -9px;
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.16);
+    }
+    .cl_materialValue {
+        margin-top: 17px;
+        position: absolute;
+        margin-left: 27px;
+        font-weight: 800;
+        font-size: 16px;
+        letter-spacing: 0.3px;
+    }
+    .cl_materialCount {
+        font-size: 10px;
+        margin-top: 44px;
+        color: red;
+        margin-left: 9px;
+    }
+    .leftsideCanvas {
+        height: 150px !important;
+        width: 300px !important;
+        margin-left: -11px !important;
+    }
 }

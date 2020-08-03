@@ -72,7 +72,7 @@ export class InspectionPlanComponent implements OnInit {
     backgroundColor: ['#58dfa7']
   }];
 
-  // Left Side Chart
+  // right Side Chart
   public DoughnutChartData: Array<number> = [32.5, 33, 33];
   public DoughnutlabelMFL: Array<any> = [
     {
