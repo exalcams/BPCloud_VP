@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import {
   PO, OrderFulfilmentDetails, Acknowledgement, OfOption, DashboardGraphStatus,
-  FulfilmentStatus, ItemDetails, ASNDetails, GRNDetails, QADetails, SLDetails
+  FulfilmentStatus, ItemDetails, ASNDetails, GRNDetails, QADetails, SLDetails, DocumentDetails, FlipDetails
 } from 'app/models/Dashboard';
 import { SODetails } from 'app/models/customer';
 import { BPCKRA, CustomerBarChartData } from 'app/models/fact';
@@ -98,6 +98,18 @@ export class DashboardService {
   GetOfSLsByPartnerIDAndDocNumber(PartnerID: any, DocNumber: any): Observable<SLDetails[] | string> {
     return this._httpClient
       .get<SLDetails[]>(`${this.baseAddress}poapi/Dashboard/GetOfSLsByPartnerIDAndDocNumber?PartnerID=${PartnerID}&DocNumber=${DocNumber}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetOfDocumentsByPartnerIDAndDocNumber(PartnerID: any, DocNumber: any): Observable<DocumentDetails[] | string> {
+    return this._httpClient
+      .get<DocumentDetails[]>(`${this.baseAddress}poapi/Dashboard/GetOfDocumentsByPartnerIDAndDocNumber?PartnerID=${PartnerID}&DocNumber=${DocNumber}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetOfFlipsByPartnerIDAndDocNumber(PartnerID: any, DocNumber: any): Observable<FlipDetails[] | string> {
+    return this._httpClient
+      .get<FlipDetails[]>(`${this.baseAddress}poapi/Dashboard/GetOfFlipsByPartnerIDAndDocNumber?PartnerID=${PartnerID}&DocNumber=${DocNumber}`)
       .pipe(catchError(this.errorHandler));
   }
 

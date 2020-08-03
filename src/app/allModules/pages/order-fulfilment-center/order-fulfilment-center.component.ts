@@ -312,6 +312,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         this.GetOfStatusByPartnerID();
         // this.GetOfAttachmentsByPartnerID();
     }
+
     CreateAppUsage(): void {
         const appUsage: AppUsage = new AppUsage();
         appUsage.UserID = this.currentUserID;
@@ -327,6 +328,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
             }
         );
     }
+
     GetOfDetails(): void {
         this.isProgressBarVisibile = true;
         this._dashboardService
@@ -585,6 +587,10 @@ export class OrderFulFilmentCenterComponent implements OnInit {
 
     goToSubconClicked(po: string): void {
         this._router.navigate(['/subcon'], { queryParams: { id: po } });
+
+    }
+
+    goToPrintPOClicked(po: string): void {
 
     }
 

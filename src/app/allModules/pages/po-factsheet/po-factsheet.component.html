@@ -526,13 +526,81 @@
 
       <!-- Document -->
       <div class="content" fxLayout="column" *ngIf="tab6">
+        <div class="p-12  mt-24">
+          <table style="width: 55% !important;" class="table" mat-table [dataSource]="documentDataSource" matSort>
 
+            <ng-container matColumnDef="ReferenceNo">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Doc Ref No </th>
+              <td mat-cell *matCellDef="let element;let odd=odd" style="text-align: left" class="tableLeftBorder pl-0">
+                <div fxLayout>
+                  <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
+                  <div fxFlex class="pl-4">{{element.ReferenceNo}} </div>
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="AttachmentName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Document name</th>
+              <td mat-cell *matCellDef="let element" style="text-align: left"> {{element.AttachmentName}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="CreatedOn">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+              <td mat-cell *matCellDef="let element" style="text-align: left">
+                {{element.CreatedOn| date :'dd/MM/yyyy'}}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ContentType">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Doc Type</th>
+              <td mat-cell style="text-align: left" *matCellDef="let element"> {{element.ContentType}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="documentDisplayedColumns;sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: documentDisplayedColumns;let even=even" style=" cursor: pointer;">
+            </tr>
+          </table>
+        </div>
       </div>
       <!-- Document -->
 
       <!-- Flip -->
       <div class="content" fxLayout="column" *ngIf="tab7">
+        <div class="p-12  mt-24">
+          <table style="width: 55% !important;" class="table" mat-table [dataSource]="flipDataSource" matSort>
 
+            <ng-container matColumnDef="FLIPID">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>FLIP ID </th>
+              <td mat-cell *matCellDef="let element;let odd=odd" style="text-align: left" class="tableLeftBorder pl-0">
+                <div fxLayout>
+                  <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
+                  <div fxFlex class="pl-4">{{element.FLIPID}} </div>
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="InvoiceNumber">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Invoice No</th>
+              <td mat-cell *matCellDef="let element" style="text-align: left"> {{element.InvoiceNumber}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="InvoiceDate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Invoice Date</th>
+              <td mat-cell *matCellDef="let element" style="text-align: left">
+                {{element.InvoiceDate| date :'dd/MM/yyyy'}}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="InvoiceAmount">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: right">Invoice Amount</th>
+              <td mat-cell style="text-align: right" *matCellDef="let element"> {{element.InvoiceAmount}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="flipDisplayedColumns;sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: flipDisplayedColumns;let even=even" style=" cursor: pointer;">
+            </tr>
+          </table>
+        </div>
       </div>
       <!-- Flip -->
 

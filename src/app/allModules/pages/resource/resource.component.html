@@ -38,8 +38,8 @@
       </div>
       <div fxLayout="row" fxFlex="100%" fxLayoutAlign="space-around center" fxLayoutGap="20px">
         <!-- <div fxFlex="50%"> -->
-        <mat-card fxFlex="50%" fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="20px"
-          style="padding: 10px;">
+        <mat-card (click)="onArticlesClicked()" fxFlex="50%" fxLayout="column" fxLayoutAlign="space-around center"
+          fxLayoutGap="20px" style="padding: 10px;  cursor: pointer;">
           <!-- <mat-card-content class="staySafe"> -->
           <div fxFlex>
             <img src="../../../../assets/icons/custom/article.svg" style="height: 120px;">
@@ -65,8 +65,8 @@
 
           </div> -->
         <!-- </div> -->
-        <mat-card (click)="navigate()" fxFlex="50%" fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="20px"
-          style="padding: 10px;">
+        <mat-card (click)="onFAQClicked()" fxFlex="50%" fxLayout="column" fxLayoutAlign="space-around center"
+          fxLayoutGap="20px" style="padding: 10px; cursor: pointer;">
           <!-- <mat-card-content class="staySafe"> -->
           <div fxFlex>
             <img src="../../../../assets/icons/custom/question.svg" style="height: 120px;">
@@ -180,10 +180,9 @@
       </div>
     </div> -->
 
-    <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
+    <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
     </mat-progress-spinner>
-    <div id="overlay" *ngIf="IsProgressBarVisibile">
+    <div id="overlay" *ngIf="isProgressBarVisibile">
     </div>
-
   </div>
 </div>
