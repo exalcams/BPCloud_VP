@@ -1,3 +1,5 @@
+import { CommonClass } from './common';
+
 export class PO {
     PO: number;
     Version: string;
@@ -50,6 +52,23 @@ export class SLDetails {
     AckDeliveryDate: Date;
 }
 
+export class DocumentDetails extends CommonClass {
+    AttachmentID: number;
+    AttachmentName: string;
+    ReferenceNo: string;
+    ContentType: string;
+    ContentLength: number;
+}
+
+export class FlipDetails {
+    DocNumber: string;
+    FLIPID: string;
+    InvoiceDate: Date;
+    InvoiceAmount: number;
+    InvoiceNumber: string;
+    InvoiceType: string;
+}
+
 export class OrderFulfilmentDetails {
     PONumber: string;
     PODate: Date;
@@ -69,6 +88,8 @@ export class OrderFulfilmentDetails {
     gRNDetails: GRNDetails[];
     qADetails: QADetails[];
     slDetails: SLDetails[];
+    documentDetails: DocumentDetails[];
+    flipDetails: FlipDetails[];
     constructor() {
         // super();
         this.itemDetails = [];

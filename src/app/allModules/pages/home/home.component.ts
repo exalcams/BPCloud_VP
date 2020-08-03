@@ -341,7 +341,7 @@ export class HomeComponent implements OnInit {
   }
 
   onFactSheetButtonClicked(): void {
-    this._router.navigate(['/pages/polookup']);
+    this._router.navigate(['/fact']);
   }
 
   onAcceptAllButtonClicked(): void {

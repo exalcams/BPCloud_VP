@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatDialogConfig, MatDialog, MatSort } from '@angular/material';
-import { ASNDetails, ItemDetails, GRNDetails, QADetails, OrderFulfilmentDetails, Acknowledgement, SLDetails } from 'app/models/Dashboard';
+import { ASNDetails, ItemDetails, GRNDetails, QADetails, OrderFulfilmentDetails, Acknowledgement, SLDetails, DocumentDetails, FlipDetails } from 'app/models/Dashboard';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DashboardService } from 'app/services/dashboard.service';
 import { FormGroup, FormBuilder, Validators, FormArray, AbstractControl } from '@angular/forms';
@@ -42,6 +42,8 @@ export class PoFactsheetComponent implements OnInit {
     grn: GRNDetails[] = [];
     qa: QADetails[] = [];
     sl: SLDetails[] = [];
+    document: DocumentDetails[] = [];
+    flip: FlipDetails[] = [];
     public itemsCount: number;
     public asnCount: number;
     public grnCount: number;
@@ -89,24 +91,43 @@ export class PoFactsheetComponent implements OnInit {
         'DeliveryDate',
         'OrderedQty'
     ];
+    documentDisplayedColumns: string[] = [
+        'ReferenceNo',
+        'AttachmentName',
+        'CreatedOn',
+        'ContentType'
+    ];
+    flipDisplayedColumns: string[] = [
+        'FLIPID',
+        'InvoiceNumber',
+        'InvoiceDate',
+        'InvoiceAmount'
+    ];
     itemDataSource = new BehaviorSubject<AbstractControl[]>([]);
     // itemDataSource: MatTableDataSource<ItemDetails>;
     asnDataSource: MatTableDataSource<ASNDetails>;
     grnDataSource: MatTableDataSource<GRNDetails>;
     qaDataSource: MatTableDataSource<QADetails>;
     slDataSource: MatTableDataSource<SLDetails>;
+    documentDataSource: MatTableDataSource<DocumentDetails>;
+    flipDataSource: MatTableDataSource<FlipDetails>;
 
     @ViewChild(MatPaginator) itemPaginator: MatPaginator;
     @ViewChild(MatPaginator) asnPaginator: MatPaginator;
     @ViewChild(MatPaginator) grnPaginator: MatPaginator;
     @ViewChild(MatPaginator) qaPaginator: MatPaginator;
     @ViewChild(MatPaginator) slPaginator: MatPaginator;
+    @ViewChild(MatPaginator) documentPaginator: MatPaginator;
+    @ViewChild(MatPaginator) flipPaginator: MatPaginator;
 
     @ViewChild(MatSort) itemSort: MatSort;
     @ViewChild(MatSort) asnSort: MatSort;
     @ViewChild(MatSort) grnSort: MatSort;
     @ViewChild(MatSort) qaSort: MatSort;
     @ViewChild(MatSort) slSort: MatSort;
+    @ViewChild(MatSort) documentSort: MatSort;
+    @ViewChild(MatSort) flipSort: MatSort;
+
     PO: any;
     poStatus: string;
     ackFormGroup: FormGroup;
@@ -159,6 +180,7 @@ export class PoFactsheetComponent implements OnInit {
         this.initializeACKFormGroup();
         this.initializePOItemFormGroup();
     }
+
     CreateAppUsage(): void {
         const appUsage: AppUsage = new AppUsage();
         appUsage.UserID = this.currentUserID;
@@ -174,6 +196,7 @@ export class PoFactsheetComponent implements OnInit {
             }
         );
     }
+
     GetOfDetailsByPartnerIDAndDocNumber(): void {
         this.isProgressBarVisibile = true;
         this._dashboardService.GetOrderFulfilmentDetails(this.PO, this.partnerID).subscribe(
@@ -186,6 +209,8 @@ export class PoFactsheetComponent implements OnInit {
                     this.grn = this.orderFulfilmentDetails.gRNDetails;
                     this.qa = this.orderFulfilmentDetails.qADetails;
                     this.sl = this.orderFulfilmentDetails.slDetails;
+                    this.document = this.orderFulfilmentDetails.documentDetails;
+                    this.flip = this.orderFulfilmentDetails.flipDetails;
                     this.itemsCount = this.orderFulfilmentDetails.ItemCount;
                     this.asnCount = this.orderFulfilmentDetails.ASNCount;
                     this.grnCount = this.orderFulfilmentDetails.GRNCount;
@@ -197,16 +222,22 @@ export class PoFactsheetComponent implements OnInit {
                     this.grnDataSource = new MatTableDataSource(this.grn);
                     this.qaDataSource = new MatTableDataSource(this.qa);
                     this.slDataSource = new MatTableDataSource(this.sl);
+                    this.documentDataSource = new MatTableDataSource(this.document);
+                    this.flipDataSource = new MatTableDataSource(this.flip);
 
                     this.asnDataSource.paginator = this.asnPaginator;
                     this.grnDataSource.paginator = this.grnPaginator;
                     this.qaDataSource.paginator = this.qaPaginator;
                     this.slDataSource.paginator = this.slPaginator;
+                    this.documentDataSource.paginator = this.documentPaginator;
+                    this.flipDataSource.paginator = this.flipPaginator;
 
                     this.asnDataSource.sort = this.asnSort;
                     this.grnDataSource.sort = this.grnSort;
                     this.qaDataSource.sort = this.qaSort;
                     this.slDataSource.sort = this.slSort;
+                    this.documentDataSource.sort = this.documentSort;
+                    this.flipDataSource.sort = this.flipSort;
                     this.items.forEach(x => {
                         this.insertPOItemsFormGroup(x);
                     });
@@ -315,6 +346,44 @@ export class PoFactsheetComponent implements OnInit {
         );
     }
 
+    GetOfDocumentsByPartnerIDAndDocNumber(): void {
+        this.isProgressBarVisibile = true;
+        this._dashboardService.GetOfDocumentsByPartnerIDAndDocNumber(this.partnerID, this.PO).subscribe(
+            data => {
+                if (data) {
+                    this.document = <DocumentDetails[]>data;
+                    this.documentDataSource = new MatTableDataSource(this.document);
+                    this.documentDataSource.paginator = this.documentPaginator;
+                    this.documentDataSource.sort = this.documentSort;
+                }
+                this.isProgressBarVisibile = false;
+            },
+            err => {
+                console.error(err);
+                this.isProgressBarVisibile = false;
+            }
+        );
+    }
+
+    GetOfFlipsByPartnerIDAndDocNumber(): void {
+        this.isProgressBarVisibile = true;
+        this._dashboardService.GetOfFlipsByPartnerIDAndDocNumber(this.partnerID, this.PO).subscribe(
+            data => {
+                if (data) {
+                    this.flip = <FlipDetails[]>data;
+                    this.flipDataSource = new MatTableDataSource(this.flip);
+                    this.flipDataSource.paginator = this.flipPaginator;
+                    this.flipDataSource.sort = this.flipSort;
+                }
+                this.isProgressBarVisibile = false;
+            },
+            err => {
+                console.error(err);
+                this.isProgressBarVisibile = false;
+            }
+        );
+    }
+
     CreateAcknowledgement(): void {
         this.isProgressBarVisibile = true;
         this._dashboardService.CreateAcknowledgement(this.acknowledgement).subscribe(
@@ -350,7 +419,7 @@ export class PoFactsheetComponent implements OnInit {
         this.tab5 = false;
         this.tab6 = false;
         this.tab7 = false;
-        this.getASNs();
+        this.getSLs();
         this.tabCount = 2;
         // this.ResetControl();
     }
@@ -363,7 +432,7 @@ export class PoFactsheetComponent implements OnInit {
         this.tab5 = false;
         this.tab6 = false;
         this.tab7 = false;
-        this.getGRNs();
+        this.getASNs();
         this.tabCount = 3;
         // this.ResetControl();
     }
@@ -376,7 +445,7 @@ export class PoFactsheetComponent implements OnInit {
         this.tab5 = false;
         this.tab6 = false;
         this.tab7 = false;
-        this.getQAs();
+        this.getGRNs();
         this.tabCount = 4;
         // this.ResetControl();
     }
@@ -389,7 +458,7 @@ export class PoFactsheetComponent implements OnInit {
         this.tab5 = true;
         this.tab6 = false;
         this.tab7 = false;
-        this.getSLs();
+        this.getQAs();
         this.tabCount = 5;
         // this.ResetControl();
     }
@@ -402,6 +471,7 @@ export class PoFactsheetComponent implements OnInit {
         this.tab5 = false;
         this.tab6 = true;
         this.tab7 = false;
+        this.getDocuments();
         this.tabCount = 6;
     }
 
@@ -413,6 +483,7 @@ export class PoFactsheetComponent implements OnInit {
         this.tab5 = false;
         this.tab6 = false;
         this.tab7 = true;
+        this.getFlips();
         this.tabCount = 7;
     }
 
@@ -516,6 +587,14 @@ export class PoFactsheetComponent implements OnInit {
 
     getSLs(): void {
         this.slDataSource = new MatTableDataSource(this.sl);
+    }
+
+    getDocuments(): void {
+        this.documentDataSource = new MatTableDataSource(this.document);
+    }
+
+    getFlips(): void {
+        this.flipDataSource = new MatTableDataSource(this.flip);
     }
 
     getStatusColor(statusFor: string): string {

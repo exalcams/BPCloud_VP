@@ -1,4 +1,3 @@
-import { PaymentReportService } from "./../../../services/paymentReport.service";
 import { Component, OnInit, ViewEncapsulation, ViewChild } from "@angular/core";
 import {
     MatTableDataSource,
@@ -8,7 +7,6 @@ import {
 } from "@angular/material";
 import { fuseAnimations } from "@fuse/animations";
 import { ReportService } from "app/services/report.service";
-import { BPCPayment } from "app/models/ReportModel";
 import { AuthenticationDetails } from "app/models/master";
 import { Guid } from "guid-typescript";
 import { NotificationSnackBarComponent } from "app/notifications/notification-snack-bar/notification-snack-bar.component";
@@ -29,11 +27,11 @@ export class ResourceComponent implements OnInit {
     authenticationDetails: AuthenticationDetails;
     currentUserID: Guid;
     currentUserRole: string;
-    MenuItems: string[];
+    menuItems: string[];
     notificationSnackBarComponent: NotificationSnackBarComponent;
-    IsProgressBarVisibile: boolean;
+    isProgressBarVisibile: boolean;
     // PaymentDataSource: MatTableDataSource<BPCPayment>;
-    AllPayments: BPCPayment[] = [];
+    // AllPayments: BPCPayment[] = [];
     // PaymentDisplayedColumns: string[] = [
     //   "PaymentDoc",
     //   "Date",
@@ -53,7 +51,7 @@ export class ResourceComponent implements OnInit {
         private _reportService: ReportService,
         private _excelService: ExcelService,
         private _datePipe: DatePipe
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         const retrievedObject = localStorage.getItem("authorizationData");
@@ -63,10 +61,10 @@ export class ResourceComponent implements OnInit {
             ) as AuthenticationDetails;
             this.currentUserID = this.authenticationDetails.UserID;
             this.currentUserRole = this.authenticationDetails.UserRole;
-            this.MenuItems = this.authenticationDetails.MenuItemNames.split(
+            this.menuItems = this.authenticationDetails.MenuItemNames.split(
                 ","
             );
-            if (this.MenuItems.indexOf("Resource") < 0) {
+            if (this.menuItems.indexOf("Resource") < 0) {
                 this.notificationSnackBarComponent.openSnackBar(
                     "You do not have permission to visit this page",
                     SnackBarStatus.danger
@@ -99,18 +97,18 @@ export class ResourceComponent implements OnInit {
     // }
 
     // GetAllPayments(): void {
-    //   this.IsProgressBarVisibile = true;
+    //   this.isProgressBarVisibile = true;
     //   this._reportService.GetAllPayments().subscribe(
     //     (data) => {
     //       this.AllPayments = data as BPCPayment[];
     //       this.PaymentDataSource = new MatTableDataSource(this.AllPayments);
     //       this.PaymentDataSource.paginator = this.paginator;
     //       this.PaymentDataSource.sort = this.sort;
-    //       this.IsProgressBarVisibile = false;
+    //       this.isProgressBarVisibile = false;
     //     },
     //     (err) => {
     //       console.error(err);
-    //       this.IsProgressBarVisibile = false;
+    //       this.isProgressBarVisibile = false;
     //     }
     //   );
 
@@ -129,18 +127,18 @@ export class ResourceComponent implements OnInit {
     //       if (TDate) {
     //         ToDate = this._datePipe.transform(TDate, 'yyyy-MM-dd');
     //       }
-    //       this.IsProgressBarVisibile = true;
+    //       this.isProgressBarVisibile = true;
     //       this._reportService.GetFilteredPayments(FromDate, ToDate).subscribe(
     //         (data) => {
     //           this.AllPayments = data as BPCPayment[];
     //           this.PaymentDataSource = new MatTableDataSource(this.AllPayments);
     //           this.PaymentDataSource.paginator = this.paginator;
     //           this.PaymentDataSource.sort = this.sort;
-    //           this.IsProgressBarVisibile = false;
+    //           this.isProgressBarVisibile = false;
     //         },
     //         (err) => {
     //           console.error(err);
-    //           this.IsProgressBarVisibile = false;
+    //           this.isProgressBarVisibile = false;
     //         }
     //       );
     //     }
@@ -188,15 +186,12 @@ export class ResourceComponent implements OnInit {
 
     // }
 
-    navigate() {
+    onFAQClicked(): void {
         this._router.navigate(["pages/faq"]);
+    }
+
+    onArticlesClicked(): void {
+        // this._router.navigate(["/pages/improvement"]);
     }
 }
 
-export class PaymentModel {
-    PaymentDoc: string;
-    Date: Date;
-    Amount: string;
-    Attachment: string;
-    Remark: string;
-}
