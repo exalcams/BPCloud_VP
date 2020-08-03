@@ -15,12 +15,13 @@
         <div fxLayoutAlign="start" class="pt-8">
           <span class="boldClass orangeBorderBottom pl-8"> Accepted/Rejected </span>
         </div>
-        <div id="doughnutChart" fxFlex fxLayoutAlign="start" class="pt-0 px-8">
+        <div id="doughnutChart" fxFlex fxLayoutAlign="start" class="pt-0 px-8" style="margin-top: 20px;">
           <div fxFlex="60">
             <canvas baseChart [datasets]="doughnutChartDataSets" [labels]="doughnutChartLabels"
               [colors]="doughnutChartColors" [legend]="doughnutChartLegend" [options]="doughnutChartOptions"
               [chartType]="doughnutChartType"></canvas>
           </div>
+          <p class="cl_Quality">Quality</p>
           <div fxFlex="40" class="boldClass" fxLayout fxLayoutAlign="end center">
             <div fxFlex fxLayout="column">
               <div fxFlex fxLayout="row" fxLayoutGap="5px" style="margin-bottom: -18px;">

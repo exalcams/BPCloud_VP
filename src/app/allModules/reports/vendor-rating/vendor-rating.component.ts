@@ -47,11 +47,12 @@ export class VendorRatingComponent implements OnInit {
   @ViewChild(MatSort) vendorRatingSort: MatSort;
   @ViewChild(MatMenuTrigger) matMenuTrigger: MatMenuTrigger;
 
-  public canvasWidth = 250;
+  public canvasWidth = 200;
   public needleValue = 87;
   public centralLabel = '1354';
-  public bottomLabel = 'overall Delivary';
+
   public options = {
+    responsive: true,
     hasNeedle: true,
     needleSize: 20,
     needleColor: 'rgb(79, 86, 92)',
@@ -61,12 +62,13 @@ export class VendorRatingComponent implements OnInit {
     rangeLabel: [],
     needleStartValue: 50,
     needleEndValue: 1354,
-    bottomLabelFont: 1
+
   };
-  public canvasWidth1 = 250;
+
+  public canvasWidth1 = 200;
   public needleValue1 = 61;
   public centralLabel1 = '620';
-  public bottomLabel1 = 'overall Score';
+
   public options1 = {
     hasNeedle: true,
     needleSize: 20,
@@ -77,15 +79,13 @@ export class VendorRatingComponent implements OnInit {
     rangeLabel: [],
     needleStartValue: 20,
     needleEndValue: 1354,
-    bottomLabelFont: 1,
-    arcBorder: ["solid"]
   };
-  public canvasWidth2 = 250;
+
+  public canvasWidth2 = 200;
   public needleValue2 = 68;
   public centralLabel2 = '720';
-  public bottomLabel2 = 'overall Quality';
-  public options2 = {
 
+  public options2 = {
     hasNeedle: true,
     needleSize: 10,
     needleColor: 'rgb(79, 86, 92)',
@@ -94,11 +94,9 @@ export class VendorRatingComponent implements OnInit {
     arcDelimiters: [20, 40, 60, 80],
     rangeLabel: [],
     needleStartValue: 50,
-    needleEndValue: 1354,
-    bottomLabelFontSize: 1,
-    bottomLableColor: "red"
-  };
+    needleEndValue: 1354
 
+  };
   constructor(
     private _reportService: ReportService,
     private formBuilder: FormBuilder,

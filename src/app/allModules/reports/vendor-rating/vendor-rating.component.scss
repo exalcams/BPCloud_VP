@@ -178,16 +178,6 @@
         border-radius: 50%;
         position: relative;
     }
-    .inner-circle {
-        // height: 75px;
-        // width: 75px;
-        // border: 1px solid #f3705a;
-        // border-radius: 50%;
-        // background-color: white;
-        position: absolute;
-        top: 11%;
-        left: 11%;
-    }
     .chart-legend .legend-labels {
         width: 100px;
     }
@@ -391,5 +381,26 @@
     .gauge-chart__label {
         margin-top: -55px !important;
         font-size: 10px !important;
+    }
+    .progress__meter,
+    .progress__value {
+        fill: none;
+    }
+    .inner-circle {
+        // height: 75px;
+        // width: 75px;
+        // border: 1px solid #f3705a;
+        // border-radius: 50%;
+        // background-color: white;
+        position: absolute;
+        top: 11%;
+        left: 11%;
+        box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.16) !important;
+    }
+    .progessSubtitle {
+        fill: rgb(250, 79, 38) !important;
+    }
+    .progress__svg {
+        transform: rotate(-90deg);
     }
 }

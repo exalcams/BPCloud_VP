@@ -15,30 +15,77 @@
         <div fxLayoutAlign="start center" class="pt-8">
           <span class="boldClass orangeBorderBottom pl-8"> Overall Delivery </span>
         </div>
-        <div id="gaugeChart1" fxFlex class="pt-8 pl-8 pr-4 pb-12">
+        <!-- <div id="gaugeChart1" fxFlex class="pt-8 pl-8 pr-4 pb-12">
           <rg-gauge-chart [canvasWidth]="canvasWidth" [needleValue]="needleValue" [centralLabel]="centralLabel"
             [options]="options" [bottomLabel]="bottomLabel">
           </rg-gauge-chart>
+        </div> -->
+        <div fxLayout="row" fxLayoutAlign="center center">
+          <div style="margin-top: -38px;margin-left: -60px;">
+            <rg-gauge-chart style="margin-top: -30px;" [canvasWidth]="canvasWidth" [needleValue]="needleValue"
+              [centralLabel]="centralLabel" [options]="options">
+            </rg-gauge-chart>
+          </div>
+          <div style="margin-left: -156px; margin-top: 67px;">
+            <svg height="110" width="110" viewBox="0 0 140 140" class="progress__svg">
+              <circle class="progress__meter" [style.strokeDasharray]="2" cx="70" cy="70" [attr.r]="radius"
+                stroke-width="10" />
+              <circle class="progress__value" [style.strokeDasharray]="circumference"
+                [style.strokeDashoffset]="1-dashoffset1" cx="70" cy="70" [attr.r]="radius" stroke-width="10" />
+              <circle r="49" cx="70" cy="70" stroke="#e2e2e2" stroke-width="3" fill="none" class="inner-circle" />
+              <text text-anchor="middle" alignment-baseline="middle" transform="rotate(90,70,70)">
+                <tspan x="70" y="85" dy="0.18em" font-size="10" class="progessSubtitle">Overall Delivery</tspan>
+              </text>
+            </svg>
+          </div>
         </div>
       </div>
       <div class="tile mx-20" fxFlex="33" fxLayout="column" fxLayoutAlign="start">
         <div fxLayoutAlign="start center" class="pt-8">
           <span class="boldClass orangeBorderBottom pl-8"> Overall Quality </span>
         </div>
-        <div id="gaugeChart2" fxFlex class="pt-8 pl-8 pr-4 pb-12">
-          <rg-gauge-chart [canvasWidth]="canvasWidth2" [needleValue]="needleValue2" [centralLabel]="centralLabel2"
-            [options]="options2" [bottomLabel]="bottomLabel2">
-          </rg-gauge-chart>
+        <div fxLayout="row" fxLayoutAlign="center center">
+          <div style="margin-top: -38px;margin-left: -60px;">
+            <rg-gauge-chart style="margin-top: -30px;" [canvasWidth]="canvasWidth" [needleValue]="needleValue"
+              [centralLabel]="centralLabel" [options]="options">
+            </rg-gauge-chart>
+          </div>
+          <div style="margin-left: -155px; margin-top: 67px;">
+            <svg height="110" width="110" viewBox="0 0 140 140" class="progress__svg">
+              <circle class="progress__meter" [style.strokeDasharray]="2" cx="70" cy="70" [attr.r]="radius"
+                stroke-width="10" />
+              <circle class="progress__value" [style.strokeDasharray]="circumference"
+                [style.strokeDashoffset]="1-dashoffset1" cx="70" cy="70" [attr.r]="radius" stroke-width="10" />
+              <circle r="49" cx="70" cy="70" stroke="#e2e2e2" stroke-width="3" fill="none" class="inner-circle" />
+              <text text-anchor="middle" alignment-baseline="middle" transform="rotate(90,70,70)">
+                <tspan x="70" y="85" dy="0.18em" font-size="10" class="progessSubtitle">Overall Delivery</tspan>
+              </text>
+            </svg>
+          </div>
         </div>
       </div>
       <div class="tile mx-20" fxFlex="33" fxLayout="column" fxLayoutAlign="start">
         <div fxLayoutAlign="start center" class="pt-8">
           <span class="boldClass orangeBorderBottom pl-8"> Overall Score </span>
         </div>
-        <div id="gaugeChart3" fxFlex class="pt-8 pl-8 pr-4 pb-12">
-          <rg-gauge-chart [canvasWidth]="canvasWidth1" [needleValue]="needleValue1" [centralLabel]="centralLabel1"
-            [options]="options1" [bottomLabel]="bottomLabel1">
-          </rg-gauge-chart>
+        <div fxLayout="row" fxLayoutAlign="center center">
+          <div style="margin-top: -38px;margin-left: -60px;">
+            <rg-gauge-chart style="margin-top: -30px;" [canvasWidth]="canvasWidth" [needleValue]="needleValue"
+              [centralLabel]="centralLabel" [options]="options">
+            </rg-gauge-chart>
+          </div>
+          <div style="margin-left: -155px; margin-top: 67px;">
+            <svg height="110" width="110" viewBox="0 0 140 140" class="progress__svg">
+              <circle class="progress__meter" [style.strokeDasharray]="2" cx="70" cy="70" [attr.r]="radius"
+                stroke-width="10" />
+              <circle class="progress__value" [style.strokeDasharray]="circumference"
+                [style.strokeDashoffset]="1-dashoffset1" cx="70" cy="70" [attr.r]="radius" stroke-width="10" />
+              <circle r="49" cx="70" cy="70" stroke="#e2e2e2" stroke-width="3" fill="none" class="inner-circle" />
+              <text text-anchor="middle" alignment-baseline="middle" transform="rotate(90,70,70)">
+                <tspan x="70" y="85" dy="0.18em" font-size="10" class="progessSubtitle">Overall Delivery</tspan>
+              </text>
+            </svg>
+          </div>
         </div>
       </div>
       <!-- <div class="ml-40 mr-20" fxFlex="25">

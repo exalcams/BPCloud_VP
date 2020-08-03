@@ -39,6 +39,7 @@ export class GRReceiptsComponent implements OnInit {
   isExpanded: boolean;
   defaultFromDate: Date;
   defaultToDate: Date;
+  data: any[];
   grReceiptsReportDisplayedColumns: string[] = ['Material', 'MaterialText', 'OrderQty', 'ReceivedQty', 'RejectedPPM', 'ReworkQty'];
   grReceiptsReportDataSource: MatTableDataSource<BPCReportGRR>;
   grReceiptsReports: BPCReportGRR[] = [];
@@ -46,34 +47,40 @@ export class GRReceiptsComponent implements OnInit {
   @ViewChild(MatSort) grReceiptsSort: MatSort;
   @ViewChild(MatMenuTrigger) matMenuTrigger: MatMenuTrigger;
 
-  // DoughnutChart
-  // public doughnutChartData: Array<number> = [33, 33];
-  // public doughnutChartDataSets: Array<any> = [
-  //   {
-  //     data: this.doughnutChartData,
-  //   }
-  // ];
-  // public doughnutChartOptions: any = {
-  //   maintainAspectRatio: false,
-  //   responsive: false,
-  //   legend: false,
-  //   cutoutPercentage: 65,
-  //   plugins: {
-  //     deferred: false
-  //   },
-  // };
-  // public doughnutChartColors: Array<any> = [{
-  //   backgroundColor: ['#fb9e61', '#3c9cdf']
-  // }];
-  // public doughnutChartType: ChartType = 'doughnut';
-  // public doughnutChartLegend = false;
+  // Left Side Chart
+  public ChartType: ChartType = 'doughnut';
+  public DoughnutChartData2: ChartDataSets[] = [
+    { data: this.randomize() }
+  ];
+  public DoughnutChartOptions2: ChartOptions = {
+    responsive: false,
+    maintainAspectRatio: false,
+    legend: {
+      display: false
+    },
+    tooltips: {
+      enabled: false
+    },
+    plugins: {
+      labels: false
+    },
+    showLines: false,
+    cutoutPercentage: 70,
+  };
+  public doughnutChartColors1: Array<any> = [{
+    backgroundColor: ['#6dd7d3']
+  }];
+
 
   // BarChart
   chartOptions = {
     responsive: true,
+    height: "10px",
+
+
     legend: {
 
-      height: "2px",
+      height: "1px",
       width: "2px"
 
     },
@@ -85,8 +92,12 @@ export class GRReceiptsComponent implements OnInit {
           fontStyle: "bold",
           beginAtZero: true,
           maxTicksLimit: 5,
+
           padding: 5,
           fontSize: 6,
+          // borderWidth: 1 ,
+          // barThickness: 30,
+          // barPercentage: 0.9,
 
         },
 
@@ -97,9 +108,13 @@ export class GRReceiptsComponent implements OnInit {
           fontColor: "rgba(0,0,0,0.5)",
           // fontStyle: "bold",
           fontSize: 6,
+          fontStyle: "bold",
           beginAtZero: true,
-          maxTicksLimit: 5,
-          padding: 5
+          // maxTicksLimit: 5,
+          padding: 5,
+          borderWidth: 1,
+          // barThickness: 30,
+          // barPercentage: 0.9,
         },
 
         gridLines: {
@@ -109,34 +124,49 @@ export class GRReceiptsComponent implements OnInit {
 
       }],
     }
-  };
+  }
+
   labels = ['17/04/2020', '18/04/2020', '19/04/2020', '20/04/2020', '21/04/2020'];
   chartData = [
     {
 
       label: 'planned',
-      data: [70, 70, 60, 70, 80]
+      data: [70, 40, 56, 45, 70],
+      barThickness: 13,
+      barPercentage: 0.3,
+      //  type: 'category',
+      // categoryPercentage: 0.8,
+      // box-shadow: 0px -1px 5px 0 rgba(0, 0, 0, 0.4);
+
 
     },
     {
       label: 'actual',
-      data: [65, 68, 80, 75, 59]
+      data: [45, 59, 70, 59, 80],
+      barThickness: 13,
+      barPercentage: 0.3,
+      // opacity: 0.9,
+
 
     }
   ];
+
   colors = [
     {
 
       backgroundColor: '#ff8f3d'
-      //       backgroundColor:
-      // "linear-gradient(to right, rgba(255,0,0,0), rgba(255,0,0,1))",
+      // backgroundColor:"linear-gradient(to top, #1b69d0, #2ea6e2)"  
+      // backgroundColor:' rgba(255,0,0,0) ,rgba(255,0,0,1)'
+      // “linear-gradient(to right, rgba(255,0,0,0), rgba(255,0,0,1))”,
+
+
 
     },
     {
 
       fill: true,
       backgroundColor: '#1b69d0'
-      // ,
+
 
     }
   ];
@@ -406,7 +436,14 @@ export class GRReceiptsComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.grReceiptsReportDataSource.filter = filterValue.trim().toLowerCase();
   }
-
+  randomize(): any[] {
+    this.data = [];
+    this.data.push(80);
+    for (let i = 81; i <= 100; i++) {
+      this.data.push(1);
+    }
+    return this.data;
+  }
 }
 
 

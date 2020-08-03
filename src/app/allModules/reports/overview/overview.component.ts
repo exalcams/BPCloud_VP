@@ -59,7 +59,11 @@ export class OverviewComponent implements OnInit {
     legend: false,
     cutoutPercentage: 65,
     plugins: {
-      deferred: false
+      labels: {
+        fontColor: '#fff',
+        fontFamily: 'Segoe UI',
+        fontSize: 13
+      }
     },
 
   };
