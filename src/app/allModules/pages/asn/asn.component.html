@@ -312,6 +312,10 @@
                         *ngIf="ASNFormGroup.get('BillOfLading').touched && ASNFormGroup.get('BillOfLading').hasError('required')">
                         Bill Of Lading is required
                       </mat-error>
+                      <mat-error *ngIf="ASNFormGroup.get('BillOfLading').touched && !ASNFormGroup.get('BillOfLading').hasError('required')
+                        &&ASNFormGroup.get('BillOfLading').hasError('maxlength')">
+                        Maximum allowed character is 20
+                      </mat-error>
                     </mat-form-field>
                   </div>
                   <div fxFlex="33">
@@ -320,6 +324,10 @@
                       <mat-error
                         *ngIf="ASNFormGroup.get('TransporterName').touched && ASNFormGroup.get('TransporterName').hasError('required')">
                         Transporter Name is required
+                      </mat-error>
+                      <mat-error *ngIf="ASNFormGroup.get('TransporterName').touched && !ASNFormGroup.get('TransporterName').hasError('required')
+                      &&ASNFormGroup.get('TransporterName').hasError('maxlength')">
+                        Maximum allowed character is 40
                       </mat-error>
                     </mat-form-field>
                   </div>
@@ -344,6 +352,10 @@
                       <mat-error
                         *ngIf="ASNFormGroup.get('ContactPerson').touched && ASNFormGroup.get('ContactPerson').hasError('required')">
                         Contact Person is required
+                      </mat-error>
+                      <mat-error *ngIf="ASNFormGroup.get('ContactPerson').touched && !ASNFormGroup.get('ContactPerson').hasError('required')
+                      && ASNFormGroup.get('ContactPerson').hasError('maxlength')">
+                        Maximum allowed character is 40
                       </mat-error>
                     </mat-form-field>
                   </div>
@@ -898,7 +910,8 @@
                             ASNPackFormGroup.get('ASNPacks').controls[index]?.get('GrossWeight').hasError('pattern')">
                               *
                             </mat-error>
-                            <mat-error *ngIf="ASNPackFormGroup.get('ASNPacks').controls[index]?.get('GrossWeight').touched && 
+                            <mat-error
+                              *ngIf="ASNPackFormGroup.get('ASNPacks').controls[index]?.get('GrossWeight').touched && 
                             !ASNPackFormGroup.get('ASNPacks').controls[index]?.get('GrossWeight').hasError('required')&&
                             ASNPackFormGroup.get('ASNPacks').controls[index]?.get('GrossWeight').hasError('mustValid')">
                               *
@@ -1218,13 +1231,17 @@
           </div>
         </div> -->
         <mat-card-actions class="m-0 pl-12 pr-16 cardActions">
-          <div fxLayout fxFlex fxLayoutAlign="end">
-            <button *ngIf="SelectedASNHeader?.ASNNumber" mat-stroked-button class="DeleteBtn mr-4 mb-8"
-              (click)="DeleteClicked()">Delete</button>
-            <button *ngIf="( SelectedASNHeader?.ASNNumber|| PO?.DocNumber) && !SelectedASNHeader?.IsSubmitted"
-              mat-raised-button class="SaveBtn" (click)="SaveClicked()">Save</button>
-            <button *ngIf="( SelectedASNHeader?.ASNNumber|| PO?.DocNumber)" mat-raised-button class="SaveBtn"
-              (click)="SubmitClicked()">Submit</button>
+          <div fxLayout fxLayoutAlign="space-between center">
+            <div fxFlex>
+              <button *ngIf="SelectedASNHeader?.ASNNumber && !SelectedASNHeader?.IsSubmitted" mat-stroked-button
+                class="DeleteBtn mr-4 mb-8" (click)="DeleteClicked()">Delete</button>
+            </div>
+            <div fxFlex align="end">
+              <button *ngIf="( SelectedASNHeader?.ASNNumber|| PO?.DocNumber) && !SelectedASNHeader?.IsSubmitted" mat-raised-button class="SaveBtn"
+                (click)="SubmitClicked()">Release</button>
+              <button *ngIf="( SelectedASNHeader?.ASNNumber|| PO?.DocNumber) && !SelectedASNHeader?.IsSubmitted"
+                mat-raised-button class="SaveBtn" (click)="SaveClicked()">Save</button>
+            </div>
           </div>
         </mat-card-actions>
       </mat-card>

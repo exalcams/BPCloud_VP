@@ -26,6 +26,7 @@ import { AttachmentDetails } from 'app/models/task';
 import { AttachmentDialogComponent } from '../attachment-dialog/attachment-dialog.component';
 import { DatePipe } from '@angular/common';
 import { SubconService } from 'app/services/subcon.service';
+import { ASNReleaseDialogComponent } from 'app/notifications/asnrelease-dialog/asnrelease-dialog.component';
 
 @Component({
     selector: 'app-asn',
@@ -220,11 +221,11 @@ export class ASNComponent implements OnInit {
             NumberOfPacks: ['1', [Validators.pattern('^[1-9][0-9]*$')]],
             CountryOfOrigin: ['IND', Validators.required],
             ShippingAgency: [''],
-            BillOfLading: ['', Validators.required],
-            TransporterName: ['', Validators.required],
-            AccessibleValue: ['', [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,2})?$')]],
-            ContactPerson: ['', Validators.required],
-            ContactPersonNo: ['', [Validators.required, Validators.pattern('^(\\+91[\\-\\s]?)?[0]?(91)?[6789]\\d{9}$')]],
+            BillOfLading: ['', Validators.maxLength(20)],
+            TransporterName: ['', Validators.maxLength(40)],
+            AccessibleValue: ['', [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,2})?$')]],
+            ContactPerson: ['', Validators.maxLength(40)],
+            ContactPersonNo: ['', [Validators.pattern('^(\\+91[\\-\\s]?)?[0]?(91)?[6789]\\d{9}$')]],
         });
         // this.DynamicallyAddAcceptedValidation();
         this.RefreshPackages();
@@ -1075,7 +1076,7 @@ export class ASNComponent implements OnInit {
                                 this.GetInvoiceDetailValues();
                                 this.GetDocumentCenterValues();
                                 this.SelectedASNView.IsSubmitted = true;
-                                this.SetActionToOpenConfirmation('Submit');
+                                this.OpenASNReleaseDialog();
                             } else {
                                 this.notificationSnackBarComponent.openSnackBar('There is no Open Qty', SnackBarStatus.danger);
                             }
@@ -1112,6 +1113,25 @@ export class ASNComponent implements OnInit {
         // }
         const Catagory = 'ASN';
         this.OpenConfirmationDialog(Actiontype, Catagory);
+    }
+
+    OpenASNReleaseDialog(): void {
+        const Actiontype = "Submit";
+        const dialogConfig: MatDialogConfig = {
+            data: 'Is Good Dispatched',
+            panelClass: 'asn-release-dialog'
+        };
+        const dialogRef = this.dialog.open(ASNReleaseDialogComponent, dialogConfig);
+        dialogRef.afterClosed().subscribe(
+            result => {
+                if (result) {
+                    if (this.SelectedASNHeader.ASNNumber) {
+                        this.UpdateASN(Actiontype);
+                    } else {
+                        this.CreateASN(Actiontype);
+                    }
+                }
+            });
     }
 
     OpenConfirmationDialog(Actiontype: string, Catagory: string): void {
