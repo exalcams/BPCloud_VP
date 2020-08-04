@@ -114,7 +114,7 @@ export class HomeComponent implements OnInit {
   }
 
   GetFactByPartnerIDAndType(): void {
-    this._factService.GetFactByPartnerIDAndType(this.currentUserName, 'Vendor').subscribe(
+    this._factService.GetFactByPartnerIDAndType(this.currentUserName, 'V').subscribe(
       (data) => {
         const fact = data as BPCFact;
         this.loadSelectedFact(fact);

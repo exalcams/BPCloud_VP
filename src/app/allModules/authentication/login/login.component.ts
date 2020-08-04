@@ -786,6 +786,24 @@ export class LoginComponent implements OnInit {
         }
       );
     }
+    this.configSubChildren.push(
+      {
+        id: 'ceomsg',
+        title: 'CEO Message',
+        translate: 'NAV.ADMIN.SUPPORT',
+        type: 'item',
+        url: '/configuration/ceomsg'
+      }
+    );
+    this.configSubChildren.push(
+      {
+        id: 'scocmsg',
+        title: 'SCOC Message',
+        translate: 'NAV.ADMIN.SUPPORT',
+        type: 'item',
+        url: '/configuration/scocmsg'
+      }
+    );
     if (this.menuItems.indexOf('Doctype') >= 0 || this.menuItems.indexOf('Session') >= 0 ||
       this.menuItems.indexOf('SupportDeskMaster') >= 0) {
       this.children.push({
