@@ -366,7 +366,7 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
   GetSODetails(): void {
     this.IsProgressBarVisibile = true;
     this._dashboardService
-      .GetSODetails('Customer', this.PartnerID)
+      .GetSODetails('C', this.PartnerID)
       .subscribe((data) => {
         if (data) {
           this.AllSOs = data as SODetails[];
@@ -481,7 +481,7 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
           ToDate = this.datePipe.transform(TDate, 'yyyy-MM-dd');
         }
         const Status1 = this.poFormGroup.get('Status').value;
-        this._dashboardService.GetFilteredSODetailsByPartnerID('Customer', this.PartnerID, FromDate, ToDate, Status1)
+        this._dashboardService.GetFilteredSODetailsByPartnerID('C', this.PartnerID, FromDate, ToDate, Status1)
           .subscribe((data) => {
             if (data) {
               this.AllSOs = data as SODetails[];
@@ -704,7 +704,7 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
           const ofAttachmentData = new OfAttachmentData();
           ofAttachmentData.DocNumber = docNumber;
           ofAttachmentData.OfAttachments = this.ofAttachments;
-          ofAttachmentData.Type = 'Customer';
+          ofAttachmentData.Type = 'C';
           this.openAttachmentViewDialog(ofAttachmentData);
         }
         this.IsProgressBarVisibile = false;

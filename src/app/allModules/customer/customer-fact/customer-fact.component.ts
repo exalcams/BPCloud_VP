@@ -319,7 +319,7 @@ export class CustomerFactComponent implements OnInit {
   }
 
   GetFactByPartnerIDAndType(): void {
-    this._FactService.GetFactByPartnerIDAndType(this.currentUserName, 'Customer').subscribe(
+    this._FactService.GetFactByPartnerIDAndType(this.currentUserName, 'C').subscribe(
       (data) => {
         const fact = data as BPCFact;
         if (fact) {

@@ -100,7 +100,7 @@ export class CustomerDashboardComponent implements OnInit {
   }
   GetFactByPartnerIDAndType(): void {
     // console.log(this.authenticationDetails.EmailAddress);
-    this._FactService.GetFactByPartnerIDAndType(this.CurrentUserName, 'Customer').subscribe(
+    this._FactService.GetFactByPartnerIDAndType(this.CurrentUserName, 'C').subscribe(
       (data) => {
         const fact = data as BPCFact;
         // console.log(fact);

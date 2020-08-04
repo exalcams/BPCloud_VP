@@ -13,6 +13,8 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { DocTypeMasterComponent } from './doc-type-master/doc-type-master.component';
 import { SessionMasterComponent } from './session-master/session-master.component';
 import { SupportDeskMasterComponent } from './support-desk-master/support-desk-master.component';
+import { CEOMessageComponent } from './ceomessage/ceomessage.component';
+import { SCOCMessageComponent } from './scocmessage/scocmessage.component';
 
 const menuRoutes: Routes = [
     {
@@ -26,13 +28,23 @@ const menuRoutes: Routes = [
     {
         path: 'supportmaster',
         component: SupportDeskMasterComponent
+    },
+    {
+        path: 'ceomsg',
+        component: CEOMessageComponent
+    },
+    {
+        path: 'scocmsg',
+        component: SCOCMessageComponent
     }
 ];
 @NgModule({
     declarations: [
         DocTypeMasterComponent,
         SessionMasterComponent,
-        SupportDeskMasterComponent
+        SupportDeskMasterComponent,
+        CEOMessageComponent,
+        SCOCMessageComponent
     ],
     imports: [
         MatButtonModule,
