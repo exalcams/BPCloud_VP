@@ -29,9 +29,13 @@ export class LoginComponent implements OnInit {
   menuItems: string[] = [];
   children: FuseNavigation[] = [];
   subChildren: FuseNavigation[] = [];
+  orderFulfilmentSubChildren: FuseNavigation[] = [];
+  supportSubChildren: FuseNavigation[] = [];
   reportSubChildren: FuseNavigation[] = [];
   paymentSubChildren: FuseNavigation[] = [];
   configSubChildren: FuseNavigation[] = [];
+  customerOrderFulfilmentSubChildren: FuseNavigation[] = [];
+  customerSupportSubChildren: FuseNavigation[] = [];
   private _unsubscribeAll: Subject<any>;
   message = 'Snack Bar opened.';
   actionButtonLabel = 'Retry';
@@ -294,48 +298,36 @@ export class LoginComponent implements OnInit {
         }
       );
     }
+
     if (this.menuItems.indexOf('OrderFulFilmentCenter') >= 0) {
+      this.orderFulfilmentSubChildren.push(
+        {
+          id: 'fulfilmentCenter',
+          title: 'Fulfilment Center',
+          translate: 'NAV.VENDOR.FULFILMENT_CENTER',
+          type: 'item',
+          url: '/pages/orderfulfilmentCenter',
+        },
+      );
+    }
+
+    if (this.menuItems.indexOf('OrderFulFilmentCenter') >= 0
+        ) {
       this.children.push(
         {
           id: 'orderfulfilmentCenter',
-          title: 'Order Fulfilment Center',
-          translate: 'NAV.VENDOR.ORDER_FULFILMENT_CENTER',
-          type: 'item',
+          title: 'Order Fulfilment',
+          translate: 'NAV.VENDOR.ORDER_FULFILMENT',
+          type: 'collapsable',
           icon: 'orderfulfilmentIcon',
           isSvgIcon: true,
           // icon: 'dashboard',
-          url: '/pages/orderfulfilmentCenter',
+          children: this.orderFulfilmentSubChildren,
         }
       );
     }
-    if (this.menuItems.indexOf('ASN') >= 0) {
-      this.children.push(
-        {
-          id: 'asn',
-          title: 'ASN',
-          translate: 'NAV.VENDOR.ASN',
-          type: 'item',
-          icon: 'asnIcon',
-          isSvgIcon: true,
-          // icon: 'dashboard',
-          url: '/pages/asn',
-        }
-      );
-    }
-    if (this.menuItems.indexOf('Flip') >= 0) {
-      this.children.push(
-        {
-          id: 'flip',
-          title: 'Flip',
-          translate: 'NAV.VENDOR.FLIP',
-          type: 'item',
-          icon: 'flipIcon',
-          isSvgIcon: true,
-          // icon: 'dashboard',
-          url: '/pages/poflip',
-        }
-      );
-    }
+    
+   
     if (this.menuItems.indexOf('Invoice') >= 0) {
       this.children.push(
         {
@@ -350,20 +342,7 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.menuItems.indexOf('Resource') >= 0) {
-      this.children.push(
-        {
-          id: 'resource',
-          title: 'Resource',
-          translate: 'NAV.VENDOR.RESOURCE',
-          type: 'item',
-          icon: 'resourceIcon',
-          isSvgIcon: true,
-          // icon: 'dashboard',
-          url: '/pages/resource',
-        }
-      );
-    }
+   
     if (this.menuItems.indexOf('DataMigration') >= 0) {
       this.children.push(
         {
@@ -378,48 +357,33 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    if (this.menuItems.indexOf('SupportDesk') >= 0) {
-      this.children.push(
+
+    // Payment related menus
+
+    if (this.menuItems.indexOf('Flip') >= 0) {
+      this.paymentSubChildren.push(
         {
-          id: 'supportdesk',
-          title: 'Support Desk',
-          translate: 'NAV.VENDOR.SUPPORT_DESK',
+          id: 'flip',
+          title: 'Po Flip',
+          translate: 'NAV.VENDOR.PO_FLIP',
           type: 'item',
-          icon: 'supportIcon',
-          isSvgIcon: true,
-          // icon: 'dashboard',
-          url: '/pages/supportdesk',
+          url: '/pages/poflip',
         }
       );
     }
-    if (this.menuItems.indexOf('Fact') >= 0) {
-      this.children.push(
+
+    if (this.menuItems.indexOf('ASN') >= 0) {
+      this.paymentSubChildren.push(
         {
-          id: 'fact',
-          title: 'My details',
-          translate: 'NAV.VENDOR.MY_DETAILS',
+          id: 'asn',
+          title: 'ASN',
+          translate: 'NAV.VENDOR.ASN',
           type: 'item',
-          icon: 'detailsIcon',
-          isSvgIcon: true,
-          // icon: 'dashboard',
-          url: '/fact',
+          url: '/pages/asn',
         }
       );
     }
-    if (this.menuItems.indexOf('Improvement') >= 0) {
-      this.children.push(
-        {
-          id: 'improvement',
-          title: 'Improvement',
-          translate: 'NAV.VENDOR.IMPROVEMENT',
-          type: 'item',
-          icon: 'flipIcon',
-          isSvgIcon: true,
-          // icon: 'dashboard',
-          url: '/pages/improvement',
-        }
-      );
-    }
+
     if (this.menuItems.indexOf('AccountStatement') >= 0) {
       this.paymentSubChildren.push(
         {
@@ -475,13 +439,14 @@ export class LoginComponent implements OnInit {
         },
       );
     }
-    if (this.menuItems.indexOf('Payments') >= 0 || this.menuItems.indexOf('Payable') >= 0 ||
+    if (this.menuItems.indexOf('Flip') >= 0 || this.menuItems.indexOf('ASN') >= 0 ||
+      this.menuItems.indexOf('Payments') >= 0 || this.menuItems.indexOf('Payable') >= 0 ||
       this.menuItems.indexOf('AccountStatement') >= 0 || this.menuItems.indexOf('TDS') >= 0 ||
       this.menuItems.indexOf('Payment') >= 0) {
       this.children.push({
         id: 'master',
-        title: 'Financials',
-        translate: 'NAV.VENDOR.FINANCIALS',
+        title: 'Payment',
+        translate: 'NAV.VENDOR.PAYMENT',
         type: 'collapsable',
         icon: 'paymentmethodIcon',
         isSvgIcon: true,
@@ -490,6 +455,73 @@ export class LoginComponent implements OnInit {
       }
       );
     }
+
+    // Support related menus
+
+    if (this.menuItems.indexOf('SupportDesk') >= 0) {
+      this.supportSubChildren.push(
+        {
+          id: 'supportdesk',
+          title: 'Get Support',
+          translate: 'NAV.VENDOR.GET_SUPPORT',
+          type: 'item',
+          url: '/pages/supportdesk',
+        }
+      );
+    }
+
+    if (this.menuItems.indexOf('Resource') >= 0) {
+      this.supportSubChildren.push(
+        {
+          id: 'resource',
+          title: 'Resource',
+          translate: 'NAV.VENDOR.RESOURCE',
+          type: 'item',
+          url: '/pages/resource',
+        }
+      );
+    }
+    if (this.menuItems.indexOf('Fact') >= 0) {
+      this.supportSubChildren.push(
+        {
+          id: 'fact',
+          title: 'My details',
+          translate: 'NAV.VENDOR.MY_DETAILS',
+          type: 'item',
+          // icon: 'dashboard',
+          url: '/fact',
+        }
+      );
+    }
+    if (this.menuItems.indexOf('SupportDesk') >= 0 || this.menuItems.indexOf('Resource') >= 0 ||
+      this.menuItems.indexOf('Fact') >= 0) {
+      this.children.push({
+        id: 'master',
+        title: 'Support',
+        translate: 'NAV.VENDOR.SUPPORT',
+        type: 'collapsable',
+        icon: 'supportIcon',
+        isSvgIcon: true,
+        // icon: 'view_list',
+        children: this.supportSubChildren
+      }
+      );
+    }
+    if (this.menuItems.indexOf('Improvement') >= 0) {
+      this.children.push(
+        {
+          id: 'improvement',
+          title: 'Improvement',
+          translate: 'NAV.VENDOR.IMPROVEMENT',
+          type: 'item',
+          icon: 'flipIcon',
+          isSvgIcon: true,
+          // icon: 'dashboard',
+          url: '/pages/improvement',
+        }
+      );
+    }
+    
     // Report Related Menu Items
     if (this.menuItems.indexOf('PPM') >= 0) {
       this.reportSubChildren.push(
@@ -600,20 +632,36 @@ export class LoginComponent implements OnInit {
         }
       );
     }
+
+
     if (this.menuItems.indexOf('CustomerOrderFulFilmentCenter') >= 0) {
+      this.customerOrderFulfilmentSubChildren.push(
+        {
+          id: 'fulfilmentCenter',
+          title: 'Fulfilment Center',
+          translate: 'NAV.CUSTOMER.FULFILMENT_CENTER',
+          type: 'item',
+          url: '/customer/orderfulfilment',
+        },
+      );
+    }
+
+    if (this.menuItems.indexOf('CustomerOrderFulFilmentCenter') >= 0
+        ) {
       this.children.push(
         {
-          id: 'custorderfulfilmentCenter',
-          title: 'Order Fulfilment Center',
-          translate: 'NAV.CUSTOMER.ORDER_FULFILMENT_CENTER',
-          type: 'item',
+          id: 'orderfulfilmentCenter',
+          title: 'Order Fulfilment',
+          translate: 'NAV.CUSTOMER.ORDER_FULFILMENT',
+          type: 'collapsable',
           icon: 'orderfulfilmentIcon',
           isSvgIcon: true,
           // icon: 'dashboard',
-          url: '/customer/orderfulfilment',
+          children: this.customerOrderFulfilmentSubChildren,
         }
       );
     }
+   
     if (this.menuItems.indexOf('PurchaseIndent') >= 0) {
       this.children.push(
         {
@@ -656,34 +704,46 @@ export class LoginComponent implements OnInit {
         }
       );
     }
+
     if (this.menuItems.indexOf('CustomerSupportDesk') >= 0) {
-      this.children.push(
+      this.customerSupportSubChildren.push(
         {
           id: 'custsupportdesk',
-          title: 'Support Desk',
-          translate: 'NAV.CUSTOMER.SUPPORT_DESK',
+          title: 'Get Support',
+          translate: 'NAV.CUSTOMER.GET_SUPPORT',
           type: 'item',
-          icon: 'supportIcon',
-          isSvgIcon: true,
-          // icon: 'dashboard',
           url: '/customer/supportdesk',
         }
       );
     }
+
     if (this.menuItems.indexOf('CustomerFact') >= 0) {
-      this.children.push(
+      this.customerSupportSubChildren.push(
         {
           id: 'custfact',
           title: 'My details',
           translate: 'NAV.CUSTOMER.MY_DETAILS',
           type: 'item',
-          icon: 'detailsIcon',
-          isSvgIcon: true,
           // icon: 'dashboard',
           url: '/customer/fact',
         }
       );
     }
+    if (this.menuItems.indexOf('CustomerSupportDesk') >= 0 || this.menuItems.indexOf('CustomerFact') >= 0
+      ) {
+      this.children.push({
+        id: 'master',
+        title: 'Support',
+        translate: 'NAV.VENDOR.SUPPORT',
+        type: 'collapsable',
+        icon: 'supportIcon',
+        isSvgIcon: true,
+        // icon: 'view_list',
+        children: this.customerSupportSubChildren
+      }
+      );
+    }
+
     // Admin Related Menu Items
     if (this.menuItems.indexOf('App') >= 0) {
       this.subChildren.push(

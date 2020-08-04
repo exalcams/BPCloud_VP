@@ -32,6 +32,7 @@ import { AttachmentViewDialogComponent } from './allModules/pages/attachment-vie
 import { BnNgIdleService } from 'bn-ng-idle';
 import { InformationDialogComponent } from './notifications/information-dialog/information-dialog.component';
 import { TourScreenDialogComponent } from './allModules/pages/tour-screen-dialog/tour-screen-dialog.component';
+import { ASNReleaseDialogComponent } from './notifications/asnrelease-dialog/asnrelease-dialog.component';
 // import { AuditModule } from './allModules/audit/audit.module';
 
 const appRoutes: Routes = [
@@ -97,7 +98,8 @@ const appRoutes: Routes = [
         AttachmentDialogComponent,
         AttachmentViewDialogComponent,
         InformationDialogComponent,
-        TourScreenDialogComponent
+        TourScreenDialogComponent,
+        ASNReleaseDialogComponent
     ],
     imports: [
         BrowserModule,
@@ -150,7 +152,8 @@ const appRoutes: Routes = [
         AttachmentDialogComponent,
         AttachmentViewDialogComponent,
         InformationDialogComponent,
-        TourScreenDialogComponent
+        TourScreenDialogComponent,
+        ASNReleaseDialogComponent
     ]
 })
 export class AppModule {

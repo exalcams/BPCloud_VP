@@ -83,7 +83,7 @@ export class SupportDeskComponent implements OnInit {
   GetSupportTicketsByPartnerIDAndType(): void {
     this.isProgressBarVisibile = true;
     this._supportdeskService
-      .GetSupportTicketsByPartnerIDAndType(this.authenticationDetails.UserName, 'Customer')
+      .GetSupportTicketsByPartnerIDAndType(this.authenticationDetails.UserName, 'C')
       .subscribe((data) => {
         if (data) {
           this.supports = <SupportHeader[]>data;
