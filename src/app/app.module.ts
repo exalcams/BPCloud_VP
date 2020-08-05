@@ -6,7 +6,7 @@ import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import {
     MatButtonModule, MatIconModule, MatSnackBar, MatSnackBarModule, MatDialogModule, MatToolbarModule,
-    MAT_DATE_LOCALE, MatProgressSpinnerModule, MatProgressBarModule, MatExpansionModule
+    MAT_DATE_LOCALE, MatProgressSpinnerModule, MatProgressBarModule, MatExpansionModule, MatTableModule
 } from '@angular/material';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import 'hammerjs';
@@ -130,6 +130,7 @@ const appRoutes: Routes = [
         FuseThemeOptionsModule,
         MatProgressBarModule,
         MatProgressSpinnerModule,
+        MatTableModule,
 
         // App modules
         LayoutModule,

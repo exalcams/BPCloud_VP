@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig, MatDialog, MatSnackBar } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig, MatDialog, MatSnackBar, MatTableDataSource } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { fuseAnimations } from '@fuse/animations';
 import { AttachmentDetails } from 'app/models/task';
@@ -43,6 +43,10 @@ export class AttachmentViewDialogComponent implements OnInit {
   partnerID: string;
   supportTicketView: SupportHeaderView;
   supportMasters: SupportMaster[] = [];
+  AttachmentDisplayedColumns: string[] = [
+    'AttachmentName',
+  ];
+  AttachmentDataSource: MatTableDataSource<BPCInvoiceAttachment>;
   constructor(
     private dialog: MatDialog,
     public _dashboardService: DashboardService,
@@ -58,6 +62,7 @@ export class AttachmentViewDialogComponent implements OnInit {
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.supportTicketView = new SupportHeaderView();
     this.ofAttachments = this.ofAttachmentData.OfAttachments;
+    this.AttachmentDataSource = new MatTableDataSource(this.ofAttachments);
     this.docNumber = this.ofAttachmentData.DocNumber;
   }
 
@@ -211,6 +216,7 @@ export class AttachmentViewDialogComponent implements OnInit {
       .subscribe((data) => {
         if (data) {
           this.ofAttachments = data as BPCInvoiceAttachment[];
+          this.AttachmentDataSource = new MatTableDataSource(this.ofAttachments);
         }
         this.isProgressBarVisibile = false;
       },
@@ -294,6 +300,7 @@ export class AttachmentViewDialogComponent implements OnInit {
           }
         });
         this.ofAttachments.push(ofattach);
+        this.AttachmentDataSource = new MatTableDataSource(this.ofAttachments);
       }
     }
   }
@@ -331,6 +338,7 @@ export class AttachmentViewDialogComponent implements OnInit {
             }
           });
           this.ofAttachments.push(ofattach);
+          this.AttachmentDataSource = new MatTableDataSource(this.ofAttachments);
         }
       });
   }

@@ -1,13 +1,12 @@
 import { CommonClass } from './common';
 import { BPCInvoiceAttachment } from './ASN';
 export class BPCOFHeader extends CommonClass {
-    ID: number;
     Client: string;
     Company: string;
     Type: string;
     PatnerID: string;
     DocNumber: string;
-    DocDate?: Date;
+    DocDate: Date | string | null;
     DocVersion: string;
     Currency: string;
     Status: string;
@@ -16,7 +15,7 @@ export class BPCOFHeader extends CommonClass {
     RefDoc: string;
     AckStatus: string;
     AckRemark: string;
-    AckDate?: Date;
+    AckDate: Date | string | null;
     AckUser: string;
     PINNumber: string;
     DocType: string;
@@ -24,7 +23,6 @@ export class BPCOFHeader extends CommonClass {
     DocCount: number;
 }
 export class BPCOFItem extends CommonClass {
-    ID: number;
     Client: string;
     Company: string;
     Type: string;
@@ -33,8 +31,7 @@ export class BPCOFItem extends CommonClass {
     Item: string;
     Material: string;
     MaterialText: string;
-    ManufactureDate?: Date;
-    DeliveryDate?: Date;
+    DeliveryDate: Date | string | null;
     OrderedQty: number;
     CompletedQty: number;
     TransitQty: number;
@@ -43,10 +40,12 @@ export class BPCOFItem extends CommonClass {
     HSN: string;
     IsClosed: boolean;
     AckStatus: string;
-    AckDelDate?: Date;
-    Price: number;
-    Tax: number;
-    Amount: number;
+    AckDeliveryDate: Date | string | null;
+    PlantCode: string;
+    UnitPrice: number | null;
+    Value: number | null;
+    TaxAmount: number | null;
+    TaxCode: string;
     MaxAllowedQty: number;
 }
 export class BPCOFScheduleLine extends CommonClass {
@@ -281,4 +280,14 @@ export class SOItemCount {
     ItemCount: number;
     GRGICount: number;
     PODCount: number;
+}
+export class BPCPlantMaster extends CommonClass {
+    PlantCode: string;
+    PlantText: string;
+    AddressLine1: string;
+    AddressLine2: string;
+    City: string;
+    State: string;
+    Country: string;
+    PinCode: string;
 }

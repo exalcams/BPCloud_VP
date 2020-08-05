@@ -13,31 +13,53 @@
     <div fxLayout="row" style="margin-top: 20px !important;margin-top: 10px !important;">
       <div fxFlex="50" class="p-8">
         <div fxFlex="45" class="mx-8 mb-8 mt-0">
-          <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="5px">
+          <div fxLayout="row" class="py-4" fxLayoutAlign="start" fxLayoutGap="5px">
             <div fxFlex style="text-align: right;">PO No : </div>
             <div fxFlex style="text-align: left;"> <strong
                 style=" line-height: 20px;">{{orderFulfilmentDetails.PONumber}}</strong></div>
           </div>
-          <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="5px" style="margin-top: 20px;color: #2e2e2e">
+          <div fxLayout="row" class="py-4" fxLayoutAlign="start" fxLayoutGap="5px">
             <div fxFlex style="text-align: right;">PO Date : </div>
             <div fxFlex style="text-align: left;"> <strong
                 style=" line-height: 20px;">{{orderFulfilmentDetails.PODate  | date :'dd/MM/yyyy'}}</strong>
             </div>
           </div>
-        </div>
-        <div fxFlex="10" fxLayoutAlign="end end">
-          <div class="divider1"></div>
-        </div>
-        <div fxFlex="45" class="mx-8 mb-8 mt-0">
-          <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="5px">
+          <div fxLayout="row" class="py-4" fxLayoutAlign="start" fxLayoutGap="5px">
             <div fxFlex style="text-align: right;">Version : </div>
             <div fxFlex style="text-align: left;"> <strong
                 style=" line-height: 20px;">{{orderFulfilmentDetails.Version}}</strong></div>
           </div>
-          <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="5px" style="margin-top: 20px;color: #2e2e2e">
+          <div fxLayout="row" class="py-4" fxLayoutAlign="start" fxLayoutGap="5px">
             <div fxFlex style="text-align: right;">Currency : </div>
             <div fxFlex style="text-align: left;"> <strong
-                style=" line-height: 20px;">{{orderFulfilmentDetails.Currency}}</strong>
+                style=" line-height: 20px;">{{orderFulfilmentDetails.Currency}}</strong></div>
+          </div>
+        </div>
+        <!-- <div fxFlex="10">
+          <div class="divider1"></div>
+        </div> -->
+        <div class="divider"></div>
+        <div fxFlex="45" class="mx-8 mb-8 mt-0" *ngIf="ItemPlantDetails?.PlantText">
+          <div fxLayout="row" class="py-4" fxLayoutAlign="start" fxLayoutGap="5px">
+            <div fxFlex style="text-align: left;"> <strong
+                style=" line-height: 20px;">Delivery address</strong></div>
+          </div>
+          <div fxLayout="row" class="py-4" fxLayoutAlign="start" fxLayoutGap="5px">
+            <div fxFlex style="text-align: left;"> <span
+                style=" line-height: 20px;">{{ItemPlantDetails.PlantText + ' , '}}</span></div>
+          </div>
+          <div fxLayout="row" class="py-4" fxLayoutAlign="start" fxLayoutGap="5px">
+            <div fxFlex style="text-align: left;"> <span
+                style=" line-height: 20px;">{{ItemPlantDetails.AddressLine1 + ' , '}}</span>
+            </div>
+          </div>
+          <div fxLayout="row" class="py-4" fxLayoutAlign="start" fxLayoutGap="5px">
+            <div fxFlex style="text-align: left;"> <span
+                style=" line-height: 20px;">{{ItemPlantDetails.City + ' , '}} {{ItemPlantDetails.State}}</span></div>
+          </div>
+          <div fxLayout="row" class="py-4" fxLayoutAlign="start" fxLayoutGap="5px">
+            <div fxFlex style="text-align: left;"> <span
+                style=" line-height: 20px;">{{ItemPlantDetails.Country + ' - '}} {{ItemPlantDetails.PinCode}}</span>
             </div>
           </div>
         </div>
@@ -86,7 +108,7 @@
     <!-- Top Header -->
 
     <!-- Tabs -->
-    <div fxFlex class="mt-24" style="background-color: #fef8f1;">
+    <div fxFlex style="background-color: #fef8f1;">
       <div class="m-12" fxLayout fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="start" fxLayoutGap="10px"
         fxLayoutGap.xs="10">
         <div fxFlex="8" (click)="tabOneClicked()">
@@ -211,14 +233,14 @@
         </div>
         <form name="ackFormGroup" [formGroup]="ackFormGroup" fxLayout="column" fxFlex>
           <div class="p-12">
-            <table class="table" style="width: 85% !important;" mat-table [dataSource]="itemDataSource" matSort
-              formArrayName="POItems">
+            <div style="overflow-x:auto;">
+              <table class="table" mat-table [dataSource]="itemDataSource" matSort formArrayName="POItems">
 
-              <!-- <ng-container matColumnDef="Item">
+                <!-- <ng-container matColumnDef="Item">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Item</th>
             <td mat-cell *matCellDef="let element">{{element.Item}}</td>
           </ng-container> -->
-              <!-- <ng-container matColumnDef="Item">
+                <!-- <ng-container matColumnDef="Item">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Item </th>
               <td mat-cell style="text-align: left" *matCellDef="let element;let odd=odd;let index=index"
                 [formGroupName]="index" class="tableLeftBorder pl-0">
@@ -232,51 +254,51 @@
               </td>
             </ng-container> -->
 
-              <ng-container matColumnDef="MaterialText">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15% !important;">Material Text</th>
-                <td mat-cell style="text-align: left" *matCellDef="let element;let odd=odd;let index=index"
-                  [formGroupName]="index" class="tableLeftBorder pl-0">
-                  <!-- <input matInput formControlName="MaterialText"> -->
-                  <div fxLayout>
-                    <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
-                    <div fxFlex class="pl-4">
-                      <!-- <input matInput formControlName="MaterialText"> -->
-                      {{ackFormGroup.get('POItems')?.controls[index]?.get('MaterialText')?.value}}
+                <ng-container matColumnDef="MaterialText">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Material Text</th>
+                  <td mat-cell style="text-align: left" *matCellDef="let element;let odd=odd;let index=index"
+                    [formGroupName]="index" class="tableLeftBorder pl-0">
+                    <!-- <input matInput formControlName="MaterialText"> -->
+                    <div fxLayout>
+                      <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
+                      <div fxFlex class="pl-4">
+                        <!-- <input matInput formControlName="MaterialText"> -->
+                        {{ackFormGroup.get('POItems')?.controls[index]?.get('MaterialText')?.value}}
+                      </div>
                     </div>
-                  </div>
-                  <!-- {{element.MaterialText}}  -->
-                </td>
-              </ng-container>
+                    <!-- {{element.MaterialText}}  -->
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="DalivaryDate">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10% !important;">Delivery Date</th>
-                <td mat-cell style="text-align: left" *matCellDef="let element; let index = index"
-                  [formGroupName]="index">
-                  <!-- <input matInput formControlName="DalivaryDate"> -->
-                  {{ackFormGroup.get('POItems')?.controls[index]?.get('DalivaryDate')?.value | date : 'dd/MM/yyyy'}}
-                  <!-- {{element.DalivaryDate| date :'dd/MM/yyyy'}}  -->
-                </td>
-              </ng-container>
+                <ng-container matColumnDef="DalivaryDate">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Delivery Date</th>
+                  <td mat-cell style="text-align: left" *matCellDef="let element; let index = index"
+                    [formGroupName]="index">
+                    <!-- <input matInput formControlName="DalivaryDate"> -->
+                    {{ackFormGroup.get('POItems')?.controls[index]?.get('DalivaryDate')?.value | date : 'dd/MM/yyyy'}}
+                    <!-- {{element.DalivaryDate| date :'dd/MM/yyyy'}}  -->
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="Proposeddeliverydate">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20% !important;">Proposed delivery
-                  date</th>
-                <td mat-cell style="text-align: left" *matCellDef="let element; let index = index"
-                  [formGroupName]="index">
-                  <!-- <input matInput formControlName="Proposeddeliverydate"> -->
-                  <mat-form-field style="width: 65%;">
-                    <input matInput [matDatepicker]="picker" formControlName="Proposeddeliverydate" required>
-                    <!-- <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle> -->
-                    <mat-datepicker-toggle matSuffix [for]="picker">
-                      <img matDatepickerToggleIcon class="calendarImg" src="assets/images/calendar.png">
-                    </mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                    <span class="pl-4 errorClass" *ngIf="ackFormGroup.get('POItems').controls[index].get('Proposeddeliverydate').touched &&
+                <ng-container matColumnDef="Proposeddeliverydate">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Proposed delivery
+                    date</th>
+                  <td mat-cell style="text-align: left" *matCellDef="let element; let index = index"
+                    [formGroupName]="index">
+                    <!-- <input matInput formControlName="Proposeddeliverydate"> -->
+                    <mat-form-field style="width: 65%;">
+                      <input matInput [matDatepicker]="picker" formControlName="Proposeddeliverydate" required>
+                      <!-- <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle> -->
+                      <mat-datepicker-toggle matSuffix [for]="picker">
+                        <img matDatepickerToggleIcon class="calendarImg" src="assets/images/calendar.png">
+                      </mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                      <span class="pl-4 errorClass" *ngIf="ackFormGroup.get('POItems').controls[index].get('Proposeddeliverydate').touched &&
                 ackFormGroup.get('POItems').controls[index].get('Proposeddeliverydate').hasError('required')">
-                      *
-                    </span>
-                  </mat-form-field>
-                  <!-- <mat-form-field>
+                        *
+                      </span>
+                    </mat-form-field>
+                    <!-- <mat-form-field>
                   <input matInput placeholder="Proposed delivery date" [matDatepicker]="picker1"
                     formControlName="DalivaryDate" required>
                   <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
@@ -286,64 +308,115 @@
                     Proposed delivery date is required
                   </mat-error>
                 </mat-form-field> -->
-                  <!-- {{element.DalivaryDate| date :'dd/MM/yyyy'}}  -->
-                </td>
-              </ng-container>
+                    <!-- {{element.DalivaryDate| date :'dd/MM/yyyy'}}  -->
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="OrderQty">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 11% !important;">Order Qty
-                <td style="text-align: right" mat-cell *matCellDef="let element; let index = index"
-                  [formGroupName]="index">
-                  <!-- <input matInput formControlName="OrderQty"> -->
-                  {{ackFormGroup.get('POItems')?.controls[index]?.get('OrderQty')?.value}}
-                  <!-- {{element.OrderQty}}  -->
-                </td>
-              </ng-container>
+                <ng-container matColumnDef="OrderQty">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Order Qty
+                  <td style="text-align: right" mat-cell *matCellDef="let element; let index = index"
+                    [formGroupName]="index">
+                    <!-- <input matInput formControlName="OrderQty"> -->
+                    {{ackFormGroup.get('POItems')?.controls[index]?.get('OrderQty')?.value}}
+                    <!-- {{element.OrderQty}}  -->
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="GRQty">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 11% !important;">GR Qty</th>
-                <td style="text-align: right" mat-cell *matCellDef="let element; let index = index"
-                  [formGroupName]="index">
-                  <!-- <input matInput formControlName="GRQty"> -->
-                  {{ackFormGroup.get('POItems')?.controls[index]?.get('GRQty')?.value}}
-                  <!-- {{element.GRQty}}  -->
-                </td>
-              </ng-container>
+                <ng-container matColumnDef="GRQty">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>GR Qty</th>
+                  <td style="text-align: right" mat-cell *matCellDef="let element; let index = index"
+                    [formGroupName]="index">
+                    <!-- <input matInput formControlName="GRQty"> -->
+                    {{ackFormGroup.get('POItems')?.controls[index]?.get('GRQty')?.value}}
+                    <!-- {{element.GRQty}}  -->
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="PipelineQty">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 11% !important;">Pipeline Qty</th>
-                <td mat-cell style="text-align: right" *matCellDef="let element; let index = index"
-                  [formGroupName]="index">
-                  <!-- <input matInput formControlName="PipelineQty"> -->
-                  {{ackFormGroup.get('POItems')?.controls[index]?.get('PipelineQty')?.value}}
-                  <!-- {{element.PipelineQty}}  -->
-                </td>
-              </ng-container>
+                <ng-container matColumnDef="PipelineQty">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Pipeline Qty</th>
+                  <td mat-cell style="text-align: right" *matCellDef="let element; let index = index"
+                    [formGroupName]="index">
+                    <!-- <input matInput formControlName="PipelineQty"> -->
+                    {{ackFormGroup.get('POItems')?.controls[index]?.get('PipelineQty')?.value}}
+                    <!-- {{element.PipelineQty}}  -->
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="OpenQty">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 11% !important;">Open Qty</th>
-                <td style="text-align: right" mat-cell *matCellDef="let element; let index = index"
-                  [formGroupName]="index">
-                  <!-- <input matInput formControlName="OpenQty"> -->
-                  {{ackFormGroup.get('POItems')?.controls[index]?.get('OpenQty')?.value}}
-                  <!-- {{element.OpenQty}}  -->
-                </td>
-              </ng-container>
+                <ng-container matColumnDef="OpenQty">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Open Qty</th>
+                  <td style="text-align: right" mat-cell *matCellDef="let element; let index = index"
+                    [formGroupName]="index">
+                    <!-- <input matInput formControlName="OpenQty"> -->
+                    {{ackFormGroup.get('POItems')?.controls[index]?.get('OpenQty')?.value}}
+                    <!-- {{element.OpenQty}}  -->
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="UOM">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 11% !important;">UOM</th>
-                <td mat-cell style="text-align: left" *matCellDef="let element; let index = index"
-                  [formGroupName]="index">
-                  <!-- <input matInput formControlName="UOM"> -->
-                  {{ackFormGroup.get('POItems')?.controls[index]?.get('UOM')?.value}}
-                  <!-- {{element.UOM}} -->
-                </td>
-              </ng-container>
+                <ng-container matColumnDef="UOM">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>UOM</th>
+                  <td mat-cell style="text-align: left" *matCellDef="let element; let index = index"
+                    [formGroupName]="index">
+                    <!-- <input matInput formControlName="UOM"> -->
+                    {{ackFormGroup.get('POItems')?.controls[index]?.get('UOM')?.value}}
+                    <!-- {{element.UOM}} -->
+                  </td>
+                </ng-container>
 
-              <tr mat-header-row *matHeaderRowDef="itemDisplayedColumns;sticky: true"></tr>
-              <tr mat-row *matRowDef="let row; columns: itemDisplayedColumns;let even=even" style=" cursor: pointer;">
-              </tr>
-            </table>
+                <ng-container matColumnDef="PlantCode">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Plant</th>
+                  <td mat-cell style="text-align: left" *matCellDef="let element; let index = index"
+                    [formGroupName]="index">
+                    <!-- <input matInput formControlName="UOM"> -->
+                    {{ackFormGroup.get('POItems')?.controls[index]?.get('PlantCode')?.value}}
+                    <!-- {{element.UOM}} -->
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="UnitPrice">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>UnitPrice</th>
+                  <td mat-cell style="text-align: left" *matCellDef="let element; let index = index"
+                    [formGroupName]="index">
+                    <!-- <input matInput formControlName="UOM"> -->
+                    {{ackFormGroup.get('POItems')?.controls[index]?.get('UnitPrice')?.value}}
+                    <!-- {{element.UOM}} -->
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Value">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Value</th>
+                  <td mat-cell style="text-align: left" *matCellDef="let element; let index = index"
+                    [formGroupName]="index">
+                    <!-- <input matInput formControlName="UOM"> -->
+                    {{ackFormGroup.get('POItems')?.controls[index]?.get('Value')?.value}}
+                    <!-- {{element.UOM}} -->
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="TaxAmount">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>TaxAmount</th>
+                  <td mat-cell style="text-align: left" *matCellDef="let element; let index = index"
+                    [formGroupName]="index">
+                    <!-- <input matInput formControlName="UOM"> -->
+                    {{ackFormGroup.get('POItems')?.controls[index]?.get('TaxAmount')?.value}}
+                    <!-- {{element.UOM}} -->
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="TaxCode">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>TaxCode</th>
+                  <td mat-cell style="text-align: left" *matCellDef="let element; let index = index"
+                    [formGroupName]="index">
+                    <!-- <input matInput formControlName="UOM"> -->
+                    {{ackFormGroup.get('POItems')?.controls[index]?.get('TaxCode')?.value}}
+                    <!-- {{element.UOM}} -->
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="itemDisplayedColumns;sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: itemDisplayedColumns;let even=even" style=" cursor: pointer;">
+                </tr>
+              </table>
+            </div>
           </div>
         </form>
       </div>
