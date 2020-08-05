@@ -19,6 +19,12 @@ export class ItemDetails {
     PipelineQty: number;
     OpenQty: number;
     UOM: string;
+    PlantCode: string;
+    UnitPrice: number | null;
+    Value: number | null;
+    TaxAmount: number | null;
+    TaxCode: string;
+    MaxAllowedQty: number;
 }
 export class ASNDetails {
     ASN: string;

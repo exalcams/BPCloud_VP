@@ -11,7 +11,7 @@ import {
 } from 'app/models/Dashboard';
 import { SODetails } from 'app/models/customer';
 import { BPCKRA, CustomerBarChartData } from 'app/models/fact';
-import { BPCOFHeader, BPCOFAIACT } from 'app/models/OrderFulFilment';
+import { BPCOFHeader, BPCOFAIACT, BPCPlantMaster } from 'app/models/OrderFulFilment';
 import { BPCInvoiceAttachment } from 'app/models/ASN';
 
 @Injectable({
@@ -213,6 +213,12 @@ export class DashboardService {
   GetOrderFulfilmentDetails(po: any, PatnerID: any): Observable<OrderFulfilmentDetails | string> {
     return this._httpClient
       .get<OrderFulfilmentDetails>(`${this.baseAddress}poapi/Dashboard/GetOrderFulfilmentDetails?PO=${po}&PatnerID=${PatnerID}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetItemPlantDetails(PlantCode: string): Observable<BPCPlantMaster | string> {
+    return this._httpClient
+      .get<BPCPlantMaster>(`${this.baseAddress}poapi/Dashboard/GetItemPlantDetails?PlantCode=${PlantCode}`)
       .pipe(catchError(this.errorHandler));
   }
 

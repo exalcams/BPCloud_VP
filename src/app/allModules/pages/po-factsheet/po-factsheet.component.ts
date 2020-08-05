@@ -11,6 +11,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { Guid } from 'guid-typescript';
 import { AuthenticationDetails, AppUsage } from 'app/models/master';
 import { MasterService } from 'app/services/master.service';
+import { BPCPlantMaster } from 'app/models/OrderFulFilment';
 @Component({
     selector: 'app-po-factsheet',
     templateUrl: './po-factsheet.component.html',
@@ -51,7 +52,7 @@ export class PoFactsheetComponent implements OnInit {
     public slCount: number;
     public documentCount: number;
     public flipCount: number;
-
+    ItemPlantDetails: BPCPlantMaster;
     itemDisplayedColumns: string[] = [
         // 'Item',
         'MaterialText',
@@ -61,8 +62,12 @@ export class PoFactsheetComponent implements OnInit {
         'GRQty',
         'PipelineQty',
         'OpenQty',
-        'UOM'
-
+        'UOM',
+        'PlantCode',
+        'UnitPrice',
+        'Value',
+        'TaxAmount',
+        'TaxCode'
     ];
     asnDisplayedColumns: string[] = [
         'ASN',
@@ -150,6 +155,7 @@ export class PoFactsheetComponent implements OnInit {
         this.tab5 = false;
         this.tab6 = false;
         this.tab7 = false;
+        this.ItemPlantDetails = new BPCPlantMaster();
     }
 
     ngOnInit(): void {
@@ -206,6 +212,9 @@ export class PoFactsheetComponent implements OnInit {
                     this.poStatus = this.orderFulfilmentDetails.Status;
                     this.asn = this.orderFulfilmentDetails.aSNDetails;
                     this.items = this.orderFulfilmentDetails.itemDetails;
+                    if (this.items.length > 0) {
+                        this.GetItemPlantDetails(this.items[0].PlantCode);
+                    }
                     this.grn = this.orderFulfilmentDetails.gRNDetails;
                     this.qa = this.orderFulfilmentDetails.qADetails;
                     this.sl = this.orderFulfilmentDetails.slDetails;
@@ -250,7 +259,16 @@ export class PoFactsheetComponent implements OnInit {
             }
         );
     }
-
+    GetItemPlantDetails(PlantCode: string): void {
+        this._dashboardService.GetItemPlantDetails(PlantCode).subscribe(
+            data => {
+                this.ItemPlantDetails = data as BPCPlantMaster;
+            },
+            err => {
+                console.error(err);
+            }
+        );
+    }
     GetOfItemsByPartnerIDAndDocNumber(): void {
         this.isProgressBarVisibile = true;
         this._dashboardService.GetOfItemsByPartnerIDAndDocNumber(this.partnerID, this.PO).subscribe(
@@ -509,7 +527,12 @@ export class PoFactsheetComponent implements OnInit {
             GRQty: [poItem.GRQty],
             PipelineQty: [poItem.PipelineQty],
             OpenQty: [poItem.OpenQty],
-            UOM: [poItem.UOM]
+            UOM: [poItem.UOM],
+            PlantCode: [poItem.PlantCode],
+            UnitPrice: [poItem.UnitPrice],
+            Value: [poItem.Value],
+            TaxAmount: [poItem.TaxAmount],
+            TaxCode: [poItem.TaxCode],
         });
         row.disable();
         row.get('Proposeddeliverydate').enable();

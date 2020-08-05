@@ -201,7 +201,7 @@ export class PoFlipComponent implements OnInit {
     this._poService.GetPOByDocAndPartnerID(selectedDocNumber, this.authenticationDetails.UserName).subscribe(
       (data) => {
         this.poHeader = data as BPCOFHeader;
-        this.selectedDocDate = this.poHeader.DocDate;
+        this.selectedDocDate = this.poHeader.DocDate as Date;
         if (this.selectedDocNumber && !this.selectedFlip.FLIPID) {
           this.GetPOItemsByDocAndPartnerID();
         }
@@ -462,7 +462,7 @@ export class PoFlipComponent implements OnInit {
       OpenQty: [poItem.OpenQty],
       InvoiceQty: ['', Validators.required],
       Price: ['', Validators.required],
-      Tax: [poItem.Tax],
+      Tax: [poItem.TaxAmount],
       Amount: ['', Validators.required],
     });
     row.disable();
