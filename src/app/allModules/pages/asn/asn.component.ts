@@ -12,7 +12,7 @@ import { ASNService } from 'app/services/asn.service';
 import { ShareParameterService } from 'app/services/share-parameters.service';
 import {
     BPCASNHeader, BPCASNItem, DocumentCenter, BPCASNView, BPCInvoiceAttachment,
-    BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster, BPCASNPack
+    BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster, BPCASNPack, ASNItemXLSX
 } from 'app/models/ASN';
 import { BehaviorSubject } from 'rxjs';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
@@ -27,7 +27,8 @@ import { AttachmentDialogComponent } from '../attachment-dialog/attachment-dialo
 import { DatePipe } from '@angular/common';
 import { SubconService } from 'app/services/subcon.service';
 import { ASNReleaseDialogComponent } from 'app/notifications/asnrelease-dialog/asnrelease-dialog.component';
-
+import { ExcelService } from 'app/services/excel.service';
+import * as XLSX from 'xlsx';
 @Component({
     selector: 'app-asn',
     templateUrl: './asn.component.html',
@@ -63,6 +64,7 @@ export class ASNComponent implements OnInit {
         'Item',
         'Material',
         'MaterialText',
+        'UnitPrice',
         'DeliveryDate',
         'OrderedQty',
         'GRQty',
@@ -122,10 +124,13 @@ export class ASNComponent implements OnInit {
     AllCurrencies: BPCCurrencyMaster[] = [];
     AllDocumentCenterMaster: BPCDocumentCenterMaster[] = [];
     isWeightError: boolean;
+    isPOBasicPriceError: boolean;
     @ViewChild('fileInput1') fileInput: ElementRef<HTMLElement>;
     selectedDocCenterMaster: BPCDocumentCenterMaster;
     ArrivalDateInterval: number;
     SubconViews: BPCOFSubconView[] = [];
+    arrayBuffer: any;
+    ASNItemXLSXs: ASNItemXLSX[] = [];
     constructor(
         private _fuseConfigService: FuseConfigService,
         private _masterService: MasterService,
@@ -134,6 +139,7 @@ export class ASNComponent implements OnInit {
         private _ASNService: ASNService,
         private _subConService: SubconService,
         private _vendorMasterService: VendorMasterService,
+        private _excelService: ExcelService,
         private _datePipe: DatePipe,
         private _route: ActivatedRoute,
         private _router: Router,
@@ -153,6 +159,7 @@ export class ASNComponent implements OnInit {
         this.minDate.setDate(this.minDate.getDate() + 1);
         this.maxDate = new Date();
         this.isWeightError = false;
+        this.isPOBasicPriceError = false;
         this.selectedDocCenterMaster = new BPCDocumentCenterMaster();
         this.ArrivalDateInterval = 1;
     }
@@ -254,11 +261,19 @@ export class ASNComponent implements OnInit {
     InitializeInvoiceDetailsFormGroup(): void {
         this.InvoiceDetailsFormGroup = this._formBuilder.group({
             InvoiceNumber: ['', [Validators.minLength(1), Validators.maxLength(16)]],
+            POBasicPrice: ['', [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,2})?$')]],
+            TaxAmount: ['', [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,2})?$')]],
             InvoiceAmount: ['', [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,2})?$')]],
             InvoiceAmountUOM: [''],
             InvoiceDate: [''],
             InvoiceAttachment: [''],
         });
+        this.InvoiceDetailsFormGroup.get('InvoiceAmount').disable();
+        this.InvoiceDetailsFormGroup.get('POBasicPrice').valueChanges.subscribe(
+            () => {
+                this.CalculateInvoiceAmount();
+            }
+        );
         // this.DynamicallyAddAcceptedValidation();
     }
 
@@ -284,6 +299,7 @@ export class ASNComponent implements OnInit {
         this.AllDocumentCenters = [];
         this.DocumentCenterDataSource = new MatTableDataSource(this.AllDocumentCenters);
         this.isWeightError = false;
+        this.isPOBasicPriceError = false;
         this.selectedDocCenterMaster = new BPCDocumentCenterMaster();
     }
 
@@ -308,11 +324,16 @@ export class ASNComponent implements OnInit {
             formGroup.get(key).markAsUntouched();
         });
     }
+    ClearASNItems(): void {
+        this.ClearFormArray(this.ASNItemFormArray);
+        this.ASNItemDataSource.next(this.ASNItemFormArray.controls);
+    }
     ClearFormArray = (formArray: FormArray) => {
         while (formArray.length !== 0) {
             formArray.removeAt(0);
         }
     }
+
 
     ResetAttachments(): void {
         this.fileToUpload = null;
@@ -673,6 +694,7 @@ export class ASNComponent implements OnInit {
         this.SelectedASNView.ASNNumber = this.SelectedASNHeader.ASNNumber;
         this.SelectedASNNumber = this.SelectedASNHeader.ASNNumber;
         this.GetPOByDocAndPartnerID(this.SelectedASNHeader.DocNumber);
+        this.ClearASNItems();
         this.GetASNItemsByASN();
         this.GetASNPacksByASN();
         this.GetDocumentCentersByASN();
@@ -777,6 +799,11 @@ export class ASNComponent implements OnInit {
             Batch: [''],
             ManufactureDate: [''],
             ExpiryDate: [''],
+            PlantCode: [poItem.PlantCode],
+            UnitPrice: [poItem.UnitPrice],
+            Value: [poItem.Value],
+            TaxAmount: [poItem.TaxAmount],
+            TaxCode: [poItem.TaxCode],
         });
         row.disable();
         if (poItem.MaxAllowedQty && poItem.MaxAllowedQty > 0) {
@@ -825,6 +852,11 @@ export class ASNComponent implements OnInit {
             Batch: [asnItem.Batch],
             ManufactureDate: [asnItem.ManufactureDate],
             ExpiryDate: [asnItem.ExpiryDate],
+            PlantCode: [asnItem.PlantCode],
+            UnitPrice: [asnItem.UnitPrice],
+            Value: [asnItem.Value],
+            TaxAmount: [asnItem.TaxAmount],
+            TaxCode: [asnItem.TaxCode],
         });
         row.disable();
         // row.get('ASNQty').enable();
@@ -863,6 +895,8 @@ export class ASNComponent implements OnInit {
     SetInvoiceDetailValues(): void {
         this.InvoiceDetailsFormGroup.get('InvoiceNumber').patchValue(this.SelectedASNHeader.InvoiceNumber);
         this.InvoiceDetailsFormGroup.get('InvoiceDate').patchValue(this.SelectedASNHeader.InvoiceDate);
+        this.InvoiceDetailsFormGroup.get('POBasicPrice').patchValue(this.SelectedASNHeader.POBasicPrice);
+        this.InvoiceDetailsFormGroup.get('TaxAmount').patchValue(this.SelectedASNHeader.TaxAmount);
         this.InvoiceDetailsFormGroup.get('InvoiceAmount').patchValue(this.SelectedASNHeader.InvoiceAmount);
         this.InvoiceDetailsFormGroup.get('InvoiceAmountUOM').patchValue(this.SelectedASNHeader.InvoiceAmountUOM);
     }
@@ -939,6 +973,11 @@ export class ASNComponent implements OnInit {
             item.OpenQty = x.get('OpenQty').value;
             item.ASNQty = x.get('ASNQty').value;
             item.Batch = x.get('Batch').value;
+            item.PlantCode = x.get('PlantCode').value;
+            item.UnitPrice = x.get('UnitPrice').value;
+            item.Value = x.get('Value').value;
+            item.TaxAmount = x.get('TaxAmount').value;
+            item.TaxCode = x.get('TaxCode').value;
             const manufDate = x.get('ManufactureDate').value;
             if (manufDate) {
                 item.ManufactureDate = this._datePipe.transform(manufDate, 'yyyy-MM-dd HH:mm:ss');
@@ -1018,7 +1057,35 @@ export class ASNComponent implements OnInit {
             this.SelectedASNHeader.InvoiceDate = this.SelectedASNView.InvoiceDate = this.InvoiceDetailsFormGroup.get('InvoiceDate').value;
         }
         this.SelectedASNHeader.InvoiceAmountUOM = this.SelectedASNView.InvoiceAmountUOM = this.InvoiceDetailsFormGroup.get('InvoiceAmountUOM').value;
+        this.SelectedASNHeader.POBasicPrice = this.SelectedASNView.POBasicPrice = this.InvoiceDetailsFormGroup.get('POBasicPrice').value;
+        this.SelectedASNHeader.TaxAmount = this.SelectedASNView.TaxAmount = this.InvoiceDetailsFormGroup.get('TaxAmount').value;
         this.SelectedASNHeader.InvoiceAmount = this.SelectedASNView.InvoiceAmount = this.InvoiceDetailsFormGroup.get('InvoiceAmount').value;
+
+    }
+
+    CalculateInvoiceAmount(): void {
+        this.CheckPOBasicPriceValidation();
+        const poBasicPrice = +this.InvoiceDetailsFormGroup.get('POBasicPrice').value;
+        const taxAmount = +this.InvoiceDetailsFormGroup.get('TaxAmount').value;
+        this.InvoiceDetailsFormGroup.get('InvoiceAmount').patchValue(poBasicPrice + taxAmount);
+    }
+
+    CheckPOBasicPriceValidation(): void {
+        const poBasicPrice = +this.InvoiceDetailsFormGroup.get('POBasicPrice').value;
+        if (poBasicPrice) {
+            let TotalASNAmount = 0;
+            this.ASNItemFormArray.controls.forEach((x, i) => {
+                const asq = +x.get('ASNQty').value;
+                const up = +x.get('UnitPrice').value;
+                TotalASNAmount += (asq * up);
+            });
+            if (TotalASNAmount !== 0 && poBasicPrice !== 0 && TotalASNAmount !== poBasicPrice) {
+                this.isPOBasicPriceError = true;
+            } else {
+                this.isPOBasicPriceError = false;
+            }
+            // this.InvoiceDetailsFormGroup.get('POBasicPrice').updateValueAndValidity();
+        }
     }
 
     GetDocumentCenterValues(): void {
@@ -1039,10 +1106,12 @@ export class ASNComponent implements OnInit {
                             this.GetASNItemValues();
                             this.GetASNPacksValues();
                             if (this.CheckForNonZeroOpenQty()) {
-                                this.GetInvoiceDetailValues();
-                                this.GetDocumentCenterValues();
-                                this.SelectedASNView.IsSubmitted = false;
-                                this.SetActionToOpenConfirmation('Save');
+                                if (!this.isPOBasicPriceError) {
+                                    this.GetInvoiceDetailValues();
+                                    this.GetDocumentCenterValues();
+                                    this.SelectedASNView.IsSubmitted = false;
+                                    this.SetActionToOpenConfirmation('Save');
+                                }
                             } else {
                                 this.notificationSnackBarComponent.openSnackBar('There is no Open Qty', SnackBarStatus.danger);
                             }
@@ -1073,10 +1142,12 @@ export class ASNComponent implements OnInit {
                             this.GetASNItemValues();
                             this.GetASNPacksValues();
                             if (this.CheckForNonZeroOpenQty()) {
-                                this.GetInvoiceDetailValues();
-                                this.GetDocumentCenterValues();
-                                this.SelectedASNView.IsSubmitted = true;
-                                this.OpenASNReleaseDialog();
+                                if (!this.isPOBasicPriceError) {
+                                    this.GetInvoiceDetailValues();
+                                    this.GetDocumentCenterValues();
+                                    this.SelectedASNView.IsSubmitted = true;
+                                    this.OpenASNReleaseDialog();
+                                }
                             } else {
                                 this.notificationSnackBarComponent.openSnackBar('There is no Open Qty', SnackBarStatus.danger);
                             }
@@ -1385,6 +1456,70 @@ export class ASNComponent implements OnInit {
         }
     }
 
+    DownloadASNItems(): void {
+        this.GetASNItemValues();
+        const itemsShowedd = [];
+        this.SelectedASNView.ASNItems.forEach(x => {
+            const item: ASNItemXLSX = {
+                'Item': x.Item,
+                'Material': x.Material,
+                'MaterialText': x.MaterialText,
+                'UnitPrice': x.UnitPrice,
+                'DeliveryDate': x.DeliveryDate ? this._datePipe.transform(x.DeliveryDate, 'dd-MM-yyyy') : '',
+                'OrderedQty': x.OrderedQty,
+                'GRQty': x.CompletedQty,
+                'PipelineQty': x.TransitQty,
+                'OpenQty': x.OpenQty,
+                'ASNQty': x.ASNQty,
+                'Batch': x.Batch,
+                'ManufactureDate': x.ManufactureDate ? this._datePipe.transform(x.ManufactureDate, 'dd-MM-yyyy') : '',
+                'ExpiryDate': x.ExpiryDate ? this._datePipe.transform(x.ExpiryDate, 'dd-MM-yyyy') : '',
+            };
+            itemsShowedd.push(item);
+        });
+        this._excelService.exportAsExcelFile(itemsShowedd, 'asnItems');
+    }
+    onSelectFile(event): void {
+        this.fileToUpload = event.target.files[0];
+        const fileReader = new FileReader();
+        fileReader.readAsArrayBuffer(this.fileToUpload);
+        fileReader.onload = (e) => {
+            this.arrayBuffer = fileReader.result;
+            const data = new Uint8Array(this.arrayBuffer);
+            const arr = new Array();
+            for (let i = 0; i !== data.length; ++i) { arr[i] = String.fromCharCode(data[i]); }
+            const bstr = arr.join("");
+            const workbook = XLSX.read(bstr, { type: "binary" });
+            if (workbook.SheetNames.length > 0) {
+                const first_sheet_name = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[first_sheet_name];
+                console.log(XLSX.utils.sheet_to_json(worksheet, { raw: true }));
+                this.ASNItemXLSXs = XLSX.utils.sheet_to_json(worksheet, { raw: true }) as ASNItemXLSX[];
+            }
+            if (this.ASNItemXLSXs.length > 0 && this.SelectedASNHeader) {
+                if (!this.SelectedASNHeader.ASNNumber) {
+                    this.UpdateASNItemFormGroupUsingXLSXData();
+                } else {
+                    this.notificationSnackBarComponent.openSnackBar('ASN has already been created', SnackBarStatus.danger);
+                }
+            }
+        };
+    }
+
+    UpdateASNItemFormGroupUsingXLSXData(): void {
+        this.ASNItemFormArray.controls.forEach((x, i) => {
+            const item: BPCASNItem = new BPCASNItem();
+            item.Item = x.get('Item').value;
+            item.Material = x.get('Material').value;
+            const curr = this.ASNItemXLSXs.filter(y => y.Item === item.Item && y.Material === item.Material)[0];
+            if (curr) {
+                x.get('ASNQty').patchValue(curr.ASNQty);
+                x.get('Batch').patchValue(curr.Batch);
+                x.get('ManufactureDate').patchValue(curr.ManufactureDate);
+                x.get('ExpiryDate').patchValue(curr.ExpiryDate);
+            }
+        });
+    }
 }
 
 export function MustValid(NetWeight: string, GrossWeight: string): ValidationErrors | null {

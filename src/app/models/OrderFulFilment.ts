@@ -267,9 +267,12 @@ export class BPCOFQMXLSX {
 }
 
 export class OfAttachmentData {
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
     DocNumber: string;
     OfAttachments: BPCInvoiceAttachment[];
-    Type: string | null;
 }
 export class SOItemCount {
     Client: string;

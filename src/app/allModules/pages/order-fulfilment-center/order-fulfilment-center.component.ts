@@ -437,25 +437,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
                 });
     }
 
-    GetOfAttachmentsByPartnerIDAndDocNumber(docNumber: string): void {
-        this.isProgressBarVisibile = true;
-        this._dashboardService.GetOfAttachmentsByPartnerIDAndDocNumber(this.authenticationDetails.UserName, docNumber)
-            .subscribe((data) => {
-                if (data) {
-                    this.ofAttachments = data as BPCInvoiceAttachment[];
-                    console.log(this.ofAttachments);
-                    const ofAttachmentData = new OfAttachmentData();
-                    ofAttachmentData.DocNumber = docNumber;
-                    ofAttachmentData.OfAttachments = this.ofAttachments;
-                    this.openAttachmentViewDialog(ofAttachmentData);
-                }
-                this.isProgressBarVisibile = false;
-            },
-                (err) => {
-                    console.error(err);
-                    this.isProgressBarVisibile = false;
-                });
-    }
+    
 
     initialiseOfDetailsFormGroup(): void {
         this.ofDetailsFormGroup = this._formBuilder.group({
@@ -704,9 +686,31 @@ export class OrderFulFilmentCenterComponent implements OnInit {
 
     viewOfAttachmentClicked(element: BPCOFHeader): void {
         // const attachments = this.ofAttachments.filter(x => x.AttachmentID.toString() === element.RefDoc);
-        this.GetOfAttachmentsByPartnerIDAndDocNumber(element.DocNumber);
+        this.GetOfAttachmentsByPartnerIDAndDocNumber(element);
     }
-
+    GetOfAttachmentsByPartnerIDAndDocNumber(element: BPCOFHeader): void {
+        this.isProgressBarVisibile = true;
+        this._dashboardService.GetOfAttachmentsByPartnerIDAndDocNumber(this.authenticationDetails.UserName, element.DocNumber)
+            .subscribe((data) => {
+                if (data) {
+                    this.ofAttachments = data as BPCInvoiceAttachment[];
+                    console.log(this.ofAttachments);
+                    const ofAttachmentData = new OfAttachmentData();
+                    ofAttachmentData.Client = element.Client;
+                    ofAttachmentData.Company = element.Company;
+                    ofAttachmentData.Type = element.Type;
+                    ofAttachmentData.PatnerID = element.PatnerID;
+                    ofAttachmentData.DocNumber = element.DocNumber;
+                    ofAttachmentData.OfAttachments = this.ofAttachments;
+                    this.openAttachmentViewDialog(ofAttachmentData);
+                }
+                this.isProgressBarVisibile = false;
+            },
+                (err) => {
+                    console.error(err);
+                    this.isProgressBarVisibile = false;
+                });
+    }
     openAttachmentViewDialog(ofAttachmentData: OfAttachmentData): void {
 
         const dialogConfig: MatDialogConfig = {
