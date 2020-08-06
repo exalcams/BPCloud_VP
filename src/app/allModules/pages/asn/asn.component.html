@@ -613,8 +613,14 @@
               </form> -->
             </div>
             <div fxFlex fxLayout="column" fxLayoutGap="20px" class="px-12 mt-4">
-              <div fxFlex>
+              <div fxFlex fxLayout fxLayoutAlign="space-between center">
                 <span class="Shipment-Proposal">Shipment Proposal</span>
+                <div fxFlex align="end">
+                  <mat-icon class="cursorPointer" (click)="DownloadASNItems()">south</mat-icon>
+                  <mat-icon class="cursorPointer" (click)="fileInput321.click()">north</mat-icon>
+                  <input hidden type="file" #fileInput321 id="file" (change)="onSelectFile($event)"
+                    accept=".csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+                </div>
               </div>
               <div fxFlex fxLayout="column">
                 <form autocomplete="off" class="abnormal" fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto"
@@ -650,6 +656,14 @@
                         <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
                           <!-- <input matInput formControlName="MaterialText">  -->
                           {{ASNItemFormGroup.get('ASNItems')?.controls[index]?.get('MaterialText')?.value}}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="UnitPrice">
+                        <th mat-header-cell *matHeaderCellDef> Unit Price </th>
+                        <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+                          <!-- <input matInput formControlName="MaterialText">  -->
+                          {{ASNItemFormGroup.get('ASNItems')?.controls[index]?.get('UnitPrice')?.value}}
                         </td>
                       </ng-container>
 
@@ -1003,7 +1017,7 @@
               <form autocomplete="off" class="normal" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="20px"
                 fxFlex="1 0 auto" name="form" novalidate [formGroup]="InvoiceDetailsFormGroup">
                 <div fxLayout="row" fxLayoutGap="20px" class="mb-12" fxLayoutAlign="start">
-                  <div fxFlex="33">
+                  <div fxFlex="25">
                     <mat-form-field class="pl-8 pr-12" style="width: 100%;">
                       <input matInput placeholder="Invoice Number (16 Char)" formControlName="InvoiceNumber">
                       <mat-error
@@ -1024,7 +1038,7 @@
                       </mat-error>
                     </mat-form-field>
                   </div>
-                  <div fxFlex="33">
+                  <div fxFlex="15">
                     <mat-form-field class="pl-8 pr-12" style="width: 100%;">
                       <input matInput placeholder="Invoice Date" [matDatepicker]="picker3" formControlName="InvoiceDate"
                         [max]="maxDate">
@@ -1038,7 +1052,39 @@
                       </mat-error>
                     </mat-form-field>
                   </div>
-                  <div fxFlex="33">
+                  <div fxFlex="15">
+                    <mat-form-field class="pl-8 pr-12" style="width: 100%;">
+                      <input matInput placeholder="PO Basic Price" formControlName="POBasicPrice"
+                        (keydown)="decimalOnly($event)" (blur)="CalculateInvoiceAmount()">
+                      <mat-error
+                        *ngIf="InvoiceDetailsFormGroup.get('POBasicPrice').touched && InvoiceDetailsFormGroup.get('InvoiceAmount').hasError('required')">
+                        PO Basic Price is required
+                      </mat-error>
+                      <mat-error *ngIf="InvoiceDetailsFormGroup.get('POBasicPrice').touched && !InvoiceDetailsFormGroup.get('InvoiceAmount').hasError('required')
+            &&InvoiceDetailsFormGroup.get('POBasicPrice').hasError('pattern')">
+                        Enter a valid amount
+                      </mat-error>
+                    </mat-form-field>
+                    <div *ngIf="isPOBasicPriceError && InvoiceDetailsFormGroup.get('POBasicPrice').valid"
+                      class="WeightError pl-8">
+                      Basic price Should match with Sum of ASN Qty values
+                    </div>
+                  </div>
+                  <div fxFlex="15">
+                    <mat-form-field class="pl-8 pr-12" style="width: 100%;">
+                      <input matInput placeholder="Tax Amount" formControlName="TaxAmount"
+                        (keydown)="decimalOnly($event)" (blur)="CalculateInvoiceAmount()">
+                      <mat-error
+                        *ngIf="InvoiceDetailsFormGroup.get('TaxAmount').touched && InvoiceDetailsFormGroup.get('InvoiceAmount').hasError('required')">
+                        Tax Amount is required
+                      </mat-error>
+                      <mat-error *ngIf="InvoiceDetailsFormGroup.get('TaxAmount').touched && !InvoiceDetailsFormGroup.get('InvoiceAmount').hasError('required')
+            &&InvoiceDetailsFormGroup.get('TaxAmount').hasError('pattern')">
+                        Enter a valid amount
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div fxFlex="30">
                     <div fxLayout="row" fxLayoutAlign="start">
                       <div fxFlex='70'>
                         <mat-form-field class="pl-8 pr-12" style="width: 100%;">
@@ -1237,8 +1283,8 @@
                 class="DeleteBtn mr-4 mb-8" (click)="DeleteClicked()">Delete</button>
             </div>
             <div fxFlex align="end">
-              <button *ngIf="( SelectedASNHeader?.ASNNumber|| PO?.DocNumber) && !SelectedASNHeader?.IsSubmitted" mat-raised-button class="SaveBtn"
-                (click)="SubmitClicked()">Release</button>
+              <button *ngIf="( SelectedASNHeader?.ASNNumber|| PO?.DocNumber) && !SelectedASNHeader?.IsSubmitted"
+                mat-raised-button class="SaveBtn" (click)="SubmitClicked()">Release</button>
               <button *ngIf="( SelectedASNHeader?.ASNNumber|| PO?.DocNumber) && !SelectedASNHeader?.IsSubmitted"
                 mat-raised-button class="SaveBtn" (click)="SaveClicked()">Save</button>
             </div>

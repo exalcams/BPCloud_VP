@@ -24,6 +24,8 @@ export class BPCASNHeader extends CommonClass {
     NumberOfPacks: number;
     InvoiceNumber: string;
     InvoiceDate: Date | string | null;
+    POBasicPrice: number | null;
+    TaxAmount: number | null;
     InvoiceAmount: number;
     InvoiceAmountUOM: string;
     InvDocReferenceNo: string;
@@ -57,6 +59,11 @@ export class BPCASNItem extends CommonClass {
     ManufactureDate: Date | string | null;
     ExpiryDate: Date | string | null;
     ManfCountry: string;
+    PlantCode: string;
+    UnitPrice: number | null;
+    Value: number | null;
+    TaxAmount: number | null;
+    TaxCode: string;
 }
 export class BPCASNPack extends CommonClass {
     ID: number;
@@ -85,6 +92,8 @@ export class BPCFLIPHeader extends CommonClass {
     FLIPID: string;
     InvoiceNumber: string;
     InvoiceDate: Date | string | null;
+    POBasicPrice: number | null;
+    TaxAmount: number | null;
     InvoiceAmount: number;
 }
 
@@ -143,6 +152,8 @@ export class BPCASNView extends CommonClass {
     NumberOfPacks: number;
     InvoiceNumber: string;
     InvoiceDate: Date | string | null;
+    POBasicPrice: number | null;
+    TaxAmount: number | null;
     InvoiceAmount: number;
     InvoiceAmountUOM: string;
     InvDocReferenceNo: string;
@@ -197,6 +208,22 @@ export class BPCDocumentCenterMaster extends CommonClass {
     Extension: string;
     SizeInKB: number;
     ForwardMail: string;
+}
+
+export class ASNItemXLSX {
+    Item: string;
+    Material: string;
+    MaterialText: string;
+    UnitPrice: number;
+    DeliveryDate: Date | string | null;
+    OrderedQty: number;
+    GRQty: number;
+    PipelineQty: number;
+    OpenQty: number;
+    ASNQty: number;
+    Batch: string;
+    ManufactureDate: Date | string | null;
+    ExpiryDate: Date | string | null;
 }
 
 

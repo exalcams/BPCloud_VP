@@ -344,8 +344,12 @@ export class AttachmentViewDialogComponent implements OnInit {
   }
 
   getSupportTicket(documentRefNo: string): void {
+    this.supportTicketView.Client = this.ofAttachmentData.Client;
+    this.supportTicketView.Company = this.ofAttachmentData.Company;
+    this.supportTicketView.Type = this.ofAttachmentData.Type;
+    this.supportTicketView.PatnerID = this.ofAttachmentData.PatnerID;
     this.supportTicketView.ReasonCode = "4592";
-    this.supportTicketView.ReasonRemarks = "ABC Ticket is raised for the PO" + documentRefNo;
+    this.supportTicketView.ReasonRemarks = "ABC Ticket is raised for the PO " + documentRefNo;
     this.supportTicketView.DocumentRefNo = documentRefNo;
     this.supportTicketView.PatnerID = this.authenticationDetails.UserName;
     let supportMaster = new SupportMaster();
@@ -354,9 +358,6 @@ export class AttachmentViewDialogComponent implements OnInit {
       this.getFilteredUsers(supportMaster);
     }
     this.supportTicketView.Users = this.filteredUsers;
-    if (this.ofAttachmentData.Type) {
-      this.supportTicketView.Type = this.ofAttachmentData.Type;
-    }
     console.log(this.filteredUsers);
   }
 
