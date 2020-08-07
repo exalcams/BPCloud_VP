@@ -70,6 +70,7 @@ import { PerformanceComponent } from "./performance/performance.component";
 import { NgImageSliderModule } from "ng-image-slider";
 import { TranslateModule } from '@ngx-translate/core';
 import { ImprovementComponent } from "./improvement/improvement.component";
+import { DeclarationComponent } from './declaration/declaration.component';
 
 // import 'chart.piecelabel.js';
 
@@ -129,6 +130,10 @@ const routes = [
     {
         path: "improvement",
         component: ImprovementComponent,
+    },
+    {
+        path: "declaration",
+        component: DeclarationComponent,
     },
     {
         path: "**",
@@ -221,6 +226,7 @@ const routes = [
         PerformanceComponent,
         FaqComponent,
         ImprovementComponent,
+        DeclarationComponent,
     ],
     providers: [DecimalPipe],
     entryComponents: [],

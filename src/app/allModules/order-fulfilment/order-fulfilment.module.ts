@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SubconComponent } from './subcon.component';
 import { Routes, RouterModule } from '@angular/router';
 import { MatFormFieldModule, MatAutocompleteModule, MatBadgeModule, MatBottomSheetModule, 
   MatButtonModule, MatButtonToggleModule, MatCardModule, MatCheckboxModule, MatChipsModule,
@@ -12,15 +11,31 @@ import { MatFormFieldModule, MatAutocompleteModule, MatBadgeModule, MatBottomShe
 import { FuseSharedModule } from '@fuse/shared.module';
 import { FuseSidebarModule, FuseCountdownModule, FuseHighlightModule, FuseMaterialColorPickerModule, FuseWidgetModule } from '@fuse/components';
 import { FormsModule } from '@angular/forms';
+import { PoSchedulesComponent } from './po-schedules/po-schedules.component';
+import { ASNListComponent } from './asnlist/asnlist.component';
+import { GRNListComponent } from './grnlist/grnlist.component';
+import { InvoiceListComponent } from './invoice-list/invoice-list.component';
 
 const route: Routes = [
   {
-    path: 'productionlog',
-    component: SubconComponent
+    path: 'poschedules',
+    component: PoSchedulesComponent
+  },
+  {
+    path: 'asnlist',
+    component: ASNListComponent
+  },
+  {
+    path: 'grnlist',
+    component: GRNListComponent
+  },
+  {
+    path: 'invoicelist',
+    component: InvoiceListComponent
   }
 ];
 @NgModule({
-  declarations: [SubconComponent],
+  declarations: [PoSchedulesComponent, ASNListComponent, GRNListComponent, InvoiceListComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(route),
@@ -73,4 +88,4 @@ const route: Routes = [
     FormsModule,
   ]
 })
-export class SubconModule { }
+export class OrderFulfilmentModule { }

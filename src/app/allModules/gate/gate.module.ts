@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SubconComponent } from './subcon.component';
 import { Routes, RouterModule } from '@angular/router';
 import { MatFormFieldModule, MatAutocompleteModule, MatBadgeModule, MatBottomSheetModule, 
   MatButtonModule, MatButtonToggleModule, MatCardModule, MatCheckboxModule, MatChipsModule,
@@ -12,15 +11,26 @@ import { MatFormFieldModule, MatAutocompleteModule, MatBadgeModule, MatBottomShe
 import { FuseSharedModule } from '@fuse/shared.module';
 import { FuseSidebarModule, FuseCountdownModule, FuseHighlightModule, FuseMaterialColorPickerModule, FuseWidgetModule } from '@fuse/components';
 import { FormsModule } from '@angular/forms';
+import { GateEntryComponent } from './gate-entry/gate-entry.component';
+import { VehicleTurnaroundComponent } from './vehicle-turnaround/vehicle-turnaround.component';
+import { HoveringVehiclesComponent } from './hovering-vehicles/hovering-vehicles.component';
 
 const route: Routes = [
-  {
-    path: 'productionlog',
-    component: SubconComponent
-  }
+    {
+        path: 'gateentry',
+        component: GateEntryComponent
+      },
+      {
+        path: 'vehicleturn',
+        component: VehicleTurnaroundComponent
+      },
+      {
+        path: 'hoveringvehicle',
+        component: HoveringVehiclesComponent
+      },
 ];
 @NgModule({
-  declarations: [SubconComponent],
+  declarations: [GateEntryComponent, VehicleTurnaroundComponent, HoveringVehiclesComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(route),
@@ -73,4 +83,4 @@ const route: Routes = [
     FormsModule,
   ]
 })
-export class SubconModule { }
+export class GateModule { }

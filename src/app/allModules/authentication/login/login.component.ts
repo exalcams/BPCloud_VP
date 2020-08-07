@@ -30,8 +30,10 @@ export class LoginComponent implements OnInit {
   children: FuseNavigation[] = [];
   subChildren: FuseNavigation[] = [];
   orderFulfilmentSubChildren: FuseNavigation[] = [];
+  gateSubChildren: FuseNavigation[] = [];
+  qualitySubChildren: FuseNavigation[] = [];
+  subconSubChildren: FuseNavigation[] = [];
   supportSubChildren: FuseNavigation[] = [];
-  reportSubChildren: FuseNavigation[] = [];
   paymentSubChildren: FuseNavigation[] = [];
   configSubChildren: FuseNavigation[] = [];
   customerOrderFulfilmentSubChildren: FuseNavigation[] = [];
@@ -283,7 +285,6 @@ export class LoginComponent implements OnInit {
       this.menuItems = this.authenticationDetails.MenuItemNames.split(',');
     } else {
     }
-    // Vendor Related Menu Items
     if (this.menuItems.indexOf('Dashboard') >= 0) {
       this.children.push(
         {
@@ -299,35 +300,15 @@ export class LoginComponent implements OnInit {
       );
     }
 
-    if (this.menuItems.indexOf('OrderFulFilmentCenter') >= 0) {
-      this.orderFulfilmentSubChildren.push(
-        {
-          id: 'fulfilmentCenter',
-          title: 'Fulfilment Center',
-          translate: 'NAV.VENDOR.FULFILMENT_CENTER',
-          type: 'item',
-          url: '/pages/orderfulfilmentCenter',
-        },
-      );
-    }
+    this.GetOrderFulfilmetMenus();
+    this.GetGateMenus();
+    this.GetQualityMenus();
+    this.GetSubconMenus();
+    this.GetPaymentMenus();
+    this.GetSupportMenus();
+    this.GetCustomerMenus();
+    this.GetAdminMenus();
 
-    if (this.menuItems.indexOf('OrderFulFilmentCenter') >= 0
-        ) {
-      this.children.push(
-        {
-          id: 'orderfulfilmentCenter',
-          title: 'Order Fulfilment',
-          translate: 'NAV.VENDOR.ORDER_FULFILMENT',
-          type: 'collapsable',
-          icon: 'orderfulfilmentIcon',
-          isSvgIcon: true,
-          // icon: 'dashboard',
-          children: this.orderFulfilmentSubChildren,
-        }
-      );
-    }
-    
-   
     if (this.menuItems.indexOf('Invoice') >= 0) {
       this.children.push(
         {
@@ -342,23 +323,275 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-   
-    if (this.menuItems.indexOf('DataMigration') >= 0) {
+
+    if (this.menuItems.indexOf('Improvement') >= 0) {
       this.children.push(
         {
-          id: 'datamigration',
-          title: 'Data Migration',
-          translate: 'NAV.VENDOR.DATA_MIGRATION',
+          id: 'improvement',
+          title: 'Improvement',
+          translate: 'NAV.VENDOR.IMPROVEMENT',
           type: 'item',
-          icon: 'receiptIcon',
+          icon: 'flipIcon',
           isSvgIcon: true,
-          // icon: 'receipt',
-          url: '/pages/datamigration',
+          // icon: 'dashboard',
+          url: '/pages/improvement',
+        }
+      );
+    }
+    if (this.menuItems.indexOf('GRReceipts') >= 0) {
+      this.qualitySubChildren.push(
+        {
+          id: 'grReceipts',
+          title: 'GR Receipts',
+          translate: 'NAV.VENDOR.GR_RECEIPTS',
+          type: 'item',
+          url: '/reports/grReceipts'
         }
       );
     }
 
-    // Payment related menus
+    this.navigation.push({
+      id: 'applications',
+      title: '',
+      translate: 'NAV.APPLICATIONS',
+      type: 'group',
+      children: this.children
+    });
+    // Saving local Storage
+    localStorage.setItem('menuItemsData', JSON.stringify(this.navigation));
+    // Update the service in order to update menu
+    this._menuUpdationService.PushNewMenus(this.navigation);
+  }
+
+  GetOrderFulfilmetMenus(): void {
+    if (this.menuItems.indexOf('OrderFulFilmentCenter') >= 0) {
+      this.orderFulfilmentSubChildren.push(
+        {
+          id: 'fulfilmentCenter',
+          title: 'Fulfilment Center',
+          translate: 'NAV.VENDOR.FULFILMENT_CENTER',
+          type: 'item',
+          url: '/pages/orderfulfilmentCenter',
+        },
+      );
+    }
+
+    this.orderFulfilmentSubChildren.push(
+      {
+        id: 'poschedules',
+        title: 'PO Schedules',
+        translate: 'NAV.VENDOR.FULFILMENT_CENTER',
+        type: 'item',
+        url: '/orderfulfilment/poschedules',
+      },
+    );
+
+    this.orderFulfilmentSubChildren.push(
+      {
+        id: 'asnlist',
+        title: 'ASN List',
+        translate: 'NAV.VENDOR.FULFILMENT_CENTER',
+        type: 'item',
+        url: '/orderfulfilment/asnlist',
+      },
+    );
+
+    this.orderFulfilmentSubChildren.push(
+      {
+        id: 'grnlist',
+        title: 'GRN List',
+        translate: 'NAV.VENDOR.FULFILMENT_CENTER',
+        type: 'item',
+        url: '/orderfulfilment/grnlist',
+      },
+    );
+
+    this.orderFulfilmentSubChildren.push(
+      {
+        id: 'invoicelist',
+        title: 'Invoice List',
+        translate: 'NAV.VENDOR.FULFILMENT_CENTER',
+        type: 'item',
+        url: '/orderfulfilment/invoicelist',
+      },
+    );
+
+    if (this.menuItems.indexOf('OrderFulFilmentCenter') >= 0
+    ) {
+      this.children.push(
+        {
+          id: 'orderfulfilmentCenter',
+          title: 'Order Fulfilment',
+          translate: 'NAV.VENDOR.ORDER_FULFILMENT',
+          type: 'collapsable',
+          icon: 'orderfulfilmentIcon',
+          isSvgIcon: true,
+          // icon: 'dashboard',
+          children: this.orderFulfilmentSubChildren,
+        }
+      );
+    }
+  }
+
+  GetGateMenus(): void {
+    if (this.menuItems.indexOf('GateEntry') >= 0) {
+      this.gateSubChildren.push(
+        {
+          id: 'gateentry',
+          title: 'Gate Entry',
+          translate: 'NAV.VENDOR.FULFILMENT_CENTER',
+          type: 'item',
+          url: '/gate/gateentry',
+        },
+      );
+    }
+    if (this.menuItems.indexOf('VehicleTurnaround') >= 0) {
+      this.gateSubChildren.push(
+        {
+          id: 'vehicleturn',
+          title: 'Vehicle Turnaround',
+          translate: 'NAV.VENDOR.FULFILMENT_CENTER',
+          type: 'item',
+          url: '/gate/vehicleturn',
+        },
+      );
+    }
+    
+    if (this.menuItems.indexOf('HoveringVehicles') >= 0) {
+      this.gateSubChildren.push(
+        {
+          id: 'hoveringvehicles',
+          title: 'Hovering Vehicles',
+          translate: 'NAV.VENDOR.FULFILMENT_CENTER',
+          type: 'item',
+          url: '/gate/hoveringvehicle',
+        },
+      );
+    }
+    if (this.menuItems.indexOf('GateEntry') >= 0 ||
+      this.menuItems.indexOf('VehicleTurnaround') >= 0 ||
+      this.menuItems.indexOf('HoveringVehicles') >= 0) {
+      this.children.push(
+        {
+          id: 'gate',
+          title: 'Gate',
+          translate: 'NAV.VENDOR.ORDER_FULFILMENT',
+          type: 'collapsable',
+          icon: 'commute',
+          // isSvgIcon: true,
+          // icon: 'dashboard',
+          children: this.gateSubChildren,
+        }
+      );
+    }
+  }
+
+  GetQualityMenus(): void {
+
+    if (this.menuItems.indexOf('Overview') >= 0) {
+      this.qualitySubChildren.push(
+        {
+          id: 'overview',
+          title: 'Overview',
+          translate: 'NAV.VENDOR.OVERVIEW',
+          type: 'item',
+          url: '/reports/overview'
+        }
+      );
+    }
+
+    if (this.menuItems.indexOf('PPM') >= 0) {
+      this.qualitySubChildren.push(
+        {
+          id: 'ppm',
+          title: 'PPM',
+          translate: 'NAV.VENDOR.PPM',
+          type: 'item',
+          url: '/reports/ppm'
+        }
+      );
+    }
+    if (this.menuItems.indexOf('DOL') >= 0) {
+      this.qualitySubChildren.push(
+        {
+          id: 'dol',
+          title: 'DOL',
+          translate: 'NAV.VENDOR.DOL',
+          type: 'item',
+          url: '/reports/dol'
+        }
+      );
+    }
+    if (this.menuItems.indexOf('InspectionPlan') >= 0) {
+      this.qualitySubChildren.push(
+        {
+          id: 'inspectionPlan',
+          title: 'Inspection Plan',
+          translate: 'NAV.VENDOR.INSPECTION_PLAN',
+          type: 'item',
+          url: '/reports/inspectionPlan'
+        }
+      );
+    }
+    if (this.menuItems.indexOf('VendorRating') >= 0) {
+      this.qualitySubChildren.push(
+        {
+          id: 'vendorRating',
+          title: 'Vendor Rating',
+          translate: 'NAV.VENDOR.VENDOR_RATING',
+          type: 'item',
+          url: '/reports/vendorRating'
+        }
+      );
+    }
+
+    if (this.menuItems.indexOf('PPM') >= 0 || this.menuItems.indexOf('DOL') >= 0 ||
+      this.menuItems.indexOf('VendorRating') >= 0 || this.menuItems.indexOf('Overview') >= 0 ||
+      this.menuItems.indexOf('InspectionPlan') >= 0) {
+      this.children.push({
+        id: 'quality',
+        title: 'Quality',
+        translate: 'NAV.VENDOR.REPORTS',
+        type: 'collapsable',
+        icon: 'reportIcon',
+        isSvgIcon: true,
+        // icon: 'view_list',
+        children: this.qualitySubChildren
+      }
+      );
+    }
+
+  }
+
+  GetSubconMenus(): void {
+    if (this.menuItems.indexOf('FGChildPartStock') >= 0) {
+      this.subconSubChildren.push(
+        {
+          id: 'fgChildPartStock',
+          title: 'FG Child Part Stock',
+          translate: 'NAV.VENDOR.FG_CHILD_PART_STOCK',
+          type: 'item',
+          url: '/reports/fgChildPartStock'
+        }
+      );
+    }
+
+    if (this.menuItems.indexOf('FGChildPartStock') >= 0) {
+      this.children.push({
+        id: 'subcon',
+        title: 'Subcon',
+        translate: 'NAV.VENDOR.PAYMENT',
+        type: 'collapsable',
+        icon: 'stockIcon',
+        isSvgIcon: true,
+        // icon: 'view_list',
+        children: this.subconSubChildren
+      }
+      );
+    }
+  }
+
+  GetPaymentMenus(): void {
 
     if (this.menuItems.indexOf('Flip') >= 0) {
       this.paymentSubChildren.push(
@@ -455,9 +688,9 @@ export class LoginComponent implements OnInit {
       }
       );
     }
+  }
 
-    // Support related menus
-
+  GetSupportMenus(): void {
     if (this.menuItems.indexOf('SupportDesk') >= 0) {
       this.supportSubChildren.push(
         {
@@ -466,6 +699,18 @@ export class LoginComponent implements OnInit {
           translate: 'NAV.VENDOR.GET_SUPPORT',
           type: 'item',
           url: '/pages/supportdesk',
+        }
+      );
+    }
+
+    if (this.menuItems.indexOf('Declaration') >= 0) {
+      this.supportSubChildren.push(
+        {
+          id: 'declaration',
+          title: 'Declaration',
+          translate: 'NAV.VENDOR.GET_SUPPORT',
+          type: 'item',
+          url: '/pages/declaration',
         }
       );
     }
@@ -507,117 +752,9 @@ export class LoginComponent implements OnInit {
       }
       );
     }
-    if (this.menuItems.indexOf('Improvement') >= 0) {
-      this.children.push(
-        {
-          id: 'improvement',
-          title: 'Improvement',
-          translate: 'NAV.VENDOR.IMPROVEMENT',
-          type: 'item',
-          icon: 'flipIcon',
-          isSvgIcon: true,
-          // icon: 'dashboard',
-          url: '/pages/improvement',
-        }
-      );
-    }
-    
-    // Report Related Menu Items
-    if (this.menuItems.indexOf('PPM') >= 0) {
-      this.reportSubChildren.push(
-        {
-          id: 'ppm',
-          title: 'PPM',
-          translate: 'NAV.VENDOR.PPM',
-          type: 'item',
-          url: '/reports/ppm'
-        }
-      );
-    }
-    if (this.menuItems.indexOf('DOL') >= 0) {
-      this.reportSubChildren.push(
-        {
-          id: 'dol',
-          title: 'DOL',
-          translate: 'NAV.VENDOR.DOL',
-          type: 'item',
-          url: '/reports/dol'
-        }
-      );
-    }
-    if (this.menuItems.indexOf('Overview') >= 0) {
-      this.reportSubChildren.push(
-        {
-          id: 'overview',
-          title: 'Overview',
-          translate: 'NAV.VENDOR.OVERVIEW',
-          type: 'item',
-          url: '/reports/overview'
-        }
-      );
-    }
-    if (this.menuItems.indexOf('VendorRating') >= 0) {
-      this.reportSubChildren.push(
-        {
-          id: 'vendorRating',
-          title: 'Vendor Rating',
-          translate: 'NAV.VENDOR.VENDOR_RATING',
-          type: 'item',
-          url: '/reports/vendorRating'
-        }
-      );
-    }
-    if (this.menuItems.indexOf('InspectionPlan') >= 0) {
-      this.reportSubChildren.push(
-        {
-          id: 'inspectionPlan',
-          title: 'Inspection Plan',
-          translate: 'NAV.VENDOR.INSPECTION_PLAN',
-          type: 'item',
-          url: '/reports/inspectionPlan'
-        }
-      );
-    }
-    if (this.menuItems.indexOf('FGChildPartStock') >= 0) {
-      this.reportSubChildren.push(
-        {
-          id: 'fgChildPartStock',
-          title: 'FG Child Part Stock',
-          translate: 'NAV.VENDOR.FG_CHILD_PART_STOCK',
-          type: 'item',
-          url: '/reports/fgChildPartStock'
-        }
-      );
-    }
-    if (this.menuItems.indexOf('GRReceipts') >= 0) {
-      this.reportSubChildren.push(
-        {
-          id: 'grReceipts',
-          title: 'GR Receipts',
-          translate: 'NAV.VENDOR.GR_RECEIPTS',
-          type: 'item',
-          url: '/reports/grReceipts'
-        }
-      );
-    }
+  }
 
-    if (this.menuItems.indexOf('PPM') >= 0 || this.menuItems.indexOf('DOL') >= 0 ||
-      this.menuItems.indexOf('VendorRating') >= 0 || this.menuItems.indexOf('Overview') >= 0 ||
-      this.menuItems.indexOf('InspectionPlan') >= 0 || this.menuItems.indexOf('FGChildPartStock') >= 0
-      || this.menuItems.indexOf('GRReciepts') >= 0) {
-      this.children.push({
-        id: 'reports',
-        title: 'Reports',
-        translate: 'NAV.VENDOR.REPORTS',
-        type: 'collapsable',
-        icon: 'reportIcon',
-        isSvgIcon: true,
-        // icon: 'view_list',
-        children: this.reportSubChildren
-      }
-      );
-    }
-    // Customer Related Menu Items
+  GetCustomerMenus(): void {
     if (this.menuItems.indexOf('CustomerDashboard') >= 0) {
       this.children.push(
         {
@@ -647,7 +784,7 @@ export class LoginComponent implements OnInit {
     }
 
     if (this.menuItems.indexOf('CustomerOrderFulFilmentCenter') >= 0
-        ) {
+    ) {
       this.children.push(
         {
           id: 'orderfulfilmentCenter',
@@ -661,7 +798,7 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-   
+
     if (this.menuItems.indexOf('PurchaseIndent') >= 0) {
       this.children.push(
         {
@@ -730,7 +867,7 @@ export class LoginComponent implements OnInit {
       );
     }
     if (this.menuItems.indexOf('CustomerSupportDesk') >= 0 || this.menuItems.indexOf('CustomerFact') >= 0
-      ) {
+    ) {
       this.children.push({
         id: 'master',
         title: 'Support',
@@ -743,8 +880,25 @@ export class LoginComponent implements OnInit {
       }
       );
     }
+  }
 
-    // Admin Related Menu Items
+  GetAdminMenus(): void {
+
+    if (this.menuItems.indexOf('DataMigration') >= 0) {
+      this.children.push(
+        {
+          id: 'datamigration',
+          title: 'Data Migration',
+          translate: 'NAV.VENDOR.DATA_MIGRATION',
+          type: 'item',
+          icon: 'receiptIcon',
+          isSvgIcon: true,
+          // icon: 'receipt',
+          url: '/pages/datamigration',
+        }
+      );
+    }
+
     if (this.menuItems.indexOf('App') >= 0) {
       this.subChildren.push(
         {
@@ -905,17 +1059,5 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    this.navigation.push({
-      id: 'applications',
-      title: '',
-      translate: 'NAV.APPLICATIONS',
-      type: 'group',
-      children: this.children
-    });
-    // Saving local Storage
-    localStorage.setItem('menuItemsData', JSON.stringify(this.navigation));
-    // Update the service in order to update menu
-    this._menuUpdationService.PushNewMenus(this.navigation);
   }
-
 }

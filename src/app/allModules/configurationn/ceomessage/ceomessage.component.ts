@@ -9,7 +9,7 @@ export class CEOMessageComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
 }
