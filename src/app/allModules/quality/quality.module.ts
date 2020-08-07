@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SubconComponent } from './subcon.component';
 import { Routes, RouterModule } from '@angular/router';
 import { MatFormFieldModule, MatAutocompleteModule, MatBadgeModule, MatBottomSheetModule, 
   MatButtonModule, MatButtonToggleModule, MatCardModule, MatCheckboxModule, MatChipsModule,
@@ -14,13 +13,21 @@ import { FuseSidebarModule, FuseCountdownModule, FuseHighlightModule, FuseMateri
 import { FormsModule } from '@angular/forms';
 
 const route: Routes = [
-  {
-    path: 'productionlog',
-    component: SubconComponent
-  }
+    // {
+    //     path: 'gateentry',
+    //     component: GateEntryComponent
+    //   },
+    //   {
+    //     path: 'vehicleturn',
+    //     component: VehicleTurnaroundComponent
+    //   },
+    //   {
+    //     path: 'hoveringvehicle',
+    //     component: HoveringVehiclesComponent
+    //   },
 ];
 @NgModule({
-  declarations: [SubconComponent],
+  declarations: [],
   imports: [
     CommonModule,
     RouterModule.forChild(route),
@@ -73,4 +80,4 @@ const route: Routes = [
     FormsModule,
   ]
 })
-export class SubconModule { }
+export class QaulityModule { }

@@ -1,0 +1,190 @@
+<div id="asnlist" class="page-layout carded fullwidth">
+  <div class="center">
+    <div class="outer" fxLayout>
+      <div class="bg"></div>
+      <div>
+        <h3 style="margin: 0px;padding-left: 10px;"><b>ASN List</b></h3>
+      </div>
+      <div fxFlex align="end">
+        <span><img src="assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
+      </div>
+    </div>
+    <div fxLayout="column" class="content-card1">
+
+      <div style="height:160px;margin-left: 20px;margin-right: 20px;margin-top: 15px;" fxLayout  fxLayoutGap="60px">
+        <div fxFlex="33" >
+          
+             <div>
+                <img src="assets/images/search.png" width="17px" height="17px" class="searchImg_po">
+                <input  type="text" placeholder="ASN"  class="search-input_po" >
+             </div>
+                <div fxLayout="row" fxLayoutGap="20px"  style="width:100%;margin-top: 20px !important; ">
+                  <div style="width:100%;" >
+                  <p class="leftDivider" fxFlex="49.5"></p>
+                  <div fxFlex="1">
+                    <p class="cl_circle"></p>
+                  </div>
+                  <p class="rightDivider" fxFlex="49.5"></p>
+                </div>
+                </div>
+              
+                  <img src="assets/images/search.png" width="17px" height="17px" class="searchImg_po">
+                  <input  type="text" placeholder="PO"   class="search-input_po" >
+              
+            </div>
+        <div fxFlex="33" >
+         
+            <div>
+            <img src="assets/images/search.png" width="17px" height="17px" class="searchImg_po">
+            <input  type="text" placeholder="Material"  class="search-input_po" >
+            </div>
+            <div fxLayout="row" fxLayoutGap="20px"  style="width:100%;margin-top: 20px !important; ">
+              <div style="width:100%;" >
+              <p class="leftDivider" fxFlex="49.5"></p>
+              <div fxFlex="1">
+                <p class="cl_circle"></p>
+              </div>
+              <p class="rightDivider" fxFlex="49.5"></p>
+            </div>
+            </div>
+          
+              <img src="assets/images/search.png" width="17px" height="17px" class="searchImg_po">
+              <input  type="text" placeholder="Status"   class="search-input_po" >
+            
+        </div>
+    
+    
+        <div fxFlex="33" >
+          
+        <div fxLayout fxLayoutGap="10px" style="margin-top: 15px;max-width: 100%;">
+           <div fxFlex="50" style="text-align: end;">
+            <input  type="text" placeholder="ASN From Dt"  class="input_date" [matDatepicker]="picker" >
+            <mat-datepicker #picker>
+            </mat-datepicker>
+            <img src="assets/images/calendar.png" width="15px" height="15px" (click)="picker.open()" class="inp_Img_date">
+          </div>
+          <div fxFlex="50"  style="text-align: end" >
+           
+              <input  type="text" placeholder="ASN To Dt"   class="input_date"  [matDatepicker]="picker1">
+              <mat-datepicker #picker1>
+              </mat-datepicker>
+              <img src="assets/images/calendar.png" width="15px" height="15px" (click)="picker1.open()" class="inp_Img_date">
+            </div>
+            </div>
+            <div style="width:100%;height:100%;text-align: end;margin-top: 57px;" >
+              <button mat-flat-button class="cl_searchBtn" >
+                Search
+              </button>
+            </div>
+        
+        </div>
+       
+    </div>
+    
+    
+    <mat-toolbar    class="toolbar" fxLayout="row">
+      <div style="width:50%"  >
+      <img src="assets/images/search.png" width="17px" height="17px" class="searchImg">
+      <input  type="text"  placeholder="Search" class="search-input">
+      </div>
+    <span class="fill"></span>
+    
+    <select class="selectInput" >
+    <option>All</option>
+    <option>One</option>
+    </select>
+    <div class="excel" >
+     <img src="assets/images/excel.png" width="14px" height="14px" >
+    </div>
+    <!-- <div > -->
+    <img src="assets/images/expand.png" width="35px" height="35px"  style="margin-right: 5px;">
+    <!-- </div> -->
+    </mat-toolbar>
+    
+    <div >
+    <mat-table  id="excel-table"  class="cl_table" [dataSource]="TableDetailsDataSource" >
+      <!-- Material Column -->
+      <ng-container matColumnDef="ASN" >
+        <mat-header-cell *matHeaderCellDef fxFlex="12" style="margin-left: 5px;" class="tableHeader"> ASN </mat-header-cell>
+        <mat-cell fxFlex="12" *matCellDef="let element ;index as i">
+          <p class="cl_box" [ngStyle]="{'background-color': i%2==0 ? '#d87e39':'#6f52ed'}"></p>
+          <p style="margin-left: 5px;"  class="tableElement" >{{element.ASN }} </p>
+        </mat-cell>
+      </ng-container>
+    
+      <ng-container matColumnDef="PO">
+        <mat-header-cell *matHeaderCellDef fxFlex="10" class="tableHeader"> PO </mat-header-cell>
+        <mat-cell fxFlex="10" *matCellDef="let element">
+          <p class="tableElement" >{{element.PO}}</p>
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="AWB">
+        <mat-header-cell fxFlex="7" *matHeaderCellDef class="tableHeader"> AWB </mat-header-cell>
+        <mat-cell fxFlex="7" *matCellDef="let element">
+          <p class="tableElement" >{{element.AWB}}</p>
+        </mat-cell>
+      </ng-container>
+    
+      <ng-container matColumnDef="Truck">
+        <mat-header-cell fxFlex="7" *matHeaderCellDef class="tableHeader" > Truck </mat-header-cell>
+        <mat-cell fxFlex="7" *matCellDef="let element">
+          <p class="tableElement">{{element.Truck}} </p>
+        </mat-cell>
+      </ng-container>
+    
+      <ng-container matColumnDef="Material">
+        <mat-header-cell fxFlex="10" *matHeaderCellDef class="tableHeader" > Material </mat-header-cell>
+        <mat-cell fxFlex="10" *matCellDef="let element">
+          <p class="tableElement">{{element.Material}} </p>
+        </mat-cell>
+      </ng-container>
+    
+      <!-- MaterialText Column -->
+      <ng-container matColumnDef="MaterialText">
+        <mat-header-cell fxFlex="23" *matHeaderCellDef class="tableHeader" > Material Text </mat-header-cell>
+        <mat-cell  fxFlex="23" *matCellDef="let element">
+          <p class="tableElement">{{element.MaterialText}} </p>
+        </mat-cell>
+      </ng-container>
+    
+      <!-- AcceptedQuantity Column -->
+      <ng-container matColumnDef="ASN_Qty">
+        <mat-header-cell fxFlex="9" *matHeaderCellDef class="tableHeader"> ASN Qty </mat-header-cell>
+        <mat-cell fxFlex="9" *matCellDef="let element">
+          <p class="tableElement">{{element.ASN_Qty}} </p>
+        </mat-cell>
+      </ng-container>
+    
+      <!-- RejectedQuantity Column -->
+      <ng-container matColumnDef="Status">
+        <mat-header-cell fxFlex="8" *matHeaderCellDef class="tableHeader"> Status </mat-header-cell>
+        <mat-cell fxFlex="8" *matCellDef="let element">
+          <img [src]="element.Status == 'ship' ? ship_url : element.Status == 'truck' ? truck_url: delivery_url" height="22px" width="26px" >
+          </mat-cell>
+      </ng-container>
+    
+      <ng-container matColumnDef="Action">
+        <mat-header-cell fxFlex="15" *matHeaderCellDef class="tableHeader"> Action </mat-header-cell>
+        <mat-cell fxFlex="15" *matCellDef="let element">
+          <img src="assets/images/lightning.png" width="11px" height="14px" class="lightning_img">
+          <select class="selectInput_table" >
+            <option>Action</option>
+            <option>option</option>
+            </select>
+         
+        </mat-cell>
+      </ng-container>
+    
+      <mat-header-row *matHeaderRowDef="displayColumn"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayColumn;"></mat-row>
+    </mat-table>
+
+
+    </div>
+    <!-- <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
+    </mat-progress-spinner>
+    <div id="overlay" *ngIf="isProgressBarVisibile">
+    </div> -->
+  </div>
+</div>
+

@@ -33,7 +33,6 @@ import { BnNgIdleService } from 'bn-ng-idle';
 import { InformationDialogComponent } from './notifications/information-dialog/information-dialog.component';
 import { TourScreenDialogComponent } from './allModules/pages/tour-screen-dialog/tour-screen-dialog.component';
 import { ASNReleaseDialogComponent } from './notifications/asnrelease-dialog/asnrelease-dialog.component';
-// import { AuditModule } from './allModules/audit/audit.module';
 
 const appRoutes: Routes = [
     {
@@ -43,6 +42,14 @@ const appRoutes: Routes = [
     {
         path: 'pages',
         loadChildren: './allModules/pages/pages.module#PagesModule'
+    },
+    {
+        path: 'gate',
+        loadChildren: './allModules/gate/gate.module#GateModule'
+    },
+    {
+        path: 'orderfulfilment',
+        loadChildren: './allModules/order-fulfilment/order-fulfilment.module#OrderFulfilmentModule'
     },
     {
         path: 'master',
@@ -84,6 +91,15 @@ const appRoutes: Routes = [
         path: 'payment',
         loadChildren: './allModules/payment/payment.module#PaymentModule'
     },
+    {
+        path: 'payment',
+        loadChildren: './allModules/payment/payment.module#PaymentModule'
+    },
+    {
+        path: 'payment',
+        loadChildren: './allModules/payment/payment.module#PaymentModule'
+    },
+    
     {
         path: '**',
         redirectTo: 'auth/login'
@@ -135,7 +151,7 @@ const appRoutes: Routes = [
         // App modules
         LayoutModule,
         PaymentModule,
-        // AuditModule
+        // AuditModule,
     ],
     providers: [
         DatePipe,
