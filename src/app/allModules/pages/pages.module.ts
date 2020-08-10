@@ -73,7 +73,8 @@ import { PerformanceComponent } from "./performance/performance.component";
 import { NgImageSliderModule } from "ng-image-slider";
 import { TranslateModule } from "@ngx-translate/core";
 import { ImprovementComponent } from "./improvement/improvement.component";
-import { DeclarationComponent } from "./declaration/declaration.component";
+import { DeclarationComponent } from './declaration/declaration.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 // import 'chart.piecelabel.js';
 
@@ -92,6 +93,10 @@ const routes = [
     },
     {
         path: "dashboard",
+        component: DashboardComponent,
+    },
+    {
+        path: "home",
         component: HomeComponent,
     },
     {
@@ -232,6 +237,7 @@ const routes = [
         ImprovementComponent,
         DeclarationComponent,
         TourComponent,
+        DashboardComponent,
     ],
     providers: [DecimalPipe],
     entryComponents: [TourComponent],
