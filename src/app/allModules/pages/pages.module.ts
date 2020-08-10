@@ -1,7 +1,10 @@
+import { TourComponent } from "./tour/tour.component";
 import { FaqComponent } from "./faq/faq.component";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { FuseSidebarModule } from "@fuse/components";
+import { MatCarouselModule } from "@ngmodule/material-carousel";
+
 import {
     MatFormFieldModule,
     MatAutocompleteModule,
@@ -68,9 +71,9 @@ import { PoFactsheetComponent } from "./po-factsheet/po-factsheet.component";
 import { OrderFulFilmentCenterComponent } from "./order-fulfilment-center/order-fulfilment-center.component";
 import { PerformanceComponent } from "./performance/performance.component";
 import { NgImageSliderModule } from "ng-image-slider";
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule } from "@ngx-translate/core";
 import { ImprovementComponent } from "./improvement/improvement.component";
-import { DeclarationComponent } from './declaration/declaration.component';
+import { DeclarationComponent } from "./declaration/declaration.component";
 
 // import 'chart.piecelabel.js';
 
@@ -209,7 +212,8 @@ const routes = [
         }),
         NgImageSliderModule,
         RouterModule.forChild(routes),
-        TranslateModule
+        TranslateModule,
+        MatCarouselModule,
     ],
     declarations: [
         OrderFulFilmentCenterComponent,
@@ -227,8 +231,9 @@ const routes = [
         FaqComponent,
         ImprovementComponent,
         DeclarationComponent,
+        TourComponent,
     ],
     providers: [DecimalPipe],
-    entryComponents: [],
+    entryComponents: [TourComponent],
 })
 export class PagesModule {}

@@ -1,4 +1,4 @@
-import { Guid } from 'guid-typescript';
+import { Guid } from "guid-typescript";
 
 export class UserWithRole {
     UserID: Guid;
@@ -100,6 +100,7 @@ export class AuthenticationDetails {
     Expires: string;
     Issued: string;
     Expiresin: string;
+    TourStatus: boolean;
 }
 export class ChangePassword {
     UserID: Guid;
@@ -157,4 +158,3 @@ export class LoginHistoryFilter {
     ToDate: string;
     UserName: string;
 }
-
