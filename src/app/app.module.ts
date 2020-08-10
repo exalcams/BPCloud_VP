@@ -27,11 +27,8 @@ import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { AttachmentDialogComponent } from './allModules/pages/attachment-dialog/attachment-dialog.component';
 import { PaymentModule } from './allModules/payment/payment.module';
 import { AttachmentViewDialogComponent } from './allModules/pages/attachment-view-dialog/attachment-view-dialog.component';
-// import { CustomerModule } from './allModules/customer/customer.module';
-// import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { BnNgIdleService } from 'bn-ng-idle';
 import { InformationDialogComponent } from './notifications/information-dialog/information-dialog.component';
-import { TourScreenDialogComponent } from './allModules/pages/tour-screen-dialog/tour-screen-dialog.component';
 import { ASNReleaseDialogComponent } from './notifications/asnrelease-dialog/asnrelease-dialog.component';
 
 const appRoutes: Routes = [
@@ -99,7 +96,7 @@ const appRoutes: Routes = [
         path: 'payment',
         loadChildren: './allModules/payment/payment.module#PaymentModule'
     },
-    
+
     {
         path: '**',
         redirectTo: 'auth/login'
@@ -114,7 +111,6 @@ const appRoutes: Routes = [
         AttachmentDialogComponent,
         AttachmentViewDialogComponent,
         InformationDialogComponent,
-        TourScreenDialogComponent,
         ASNReleaseDialogComponent
     ],
     imports: [
@@ -169,7 +165,6 @@ const appRoutes: Routes = [
         AttachmentDialogComponent,
         AttachmentViewDialogComponent,
         InformationDialogComponent,
-        TourScreenDialogComponent,
         ASNReleaseDialogComponent
     ]
 })
