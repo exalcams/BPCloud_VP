@@ -377,6 +377,11 @@
   .btnBg {
     background-color: #efb577 !important;
     color: white;
+    margin-bottom: 8px;
+  }
+  .saveBtn {
+    color: #efb577 !important;
+    margin-bottom: 8px;
   }
   .tile {
     @include mat-elevation(2);
@@ -676,6 +681,10 @@
   }
   .cardActions {
     box-shadow: 0 -5px 10px 0 rgba(0, 0, 0, 0.16);
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
   }
   .WeightError {
     color: #f44336;
@@ -690,5 +699,24 @@
   .floatBtn {
     position: fixed;
     bottom: 80px !important;
+  }
+  .save_button {
+    width: 83px;
+
+    background-color: #fbc96f;
+    color: white;
+  }
+  .release_button1 {
+    width: 83px;
+    color: #fbc96f;
+    background-color: white;
+    border-color: #fbc96f;
+    border-style: solid;
+    border-width: thin;
+  }
+  .mat_card {
+    border-style: none;
+    border-bottom: none;
+    box-shadow: none;
   }
 }
