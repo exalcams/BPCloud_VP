@@ -10,10 +10,24 @@
       </div>
     </div>
     <div fxLayout class="content-card1">
+      <mat-card class="mat_card p-0" style="height: 100% !important;width: 100% !important;">
+        <mat-card-content style="height: 88% !important;" class="richtext">
+          <form name="notesForm" [formGroup]="notesForm" novalidate fxLayout="column" fxFlex>
+            <div fxLayout fxLayoutAlign="center" class="p-8">
+              <ck-editor style="width: 100% !important;" name="editor1" formControlName="Notes" skin="moono-lisa" language="en" [fullPage]="true">
+              </ck-editor>
+            </div>
+          </form>
+        </mat-card-content>
+        <mat-card-actions class="m-0 px-12 cardActions">
+          <div fxLayout fxLayoutAlign="end center">
+            <div fxFlex align="end">
+              <button mat-raised-button type="button" class="btnBg mr-4" (click)="CloseClicked()">Release</button>
+              <button mat-stroked-button type="button" class="saveBtn" (click)="YesClicked()">Save</button>
+            </div>
+          </div>
+        </mat-card-actions>
+      </mat-card>
     </div>
-    <!-- <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
-    </mat-progress-spinner>
-    <div id="overlay" *ngIf="isProgressBarVisibile">
-    </div> -->
   </div>
 </div>

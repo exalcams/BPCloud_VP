@@ -10,6 +10,7 @@ import {
 
 import { FuseSharedModule } from '@fuse/shared.module';
 import { FileUploadModule } from 'ng2-file-upload';
+import { CKEditorModule } from 'ngx-ckeditor';
 import { DocTypeMasterComponent } from './doc-type-master/doc-type-master.component';
 import { SessionMasterComponent } from './session-master/session-master.component';
 import { SupportDeskMasterComponent } from './support-desk-master/support-desk-master.component';
@@ -63,6 +64,7 @@ const menuRoutes: Routes = [
         MatTooltipModule,
         FuseSharedModule,
         FileUploadModule,
+        CKEditorModule,
         RouterModule.forChild(menuRoutes)
     ],
     providers: [

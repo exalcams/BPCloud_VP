@@ -691,4 +691,223 @@
     position: fixed;
     bottom: 80px !important;
   }
+
+  .bpcloudlogo {
+    margin-right: 16px;
+    height: 56px;
+    width: 100px;
+  }
+  .headerheight {
+    width: 100%;
+    height: 60px;
+    position: relative;
+  }
+  .searchbar {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    opacity: 0.7;
+    position: absolute;
+    margin-left: 10px;
+    margin-top: 30px;
+    padding-left: 5px;
+  }
+  .searchbar1 {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    opacity: 0.7;
+    position: absolute;
+    margin-left: 10px;
+    margin-top: 27px;
+    padding-left: 5px;
+  }
+  .search_field {
+    border: 1px solid darkgrey;
+    border-radius: 5px;
+    padding-left: 42px;
+    width: 90%;
+    height: 44px;
+    font-family: "Segoe UI";
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 15px;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  .search_field1 {
+    border: 1px solid darkgrey;
+    padding-left: 42px;
+    width: 90%;
+    height: 35px;
+    font-family: "Segoe UI";
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 15px;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  .date_field {
+    width: 243px;
+    height: 43px;
+    border: 1px solid darkgrey;
+    border-radius: 5px;
+    padding-left: 15px;
+    font-family: "Segoe UI";
+    font-size: 16px;
+    font-weight: 700;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+  .datepicker_image {
+    object-fit: contain;
+    position: absolute;
+    margin-left: -10px;
+    height: 21.5px;
+    width: 21.5px;
+    margin-top: -51px;
+    border: none !important;
+    outline: none !important;
+  }
+  .selectInput {
+    width: 10%;
+    height: 42px;
+    padding-left: 10px;
+    padding-right: 12px;
+    font-family: "Segoe UI";
+    font-size: 20px;
+    font-weight: 500;
+    border: 0.7px solid darkgrey;
+    border-radius: 4px;
+  }
+
+  .divider {
+    flex: 1;
+  }
+  .excelbox {
+    border: 1.9px solid #2e7d32;
+    height: 38px;
+    width: 40px;
+    margin-right: 8px;
+    margin-left: 22px;
+    border-radius: 4px;
+  }
+  .Excel_image {
+    width: 25px;
+    margin-top: 7px;
+    margin-left: 7px;
+    height: 22px;
+  }
+  .extender_image {
+    width: 40px;
+    height: 40px;
+    margin-right: 28px;
+    margin-left: 10px;
+  }
+
+  .search_button {
+    color: white;
+    background-color: #f4cda4;
+    width: 200px;
+    height: 51px;
+    border-radius: 5px;
+    border: solid 3px #f4cda4;
+    font-family: "Segoe UI";
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .table {
+    width: 97%;
+    margin-left: 22px;
+    margin-top: 34px;
+    border: 1px solid grey;
+  }
+  .PObox {
+    width: 12px;
+    height: 30px;
+    margin-left: -24px;
+    margin-top: 9px;
+    opacity: 0.7;
+  }
+
+  .lighting_image {
+    width: 15px;
+    height: 21px;
+
+    margin-bottom: -4px;
+  }
+  .selectInput2 {
+    width: 71%;
+    height: 35px;
+    padding-left: 30px;
+    font-family: "Segoe UI";
+    font-size: 17px;
+    font-weight: 450;
+    border: 1px solid darkgrey;
+    border-radius: 4px;
+  }
+  select {
+    background: url("/assets/images/arrowhead.png") no-repeat right;
+    -webkit-appearance: none;
+    outline: none !important;
+    box-shadow: none !important;
+    margin-left: -23px;
+    background-position-x: 93%;
+    background-position-y: 11px;
+  }
+
+  @media screen and (max-width: 1000px) {
+    .date_field {
+      width: 90px;
+      height: 40 px;
+      border: 1px solid darkgrey;
+      border-radius: 5px;
+      padding-left: 7px;
+      font-family: "Segoe UI";
+      font-size: 11px;
+      font-weight: 700;
+      outline: none !important;
+      box-shadow: none !important;
+    }
+
+    .search_input {
+      border: 1px solid darkgrey;
+      border-radius: 5px;
+      padding-left: 42px;
+      width: 80%;
+      height: 40px;
+      font-family: "Segoe UI";
+      font-size: 13px;
+      font-weight: 500;
+      margin-top: 15px;
+    }
+    .search_button {
+      margin-right: -10px;
+      height: 40px;
+      width: 130px;
+      font-size: 16px;
+      background-color: #f4cda4;
+      border: none;
+      color: white;
+      border-radius: 5px;
+    }
+    .table {
+      width: 94%;
+      margin-left: 22px;
+      margin-top: 34px;
+    }
+
+    .selectInput2 {
+      width: 71%;
+      height: 35px;
+      padding-left: 30px;
+      font-family: "Segoe UI";
+      font-size: 17px;
+      font-weight: 450;
+      border: 1px solid darkgrey;
+    }
+  }
 }
