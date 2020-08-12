@@ -7,29 +7,29 @@ import { MatTableDataSource } from '@angular/material';
   styleUrls: ['./po-schedules.component.scss']
 })
 export class PoSchedulesComponent implements OnInit {
-  po_schedule: po_schedule[] = [];
-  DisplayedColumn: string[] = ['box', 'PO', 'Item', 'DelDate', 'Material', 'MaterialText', 'OpenQty', 'Action'];
-  DataSource: MatTableDataSource<any>;
+  poschedules: PoSchedule[] = [];
+  DisplayedColumn: string[] = ['PO', 'Item', 'DelDate', 'Material', 'MaterialText', 'OpenQty', 'Action'];
+  PoDataSource: MatTableDataSource<any>;
   constructor() { }
 
   ngOnInit(): void {
     this.GetPOSchduleDetails();
   }
   GetPOSchduleDetails(): void {
-    this.po_schedule = [
+    this.poschedules = [
 
-      { box: '', PO: '6839821', Item: 'PO-15487', DelDate: '23/07/2020', Material: 'Coffee Beans', MaterialText: 'MM02 - Coffee-beans-5480845 ', OpenQty: '325', Action: 'Action' },
-      { box: '', PO: '6839821', Item: 'PO-15487', DelDate: '23/07/2020', Material: 'Coffee Beans', MaterialText: 'MM02 - Coffee-beans-5480845 ', OpenQty: '325', Action: 'Action' },
-      { box: '', PO: '6839821', Item: 'PO-15487', DelDate: '23/07/2020', Material: 'Coffee Beans', MaterialText: 'MM02 - Coffee-beans-5480845 ', OpenQty: '325', Action: 'Action' },
-      { box: '', PO: '6839821', Item: 'PO-15487', DelDate: '23/07/2020', Material: 'Coffee Beans', MaterialText: 'MM02 - Coffee-beans-5480845 ', OpenQty: '325', Action: 'Action' },
-      { box: '', PO: '6839821', Item: 'PO-15487', DelDate: '23/07/2020', Material: 'Coffee Beans', MaterialText: 'MM02 - Coffee-beans-5480845 ', OpenQty: '325', Action: 'Action' },
-      { box: '', PO: '6839821', Item: 'PO-15487', DelDate: '23/07/2020', Material: 'Coffee Beans', MaterialText: 'MM02 - Coffee-beans-5480845 ', OpenQty: '325', Action: 'Action' }
-    ]
+      { PO: '6839821', Item: 'PO-15487', DelDate: '23/07/2020', Material: 'Coffee Beans', MaterialText: 'MM02 - Coffee-beans-5480845 ', OpenQty: '325', Action: 'Action' },
+      { PO: '6839821', Item: 'PO-15487', DelDate: '23/07/2020', Material: 'Coffee Beans', MaterialText: 'MM02 - Coffee-beans-5480845 ', OpenQty: '325', Action: 'Action' },
+      { PO: '6839821', Item: 'PO-15487', DelDate: '23/07/2020', Material: 'Coffee Beans', MaterialText: 'MM02 - Coffee-beans-5480845 ', OpenQty: '325', Action: 'Action' },
+      { PO: '6839821', Item: 'PO-15487', DelDate: '23/07/2020', Material: 'Coffee Beans', MaterialText: 'MM02 - Coffee-beans-5480845 ', OpenQty: '325', Action: 'Action' },
+      { PO: '6839821', Item: 'PO-15487', DelDate: '23/07/2020', Material: 'Coffee Beans', MaterialText: 'MM02 - Coffee-beans-5480845 ', OpenQty: '325', Action: 'Action' },
+      { PO: '6839821', Item: 'PO-15487', DelDate: '23/07/2020', Material: 'Coffee Beans', MaterialText: 'MM02 - Coffee-beans-5480845 ', OpenQty: '325', Action: 'Action' }
+    ];
+    this.PoDataSource = new MatTableDataSource(this.poschedules);
   }
 }
 
-export class po_schedule {
-  box: string;
+export class PoSchedule {
   PO: string;
   Item: string;
   DelDate: string;

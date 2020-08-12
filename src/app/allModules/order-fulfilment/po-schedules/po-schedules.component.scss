@@ -1,5 +1,5 @@
 @import "src/@fuse/scss/fuse";
-#ceomsg {
+#poschedule {
   background-color: white;
   .outer {
     border-bottom: 1px solid rgba(255, 85, 0, 0.1);
@@ -709,7 +709,7 @@
     opacity: 0.7;
     position: absolute;
     margin-left: 10px;
-    margin-top: 30px;
+    margin-top: 27px;
     padding-left: 5px;
   }
   .searchbar1 {
@@ -727,9 +727,9 @@
     border-radius: 5px;
     padding-left: 42px;
     width: 90%;
-    height: 44px;
+    height: 35px;
     font-family: "Segoe UI";
-    font-size: 16px;
+    font-size: 13px;
     font-weight: 500;
     margin-top: 15px;
     outline: none !important;
@@ -742,42 +742,44 @@
     width: 90%;
     height: 35px;
     font-family: "Segoe UI";
-    font-size: 16px;
+    font-size: 13px;
     font-weight: 500;
     margin-top: 15px;
     outline: none !important;
     box-shadow: none !important;
   }
-
+  th.mat-header-cell:first-child {
+    border-right: none;
+  }
   .date_field {
-    width: 243px;
-    height: 43px;
+    width: 90%;
+    height: 37px;
     border: 1px solid darkgrey;
     border-radius: 5px;
     padding-left: 15px;
     font-family: "Segoe UI";
-    font-size: 16px;
-    font-weight: 700;
+    font-size: 13px;
+    font-weight: 500;
     outline: none !important;
     box-shadow: none !important;
   }
   .datepicker_image {
     object-fit: contain;
     position: absolute;
-    margin-left: -10px;
+    margin-left: -30px;
     height: 21.5px;
     width: 21.5px;
-    margin-top: -51px;
+    top: 33px;
     border: none !important;
     outline: none !important;
   }
   .selectInput {
-    width: 10%;
-    height: 42px;
+    width: 11%;
+    height: 40px;
     padding-left: 10px;
     padding-right: 12px;
     font-family: "Segoe UI";
-    font-size: 20px;
+    font-size: 17px;
     font-weight: 500;
     border: 0.7px solid darkgrey;
     border-radius: 4px;
@@ -788,7 +790,7 @@
   }
   .excelbox {
     border: 1.9px solid #2e7d32;
-    height: 38px;
+    height: 36px;
     width: 40px;
     margin-right: 8px;
     margin-left: 22px;
@@ -802,7 +804,7 @@
   }
   .extender_image {
     width: 40px;
-    height: 40px;
+    height: 39px;
     margin-right: 28px;
     margin-left: 10px;
   }
@@ -810,10 +812,10 @@
   .search_button {
     color: white;
     background-color: #f4cda4;
-    width: 200px;
-    height: 51px;
+    width: 143px;
+    height: 40px;
     border-radius: 5px;
-    border: solid 3px #f4cda4;
+    margin-top: 33px;
     font-family: "Segoe UI";
     font-size: 18px;
     font-weight: 600;
@@ -825,6 +827,9 @@
     margin-top: 34px;
     border: 1px solid grey;
   }
+  th.mat-header-cell {
+    border-right: none;
+  }
   .PObox {
     width: 12px;
     height: 30px;
@@ -834,13 +839,12 @@
   }
 
   .lighting_image {
-    width: 15px;
-    height: 21px;
-
-    margin-bottom: -4px;
+    width: 12px;
+    height: 17.2px;
+    margin-top: 8px;
   }
   .selectInput2 {
-    width: 71%;
+    width: 100%;
     height: 35px;
     padding-left: 30px;
     font-family: "Segoe UI";
@@ -858,11 +862,32 @@
     background-position-x: 93%;
     background-position-y: 11px;
   }
+  .search_input {
+    border: 1px solid darkgrey;
+    border-radius: 5px;
+    padding-left: 42px;
+    width: 80%;
+    height: 40px;
+    font-family: "Segoe UI";
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: 15px;
+  }
+  .search_button {
+    margin-top: 23px;
+    height: 40px;
+    width: 130px;
+    font-size: 16px;
+    background-color: #f4cda4;
+    border: none;
+    color: white;
+    border-radius: 5px;
+  }
 
   @media screen and (max-width: 1000px) {
     .date_field {
-      width: 90px;
-      height: 40 px;
+      width: 90%;
+      height: 37px;
       border: 1px solid darkgrey;
       border-radius: 5px;
       padding-left: 7px;
@@ -901,13 +926,16 @@
     }
 
     .selectInput2 {
-      width: 71%;
+      width: 100%;
       height: 35px;
       padding-left: 30px;
       font-family: "Segoe UI";
       font-size: 17px;
       font-weight: 450;
       border: 1px solid darkgrey;
+    }
+    th.mat-header-cell {
+      border-right: none;
     }
   }
 }

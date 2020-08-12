@@ -72,6 +72,11 @@
                         <span>No ASN Created for this PO</span>
                       </div>
                     </div>
+                    <div fxFlex='60' *ngIf="SelectedASNHeader?.ASNNumber" fxLayout fxLayoutGap="10px">
+                      <div fxFlex fxLayoutAlign="end center" align="end">
+                        <img src="assets/images/DownloadIcon.png" (click)="CreateASNPdf()" class="alert">
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div fxFlex class="Date px-20 pb-12">
