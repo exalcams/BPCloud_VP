@@ -176,6 +176,15 @@ export class ASNService {
             .pipe(catchError(this.errorHandler));
     }
 
+    
+    CreateASNPdf(ASNNumber: string): Observable<Blob | string> {
+        return this._httpClient.get(`${this.baseAddress}poapi/ASN/CreateASNPdf?ASNNumber=${ASNNumber}`, {
+            responseType: 'blob',
+            headers: new HttpHeaders().append('Content-Type', 'application/json')
+        })
+            .pipe(catchError(this.errorHandler));
+    }
+
     GetInvoiceAttachmentByASN(ASNNumber: string, InvDocReferenceNo: string): Observable<BPCInvoiceAttachment | string> {
         return this._httpClient.get<BPCInvoiceAttachment>(`${this.baseAddress}poapi/ASN/GetInvoiceAttachmentByASN?ASNNumber=${ASNNumber}&InvDocReferenceNo=${InvDocReferenceNo}`)
             .pipe(catchError(this.errorHandler));

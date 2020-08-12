@@ -368,6 +368,10 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         this.clearOfDetailsFormGroup();
     }
 
+    ResetClicked(): void {
+        this.GetOfDetails();
+    }
+
     GetOfStatusByPartnerID(): void {
         this.isProgressBarVisibile = true;
         this._dashboardService
@@ -437,7 +441,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
                 });
     }
 
-    
+
 
     initialiseOfDetailsFormGroup(): void {
         this.ofDetailsFormGroup = this._formBuilder.group({

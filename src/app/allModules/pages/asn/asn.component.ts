@@ -29,6 +29,7 @@ import { SubconService } from 'app/services/subcon.service';
 import { ASNReleaseDialogComponent } from 'app/notifications/asnrelease-dialog/asnrelease-dialog.component';
 import { ExcelService } from 'app/services/excel.service';
 import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';
 @Component({
     selector: 'app-asn',
     templateUrl: './asn.component.html',
@@ -1519,6 +1520,25 @@ export class ASNComponent implements OnInit {
                 x.get('ExpiryDate').patchValue(curr.ExpiryDate);
             }
         });
+    }
+
+    CreateASNPdf(): void {
+        this.IsProgressBarVisibile = true;
+        this._ASNService.CreateASNPdf(this.SelectedASNHeader.ASNNumber).subscribe(
+            data => {
+                if (data) {
+                    const fileType = 'application/pdf';
+                    const blob = new Blob([data], { type: fileType });
+                    const currentDateTime = this._datePipe.transform(new Date(), 'ddMMyyyyHHmmss');
+                    FileSaver.saveAs(blob, this.SelectedASNHeader.ASNNumber + '_' + currentDateTime + '.pdf');
+                }
+                this.IsProgressBarVisibile = false;
+            },
+            error => {
+                console.error(error);
+                this.IsProgressBarVisibile = false;
+            }
+        );
     }
 }
 

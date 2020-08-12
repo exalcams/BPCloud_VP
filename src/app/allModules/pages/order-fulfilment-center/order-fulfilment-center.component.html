@@ -77,7 +77,7 @@
     <div class="sidenav-content px-24 mt-4" fxFlex>
       <form class="formGroupStyle" autocomplete="off" fxFlex name="form" [formGroup]="ofDetailsFormGroup" novalidate>
         <div fxLayout="row" class="formRowStyle" fxLayout.xs="column">
-          <div fxFlex="21%">
+          <div fxFlex="20%">
             <mat-form-field>
               <input matInput placeholder="From date" [matDatepicker]="picker1" formControlName="FromDate"
                 (dateChange)="fromAndToDateChanged()">
@@ -87,7 +87,7 @@
               <mat-datepicker #picker1></mat-datepicker>
             </mat-form-field>
           </div>
-          <div fxFlex="21%">
+          <div fxFlex="20%">
             <mat-form-field>
               <input matInput placeholder="To Date" [matDatepicker]="picker2" formControlName="ToDate"
                 (dateChange)="fromAndToDateChanged()">
@@ -100,7 +100,7 @@
               To date should not be less than from date
             </div>
           </div>
-          <div fxFlex="19%">
+          <div fxFlex="20%">
             <mat-form-field>
               <mat-select style="width:180px" placeholder="Status" formControlName="Status">
                 <!-- <mat-option>None</mat-option> -->
@@ -110,7 +110,7 @@
               </mat-select>
             </mat-form-field>
           </div>
-          <div fxFlex="19%">
+          <div fxFlex="20%">
             <mat-form-field>
               <mat-select style="width:180px" placeholder="PO Type" formControlName="DocType">
                 <!-- <mat-option>None</mat-option> -->
@@ -120,9 +120,15 @@
               </mat-select>
             </mat-form-field>
           </div>
-          <div fxFlex="45%">
-            <button class="mt-12" style="background-color: #efb577;color: white;" mat-raised-button
+          <div fxFlex="20%">
+            <div fxLayout fxLayoutAlign="start center">
+              <button class="mt-12" style="background-color: #efb577;color: white;" mat-raised-button
               (click)="getOfsByOptionClicked()">Search</button>
+            <div fxFlex align="end">
+              <button class="ml-12 mt-12" style="color: #efb577;background-color: white;" mat-stroked-button
+                (click)="ResetClicked()">Reset</button>
+            </div>
+            </div>
           </div>
         </div>
       </form>
