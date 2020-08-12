@@ -1,10 +1,22 @@
 <div id="login" class="inner-scroll normal" fxLayout="row" fxLayoutAlign="start">
 
   <div id="login-intro" fxFlex fxHide fxShow.gt-xs>
-    <div *ngIf="currentText" class="description" [ngStyle]="{'color':'white'}"
+    <!-- <div *ngIf="currentText" class="description" [ngStyle]="{'color':'white'}"
       [@animate]="{value:'*',params:{x:'100%'}}">
       Maximum <span>{{currentText}}</span>
-    </div>
+    </div> -->
+    <!-- <div>
+      Maximum <span>{{currentText}}</span>
+    </div> -->
+
+    <article  class="description" [ngStyle]="{'color':'white'}">
+      <h2 class="h1 col-md-offset-3 ">Maximum <span>{{currentText}}</span><span class="cursor"></span></h2>
+     <!--<a href="#" class="button col-md-offset-2"><span>Supplier</span></a>
+      <a href="#" class="button col-md-offset-2"><span>Dealer</span></a>
+      <a href="#" class="button col-md-offset-2"><span>Transporter</span></a> -->
+
+  </article>
+
   </div>
 
   <div id="login-form-wrapper" [style.background-color]="'white'" fusePerfectScrollbar
@@ -36,13 +48,15 @@
           </mat-error>
         </mat-form-field>
 
-        <div class="remember-forgot-password" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between center">
+        <div class="remember-forgot-password" fxLayout="row" fxLayout.xs="column"
+          fxLayoutAlign="space-between center">
           <span class="forgot-password" style="cursor: pointer;" (click)="openForgetPasswordLinkDialog()">
             Forgot Password?
           </span>
         </div>
 
-        <button mat-raised-button color="accent" class="submit-button" aria-label="LOGIN" (click)="loginClicked()">
+        <button mat-raised-button color="accent" class="submit-button" aria-label="LOGIN"
+          (click)="loginClicked()">
           <span class="loginButton">LOG IN </span>
         </button>
         <!-- <a class="link" href="/#/register/vendor">Click here to regster</a> -->
@@ -50,7 +64,8 @@
 
     </div>
 
-    <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
+    <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent"
+      mode="indeterminate">
     </mat-progress-spinner>
   </div>
 
