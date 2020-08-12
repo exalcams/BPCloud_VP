@@ -1,18 +1,17 @@
 @import "src/@fuse/scss/fuse";
 
 login {
-
     #login {
         width: 100%;
         overflow: hidden;
-        background: url('/assets/images/backgrounds/BPCloudBG.png') no-repeat;
+        background: url("/assets/images/backgrounds/BPCloudBG.png") no-repeat;
         // background-size: cover;
         background-size: 72% 100%;
 
         #login-intro {
             padding: 128px;
 
-            @include media-breakpoint('sm') {
+            @include media-breakpoint("sm") {
                 padding: 128px 64px;
             }
 
@@ -43,13 +42,13 @@ login {
 
             @include mat-elevation(16);
 
-            @include media-breakpoint('sm') {
+            @include media-breakpoint("sm") {
                 width: 28%;
                 min-width: 28%;
                 max-width: 28%;
             }
 
-            @include media-breakpoint('xs') {
+            @include media-breakpoint("xs") {
                 width: 100%;
                 min-width: 100%;
                 max-width: 100%;
@@ -58,7 +57,7 @@ login {
             #login-form {
                 padding: 128px 48px 48px 48px;
 
-                @include media-breakpoint('xs') {
+                @include media-breakpoint("xs") {
                     text-align: center;
                     padding: 24px;
                 }
@@ -79,16 +78,15 @@ login {
                     font-weight: 900;
                     margin-bottom: 15px;
                     margin-top: -35px;
-                   
                 }
-            .border{
-                border-bottom: #3a7be3;
-                border-bottom-style: solid;
-                margin-left: 20px;
-                margin-right: 212px;
-                margin-top: -15px !important;
-            }
-                .subTitel{
+                .border {
+                    border-bottom: #3a7be3;
+                    border-bottom-style: solid;
+                    margin-left: 20px;
+                    margin-right: 212px;
+                    margin-top: -15px !important;
+                }
+                .subTitel {
                     opacity: 0.8;
                     // font-family: SegoeUI;
                     font-size: 12px;
@@ -99,8 +97,7 @@ login {
                     color: #454545;
                     margin-top: 20px !important;
                 }
-                .loginButton{
-                    
+                .loginButton {
                     // font-family: SegoeUI;
                     // font-size: 34px;
                     font-weight: 400;
@@ -123,7 +120,7 @@ login {
                     mat-form-field {
                         width: 100%;
 
-                        @include media-breakpoint('xs') {
+                        @include media-breakpoint("xs") {
                             width: 80%;
                         }
                     }
@@ -137,7 +134,7 @@ login {
                         margin-top: 8px;
 
                         .remember-me {
-                            margin-bottom: 16px
+                            margin-bottom: 16px;
                         }
 
                         .forgot-password {
@@ -155,8 +152,8 @@ login {
                         }
                     }
 
-                    .mat-form-field-appearance-outline .mat-form-field-outline{
-                        color: rgba(67, 132, 255, 0.4) !important
+                    .mat-form-field-appearance-outline .mat-form-field-outline {
+                        color: rgba(67, 132, 255, 0.4) !important;
                     }
 
                     .submit-button {
@@ -164,7 +161,7 @@ login {
                         margin: 16px auto;
                         display: block;
 
-                        @include media-breakpoint('xs') {
+                        @include media-breakpoint("xs") {
                             width: 80%;
                         }
                     }
@@ -187,7 +184,7 @@ login {
 
                         &:before,
                         &:after {
-                            content: '';
+                            content: "";
                             display: block;
                             width: 30px;
                             position: absolute;
@@ -206,26 +203,25 @@ login {
                 }
 
                 button {
-
                     &.google,
                     &.facebook {
                         width: 70%;
                         text-transform: none;
-                        color: #FFFFFF;
+                        color: #ffffff;
                         font-size: 13px;
 
-                        @include media-breakpoint('xs') {
+                        @include media-breakpoint("xs") {
                             width: 60%;
                         }
 
                         mat-icon {
-                            color: #FFFFFF;
+                            color: #ffffff;
                             margin: 0 8px 0 0;
                         }
                     }
 
                     &.google {
-                        background-color: #D73D32;
+                        background-color: #d73d32;
                         margin-bottom: 8px;
                     }
 
@@ -253,7 +249,26 @@ login {
                 top: 250px;
                 z-index: 1;
                 left: 25%;
-              }
+            }
+        }
+    }
+
+    .cursor {
+        display: inline-block;
+        height: 22px;
+        width: 3px;
+        background: #fff;
+        vertical-align: initial;
+        animation: 1s blink linear infinite;
+    }
+    @keyframes blink {
+        0%,
+        49% {
+            opacity: 0;
+        }
+        50%,
+        100% {
+            opacity: 1;
         }
     }
 }

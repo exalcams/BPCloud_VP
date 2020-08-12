@@ -19,4 +19,8 @@ export class CEOMessageComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  CloseClicked(){}
+
+  YesClicked(){}
+
 }
