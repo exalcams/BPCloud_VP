@@ -9,7 +9,250 @@
         <span><img src="assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
       </div>
     </div>
-    <div fxLayout class="content-card1">
+    <div fxLayout="column" class="content-card1">
+      <div fxLayout="row" fxLayout.xs="row">
+
+        <mat-card fxFlex.lg="100" fxFlex.lt-xl="100" fxFlex.sm="100" fxFlex.gt-sm="100" class="coe_card">
+
+          <div fxFlex="50">
+
+            <p class="coe_message">CEO Message !</p>
+
+            <p class="colon">“</p>
+
+          </div>
+          <div fxFlex="50">
+
+            <div fxFlex="50" class="cl_colon">
+
+              <p class="colon1">”</p>
+
+            </div>
+
+
+            <div fxFlex="50" class="cl_cardflex">
+
+              <div class="cl_cardflex">
+                <img src="assets/images/image.png" fxFlex.lg="35" fxFlex="69" fxFlex.gt-sm="45" fxFlex.xl="27"
+                  fxFlex.xs="100" class="man_image"></div>
+
+              <div class="div_tim">
+                <p class="cl_tim">Tim John</p>
+                <p class="cl_ceo">CEO</p>
+              </div>
+            </div>
+
+
+          </div>
+        </mat-card>
+      </div>
+      <div fxLayout="row" fxLayout.xs="column" class="cl_outermost" fxLayoutGap="13px">
+
+        <div fxFlex="20" fxFlex.lg="18" fxFlex.gt-sm="18" fxFlex.xl="18" fxFlex.xs="18">
+          <mat-card class="cl_card matshadow">
+            <mat-card-title>
+              <p class="overall">Overall Score</p>
+              <mat-divider class="cl_matdividerflex cl_divider1"></mat-divider>
+            </mat-card-title>
+            <mat-card-content>
+              <div fxLayout="row" fxLayoutAlign="center center" fxFlex="110" fxFlex.lg="60" fxFlex.gt-sm="40"
+                fxFlex.xl="100" fxFlex.xs="50">
+
+                <canvas baseChart id="doughnut4" fxLayoutAlign="center center">
+
+
+                </canvas>
+
+                <svg height="100" width="100" class="cl_svg">
+                  <circle cx="50" cy="50" r="35" class="svg_innner" stroke="#ebebed" stroke-width="3"
+                    class="innercircle" fill="white" />
+
+                </svg>
+                <p class="cl_75">75%</p>
+              </div>
+
+              <div fxFlex="80" fxFlex.lg="50" fxFlex.gt-sm="70" fxFlex.xl="80" fxFlex.xs="20" class="cl_divflex">
+
+                <div class="cl_divheight" fxLayoutAlign="center center" fxFlex="5" fxFlex.lg="5" fxFlex.gt-sm="5"
+                  fxFlex.xl="5" fxFlex.xs="5">
+                  <mat-divider [vertical]="true" class="divider_inner"></mat-divider>
+                </div>
+                <div class="div_average" fxLayout="column" fxFlex="100" fxFlex.lg="100" fxFlex.gt-sm="100"
+                  fxFlex.xl="100" fxFlex.xs="20" fxLayoutAlign="center center">
+                  <p class="cl_round"></p>
+                  <p class="cl_avg">Average</p>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div fxFlex="20" fxFlex.lg="18" fxFlex.gt-sm="18" fxFlex.xl="18" fxFlex.xs="18">
+          <mat-card class="cl_card matshadow">
+            <mat-card-title>
+              <p class="Quality">Quality Index (PPM)</p>
+              <mat-divider class="cl_matdividerflex2  cl_divider6"></mat-divider>
+            </mat-card-title>
+            <mat-card-content>
+              <div fxLayout="row" fxLayoutAlign="center center" fxFlex="110" fxFlex.lg="60" fxFlex.gt-sm="40"
+                fxFlex.xl="100" fxFlex.xs="50">
+
+                <canvas baseChart id="doughnut3" fxLayoutAlign="center center">
+
+
+                </canvas>
+
+                <svg height="100" width="100" class="cl_svg">
+                  <circle cx="50" cy="50" r="35" class="svg_innner" stroke="#ebebed" stroke-width="3"
+                    class="innercircle" fill="white" />
+
+                </svg>
+                <p class="cl_75">90%</p>
+              </div>
+
+              <div fxFlex="80" fxFlex.lg="50" fxFlex.gt-sm="70" fxFlex.xl="80" fxFlex.xs="20" class="cl_divflex">
+
+                <div class="cl_divheight" fxLayoutAlign="center center" fxFlex="5" fxFlex.lg="5" fxFlex.gt-sm="5"
+                  fxFlex.xl="5" fxFlex.xs="5">
+                  <mat-divider [vertical]="true" class="divider_inner"></mat-divider>
+                </div>
+                <div class="div_average" fxLayout="column" fxFlex="100" fxFlex.lg="100" fxFlex.gt-sm="100"
+                  fxFlex.xl="100" fxFlex.xs="20" fxLayoutAlign="center center">
+                  <p class="cl_round2"></p>
+                  <p class="cl_avg">Excellent</p>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div fxFlex="24" fxFlex.lg="24" fxFlex.gt-sm="20" fxFlex.xl="20" fxFlex.xs="20">
+          <mat-card class="cl_card matshadow">
+            <mat-card-title>
+              <p class="overall">On Time In Full (OTIF)</p>
+              <mat-divider class="cl_matdividerflex cl_divider2"></mat-divider>
+            </mat-card-title>
+            <mat-card-content>
+              <div fxLayout="row" fxLayoutAlign="center center" fxFlex="110" fxFlex.lg="60" fxFlex.gt-sm="40"
+                fxFlex.xl="100" fxFlex.xs="50">
+
+                <canvas baseChart id="doughnut5" fxLayoutAlign="center center">
+
+
+                </canvas>
+
+
+                <svg height="100" width="100" class="cl_svg">
+                  <circle cx="50" cy="50" r="35" class="svg_innner" stroke="#ebebed" stroke-width="3"
+                    class="innercircle" fill="white" />
+
+                </svg>
+
+                <p class="cl_73">73%</p>
+
+                <p class="cl_efficiny">Efficiency</p>
+
+
+
+
+              </div>
+              <div fxFlex="80" fxFlex.lg="50" fxFlex.gt-sm="70" fxFlex.xl="80" fxFlex.xs="20">
+
+                <div class="div_outerheight" fxLayoutAlign="center center" fxFlex="5" fxFlex.lg="5" fxFlex.gt-sm="5"
+                  fxFlex.xl="5" fxFlex.xs="5">
+                  <mat-divider [vertical]="true" class="divider_inner"></mat-divider>
+                </div>
+                <div class="div_average" fxLayout="column" fxFlex="100" fxFlex.lg="100" fxFlex.gt-sm="100"
+                  fxFlex.xl="100" fxFlex.xs="20" fxLayoutAlign="center center">
+                  <p class="cl_round2"></p>
+                  <p class="cl_avg">Good</p>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <div fxFlex="20" fxFlex.lg="18" fxFlex.gt-sm="18" fxFlex.xl="18" fxFlex.xs="18">
+          <mat-card class="cl_card matshadow">
+            <mat-card-title>
+              <p class="overall">Price Variation</p>
+              <mat-divider class="cl_matdividerflex2  cl_divider3"></mat-divider>
+            </mat-card-title>
+
+            <mat-card-content>
+              <div fxLayout="row" fxLayoutAlign="center center" fxFlex="110" fxFlex.lg="60" fxFlex.gt-sm="40"
+                fxFlex.xl="100" fxFlex.xs="50">
+
+                <canvas baseChart id="doughnut2" fxLayoutAlign="center center">
+
+
+                </canvas>
+
+                <svg height="100" width="100" class="cl_svg">
+                  <circle cx="50" cy="50" r="35" class="svg_innner" stroke="#ebebed" stroke-width="3"
+                    class="innercircle" fill="white" />
+
+                </svg>
+                <p class="cl_75">90%</p>
+              </div>
+
+
+              <div fxFlex="80" fxFlex.lg="50" fxFlex.gt-sm="70" fxFlex.xl="80" fxFlex.xs="20" class="cl_divflex">
+
+                <div class="cl_divheight" fxLayoutAlign="center center" fxFlex="5" fxFlex.lg="5" fxFlex.gt-sm="5"
+                  fxFlex.xl="5" fxFlex.xs="5">
+                  <mat-divider [vertical]="true" class="divider_inner"></mat-divider>
+                </div>
+                <div class="div_average" fxLayout="column" fxFlex="100" fxFlex.lg="100" fxFlex.gt-sm="100"
+                  fxFlex.xl="100" fxFlex.xs="20" fxLayoutAlign="center center">
+                  <p class="cl_round2"></p>
+                  <p class="cl_avg">Excellent</p>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div fxFlex="20" fxFlex.lg="18" fxFlex.gt-sm="18" fxFlex.xl="18" fxFlex.xs="18">
+          <mat-card class="cl_card matshadow">
+            <mat-card-title>
+              <p class="overall">Responsiveness</p>
+              <mat-divider class="cl_matdividerflex cl_divider4"></mat-divider>
+            </mat-card-title>
+            <mat-card-content>
+              <div fxLayout="row" fxLayoutAlign="center center" fxFlex="110" fxFlex.lg="60" fxFlex.gt-sm="40"
+                fxFlex.xl="100" fxFlex.xs="50">
+
+                <canvas baseChart id="doughnut1" fxLayoutAlign="center center">
+
+                </canvas>
+
+                <svg height="100" width="100" class="cl_svg">
+                  <circle cx="50" cy="50" r="35" class="svg_innner" stroke="#ebebed" stroke-width="3"
+                    class="innercircle" fill="white" />
+
+                </svg>
+                <p class="cl_75">75%</p>
+              </div>
+              <div fxFlex="80" fxFlex.lg="50" fxFlex.gt-sm="70" fxFlex.xl="80" fxFlex.xs="20" class="cl_divflex">
+
+                <div class="div_outerheight" fxLayoutAlign="center center" fxFlex="5" fxFlex.lg="5" fxFlex.gt-sm="5"
+                  fxFlex.xl="5" fxFlex.xs="5">
+                  <mat-divider [vertical]="true" class="divider_inner"></mat-divider>
+                </div>
+                <div class="div_average" fxLayout="column" fxFlex="100" fxFlex.lg="100" fxFlex.gt-sm="100"
+                  fxFlex.xl="100" fxFlex.xs="20" fxLayoutAlign="center center">
+                  <p class="cl_round"></p>
+                  <p class="cl_avg">Average</p>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+
+      <p class="supplier">SCOC (Supplier’s Code of Conduct)</p>
+      <mat-divider class="divider_underline"></mat-divider>
+      <mat-card class="supplierconduct">
+
+      </mat-card>
     </div>
     <!-- <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
     </mat-progress-spinner>

@@ -77,6 +77,14 @@ export class DashboardService {
       .pipe(catchError(this.errorHandler));
   }
 
+  CreatePOPdf(DocNumber: string): Observable<Blob | string> {
+    return this._httpClient.get(`${this.baseAddress}poapi/PO/CreatePOPdf?DocNumber=${DocNumber}`, {
+      responseType: 'blob',
+      headers: new HttpHeaders().append('Content-Type', 'application/json')
+    })
+      .pipe(catchError(this.errorHandler));
+  }
+
   GetOfASNsByPartnerIDAndDocNumber(PartnerID: any, DocNumber: any): Observable<ASNDetails[] | string> {
     return this._httpClient
       .get<ASNDetails[]>(`${this.baseAddress}poapi/Dashboard/GetOfASNsByPartnerIDAndDocNumber?PartnerID=${PartnerID}&DocNumber=${DocNumber}`)

@@ -384,18 +384,7 @@ export class LoginComponent implements OnInit {
         this.GetCustomerMenus();
         this.GetAdminMenus();
 
-        if (this.menuItems.indexOf("Invoice") >= 0) {
-            this.children.push({
-                id: "invoice",
-                title: "Invoice",
-                translate: "NAV.VENDOR.INVOICE",
-                type: "item",
-                icon: "billIcon",
-                isSvgIcon: true,
-                // icon: 'dashboard',
-                url: "/invoice",
-            });
-        }
+
 
         if (this.menuItems.indexOf("Improvement") >= 0) {
             this.children.push({
@@ -647,6 +636,17 @@ export class LoginComponent implements OnInit {
                 translate: "NAV.VENDOR.ASN",
                 type: "item",
                 url: "/pages/asn",
+            });
+        }
+
+        if (this.menuItems.indexOf("Invoice") >= 0) {
+            this.paymentSubChildren.push({
+                id: "invoice",
+                title: "Invoice",
+                translate: "NAV.VENDOR.INVOICE",
+                type: "item",
+
+                url: "/invoice",
             });
         }
 

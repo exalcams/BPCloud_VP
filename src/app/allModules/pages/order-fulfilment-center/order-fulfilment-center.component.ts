@@ -19,6 +19,7 @@ import { DashboardService } from 'app/services/dashboard.service';
 import { AttachmentViewDialogComponent } from '../attachment-view-dialog/attachment-view-dialog.component';
 import { BPCInvoiceAttachment } from 'app/models/ASN';
 import { MasterService } from 'app/services/master.service';
+import * as FileSaver from 'file-saver';
 @Component({
     selector: 'app-order-fulfilment-center',
     templateUrl: './order-fulfilment-center.component.html',
@@ -577,7 +578,22 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     }
 
     goToPrintPOClicked(po: string): void {
-
+        this.isProgressBarVisibile = true;
+        this._dashboardService.CreatePOPdf(po).subscribe(
+            data => {
+                if (data) {
+                    const fileType = 'application/pdf';
+                    const blob = new Blob([data], { type: fileType });
+                    const currentDateTime = this.datePipe.transform(new Date(), 'ddMMyyyyHHmmss');
+                    FileSaver.saveAs(blob, po + '_' + currentDateTime + '.pdf');
+                }
+                this.isProgressBarVisibile = false;
+            },
+            error => {
+                console.error(error);
+                this.isProgressBarVisibile = false;
+            }
+        );
     }
 
     nextProcessClicked(nextProcess: string, po: string): void {

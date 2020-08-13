@@ -1,11 +1,11 @@
 import { CommonClass } from './common';
 export class BPCASNHeader extends CommonClass {
-    ID: number;
     Client: string;
     Company: string;
     Type: string;
     PatnerID: string;
     ASNNumber: string;
+    ASNDate: Date | string | null;
     DocNumber: string;
     TransportMode: string;
     VessleNumber: string;
@@ -15,20 +15,21 @@ export class BPCASNHeader extends CommonClass {
     DepartureDate: Date | string | null;
     ArrivalDate: Date | string | null;
     ShippingAgency: string;
-    GrossWeight: number;
+    GrossWeight: number | null;
     GrossWeightUOM: string;
-    NetWeight: number;
+    NetWeight: number | null;
     NetWeightUOM: string;
-    VolumetricWeight: number;
+    VolumetricWeight: number | null;
     VolumetricWeightUOM: string;
-    NumberOfPacks: number;
+    NumberOfPacks: number | null;
     InvoiceNumber: string;
     InvoiceDate: Date | string | null;
     POBasicPrice: number | null;
     TaxAmount: number | null;
-    InvoiceAmount: number;
+    InvoiceAmount: number | null;
     InvoiceAmountUOM: string;
     InvDocReferenceNo: string;
+    Status: string;
     IsSubmitted: boolean;
     ArrivalDateInterval: number;
     BillOfLading: string;
@@ -128,12 +129,12 @@ export class BPCFLIPCost extends CommonClass {
 }
 
 export class BPCASNView extends CommonClass {
-    ID: number;
     Client: string;
     Company: string;
     Type: string;
     PatnerID: string;
     ASNNumber: string;
+    ASNDate: Date | string | null;
     DocNumber: string;
     TransportMode: string;
     VessleNumber: string;
@@ -143,18 +144,18 @@ export class BPCASNView extends CommonClass {
     DepartureDate: Date | string | null;
     ArrivalDate: Date | string | null;
     ShippingAgency: string;
-    GrossWeight: number;
+    GrossWeight: number | null;
     GrossWeightUOM: string;
-    NetWeight: number;
+    NetWeight: number | null;
     NetWeightUOM: string;
-    VolumetricWeight: number;
+    VolumetricWeight: number | null;
     VolumetricWeightUOM: string;
-    NumberOfPacks: number;
+    NumberOfPacks: number | null;
     InvoiceNumber: string;
     InvoiceDate: Date | string | null;
     POBasicPrice: number | null;
     TaxAmount: number | null;
-    InvoiceAmount: number;
+    InvoiceAmount: number | null;
     InvoiceAmountUOM: string;
     InvDocReferenceNo: string;
     IsSubmitted: boolean;
