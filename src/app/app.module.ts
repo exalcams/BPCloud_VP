@@ -6,14 +6,14 @@ import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import {
     MatButtonModule, MatIconModule, MatSnackBar, MatSnackBarModule, MatDialogModule, MatToolbarModule,
-    MAT_DATE_LOCALE, MatProgressSpinnerModule, MatProgressBarModule, MatExpansionModule, MatTableModule
+    MAT_DATE_LOCALE, MatProgressSpinnerModule, MatProgressBarModule, MatExpansionModule, MatTableModule, MatDatepickerModule, MatFormFieldModule, MatAutocompleteModule, MatBadgeModule, MatBottomSheetModule, MatButtonToggleModule, MatCardModule, MatCheckboxModule, MatChipsModule, MatStepperModule, MatDividerModule, MatGridListModule, MatInputModule, MatListModule, MatMenuModule, MatNativeDateModule, MatPaginatorModule, MatRadioModule, MatRippleModule, MatSelectModule, MatSidenavModule, MatSliderModule, MatSlideToggleModule, MatSortModule, MatTabsModule, MatTooltipModule, MatTreeModule
 } from '@angular/material';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import 'hammerjs';
 
 import { FuseModule } from '@fuse/fuse.module';
 import { FuseSharedModule } from '@fuse/shared.module';
-import { FuseProgressBarModule, FuseSidebarModule, FuseThemeOptionsModule } from '@fuse/components';
+import { FuseProgressBarModule, FuseSidebarModule, FuseThemeOptionsModule, FuseCountdownModule, FuseHighlightModule, FuseMaterialColorPickerModule, FuseWidgetModule } from '@fuse/components';
 
 import { fuseConfig } from 'app/fuse-config';
 
@@ -30,6 +30,10 @@ import { AttachmentViewDialogComponent } from './allModules/pages/attachment-vie
 import { BnNgIdleService } from 'bn-ng-idle';
 import { InformationDialogComponent } from './notifications/information-dialog/information-dialog.component';
 import { ASNReleaseDialogComponent } from './notifications/asnrelease-dialog/asnrelease-dialog.component';
+import { FormsModule } from '@angular/forms';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { NgxDonutChartModule } from 'ngx-doughnut-chart';
+import { ChartsModule } from 'ng2-charts';
 
 const appRoutes: Routes = [
     {
@@ -125,7 +129,6 @@ const appRoutes: Routes = [
 
         // Material moment date module
         MatMomentDateModule,
-
         // Material
         MatButtonModule,
         MatIconModule,
@@ -143,10 +146,62 @@ const appRoutes: Routes = [
         MatProgressBarModule,
         MatProgressSpinnerModule,
         MatTableModule,
-
+        MatDatepickerModule,
         // App modules
         LayoutModule,
         PaymentModule,
+        MatFormFieldModule,
+        MatAutocompleteModule,
+        MatBadgeModule,
+        MatBottomSheetModule,
+        MatButtonModule,
+        MatButtonToggleModule,
+        MatCardModule,
+        MatCheckboxModule,
+        MatChipsModule,
+        MatStepperModule,
+        MatDatepickerModule,
+        MatDialogModule,
+        MatDividerModule,
+        MatExpansionModule,
+        MatGridListModule,
+        MatIconModule,
+        MatInputModule,
+        MatListModule,
+        MatMenuModule,
+        MatNativeDateModule,
+        MatPaginatorModule,
+        MatProgressBarModule,
+        MatProgressSpinnerModule,
+        MatRadioModule,
+        MatRippleModule,
+        MatSelectModule,
+        MatSidenavModule,
+        MatSliderModule,
+        MatSlideToggleModule,
+        MatSnackBarModule,
+        MatSortModule,
+        MatTableModule,
+        MatTabsModule,
+        MatToolbarModule,
+        MatTooltipModule,
+        MatTreeModule,
+
+        NgxChartsModule,
+        NgxDonutChartModule,
+
+        ChartsModule,
+
+        FuseSharedModule,
+        FuseSidebarModule,
+
+        FuseCountdownModule,
+        FuseHighlightModule,
+        FuseMaterialColorPickerModule,
+        FuseWidgetModule,
+        // NgMultiSelectDropDownModule,
+
+        FormsModule,
         // AuditModule,
     ],
     providers: [

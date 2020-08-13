@@ -873,13 +873,13 @@ export class ASNComponent implements OnInit {
         const row = this._formBuilder.group({
             PackageID: [pack.PackageID, Validators.required],
             ReferenceNumber: [pack.ReferenceNumber, Validators.required],
-            Dimension: [pack.Dimension, Validators.required],
-            NetWeight: [pack.NetWeight, [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
+            Dimension: [pack.Dimension],
+            NetWeight: [pack.NetWeight, [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
             NetWeightUOM: [pack.GrossWeightUOM],
-            GrossWeight: [pack.GrossWeight, [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
-            GrossWeightUOM: [pack.GrossWeightUOM, Validators.required],
-            VolumetricWeight: [pack.VolumetricWeight, [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
-            VolumetricWeightUOM: [pack.VolumetricWeightUOM, Validators.required],
+            GrossWeight: [pack.GrossWeight, [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
+            GrossWeightUOM: [pack.GrossWeightUOM],
+            VolumetricWeight: [pack.VolumetricWeight, [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
+            VolumetricWeightUOM: [pack.VolumetricWeightUOM],
         }, {
             validator: MustValid('NetWeight', 'GrossWeight')
         });
@@ -1197,6 +1197,10 @@ export class ASNComponent implements OnInit {
         dialogRef.afterClosed().subscribe(
             result => {
                 if (result) {
+                    const dtt = result as Date;
+                    const dt = this._datePipe.transform(dtt, 'yyyy-MM-dd');
+                    this.SelectedASNHeader.ASNDate = dt;
+                    this.SelectedASNView.ASNDate = this.SelectedASNHeader.ASNDate;
                     if (this.SelectedASNHeader.ASNNumber) {
                         this.UpdateASN(Actiontype);
                     } else {
