@@ -267,7 +267,7 @@ export class LoginComponent implements OnInit {
         } else if (data.UserRole === "CustomerHelpDeskAdmin") {
             this._router.navigate(["customer/supportdesk"]);
         } else {
-            this._router.navigate(["pages/dashboard"]);
+            this._router.navigate(["pages/home"]);
         }
     }
 
@@ -362,6 +362,18 @@ export class LoginComponent implements OnInit {
             );
         } else {
         }
+        if (this.menuItems.indexOf("Home") >= 0) {
+            this.children.push({
+                id: "home",
+                title: "Home",
+                translate: "NAV.VENDOR.DASHBOARD",
+                type: "item",
+                icon: "home",
+                // isSvgIcon: true,
+                // icon: 'dashboard',
+                url: "/pages/home",
+            });
+        }
         if (this.menuItems.indexOf("Dashboard") >= 0) {
             this.children.push({
                 id: "dashboard",
@@ -376,15 +388,13 @@ export class LoginComponent implements OnInit {
         }
 
         this.GetOrderFulfilmetMenus();
+        this.GetCustomerMenus();
+        this.GetAdminMenus();
         this.GetGateMenus();
         this.GetQualityMenus();
         this.GetSubconMenus();
         this.GetPaymentMenus();
         this.GetSupportMenus();
-        this.GetCustomerMenus();
-        this.GetAdminMenus();
-
-
 
         if (this.menuItems.indexOf("Improvement") >= 0) {
             this.children.push({
@@ -398,15 +408,15 @@ export class LoginComponent implements OnInit {
                 url: "/pages/improvement",
             });
         }
-        if (this.menuItems.indexOf("GRReceipts") >= 0) {
-            this.qualitySubChildren.push({
-                id: "grReceipts",
-                title: "GR Receipts",
-                translate: "NAV.VENDOR.GR_RECEIPTS",
-                type: "item",
-                url: "/reports/grReceipts",
-            });
-        }
+        // if (this.menuItems.indexOf("GRReceipts") >= 0) {
+        //     this.qualitySubChildren.push({
+        //         id: "grReceipts",
+        //         title: "GR Receipts",
+        //         translate: "NAV.VENDOR.GR_RECEIPTS",
+        //         type: "item",
+        //         url: "/reports/grReceipts",
+        //     });
+        // }
 
         this.navigation.push({
             id: "applications",
