@@ -21,46 +21,29 @@ import { Chart, ChartType, ChartOptions } from 'chart.js';
     styleUrls: ["./home.component.scss"],
 })
 export class HomeComponent implements OnInit {
-    menuItems: string[];
-    authenticationDetails: AuthenticationDetails;
-    currentUserID: Guid;
-    currentUserName: string;
-    currentUserRole = "";
-    currentDisplayName: string;
-    notificationSnackBarComponent: NotificationSnackBarComponent;
-    isProgressBarVisibile: boolean;
-    searchText = "";
-    selectedPartnerID: string;
-    selection = new SelectionModel<any>(true, []);
-    todayDate: any;
-    selectedFact: BPCFact;
-    selectedAIACT: BPCOFAIACT;
-    facts: BPCFact[] = [];
-    actions: BPCOFAIACT[] = [];
-    notifications: BPCOFAIACT[] = [];
-    notificationCount: number;
-    aIACTs: BPCOFAIACT[] = [];
-    aIACTsView: BPCOFAIACT[] = [];
-    SetIntervalID: any;
-    constructor(
-        private _factService: FactService,
-        private _masterService: MasterService,
-        private _dashboardService: DashboardService,
-        private _router: Router,
-        public snackBar: MatSnackBar,
-        private dialog: MatDialog
-    ) {
-        this.selectedFact = new BPCFact();
-        this.selectedAIACT = new BPCOFAIACT();
-        this.authenticationDetails = new AuthenticationDetails();
-        this.notificationSnackBarComponent = new NotificationSnackBarComponent(
-            this.snackBar
-        );
-        this.isProgressBarVisibile = false;
-        this.todayDate = new Date().getDate();
-    }
+    i: any;
+    a: any = 1;
+    b: any = "#1f76d3";
+
+    array1: any = [];
+
+    color_75: any = [];
+    color_90: any = [];
+
+    constructor() { }
 
     ngOnInit(): void {
+        for (this.i = 0; this.i <= 100; this.i++) {
+            this.array1[this.i] = this.a;
+        }
+
+
+        for (this.i = 0; this.i <= 75; this.i++) {
+            this.color_75[this.i] = this.b
+        }
+        for (this.i = 0; this.i <= 90; this.i++) {
+            this.color_90[this.i] = this.b
+        }
         new Chart('doughnut1', {
             type: 'doughnut',
             options: {
@@ -79,6 +62,9 @@ export class HomeComponent implements OnInit {
                     position: 'top'
 
                 },
+                plugins: {
+                    labels: false
+                },
                 animation: {
                     animateScale: true,
                     animateRotate: true
@@ -86,25 +72,18 @@ export class HomeComponent implements OnInit {
             },
             data: {
                 datasets: [{
-                    data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,],
-                    backgroundColor: ["#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed"],
-                    label: 'dataset1'
-                }
-                    // ,{
-                    //   data:[1],
-                    //   backgroundColor:["#ff8f3d"],
+                    data: this.array1,
+                    backgroundColor: this.color_75,
 
-                    //   label:'dataset1'
-                    // },
-                    // {
-                    //   data:[0.1],
-                    //   backgroundColor:["#6dd7d3"],
-                    //   label:'dataset2'
-                    // }
+
+                    label: 'dataset1'
+
+                }
+
                 ],
 
 
-                labels: ['blue', 'orange', 'yellow', 'blue', 'pink', 'orange', 'orange', 'orange', 'orange', 'orange', 'orange', 'orange', 'orange', 'orange']
+
             }
         })
         new Chart('doughnut2', {
@@ -125,6 +104,9 @@ export class HomeComponent implements OnInit {
                     position: 'top'
 
                 },
+                plugins: {
+                    labels: false
+                },
                 animation: {
                     animateScale: true,
                     animateRotate: true
@@ -132,26 +114,14 @@ export class HomeComponent implements OnInit {
             },
             data: {
                 datasets: [{
-                    data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,],
-                    backgroundColor: ["#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed"],
-
+                    data: this.array1,
+                    backgroundColor: this.color_90,
                     label: 'dataset1'
                 }
-                    // ,{
-                    //   data:[1],
-                    //   backgroundColor:["#ff8f3d"],
 
-                    //   label:'dataset1'
-                    // },
-                    // {
-                    //   data:[0.1],
-                    //   backgroundColor:["#6dd7d3"],
-                    //   label:'dataset2'
-                    // }
                 ],
 
 
-                labels: ['blue', 'orange', 'yellow', 'blue', 'pink', 'orange', 'orange', 'orange', 'orange', 'orange', 'orange', 'orange', 'orange', 'orange']
             }
         })
         new Chart('doughnut3', {
@@ -172,6 +142,9 @@ export class HomeComponent implements OnInit {
                     position: 'top'
 
                 },
+                plugins: {
+                    labels: false
+                },
                 animation: {
                     animateScale: true,
                     animateRotate: true
@@ -179,26 +152,15 @@ export class HomeComponent implements OnInit {
             },
             data: {
                 datasets: [{
-                    data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,],
-                    backgroundColor: ["#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed"],
-
+                    data: this.array1,
+                    backgroundColor: this.color_90,
                     label: 'dataset1'
                 }
-                    // ,{
-                    //   data:[1],
-                    //   backgroundColor:["#ff8f3d"],
 
-                    //   label:'dataset1'
-                    // },
-                    // {
-                    //   data:[0.1],
-                    //   backgroundColor:["#6dd7d3"],
-                    //   label:'dataset2'
-                    // }
                 ],
 
 
-                labels: ['blue', 'orange', 'yellow', 'blue', 'pink', 'orange', 'orange', 'orange', 'orange', 'orange', 'orange', 'orange', 'orange', 'orange']
+
             }
         })
         new Chart('doughnut4', {
@@ -219,6 +181,9 @@ export class HomeComponent implements OnInit {
                     position: 'top'
 
                 },
+                plugins: {
+                    labels: false
+                },
                 animation: {
                     animateScale: true,
                     animateRotate: true
@@ -226,25 +191,18 @@ export class HomeComponent implements OnInit {
             },
             data: {
                 datasets: [{
-                    data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,],
-                    backgroundColor: ["#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#1f76d3", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed"],
-                    label: 'dataset1'
-                }
-                    // ,{
-                    //   data:[1],
-                    //   backgroundColor:["#ff8f3d"],
+                    data: this.array1,
+                    backgroundColor: this.color_75,
 
-                    //   label:'dataset1'
-                    // },
-                    // {
-                    //   data:[0.1],
-                    //   backgroundColor:["#6dd7d3"],
-                    //   label:'dataset2'
-                    // }
+
+                    label: 'dataset1'
+
+                }
+
                 ],
 
 
-                labels: ['blue', 'orange', 'yellow', 'blue', 'pink', 'orange', 'orange', 'orange', 'orange', 'orange', 'orange', 'orange', 'orange', 'orange']
+
             }
         })
 
@@ -277,22 +235,13 @@ export class HomeComponent implements OnInit {
                     backgroundColor: ["#1f76d3", "#ebebed"],
                     label: 'dataset1'
                 }
-                    // ,{
-                    //   data:[1],
-                    //   backgroundColor:["#ff8f3d"],
 
-                    //   label:'dataset1'
-                    // },
-                    // {
-                    //   data:[0.1],
-                    //   backgroundColor:["#6dd7d3"],
-                    //   label:'dataset2'
-                    // }
                 ],
 
 
-                labels: ['blue', 'orange', 'yellow', 'blue', 'pink', 'orange', 'orange', 'orange', 'orange', 'orange', 'orange', 'orange', 'orange', 'orange']
+
             }
         })
+
     }
 }

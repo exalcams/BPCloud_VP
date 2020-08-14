@@ -775,7 +775,7 @@
     /* width: 53px; */
     background-color: #484141;
   }
- 
+
   .order_header {
     color: #3e3e3e;
     letter-spacing: 0.64px;
@@ -786,18 +786,18 @@
   .coe_card {
     margin-left: 26px;
     margin-right: 26px;
-    height: 181px;
-    margin-top: 26px;
+    height: 160px;
+    margin-top: 12px;
     /* border-style: solid; */
     /* background-color: yellowgreen; */
     /* border-style: solid; */
   }
-  .mat-card {
-    &:not([class*="mat-elevation-z"]) {
-      box-shadow: 0px 1px 0px 0.1px rgb(234,229,229), 0px 0px 0px 0px rgb(0,0,0),
-        0px 0px 0px 0px rgba(0, 0, 0, 0.1);
-    }
-  }
+  // .mat-card {
+  //   &:not([class*="mat-elevation-z"]) {
+  //     box-shadow: 0px 1px 0px 0.1px rgb(234,229,229), 0px 0px 0px 0px rgb(0,0,0),
+  //       0px 0px 0px 0px rgba(0, 0, 0, 0.1);
+  //   }
+  // }
   .coe_message {
     font-weight: bold;
     font-stretch: normal;
@@ -806,6 +806,7 @@
     line-height: 20px;
     letter-spacing: 1.28px;
     color: #2e2e2e;
+    padding-top: 16px;
   }
   /* .cl_innerdiv{
 width:20%;
@@ -830,8 +831,9 @@ width:20%;
     font-style: normal;
     line-height: 0.57;
     letter-spacing: 1.92px;
-    text-align: left;
-    text-align: end;
+    position: absolute;
+    bottom: 0px;
+    right: 20%;
     cursor: alias;
   }
   .man_image {
@@ -888,6 +890,7 @@ width:20%;
     color: #2e2e2e;
     line-height: 1.37;
     letter-spacing: 0.76px;
+    margin: 8px;
   }
   .Quality {
     font-size: 14px;
@@ -895,16 +898,18 @@ width:20%;
     line-height: 1.37;
     letter-spacing: 0.76px;
     font-weight: 500;
+    margin: 8px;
   }
   .cl_card {
     background-color: white;
+    padding: 12px;
   }
-  .matshadow.mat-card {
-    &:not([class*="mat-elevation-z"]) {
-      box-shadow: 0px 2px 0px 0.4px rgb(234, 229, 229), 0px 0px 0px 0px rgb(0,0,0),
-        0px 0px 0px 0px rgba(0, 0, 0, 0.1);
-    }
-  }
+  // .matshadow.mat-card {
+  //   &:not([class*="mat-elevation-z"]) {
+  //     box-shadow: 0px 2px 0px 0.4px rgb(234, 229, 229), 0px 0px 0px 0px rgb(0,0,0),
+  //       0px 0px 0px 0px rgba(0, 0, 0, 0.1);
+  //   }
+  // }
 
   .cl_matdividerflex {
     margin-top: -8px;
@@ -967,7 +972,8 @@ width:20%;
     margin-left: 30px;
     margin-right: 30px;
     margin-top: 10px;
-    height: 22%;
+    margin-bottom: 10px;
+    min-height: 120px;
   }
   .cl_75 {
     position: absolute;
@@ -1051,7 +1057,7 @@ width:20%;
   }
   .cl_colon {
     background-color: red;
-    align-self: flex-end;
+    // align-self: flex-end;
     height: 0px;
   }
   .cl_divider1 {
