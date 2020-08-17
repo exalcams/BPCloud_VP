@@ -92,9 +92,9 @@ export class DashboardComponent implements OnInit {
           // }, 10000);
           // this.openTourScreenDialog();
 
-          if (!this.authenticationDetails.TourStatus) {
-              this.openTourScreenDialog();
-          }
+        //   if (!this.authenticationDetails.TourStatus) {
+        //       this.openTourScreenDialog();
+        //   }
       } else {
           this._router.navigate(["/auth/login"]);
       }

@@ -13,14 +13,16 @@ import { DashboardService } from "app/services/dashboard.service";
 import { BPCOFAIACT } from "app/models/OrderFulFilment";
 import { MasterService } from "app/services/master.service";
 import { TranslateService, TranslatePipe } from "@ngx-translate/core";
-import { TourComponent } from '../tour/tour.component';
-import { Chart, ChartType, ChartOptions } from 'chart.js';
+import { TourComponent } from "../tour/tour.component";
+import { Chart, ChartType, ChartOptions } from "chart.js";
 @Component({
     selector: "app-home",
     templateUrl: "./home.component.html",
     styleUrls: ["./home.component.scss"],
 })
 export class HomeComponent implements OnInit {
+    authenticationDetails: AuthenticationDetails;
+
     i: any;
     a: any = 1;
     b: any = "#1f76d3";
@@ -30,22 +32,31 @@ export class HomeComponent implements OnInit {
     color_75: any = [];
     color_90: any = [];
 
-    constructor() { }
+    constructor(private dialog: MatDialog) {
+        this.authenticationDetails = new AuthenticationDetails();
+    }
 
     ngOnInit(): void {
+        const retrievedObject = localStorage.getItem("authorizationData");
+        this.authenticationDetails = JSON.parse(
+            retrievedObject
+        ) as AuthenticationDetails;
+        if (!this.authenticationDetails.TourStatus) {
+            this.openTourScreenDialog();
+        }
+
         for (this.i = 0; this.i <= 100; this.i++) {
             this.array1[this.i] = this.a;
         }
 
-
         for (this.i = 0; this.i <= 75; this.i++) {
-            this.color_75[this.i] = this.b
+            this.color_75[this.i] = this.b;
         }
         for (this.i = 0; this.i <= 90; this.i++) {
-            this.color_90[this.i] = this.b
+            this.color_90[this.i] = this.b;
         }
-        new Chart('doughnut1', {
-            type: 'doughnut',
+        new Chart("doughnut1", {
+            type: "doughnut",
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
@@ -53,41 +64,34 @@ export class HomeComponent implements OnInit {
 
                 title: {
                     display: false,
-                    text: 'Doughnut chart'
-
+                    text: "Doughnut chart",
                 },
 
                 legend: {
                     display: false,
-                    position: 'top'
-
+                    position: "top",
                 },
                 plugins: {
-                    labels: false
+                    labels: false,
                 },
                 animation: {
                     animateScale: true,
-                    animateRotate: true
-                }
+                    animateRotate: true,
+                },
             },
             data: {
-                datasets: [{
-                    data: this.array1,
-                    backgroundColor: this.color_75,
+                datasets: [
+                    {
+                        data: this.array1,
+                        backgroundColor: this.color_75,
 
-
-                    label: 'dataset1'
-
-                }
-
+                        label: "dataset1",
+                    },
                 ],
-
-
-
-            }
-        })
-        new Chart('doughnut2', {
-            type: 'doughnut',
+            },
+        });
+        new Chart("doughnut2", {
+            type: "doughnut",
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
@@ -95,37 +99,33 @@ export class HomeComponent implements OnInit {
 
                 title: {
                     display: false,
-                    text: 'Doughnut chart'
-
+                    text: "Doughnut chart",
                 },
 
                 legend: {
                     display: false,
-                    position: 'top'
-
+                    position: "top",
                 },
                 plugins: {
-                    labels: false
+                    labels: false,
                 },
                 animation: {
                     animateScale: true,
-                    animateRotate: true
-                }
+                    animateRotate: true,
+                },
             },
             data: {
-                datasets: [{
-                    data: this.array1,
-                    backgroundColor: this.color_90,
-                    label: 'dataset1'
-                }
-
+                datasets: [
+                    {
+                        data: this.array1,
+                        backgroundColor: this.color_90,
+                        label: "dataset1",
+                    },
                 ],
-
-
-            }
-        })
-        new Chart('doughnut3', {
-            type: 'doughnut',
+            },
+        });
+        new Chart("doughnut3", {
+            type: "doughnut",
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
@@ -133,38 +133,33 @@ export class HomeComponent implements OnInit {
 
                 title: {
                     display: false,
-                    text: 'Doughnut chart'
-
+                    text: "Doughnut chart",
                 },
 
                 legend: {
                     display: false,
-                    position: 'top'
-
+                    position: "top",
                 },
                 plugins: {
-                    labels: false
+                    labels: false,
                 },
                 animation: {
                     animateScale: true,
-                    animateRotate: true
-                }
+                    animateRotate: true,
+                },
             },
             data: {
-                datasets: [{
-                    data: this.array1,
-                    backgroundColor: this.color_90,
-                    label: 'dataset1'
-                }
-
+                datasets: [
+                    {
+                        data: this.array1,
+                        backgroundColor: this.color_90,
+                        label: "dataset1",
+                    },
                 ],
-
-
-
-            }
-        })
-        new Chart('doughnut4', {
-            type: 'doughnut',
+            },
+        });
+        new Chart("doughnut4", {
+            type: "doughnut",
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
@@ -172,42 +167,35 @@ export class HomeComponent implements OnInit {
 
                 title: {
                     display: false,
-                    text: 'Doughnut chart'
-
+                    text: "Doughnut chart",
                 },
 
                 legend: {
                     display: false,
-                    position: 'top'
-
+                    position: "top",
                 },
                 plugins: {
-                    labels: false
+                    labels: false,
                 },
                 animation: {
                     animateScale: true,
-                    animateRotate: true
-                }
+                    animateRotate: true,
+                },
             },
             data: {
-                datasets: [{
-                    data: this.array1,
-                    backgroundColor: this.color_75,
+                datasets: [
+                    {
+                        data: this.array1,
+                        backgroundColor: this.color_75,
 
-
-                    label: 'dataset1'
-
-                }
-
+                        label: "dataset1",
+                    },
                 ],
+            },
+        });
 
-
-
-            }
-        })
-
-        new Chart('doughnut5', {
-            type: 'doughnut',
+        new Chart("doughnut5", {
+            type: "doughnut",
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
@@ -215,33 +203,35 @@ export class HomeComponent implements OnInit {
 
                 title: {
                     display: false,
-                    text: 'Doughnut chart'
-
+                    text: "Doughnut chart",
                 },
 
                 legend: {
                     display: false,
-                    position: 'top'
-
+                    position: "top",
                 },
                 animation: {
                     animateScale: true,
-                    animateRotate: true
-                }
+                    animateRotate: true,
+                },
             },
             data: {
-                datasets: [{
-                    data: [69, 31],
-                    backgroundColor: ["#1f76d3", "#ebebed"],
-                    label: 'dataset1'
-                }
-
+                datasets: [
+                    {
+                        data: [69, 31],
+                        backgroundColor: ["#1f76d3", "#ebebed"],
+                        label: "dataset1",
+                    },
                 ],
+            },
+        });
+    }
 
+    openTourScreenDialog(): void {
+        const dialogConfig = new MatDialogConfig();
 
-
-            }
-        })
-
+        dialogConfig.disableClose = true;
+        dialogConfig.width = "50%";
+        this.dialog.open(TourComponent, dialogConfig);
     }
 }

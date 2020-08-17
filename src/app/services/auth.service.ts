@@ -105,12 +105,13 @@ export class AuthService {
             )
             .pipe(catchError(this.errorHandler1));
     }
+
     GetUserPreferenceByUserID(
         UserID: Guid
     ): Observable<UserPreference | string> {
         return this._httpClient
             .get<UserPreference>(
-                `${this.baseAddress}authenticationapi/Master/GetUserPreferenceByUserID`
+                `${this.baseAddress}authenticationapi/Master/GetUserPreferenceByUserID?UserID=${UserID}`
             )
             .pipe(catchError(this.errorHandler));
     }
