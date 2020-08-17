@@ -144,6 +144,7 @@ export class AppComponent implements OnInit, OnDestroy {
         mdIconRegistry.addSvgIcon('thunderBlackIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/thunder_black.svg'));
         mdIconRegistry.addSvgIcon('purchaseIntentIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/purchaseIntent.svg'));
         mdIconRegistry.addSvgIcon('stockIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/stock.svg'));
+        mdIconRegistry.addSvgIcon('settingsIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/settings.svg'));
 
         /**
          * ------------------------------------------------------------------
@@ -288,7 +289,7 @@ export class AppComponent implements OnInit, OnDestroy {
                 this.document.body.classList.add(this.fuseConfig.colorTheme);
             });
 
-        // Retrive menu items from Local Storage    
+        // Retrive menu items from Local Storage
         const menuItems = localStorage.getItem('menuItemsData');
         if (menuItems) {
             this.navigation = JSON.parse(menuItems);

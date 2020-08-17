@@ -180,52 +180,53 @@ export class UserPreferencesComponent implements OnInit {
   }
 
   DeleteClicked(): void {
-    if (this.userPreferenceFormGroup.valid) {
-      if (this.userPreference.ID) {
-        const dialogConfig: MatDialogConfig = {
-          data: {
-            Actiontype: 'Delete',
-            Catagory: 'User Preference'
-          },
-        };
-        const dialogRef = this.dialog.open(NotificationDialogComponent, dialogConfig);
-        dialogRef.afterClosed().subscribe(
-          result => {
-            if (result) {
-              this.IsProgressBarVisibile = true;
-              this.userPreference.UserID = this.authenticationDetails.UserID;
-              this.userPreference.NavbarPrimaryBackground = this.userPreferenceFormGroup.get('navbarPrimaryBackground').value;
-              this.userPreference.NavbarSecondaryBackground = this.userPreferenceFormGroup.get('navbarSecondaryBackground').value;
-              this.userPreference.ToolbarBackground = this.userPreferenceFormGroup.get('toolbarBackground').value;
-              this.userPreference.ModifiedBy = this.authenticationDetails.UserID.toString();
-              this._masterService.DeleteUserPreference(this.userPreference).subscribe(
-                (data) => {
-                  // console.log(data);
-                  this.ResetControl();
-                  this.notificationSnackBarComponent.openSnackBar('User preference deleted successfully', SnackBarStatus.success);
-                  this.IsProgressBarVisibile = false;
-                  localStorage.removeItem('userPreferenceData');
-                  this.GetUserPreferenceByUserID();
-                  // this.SaveSucceed.emit('success');
-                  // this._masterService.TriggerNotification('App deleted successfully');
-                },
-                (err) => {
-                  console.error(err);
-                  this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-                  this.IsProgressBarVisibile = false;
-                  // this.ShowProgressBarEvent.emit('hide');
-                }
-              );
-            }
-          });
-      }
-    } else {
-      Object.keys(this.userPreferenceFormGroup.controls).forEach(key => {
-        this.userPreferenceFormGroup.get(key).markAsTouched();
-        this.userPreferenceFormGroup.get(key).markAsDirty();
-      });
-    }
+    // if (this.userPreferenceFormGroup.valid) {
+    //   if (this.userPreference.ID) {
+    //     const dialogConfig: MatDialogConfig = {
+    //       data: {
+    //         Actiontype: 'Delete',
+    //         Catagory: 'User Preference'
+    //       },
+    //     };
+    //     const dialogRef = this.dialog.open(NotificationDialogComponent, dialogConfig);
+    //     dialogRef.afterClosed().subscribe(
+    //       result => {
+    //         if (result) {
+    //           this.IsProgressBarVisibile = true;
+    //           this.userPreference.UserID = this.authenticationDetails.UserID;
+    //           this.userPreference.NavbarPrimaryBackground = this.userPreferenceFormGroup.get('navbarPrimaryBackground').value;
+    //           this.userPreference.NavbarSecondaryBackground = this.userPreferenceFormGroup.get('navbarSecondaryBackground').value;
+    //           this.userPreference.ToolbarBackground = this.userPreferenceFormGroup.get('toolbarBackground').value;
+    //           this.userPreference.ModifiedBy = this.authenticationDetails.UserID.toString();
+    //           this._masterService.DeleteUserPreference(this.userPreference).subscribe(
+    //             (data) => {
+    //               // console.log(data);
+    //               this.ResetControl();
+    //               this.notificationSnackBarComponent.openSnackBar('User preference deleted successfully', SnackBarStatus.success);
+    //               this.IsProgressBarVisibile = false;
+    //               localStorage.removeItem('userPreferenceData');
+    //               this.GetUserPreferenceByUserID();
+    //               // this.SaveSucceed.emit('success');
+    //               // this._masterService.TriggerNotification('App deleted successfully');
+    //             },
+    //             (err) => {
+    //               console.error(err);
+    //               this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+    //               this.IsProgressBarVisibile = false;
+    //               // this.ShowProgressBarEvent.emit('hide');
+    //             }
+    //           );
+    //         }
+    //       });
+    //   }
+    // } else {
+    //   Object.keys(this.userPreferenceFormGroup.controls).forEach(key => {
+    //     this.userPreferenceFormGroup.get(key).markAsTouched();
+    //     this.userPreferenceFormGroup.get(key).markAsDirty();
+    //   });
+    // }
   }
+
   UpdateUserPreference(): void {
     this._fuseConfigService.config
       // .pipe(takeUntil(this._unsubscribeAll))
@@ -233,7 +234,7 @@ export class UserPreferencesComponent implements OnInit {
 
         this.fuseConfig = config;
         this.BGClassName = config;
-        // Retrive user preference from Local Storage    
+        // Retrive user preference from Local Storage
         const userPre = localStorage.getItem('userPreferenceData');
         if (userPre) {
           const userPrefercence: UserPreference = JSON.parse(userPre) as UserPreference;

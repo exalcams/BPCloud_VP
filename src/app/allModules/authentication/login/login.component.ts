@@ -150,22 +150,26 @@ export class LoginComponent implements OnInit {
                 )
                 .subscribe(
                     (data) => {
-                        // this._authService.GetUserPreferenceByUserID(data.userID as Guid).subscribe(
-                        //   data1 => {
-                        //       let userPre = data1 as UserPreference;
-                        //       console.log(userPre);
-                        //       if (!userPre) {
-                        //           userPre = new UserPreference();
-                        //           userPre.NavbarPrimaryBackground = 'fuse-navy-700';
-                        //           userPre.NavbarSecondaryBackground = 'fuse-navy-700';
-                        //           userPre.ToolbarBackground = 'blue-800';
-                        //       }
-                        //       localStorage.setItem('userPreferenceData', JSON.stringify(userPre));
-                        //       console.log(userPre.ToolbarBackground);
-                        //       this.UpdateUserPreference();
-                        //   },
-
-                        //   );
+                        this._authService
+                            .GetUserPreferenceByUserID(data.UserID as Guid)
+                            .subscribe((data1) => {
+                                let userPre = data1 as UserPreference;
+                                console.log(userPre);
+                                if (!userPre) {
+                                    userPre = new UserPreference();
+                                    userPre.NavbarPrimaryBackground =
+                                        "fuse-navy-700";
+                                    userPre.NavbarSecondaryBackground =
+                                        "fuse-navy-700";
+                                    userPre.ToolbarBackground = "blue-800";
+                                }
+                                localStorage.setItem(
+                                    "userPreferenceData",
+                                    JSON.stringify(userPre)
+                                );
+                                console.log(userPre.ToolbarBackground);
+                                this.UpdateUserPreference();
+                            });
                         this.isProgressBarVisibile = false;
                         const dat = data as AuthenticationDetails;
                         if (data.isChangePasswordRequired === "Yes") {
@@ -192,6 +196,7 @@ export class LoginComponent implements OnInit {
             });
         }
     }
+
     UpdateUserPreference(): void {
         this._fuseConfigService.config
             //   .pipe(takeUntil(this._unsubscribeAll))
@@ -395,6 +400,8 @@ export class LoginComponent implements OnInit {
         this.GetSubconMenus();
         this.GetPaymentMenus();
         this.GetSupportMenus();
+        this.GetCustomerMenus();
+        this.GetAdminMenus();
 
         if (this.menuItems.indexOf("Improvement") >= 0) {
             this.children.push({
@@ -408,6 +415,17 @@ export class LoginComponent implements OnInit {
                 url: "/pages/improvement",
             });
         }
+
+        if (this.menuItems.indexOf("UserPreferences") >= 0) {
+            this.children.push({
+                id: "userpreferences",
+                title: "User Preferences",
+                type: "item",
+                icon: "settingsIcon",
+                isSvgIcon: true,
+                url: "/master/userpreferences",
+            });
+        }
         // if (this.menuItems.indexOf("GRReceipts") >= 0) {
         //     this.qualitySubChildren.push({
         //         id: "grReceipts",
@@ -417,6 +435,16 @@ export class LoginComponent implements OnInit {
         //         url: "/reports/grReceipts",
         //     });
         // }
+
+        if (this.menuItems.indexOf("GRReceipts") >= 0) {
+            this.qualitySubChildren.push({
+                id: "grReceipts",
+                title: "GR Receipts",
+                translate: "NAV.VENDOR.GR_RECEIPTS",
+                type: "item",
+                url: "/reports/grReceipts",
+            });
+        }
 
         this.navigation.push({
             id: "applications",
@@ -972,14 +1000,6 @@ export class LoginComponent implements OnInit {
             });
         }
 
-        if (this.menuItems.indexOf("UserPreferences") >= 0) {
-            this.configSubChildren.push({
-                id: "userpreferences",
-                title: "User Preferences",
-                type: "item",
-                url: "/master/userpreferences",
-            });
-        }
         if (this.menuItems.indexOf("ExpenseType") >= 0) {
             this.configSubChildren.push({
                 id: "expensetype",
@@ -1038,21 +1058,19 @@ export class LoginComponent implements OnInit {
                 url: "/audit/loginHistory",
             });
         }
-        if (this.menuItems.indexOf("Improvement") >= 0) {
-            this.children.push({
-                id: "improvement",
-                title: "Improvement",
-                translate: "NAV.SAMPLE.TITLE",
-                type: "item",
-                icon: "flipIcon",
-                isSvgIcon: true,
-                // icon: 'dashboard',
-                url: "/pages/improvement",
-            });
-        }
+        // if (this.menuItems.indexOf("Improvement") >= 0) {
+        //     this.children.push({
+        //         id: "improvement",
+        //         title: "Improvement",
+        //         translate: "NAV.VENDOR.IMPROVEMENT",
+        //         type: "item",
+        //         icon: "flipIcon",
+        //         isSvgIcon: true,
+        //         // icon: 'dashboard',
+        //         url: "/pages/improvement",
+        //     });
+        // }
     }
-
-    // mHTML = document.getElementById("message");
 
     typeMessage(): void {
         if (!this.messages[this.currentMessage]) {
