@@ -74,6 +74,13 @@ export class SupportDeskComponent implements OnInit {
   }
 
   LoadBotChat(): void {
+    // (function (d, m) {
+    //   var kommunicateSettings = { "appId": "10fd8a0b153726753ff1ad51af63846ce", "popupWidget": true, "automaticChatOpenOnNavigation": true };
+    //   var s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
+    //   s.src = "https://api.kommunicate.io/v2/kommunicate.app";
+    //   var h = document.getElementsByTagName("head")[0]; h.appendChild(s);
+    //   (window as any).kommunicate = m; m._globals = kommunicateSettings;
+    // })(document, (window as any).kommunicate || {});
     (function (d, m) {
       var kommunicateSettings = { "appId": "10fd8a0b153726753ff1ad51af63846ce", "popupWidget": true, "automaticChatOpenOnNavigation": true };
       var s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
@@ -81,61 +88,61 @@ export class SupportDeskComponent implements OnInit {
       var h = document.getElementsByTagName("head")[0]; h.appendChild(s);
       (window as any).kommunicate = m; m._globals = kommunicateSettings;
     })(document, (window as any).kommunicate || {});
-  }
+}
 
-  loadSupportDeskBasedOnCondition(): void {
-    if (this.docRefNo) {
-      this._router.navigate(['/pages/supportticket'], { queryParams: { DocRefNo: this.docRefNo } });
-    }
+loadSupportDeskBasedOnCondition(): void {
+  if(this.docRefNo) {
+  this._router.navigate(['/pages/supportticket'], { queryParams: { DocRefNo: this.docRefNo } });
+}
     else {
-      this.GetSupportMasters();
-      this.GetSupportTicketsByPartnerID();
-    }
+  this.GetSupportMasters();
+  this.GetSupportTicketsByPartnerID();
+}
   }
 
-  GetSupportTicketsByPartnerID(): void {
-    this.isProgressBarVisibile = true;
-    this._supportdeskService
-      .GetSupportTicketsByPartnerID(this.authenticationDetails.UserName)
-      .subscribe((data) => {
-        if (data) {
-          this.supports = <SupportHeader[]>data;
-          if (this.supports && this.supports.length === 0) {
-            this.isSupport = true;
-          }
-          this.supportDataSource = new MatTableDataSource(this.supports);
-          this.supportDataSource.paginator = this.paginator;
-          this.supportDataSource.sort = this.sort;
+GetSupportTicketsByPartnerID(): void {
+  this.isProgressBarVisibile = true;
+  this._supportdeskService
+    .GetSupportTicketsByPartnerID(this.authenticationDetails.UserName)
+    .subscribe((data) => {
+      if (data) {
+        this.supports = <SupportHeader[]>data;
+        if (this.supports && this.supports.length === 0) {
+          this.isSupport = true;
         }
+        this.supportDataSource = new MatTableDataSource(this.supports);
+        this.supportDataSource.paginator = this.paginator;
+        this.supportDataSource.sort = this.sort;
+      }
+      this.isProgressBarVisibile = false;
+    },
+      (err) => {
+        console.error(err);
         this.isProgressBarVisibile = false;
-      },
-        (err) => {
-          console.error(err);
-          this.isProgressBarVisibile = false;
-        });
-  }
+      });
+}
 
-  GetSupportMasters(): void {
-    this.isProgressBarVisibile = true;
-    this._supportdeskService
-      .GetSupportMasters()
-      .subscribe((data) => {
-        if (data) {
-          this.supportMasters = <SupportMaster[]>data;
-        }
+GetSupportMasters(): void {
+  this.isProgressBarVisibile = true;
+  this._supportdeskService
+    .GetSupportMasters()
+    .subscribe((data) => {
+      if (data) {
+        this.supportMasters = <SupportMaster[]>data;
+      }
+      this.isProgressBarVisibile = false;
+    },
+      (err) => {
+        console.error(err);
         this.isProgressBarVisibile = false;
-      },
-        (err) => {
-          console.error(err);
-          this.isProgressBarVisibile = false;
-        });
-  }
+      });
+}
 
-  addSupportTicketClicked(): void {
-    this._router.navigate(['/pages/supportticket']);
-  }
+addSupportTicketClicked(): void {
+  this._router.navigate(['/pages/supportticket']);
+}
 
-  onSupportRowClicked(row: any): void {
-    this._router.navigate(['/pages/supportchat'], { queryParams: { SupportID: row.SupportID } });
-  }
+onSupportRowClicked(row: any): void {
+  this._router.navigate(['/pages/supportchat'], { queryParams: { SupportID: row.SupportID } });
+}
 }
