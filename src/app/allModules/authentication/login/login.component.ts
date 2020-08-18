@@ -436,15 +436,15 @@ export class LoginComponent implements OnInit {
         //     });
         // }
 
-        if (this.menuItems.indexOf("GRReceipts") >= 0) {
-            this.qualitySubChildren.push({
-                id: "grReceipts",
-                title: "GR Receipts",
-                translate: "NAV.VENDOR.GR_RECEIPTS",
-                type: "item",
-                url: "/reports/grReceipts",
-            });
-        }
+        // if (this.menuItems.indexOf("GRReceipts") >= 0) {
+        //     this.qualitySubChildren.push({
+        //         id: "grReceipts",
+        //         title: "GR Receipts",
+        //         translate: "NAV.VENDOR.GR_RECEIPTS",
+        //         type: "item",
+        //         url: "/reports/grReceipts",
+        //     });
+        // }
 
         this.navigation.push({
             id: "applications",
@@ -478,6 +478,16 @@ export class LoginComponent implements OnInit {
             url: "/orderfulfilment/poschedules",
         });
 
+        if (this.menuItems.indexOf("ASN") >= 0) {
+            this.orderFulfilmentSubChildren.push({
+                id: "asn",
+                title: "ASN",
+                translate: "NAV.VENDOR.ASN",
+                type: "item",
+                url: "/pages/asn",
+            });
+        }
+
         this.orderFulfilmentSubChildren.push({
             id: "asnlist",
             title: "ASN List",
@@ -485,22 +495,33 @@ export class LoginComponent implements OnInit {
             type: "item",
             url: "/orderfulfilment/asnlist",
         });
-
-        this.orderFulfilmentSubChildren.push({
-            id: "grnlist",
-            title: "GRN List",
-            translate: "NAV.VENDOR.FULFILMENT_CENTER",
-            type: "item",
-            url: "/orderfulfilment/grnlist",
-        });
+        if (this.menuItems.indexOf("GRReceipts") >= 0) {
+            this.orderFulfilmentSubChildren.push({
+                id: "grnlist",
+                title: "GRN List",
+                translate: "NAV.VENDOR.FULFILMENT_CENTER",
+                type: "item",
+                url: "/reports/grReceipts",
+            });
+        }
 
         this.orderFulfilmentSubChildren.push({
             id: "invoicelist",
             title: "Invoice List",
             translate: "NAV.VENDOR.FULFILMENT_CENTER",
             type: "item",
-            url: "/orderfulfilment/invoicelist",
+            url: "/invoice",
         });
+        // if (this.menuItems.indexOf("Invoice") >= 0) {
+        //     this.paymentSubChildren.push({
+        //         id: "invoice",
+        //         title: "Invoice",
+        //         translate: "NAV.VENDOR.INVOICE",
+        //         type: "item",
+
+        //         url: "/invoice",
+        //     });
+        // }
 
         if (this.menuItems.indexOf("OrderFulFilmentCenter") >= 0) {
             this.children.push({
@@ -567,7 +588,7 @@ export class LoginComponent implements OnInit {
         if (this.menuItems.indexOf("Overview") >= 0) {
             this.qualitySubChildren.push({
                 id: "overview",
-                title: "Overview",
+                title: "Rejections",
                 translate: "NAV.VENDOR.OVERVIEW",
                 type: "item",
                 url: "/reports/overview",
@@ -667,27 +688,6 @@ export class LoginComponent implements OnInit {
             });
         }
 
-        if (this.menuItems.indexOf("ASN") >= 0) {
-            this.paymentSubChildren.push({
-                id: "asn",
-                title: "ASN",
-                translate: "NAV.VENDOR.ASN",
-                type: "item",
-                url: "/pages/asn",
-            });
-        }
-
-        if (this.menuItems.indexOf("Invoice") >= 0) {
-            this.paymentSubChildren.push({
-                id: "invoice",
-                title: "Invoice",
-                translate: "NAV.VENDOR.INVOICE",
-                type: "item",
-
-                url: "/invoice",
-            });
-        }
-
         if (this.menuItems.indexOf("AccountStatement") >= 0) {
             this.paymentSubChildren.push({
                 id: "accountStatement",
@@ -715,15 +715,6 @@ export class LoginComponent implements OnInit {
                 url: "/payment/payments",
             });
         }
-        if (this.menuItems.indexOf("TDS") >= 0) {
-            this.paymentSubChildren.push({
-                id: "tds",
-                title: "TDS",
-                translate: "NAV.VENDOR.TDS",
-                type: "item",
-                url: "/payment/tds",
-            });
-        }
         if (this.menuItems.indexOf("Payment") >= 0) {
             this.paymentSubChildren.push({
                 id: "payment",
@@ -733,9 +724,18 @@ export class LoginComponent implements OnInit {
                 url: "/pages/payment",
             });
         }
+        if (this.menuItems.indexOf("TDS") >= 0) {
+            this.paymentSubChildren.push({
+                id: "tds",
+                title: "TDS",
+                translate: "NAV.VENDOR.TDS",
+                type: "item",
+                url: "/payment/tds",
+            });
+        }
+
         if (
             this.menuItems.indexOf("Flip") >= 0 ||
-            this.menuItems.indexOf("ASN") >= 0 ||
             this.menuItems.indexOf("Payments") >= 0 ||
             this.menuItems.indexOf("Payable") >= 0 ||
             this.menuItems.indexOf("AccountStatement") >= 0 ||

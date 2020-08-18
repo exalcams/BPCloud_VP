@@ -45,6 +45,7 @@ import {
 } from "@angular/material";
 import { NgxChartsModule } from "@swimlane/ngx-charts";
 import { NgxDonutChartModule } from "ngx-doughnut-chart";
+import { NgxDropzoneModule } from 'ngx-dropzone';
 import {
     FuseCountdownModule,
     FuseHighlightModule,
@@ -192,7 +193,7 @@ const routes = [
 
         NgxChartsModule,
         NgxDonutChartModule,
-
+        NgxDropzoneModule,
         ChartsModule,
 
         FuseSharedModule,
