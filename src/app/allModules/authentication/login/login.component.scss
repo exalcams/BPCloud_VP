@@ -9,7 +9,7 @@ login {
         background-size: 72% 100%;
 
         #login-intro {
-            padding: 128px;
+            padding: 60px;
 
             @include media-breakpoint("sm") {
                 padding: 128px 64px;
@@ -255,8 +255,8 @@ login {
 
     .cursor {
         display: inline-block;
-        height: 22px;
-        width: 3px;
+        height: 32px;
+        width: 5px;
         background: #fff;
         vertical-align: initial;
         animation: 1s blink linear infinite;
@@ -270,5 +270,9 @@ login {
         100% {
             opacity: 1;
         }
+    }
+
+    .h1 {
+        font-size: 36px !important;
     }
 }
