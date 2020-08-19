@@ -22,12 +22,16 @@
         <mat-card-actions class="m-0 px-12 cardActions">
           <div fxLayout fxLayoutAlign="end center">
             <div fxFlex align="end">
-              <button mat-raised-button type="button" class="btnBg mr-4" (click)="CloseClicked()">Release</button>
-              <button mat-stroked-button type="button" class="saveBtn" (click)="YesClicked()">Save</button>
+              <button mat-raised-button type="button" class="btnBg mr-4" (click)="Releaselicked()">Release</button>
+              <button mat-stroked-button type="button" class="saveBtn" (click)="SaveClicked()">Save</button>
             </div>
           </div>
         </mat-card-actions>
       </mat-card>
+    </div>
+    <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
+    </mat-progress-spinner>
+    <div id="overlay" *ngIf="IsProgressBarVisibile">
     </div>
   </div>
 </div>

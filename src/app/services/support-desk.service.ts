@@ -198,4 +198,27 @@ export class SupportDeskService {
             .pipe(catchError(this.errorHandler));
     }
 
+    SaveFAQAttachment(CreatedBy: string, selectedFile: File): Observable<any> {
+        const formData: FormData = new FormData();
+        formData.append(selectedFile.name, selectedFile, selectedFile.name);
+        formData.append('CreatedBy', CreatedBy.toString());
+
+        return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/SaveFAQAttachment`,
+            formData,
+            // {
+            //   headers: new HttpHeaders({
+            //     'Content-Type': 'application/json'
+            //   })
+            // }
+        ).pipe(catchError(this.errorHandler));
+    }
+
+    GetFAQAttachment(): Observable<Blob | string> {
+        return this._httpClient.get(`${this.baseAddress}supportapi/SupportDesk/GetFAQAttachment`, {
+            responseType: 'blob',
+            headers: new HttpHeaders().append('Content-Type', 'application/json')
+        })
+            .pipe(catchError(this.errorHandler));
+    }
+
 }

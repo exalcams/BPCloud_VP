@@ -282,49 +282,7 @@
   //   }
   // }
 
-  @mixin TableBorderRight($color) {
-    border-right: 1px solid $color;
-  }
-
-  .TableCommon {
-    padding: 5px;
-    font-size: 14px;
-    min-width: 50px !important;
-    white-space: nowrap;
-  }
-
-  table {
-    width: 100%;
-
-    th {
-      @include TableBorderRight(gray);
-      @extend .TableCommon;
-      // min-width: max-content !important;
-      color: white;
-      background-color: #121214;
-    }
-
-    td {
-      @include TableBorderRight(rgba(0, 0, 0, 0.12));
-      @extend .TableCommon;
-      // min-width: max-content !important;
-      &.QtyClass {
-        text-align: right;
-      }
-      .mat-form-field-underline {
-        display: none;
-      }
-    }
-
-    tr {
-      height: 40px;
-    }
-
-    .mat-sort-header-container {
-      display: flex;
-      justify-content: center;
-    }
-  }
+ 
   .abnormal {
     .mat-form-field-flex > .mat-form-field-infix {
       padding: 0.3em 0px !important;
@@ -349,34 +307,17 @@
       border-radius: 0 !important;
     }
   }
-  // td.mat-cell {
-  //   /* row padding */
-  //   padding: 16px 0;
-  //   /* row border */
-  //   border-bottom: 1px solid #ffa600;
-  //   border-top: 1px solid #ffa600;
-  //  }
-
-  //  td.mat-cell:first-child {
-  //    /* row border */
-  //    border-left: 1px solid #ffa600;
-  //  }
-
-  //  td.mat-cell:last-child {
-  //    /* row border */
-  //    border-right: 1px solid #ffa600;
-  //  }
-
-  //  table {
-  //    /* row spacing / margin */
-  //    border-spacing: 0 8px !important;
-  //  }
   .whiteBg {
     background-color: white !important;
   }
   .btnBg {
     background-color: #efb577 !important;
     color: white;
+    margin-bottom: 8px;
+  }
+  .saveBtn {
+    color: #efb577 !important;
+    margin-bottom: 8px;
   }
   .tile {
     @include mat-elevation(2);
@@ -407,42 +348,8 @@
   .italicClass {
     font-style: italic;
   }
-  .avatar1 {
-    height: 40px !important;
-    width: 40px !important;
-    margin: 0 8px 0 0;
-    border-radius: 50%;
-    font-size: 17px;
-    font-weight: 500;
-    text-align: center;
-  }
-  .intervalclass {
-    @extend .italicClass;
-    @extend .semiBoldClass;
-    font-size: small;
-  }
   .subHeader {
     font-weight: 500;
-  }
-  .outer-circle {
-    height: 100px;
-    width: 100px;
-    border: 3px dashed red;
-    border-radius: 50%;
-    position: relative;
-  }
-  .inner-circle {
-    // height: 75px;
-    // width: 75px;
-    // border: 1px solid #f3705a;
-    // border-radius: 50%;
-    // background-color: white;
-    position: absolute;
-    top: 11%;
-    left: 11%;
-  }
-  .chart-legend .legend-labels {
-    width: 100px;
   }
   .search {
     height: 36px;
@@ -473,140 +380,6 @@
       border: none;
     }
   }
-  .doughnutChartPosition {
-    margin-bottom: 8px;
-    position: relative;
-    left: 54%;
-  }
-  #doughnutChart {
-    canvas {
-      // width: 200px !important;
-      height: 140px !important;
-    }
-  }
-  #barChart {
-    canvas {
-      // width: 200px !important;
-      height: 170px !important;
-    }
-  }
-
-  // .mat-form-field-appearance-outline {
-  //   .mat-form-field-outline {
-  //     color: rgba(0, 0, 0, 0.5) !important;
-  //   }
-  // }
-  // .mat-form-field-appearance-outline.ng-invalid.ng-touched {
-  //     .mat-form-field-outline {
-  //         color: red !important;
-  //     }
-  // }
-
-  // .mat-form-field-appearance-outline.ng-valid {
-  //     .mat-form-field-outline {
-  //         color: rgba(0, 0, 0, 0.5) !important;
-  //     }
-  // }
-
-  // .mat-form-field-appearance-outline .mat-form-field-outline {
-  //   top: 0.4em !important;
-  // }
-  // .mat-form-field-flex > .mat-form-field-infix {
-  //   padding: 0.002em 0px !important;
-  // }
-  // .normal .mat-form-field-flex > .mat-form-field-infix {
-  //   padding: 0.4375em 0 !important;
-  // }
-  // .mat-form-field-label-wrapper {
-  //   top: -1em;
-  // }
-
-  // .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
-  //   transform: translateY(-0.5em) scale(0.75);
-  // }
-
-  // .mat-form-field-suffix .mat-icon-button {
-  //   width: 2.5em;
-  //   height: 1.5em !important;
-  // }
-
-  // .mat-form-field-appearance-outline .mat-form-field-outline-start {
-  //   border-radius: 0px 0 0 0px !important;
-  // }
-  // .mat-form-field-appearance-outline .mat-form-field-outline-end {
-  //   border-radius: 0px 0 0 0px !important;
-  // }
-
-  // .mat-form-field-outline-gap {
-  //   border: 1px solid #1b56ca;
-  //   border-radius: 1e-6px;
-  // }
-  // .mat-form-field-wrapper {
-  //   padding-bottom: 0.7em !important;
-  // }
-  .tableLeftBorder {
-    border-left: 1px solid rgba(0, 0, 0, 0.12);
-  }
-
-  .roundCommon {
-    height: 20px;
-    width: 20px;
-    border-radius: 20px;
-    border-width: 3px;
-    border-style: solid;
-  }
-
-  .round {
-    @extend .roundCommon;
-    background-color: white;
-    border-color: gray;
-  }
-  // .round1 {
-  //   @extend .roundCommon;
-  //   background-color: white;
-  //   border-color: #34ad65;
-  // }
-  .hor-timeline {
-    height: 8px;
-    margin-top: 5px;
-    //border-radius: 4px;
-  }
-  .green-timeline {
-    @extend .hor-timeline;
-    background-color: #34ad65;
-  }
-  .orange-timeline {
-    @extend .hor-timeline;
-    background-color: #efb577;
-  }
-  .white-timeline {
-    @extend .hor-timeline;
-    background-color: white;
-    border-top: 2px solid rgba(0, 0, 0, 0.2);
-    border-bottom: 2px solid rgba(0, 0, 0, 0.2);
-  }
-  .Rectangle {
-    // width: 152px;
-    min-height: 50px;
-    border-radius: 9px;
-    border: solid 1px #cccccc;
-    background-color: #ffffff;
-    cursor: pointer !important;
-  }
-  .Rectangle-106 {
-    width: 36px;
-    height: 33px;
-    opacity: 0.2;
-    border-radius: 2px;
-    background-color: #f9d2a8;
-  }
-  .tableCellBorder {
-    height: 20px;
-    vertical-align: middle;
-    width: 10px;
-    background-color: #d87e39;
-    opacity: 0.7;
-  }
   .next {
     background-color: #e8ffeb;
     padding: 4px 2px;
@@ -632,33 +405,6 @@
     transform: rotate(-90deg);
   }
 
-  .progress__meter,
-  .progress__value {
-    fill: none;
-  }
-
-  // .progress__meter {
-  //   stroke: #ccc;
-  //   stroke-dasharray: 2;
-  // }
-
-  // .progress__value {
-  //   stroke: green;
-  //   stroke-dasharray: 2;
-  //   transition: all;
-  // }
-  .progress__meter {
-    stroke: #f3705a;
-  }
-
-  .progress__value {
-    stroke: #efefef;
-    opacity: 0.9;
-    transition: all 100ms;
-  }
-  .progressSubtitle {
-    fill: #f3705a !important;
-  }
   .pdfLinkClass {
     color: #1e8bed;
     cursor: pointer;
@@ -676,6 +422,10 @@
   }
   .cardActions {
     box-shadow: 0 -5px 10px 0 rgba(0, 0, 0, 0.16);
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
   }
   .WeightError {
     color: #f44336;
@@ -690,5 +440,24 @@
   .floatBtn {
     position: fixed;
     bottom: 80px !important;
+  }
+  .save_button {
+    width: 83px;
+
+    background-color: #fbc96f;
+    color: white;
+  }
+  .release_button1 {
+    width: 83px;
+    color: #fbc96f;
+    background-color: white;
+    border-color: #fbc96f;
+    border-style: solid;
+    border-width: thin;
+  }
+  .mat_card {
+    border-style: none;
+    border-bottom: none;
+    box-shadow: none;
   }
 }
