@@ -677,6 +677,10 @@
     }
     .cardActions {
         box-shadow: 0 -5px 10px 0 rgba(0, 0, 0, 0.16);
+        // position: fixed;
+        // bottom: 0px;
+        // left: 0px;
+        // right: 0px;
     }
     .WeightError {
         color: #f44336;
@@ -701,21 +705,22 @@
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     }
     .dropzone {
-        height: -webkit-fill-available;
+        height: 100%;
     }
     .iframe {
         width: 100%;
-        height: -webkit-fill-available;
+        height: 100%;
         border: none;
     }
     .mat_card {
-        height: 90% !important;
+        height: 100% !important;
         border-style: none;
         border-bottom: none;
         box-shadow: none;
     }
     .mat_card_content {
-        height: 80vh !important;
+        height: 84%;
+        margin-bottom: 0px;
     }
     .cl_div {
         height: 100%;

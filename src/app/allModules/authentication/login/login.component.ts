@@ -400,8 +400,8 @@ export class LoginComponent implements OnInit {
         this.GetSubconMenus();
         this.GetPaymentMenus();
         this.GetSupportMenus();
-        this.GetCustomerMenus();
-        this.GetAdminMenus();
+        // this.GetCustomerMenus();
+        // this.GetAdminMenus();
 
         if (this.menuItems.indexOf("Improvement") >= 0) {
             this.children.push({
@@ -681,7 +681,7 @@ export class LoginComponent implements OnInit {
         if (this.menuItems.indexOf("Flip") >= 0) {
             this.paymentSubChildren.push({
                 id: "flip",
-                title: "Po Flip",
+                title: "PO Flip",
                 translate: "NAV.VENDOR.PO_FLIP",
                 type: "item",
                 url: "/pages/poflip",
@@ -788,7 +788,7 @@ export class LoginComponent implements OnInit {
         if (this.menuItems.indexOf("Fact") >= 0) {
             this.supportSubChildren.push({
                 id: "fact",
-                title: "My details",
+                title: "My Details",
                 translate: "NAV.VENDOR.MY_DETAILS",
                 type: "item",
                 // icon: 'dashboard',
@@ -900,7 +900,7 @@ export class LoginComponent implements OnInit {
         if (this.menuItems.indexOf("CustomerFact") >= 0) {
             this.customerSupportSubChildren.push({
                 id: "custfact",
-                title: "My details",
+                title: "My Details",
                 translate: "NAV.CUSTOMER.MY_DETAILS",
                 type: "item",
                 // icon: 'dashboard',

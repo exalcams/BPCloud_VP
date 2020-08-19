@@ -15,14 +15,20 @@ import { MasterService } from "app/services/master.service";
 import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import { TourComponent } from "../tour/tour.component";
 import { Chart, ChartType, ChartOptions } from "chart.js";
+import { POService } from 'app/services/po.service';
+import { Validators } from '@angular/forms';
+import { BPCCEOMessage, BPCSCOCMessage } from 'app/models/Message.model';
 @Component({
     selector: "app-home",
     templateUrl: "./home.component.html",
     styleUrls: ["./home.component.scss"],
 })
 export class HomeComponent implements OnInit {
+    menuItems: string[] = [];
     authenticationDetails: AuthenticationDetails;
-
+    IsProgressBarVisibile: boolean;
+    selectedCEOMessage: BPCCEOMessage;
+    selectedSCOCMessage: BPCSCOCMessage;
     i: any;
     a: any = 1;
     b: any = "#1f76d3";
@@ -32,19 +38,81 @@ export class HomeComponent implements OnInit {
     color_75: any = [];
     color_90: any = [];
 
-    constructor(private dialog: MatDialog) {
+    constructor(
+        private dialog: MatDialog,
+        private _POService: POService,
+        private _router: Router,
+    ) {
+        this.IsProgressBarVisibile = false;
         this.authenticationDetails = new AuthenticationDetails();
+        this.selectedCEOMessage = new BPCCEOMessage();
+        this.selectedSCOCMessage = new BPCSCOCMessage();
     }
 
     ngOnInit(): void {
-        const retrievedObject = localStorage.getItem("authorizationData");
-        this.authenticationDetails = JSON.parse(
-            retrievedObject
-        ) as AuthenticationDetails;
-        if (!this.authenticationDetails.TourStatus) {
-            this.openTourScreenDialog();
+        const retrievedObject = localStorage.getItem('authorizationData');
+        if (retrievedObject) {
+            this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+            this.menuItems = this.authenticationDetails.MenuItemNames.split(',');
+            // if (this.menuItems.indexOf('User') < 0) {
+            //   this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
+            //   this._router.navigate(['/auth/login']);
+            // }
+            if (!this.authenticationDetails.TourStatus) {
+                this.openTourScreenDialog();
+            }
+            this.LoadBotChat();
+            this.GetCEOMessage();
+            this.GetSCOCMessage();
+            this.LoadCharts();
+        } else {
+            this._router.navigate(['/auth/login']);
         }
-        this.LoadBotChat();
+    }
+
+    openTourScreenDialog(): void {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.width = "50%";
+        this.dialog.open(TourComponent, dialogConfig);
+    }
+
+    GetCEOMessage(): void {
+        this.IsProgressBarVisibile = true;
+        this._POService.GetCEOMessage().subscribe(
+            (data) => {
+                this.IsProgressBarVisibile = false;
+                this.selectedCEOMessage = data as BPCCEOMessage;
+                if (!this.selectedCEOMessage) {
+                    this.selectedCEOMessage = new BPCCEOMessage();
+                }
+            },
+            (err) => {
+                console.error(err);
+                this.IsProgressBarVisibile = false;
+            }
+        );
+    }
+
+    GetSCOCMessage(): void {
+        this.IsProgressBarVisibile = true;
+        this._POService.GetSCOCMessage().subscribe(
+            (data) => {
+                this.IsProgressBarVisibile = false;
+                this.selectedSCOCMessage = data as BPCSCOCMessage;
+                if (!this.selectedSCOCMessage) {
+                    this.selectedSCOCMessage = new BPCSCOCMessage();
+                }
+            },
+            (err) => {
+                console.error(err);
+                this.IsProgressBarVisibile = false;
+            }
+        );
+    }
+
+    LoadCharts(): void {
         for (this.i = 0; this.i <= 100; this.i++) {
             this.array1[this.i] = this.a;
         }
@@ -227,21 +295,13 @@ export class HomeComponent implements OnInit {
         });
     }
 
-    openTourScreenDialog(): void {
-        const dialogConfig = new MatDialogConfig();
-
-        dialogConfig.disableClose = true;
-        dialogConfig.width = "50%";
-        this.dialog.open(TourComponent, dialogConfig);
-    }
-
     LoadBotChat(): void {
         (function (d, m) {
-          var kommunicateSettings = { "appId": "10fd8a0b153726753ff1ad51af63846ce", "popupWidget": true, "automaticChatOpenOnNavigation": true };
-          var s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
-          s.src = "https://api.kommunicate.io/v2/kommunicate.app";
-          var h = document.getElementsByTagName("head")[0]; h.appendChild(s);
-          (window as any).kommunicate = m; m._globals = kommunicateSettings;
+            var kommunicateSettings = { "appId": "10fd8a0b153726753ff1ad51af63846ce", "popupWidget": true, "automaticChatOpenOnNavigation": true };
+            var s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
+            s.src = "https://api.kommunicate.io/v2/kommunicate.app";
+            var h = document.getElementsByTagName("head")[0]; h.appendChild(s);
+            (window as any).kommunicate = m; m._globals = kommunicateSettings;
         })(document, (window as any).kommunicate || {});
         // (function (d, m) {
         //   var kommunicateSettings = { "appId": "10fd8a0b153726753ff1ad51af63846ce", "popupWidget": true, "automaticChatOpenOnNavigation": true };

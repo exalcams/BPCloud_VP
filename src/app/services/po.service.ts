@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { BPCOFHeader, BPCOFItem, BPCOFHeaderXLSX, BPCOFItemXLSX, BPCOFScheduleLineXLSX, BPCOFGRGIXLSX, BPCOFQMXLSX, BPCOFGRGI, SOItemCount } from 'app/models/OrderFulFilment';
+import { BPCCEOMessage, BPCSCOCMessage } from 'app/models/Message.model';
 
 @Injectable({
   providedIn: 'root'
@@ -106,5 +107,107 @@ export class POService {
       // }
     ).pipe(catchError(this.errorHandler));
   }
+
+  // CEOMessage
+  CreateCEOMessage(CEOMessage: BPCCEOMessage): Observable<any> {
+    return this._httpClient
+      .post<any>(
+        `${this.baseAddress}poapi/Message/CreateCEOMessage`,
+        CEOMessage,
+        {
+          headers: new HttpHeaders({
+            "Content-Type": "application/json",
+          }),
+        }
+      )
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetCEOMessage(): Observable<BPCCEOMessage | string> {
+    return this._httpClient
+      .get<BPCCEOMessage>(
+        `${this.baseAddress}poapi/Message/GetCEOMessage`
+      )
+      .pipe(catchError(this.errorHandler));
+  }
+
+  UpdateCEOMessage(CEOMessage: BPCCEOMessage): Observable<any> {
+    return this._httpClient
+      .post<any>(
+        `${this.baseAddress}poapi/Message/UpdateCEOMessage`,
+        CEOMessage,
+        {
+          headers: new HttpHeaders({
+            "Content-Type": "application/json",
+          }),
+        }
+      )
+      .pipe(catchError(this.errorHandler));
+  }
+
+  DeleteCEOMessage(CEOMessage: BPCCEOMessage): Observable<any> {
+    return this._httpClient
+      .post<any>(
+        `${this.baseAddress}poapi/Message/DeleteCEOMessage`,
+        CEOMessage,
+        {
+          headers: new HttpHeaders({
+            "Content-Type": "application/json",
+          }),
+        }
+      )
+      .pipe(catchError(this.errorHandler));
+  }
+
+     // SCOCMessage
+     CreateSCOCMessage(SCOCMessage: BPCSCOCMessage): Observable<any> {
+      return this._httpClient
+        .post<any>(
+          `${this.baseAddress}poapi/Message/CreateSCOCMessage`,
+          SCOCMessage,
+          {
+            headers: new HttpHeaders({
+              "Content-Type": "application/json",
+            }),
+          }
+        )
+        .pipe(catchError(this.errorHandler));
+    }
+  
+    GetSCOCMessage(): Observable<BPCSCOCMessage | string> {
+      return this._httpClient
+        .get<BPCSCOCMessage>(
+          `${this.baseAddress}poapi/Message/GetSCOCMessage`
+        )
+        .pipe(catchError(this.errorHandler));
+    }
+  
+    UpdateSCOCMessage(SCOCMessage: BPCSCOCMessage): Observable<any> {
+      return this._httpClient
+        .post<any>(
+          `${this.baseAddress}poapi/Message/UpdateSCOCMessage`,
+          SCOCMessage,
+          {
+            headers: new HttpHeaders({
+              "Content-Type": "application/json",
+            }),
+          }
+        )
+        .pipe(catchError(this.errorHandler));
+    }
+  
+    DeleteSCOCMessage(SCOCMessage: BPCSCOCMessage): Observable<any> {
+      return this._httpClient
+        .post<any>(
+          `${this.baseAddress}poapi/Message/DeleteSCOCMessage`,
+          SCOCMessage,
+          {
+            headers: new HttpHeaders({
+              "Content-Type": "application/json",
+            }),
+          }
+        )
+        .pipe(catchError(this.errorHandler));
+    }
 
 }

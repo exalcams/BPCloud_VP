@@ -17,9 +17,9 @@
           <div fxFlex="80">
 
             <div class="coe_message">CEO Message !</div>
-            <div fxLayout fxLayoutAlign="space-between center">
-              <div class="colon">“</div>
-              <div fxFlex></div>
+            <div fxLayout fxLayoutAlign="start start">
+              <div fxFlex="5" class="colon">“</div>
+              <div fxFlex [innerHtml]="selectedCEOMessage?.CEOMessage"></div>
               <div fxFlex="10" align="end" class="colon1 pt-16">”</div>
             </div>
 
@@ -253,8 +253,7 @@
 
       <div class="supplier mt-16 mb-4">SCOC (Supplier’s Code of Conduct)</div>
       <mat-divider class="divider_underline"></mat-divider>
-      <mat-card class="supplierconduct">
-
+      <mat-card class="supplierconduct" [innerHtml]="selectedSCOCMessage?.SCOCMessage">
       </mat-card>
     </div>
     <!-- <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
