@@ -158,10 +158,10 @@ export class LoginComponent implements OnInit {
                                 if (!userPre) {
                                     userPre = new UserPreference();
                                     userPre.NavbarPrimaryBackground =
-                                        "fuse-navy-700";
+                                        "theme-primaryBackground";
                                     userPre.NavbarSecondaryBackground =
-                                        "fuse-navy-700";
-                                    userPre.ToolbarBackground = "blue-800";
+                                        "theme-secondaryBackground";
+                                    userPre.ToolbarBackground = "theme-toolBar ";
                                 }
                                 localStorage.setItem(
                                     "userPreferenceData",
@@ -216,7 +216,7 @@ export class LoginComponent implements OnInit {
                             userPrefercence.NavbarPrimaryBackground;
                     } else {
                         this.fuseConfig.layout.navbar.primaryBackground =
-                            "fuse-navy-700";
+                            "theme-primaryBackground";
                     }
                     if (
                         userPrefercence.NavbarSecondaryBackground &&
@@ -226,7 +226,7 @@ export class LoginComponent implements OnInit {
                             userPrefercence.NavbarSecondaryBackground;
                     } else {
                         this.fuseConfig.layout.navbar.secondaryBackground =
-                            "fuse-navy-700";
+                            "theme-secondaryBackground";
                     }
                     if (
                         userPrefercence.ToolbarBackground &&
@@ -236,15 +236,15 @@ export class LoginComponent implements OnInit {
                             userPrefercence.ToolbarBackground;
                         this.fuseConfig.layout.toolbar.customBackgroundColor = true;
                     } else {
-                        this.fuseConfig.layout.toolbar.background = "blue-800";
+                        this.fuseConfig.layout.toolbar.background = "theme-toolBar";
                         this.fuseConfig.layout.toolbar.customBackgroundColor = true;
                     }
                 } else {
                     this.fuseConfig.layout.navbar.primaryBackground =
-                        "fuse-navy-700";
+                        "theme-primaryBackground";
                     this.fuseConfig.layout.navbar.secondaryBackground =
-                        "fuse-navy-700";
-                    this.fuseConfig.layout.toolbar.background = "blue-800";
+                        "theme-secondaryBackground";
+                    this.fuseConfig.layout.toolbar.background = "theme-toolBar";
                     this.fuseConfig.layout.toolbar.customBackgroundColor = true;
                 }
             });
