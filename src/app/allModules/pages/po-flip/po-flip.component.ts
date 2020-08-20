@@ -19,6 +19,7 @@ import { BehaviorSubject } from 'rxjs';
 import { BPCInvoiceAttachment, BPCCurrencyMaster, BPCCountryMaster } from 'app/models/ASN';
 import { ASNService } from 'app/services/asn.service';
 import { MasterService } from 'app/services/master.service';
+import { FuseConfigService } from '@fuse/services/config.service';
 @Component({
   selector: 'app-po-flip',
   templateUrl: './po-flip.component.html',
@@ -27,6 +28,11 @@ import { MasterService } from 'app/services/master.service';
   animations: fuseAnimations
 })
 export class PoFlipComponent implements OnInit {
+
+  
+  fuseConfig: any;
+  BGClassName: any;
+
   menuItems: string[];
   authenticationDetails: AuthenticationDetails;
   currentUserID: Guid;
@@ -81,7 +87,10 @@ export class PoFlipComponent implements OnInit {
   invoiceTypes: string[] = [];
   math = Math;
   maxDate: Date;
+
+
   constructor(
+    private _fuseConfigService: FuseConfigService,
     private _poFlipService: POFlipService,
     private _poService: POService,
     private _ASNService: ASNService,
@@ -143,7 +152,8 @@ export class PoFlipComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._route.queryParams.subscribe(params => {
+    this.SetUserPreference();
+        this._route.queryParams.subscribe(params => {
       this.selectedDocNumber = params['id'];
     });
     // Retrive authorizationData
@@ -830,7 +840,14 @@ export class PoFlipComponent implements OnInit {
     const numeric = Number(input);
     return numeric;
   }
-
+  SetUserPreference(): void {
+    this._fuseConfigService.config
+      .subscribe((config) => {
+        this.fuseConfig = config;
+        this.BGClassName = config;
+      });
+    // this._fuseConfigService.config = this.fuseConfig;
+  }
   //   GetInvoiceAttachmentByFLIPID(): void {
   //     this._poFlipService.GetInvoiceAttachmentByASN(this.selectedFlip.FLIPID, this.selectedFlip.DocNumber).subscribe(
   //         (data) => {

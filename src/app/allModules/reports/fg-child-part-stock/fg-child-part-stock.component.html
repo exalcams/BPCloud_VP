@@ -212,7 +212,7 @@
         </ng-container>
 
         <ng-container matColumnDef="Price">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header  [ngClass]="BGClassName?.layout?.toolbar?.background">Price</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">Price</th>
           <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
             {{element.Price}}
           </td>

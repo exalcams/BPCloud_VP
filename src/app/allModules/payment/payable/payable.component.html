@@ -12,8 +12,11 @@
     <div fxFlex fxLayout *ngIf="!isExpanded" @expandCollapse>
       <div class="tile mx-20" fxFlex="30" fxLayout="column" fxLayoutAlign="start">
         <div fxLayoutAlign="start" class="pt-8">
-          <span class="boldClass orangeBorderBottom pl-8"> Payment </span>
+          <span class="boldClass  pl-8"> Payment </span>
+
         </div>
+        <p [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="underline1"></p>
+
         <div *ngIf="barChartLabels.length" id="barChart" fxFlex fxLayoutAlign="start" class="pt-0 px-8">
           <canvas #barCanvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
             [legend]="barChartLegend" [chartType]="barChartType" [colors]="barColors">
@@ -22,8 +25,10 @@
       </div>
       <div class="tile mx-20" fxFlex="20" fxLayout="column" fxLayoutAlign="start">
         <div fxLayoutAlign="start center" class="pt-8">
-          <span class="boldClass orangeBorderBottom pl-8"> Payment Aging </span>
+          <span class="boldClass  pl-8"> Payment Aging </span>
         </div>
+        <p [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="underline2"></p>
+
         <div id="doughnutChart" fxFlex fxLayoutAlign="start" class="pt-8 pl-8 pr-4">
           <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType"
             [options]="doughnutChartOptions" [colors]="colors">
@@ -71,7 +76,8 @@
           </div>
           <div fxLayout="row" fxLayoutAlign="start center">
             <div fxFlex align="end">
-              <button mat-raised-button class="SaveBtn" (click)="SearchClicked()">Search</button>
+              <button mat-raised-button class="SaveBtn" [ngClass]="BGClassName?.layout?.navbar?.primaryBackground"
+                (click)="SearchClicked()">Search</button>
             </div>
           </div>
         </form>
@@ -108,7 +114,8 @@
         </ng-container> -->
 
         <ng-container matColumnDef="Invoice">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">
+            Invoice </th>
           <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
             <div fxLayout>
               <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
@@ -118,41 +125,47 @@
         </ng-container>
 
         <ng-container matColumnDef="InvoiceDate">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice Date </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">
+            Invoice Date </th>
           <td mat-cell *matCellDef="let element">
             {{element.InvoiceDate  | date :'dd/MM/yyyy'}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="PostedOn">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Posted on </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">
+            Posted on </th>
           <td mat-cell *matCellDef="let element"> {{element.PostedOn | date :'dd/MM/yyyy'}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="DueDate">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Due Date </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">
+            Due Date </th>
           <td mat-cell *matCellDef="let element">
             {{element.DueDate | date :'dd/MM/yyyy'}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="AdvAmount">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Adv Amount </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">Adv
+            Amount </th>
           <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
             {{element.AdvAmount}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="Amount">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Invoice value </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">
+            Invoice value </th>
           <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
             {{element.Amount}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="Currency">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Currency </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">
+            Currency </th>
           <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
             {{element.Currency}}
           </td>

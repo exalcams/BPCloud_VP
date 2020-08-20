@@ -14,6 +14,7 @@ import { PaymentService } from 'app/services/payment.service';
 import { DatePipe } from '@angular/common';
 import { ExcelService } from 'app/services/excel.service';
 import { MasterService } from 'app/services/master.service';
+import { FuseConfigService } from '@fuse/services/config.service';
 
 @Component({
   selector: 'app-payable',
@@ -46,6 +47,10 @@ export class PayableComponent implements OnInit {
     'Amount',
     'Currency'
   ];
+
+  fuseConfig: any;
+  BGClassName: any;
+
   tableDataSource: MatTableDataSource<BPCPayPayable>;
   @ViewChild(MatPaginator) tablePaginator: MatPaginator;
   @ViewChild(MatMenuTrigger) matMenuTrigger: MatMenuTrigger;
@@ -179,6 +184,7 @@ export class PayableComponent implements OnInit {
 
 
   constructor(
+    private _fuseConfigService: FuseConfigService,
     private formBuilder: FormBuilder,
     private _router: Router,
     public snackBar: MatSnackBar,
@@ -202,6 +208,7 @@ export class PayableComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.SetUserPreference();
     // Retrive authorizationData
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
@@ -369,6 +376,14 @@ export class PayableComponent implements OnInit {
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.tableDataSource.filter = filterValue.trim().toLowerCase();
+  }
+  SetUserPreference(): void {
+    this._fuseConfigService.config
+      .subscribe((config) => {
+        this.fuseConfig = config;
+        this.BGClassName = config;
+      });
+    // this._fuseConfigService.config = this.fuseConfig;
   }
 }
 

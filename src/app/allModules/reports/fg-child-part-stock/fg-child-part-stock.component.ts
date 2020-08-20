@@ -44,6 +44,8 @@ export class FGChildPartStockComponent implements OnInit {
   defaultFromDate: Date;
   defaultToDate: Date;
   data: any[];
+  fuseConfig: any;
+  BGClassName: any;
   fgChildPartStockReportDisplayedColumns: string[] = ['Plant', 'Material', 'MaterialText', 'StickQty', 'UOM', 'Batch', 'Price'];
   fgChildPartStockReportDataSource: MatTableDataSource<BPCReportFGCPS>;
   fgChildPartStockReports: BPCReportFGCPS[] = [];
@@ -217,6 +219,7 @@ export class FGChildPartStockComponent implements OnInit {
    }];
   constructor(
     private _fuseConfigService: FuseConfigService,
+
     private _reportService: ReportService,
     private formBuilder: FormBuilder,
     private _router: Router,
@@ -239,6 +242,7 @@ export class FGChildPartStockComponent implements OnInit {
 
   ngOnInit(): void {
     this.SetUserPreference();
+
     // Retrive authorizationData
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
@@ -506,6 +510,14 @@ export class FGChildPartStockComponent implements OnInit {
       this.data.push(1);
     }
     return this.data;
+  }
+  SetUserPreference(): void {
+    this._fuseConfigService.config
+      .subscribe((config) => {
+        this.fuseConfig = config;
+        this.BGClassName = config;
+      });
+    // this._fuseConfigService.config = this.fuseConfig;
   }
 }
 

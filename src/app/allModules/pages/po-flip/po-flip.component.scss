@@ -400,9 +400,15 @@
     width: 30%;
   }
   .title {
-    border-bottom: 2px solid #efb577;
+    // border-bottom: 2px solid #efb577;
     font-size: 20px;
   }
+  .underline{
+    height: 2.5px;
+    width: 79px;
+    margin-top: 0px;
+    margin-left: 16px;
+}
   .mat-input-element:disabled {
     color: black;
   }

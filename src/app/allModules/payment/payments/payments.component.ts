@@ -12,6 +12,7 @@ import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { ExcelService } from 'app/services/excel.service';
 import { MasterService } from 'app/services/master.service';
+import { FuseConfigService } from '@fuse/services/config.service';
 
 @Component({
   selector: 'app-payments',
@@ -45,12 +46,18 @@ export class PaymentsComponent implements OnInit {
     'BankAccount',
     'DocumentNumber'
   ];
+  
+  fuseConfig: any;
+  BGClassName: any;
+
   tableDataSource: MatTableDataSource<BPCPayPayment>;
   @ViewChild(MatPaginator) tablePaginator: MatPaginator;
   @ViewChild(MatMenuTrigger) matMenuTrigger: MatMenuTrigger;
   @ViewChild(MatSort) tableSort: MatSort;
 
   constructor(
+    private _fuseConfigService: FuseConfigService,
+
     private formBuilder: FormBuilder,
     private _router: Router,
     public snackBar: MatSnackBar,
@@ -74,6 +81,7 @@ export class PaymentsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.SetUserPreference();
     // Retrive authorizationData
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
@@ -241,6 +249,14 @@ export class PaymentsComponent implements OnInit {
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.tableDataSource.filter = filterValue.trim().toLowerCase();
+  }
+  SetUserPreference(): void {
+    this._fuseConfigService.config
+      .subscribe((config) => {
+        this.fuseConfig = config;
+        this.BGClassName = config;
+      });
+    // this._fuseConfigService.config = this.fuseConfig;
   }
 }
 

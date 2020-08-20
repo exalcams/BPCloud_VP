@@ -231,7 +231,7 @@ export class UserPreferencesComponent implements OnInit {
     this._fuseConfigService.config
       // .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((config) => {
-
+        console.log("User Preference", config);
         this.fuseConfig = config;
         this.BGClassName = config;
         // Retrive user preference from Local Storage

@@ -137,8 +137,29 @@
     .redBorderBottom {
         border-bottom: 2px solid #f3705a;
     }
-    .orangeBorderBottom {
-        border-bottom: 2px solid #ffd15c;
+    // .orangeBorderBottom {
+    //     border-bottom: 2px solid #ffd15c;
+    // }
+    .underline1 {
+        height: 2.5px;
+        width: 84px;
+        margin-top: 39px;
+        margin-left: 16px;
+        position: absolute;
+    }
+    .underline2 {
+        height: 2.5px;
+        width: 79px;
+        margin-top: 39px;
+        margin-left: 16px;
+        position: absolute;
+    }
+    .underline3 {
+        height: 2.5px;
+        width: 73px;
+        margin-top: 39px;
+        margin-left: 16px;
+        position: absolute;
     }
     .rightCard {
         min-height: 300px !important;

@@ -17,6 +17,7 @@ import { ExcelService } from 'app/services/excel.service';
 import { MasterService } from 'app/services/master.service';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { fuseAnimations } from '@fuse/animations';
+import { FuseConfigService } from '@fuse/services/config.service';
 @Component({
   selector: 'app-inspection-plan',
   templateUrl: './inspection-plan.component.html',
@@ -25,6 +26,8 @@ import { fuseAnimations } from '@fuse/animations';
   animations: fuseAnimations,
 })
 export class InspectionPlanComponent implements OnInit {
+  fuseConfig: any;
+  BGClassName: any;
   authenticationDetails: AuthenticationDetails;
   currentUserID: Guid;
   currentUserName: string;
@@ -104,6 +107,8 @@ export class InspectionPlanComponent implements OnInit {
   }];
 
   constructor(
+    private _fuseConfigService: FuseConfigService,
+
     private _reportService: ReportService,
     private formBuilder: FormBuilder,
     private _router: Router,
@@ -125,6 +130,8 @@ export class InspectionPlanComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.SetUserPreference();
+
     // Retrive authorizationData
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
@@ -380,6 +387,13 @@ export class InspectionPlanComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.inspectionPlanReportDataSource.filter = filterValue.trim().toLowerCase();
   }
-
+  SetUserPreference(): void {
+    this._fuseConfigService.config
+      .subscribe((config) => {
+        this.fuseConfig = config;
+        this.BGClassName = config;
+      });
+    // this._fuseConfigService.config = this.fuseConfig;
+  }
 }
 

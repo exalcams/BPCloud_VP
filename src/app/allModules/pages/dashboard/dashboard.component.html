@@ -181,8 +181,11 @@
       <div fxFlex="30" style="height: 100%;background-color: white;">
         <div fxLayout="column" style="padding: 15px 15px 10px 15px;">
           <div fxFlex>
-            <h2 style="font-weight: 500;margin: 0px;"><span style="margin:0px 5px 0px 0px;"><img style="width: 32px;
-                height: 32px; margin-top: 5px;" src="../../../../assets/images/bot.png"></span>
+            <h2 style="font-weight: 500;margin: 0px;">
+              <span style="margin:0px 5px 0px 0px;">
+                <img style="width: 32px;
+                height: 32px; margin-top: 5px;" src="../../../../assets/images/bot.png">
+              </span>
               {{'DASHBOARD.SUGGESTED_ACTIONS' | translate}}
               <span>
                 <button style="height: 25px;width: 40px;float: right;" mat-icon-button [matMenuTriggerFor]="menu"
@@ -203,7 +206,9 @@
 
             </h2>
           </div>
-          <hr class="rightFlexHr">
+          <!-- <hr class="rightFlexHr"> -->
+          <p [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="underline"></p>
+
           <div fxFlex>
             <mat-tab-group>
               <mat-tab label="Action ({{actions?.length}})">

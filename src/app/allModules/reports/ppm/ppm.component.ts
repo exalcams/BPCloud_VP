@@ -14,6 +14,7 @@ import { DatePipe } from '@angular/common';
 import { ExcelService } from 'app/services/excel.service';
 import { MasterService } from 'app/services/master.service';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
+import { FuseConfigService } from '@fuse/services/config.service';
 @Component({
   selector: 'app-ppm',
   templateUrl: './ppm.component.html',
@@ -22,6 +23,8 @@ import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notific
   animations: fuseAnimations,
 })
 export class PPMComponent implements OnInit {
+  fuseConfig: any;
+  BGClassName: any;
   authenticationDetails: AuthenticationDetails;
   currentUserID: Guid;
   currentUserName: string;
@@ -52,6 +55,8 @@ export class PPMComponent implements OnInit {
   // fromdate: any = '';
   // todate: any = '';
   constructor(private _reportService: ReportService,
+    private _fuseConfigService: FuseConfigService,
+
     private formBuilder: FormBuilder,
     private _router: Router,
     public snackBar: MatSnackBar,
@@ -72,6 +77,8 @@ export class PPMComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.SetUserPreference();
+
     // Retrive authorizationData
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
@@ -291,6 +298,14 @@ export class PPMComponent implements OnInit {
 
   }
 
+  SetUserPreference(): void {
+    this._fuseConfigService.config
+      .subscribe((config) => {
+        this.fuseConfig = config;
+        this.BGClassName = config;
+      });
+    // this._fuseConfigService.config = this.fuseConfig;
+  }
   // getPPMReportByDateClicked(): void {
   //   this.ppmReportOption.PartnerID = this.PPMData[0].PatnerID;
   //   this.ppmReportOption.Material = this.PPMData[0].Material;

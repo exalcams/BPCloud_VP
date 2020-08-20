@@ -18,6 +18,7 @@ import { Chart, ChartType, ChartOptions } from "chart.js";
 import { POService } from 'app/services/po.service';
 import { Validators } from '@angular/forms';
 import { BPCCEOMessage, BPCSCOCMessage } from 'app/models/Message.model';
+import { FuseConfigService } from '@fuse/services/config.service';
 @Component({
     selector: "app-home",
     templateUrl: "./home.component.html",
@@ -37,19 +38,24 @@ export class HomeComponent implements OnInit {
 
     color_75: any = [];
     color_90: any = [];
+    fuseConfig: any;
+    BGClassName: any;
 
     constructor(
         private dialog: MatDialog,
         private _POService: POService,
         private _router: Router,
+        private _fuseConfigService: FuseConfigService
     ) {
         this.IsProgressBarVisibile = false;
+
         this.authenticationDetails = new AuthenticationDetails();
         this.selectedCEOMessage = new BPCCEOMessage();
         this.selectedSCOCMessage = new BPCSCOCMessage();
     }
 
     ngOnInit(): void {
+        this.SetUserPreference();
         const retrievedObject = localStorage.getItem('authorizationData');
         if (retrievedObject) {
             this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
@@ -310,5 +316,13 @@ export class HomeComponent implements OnInit {
         //   var h = document.getElementsByTagName("head")[0]; h.appendChild(s);
         //   (window as any).kommunicate = m; m._globals = kommunicateSettings;
         // })(document, (window as any).kommunicate || {});
+    }
+    SetUserPreference(): void {
+        this._fuseConfigService.config
+            .subscribe((config) => {
+                this.fuseConfig = config;
+                this.BGClassName = config;
+            });
+        // this._fuseConfigService.config = this.fuseConfig;
     }
 }
