@@ -15,6 +15,7 @@ import { Router } from "@angular/router";
 import { ExcelService } from "app/services/excel.service";
 import { DatePipe } from "@angular/common";
 import { SnackBarStatus } from "app/notifications/notification-snack-bar/notification-snackbar-status-enum";
+import { FuseConfigService } from '@fuse/services/config.service';
 
 @Component({
     selector: "app-resource",
@@ -24,6 +25,8 @@ import { SnackBarStatus } from "app/notifications/notification-snack-bar/notific
     animations: fuseAnimations,
 })
 export class ResourceComponent implements OnInit {
+    BGClassName: any;
+  fuseConfig: any;
     authenticationDetails: AuthenticationDetails;
     currentUserID: Guid;
     currentUserRole: string;
@@ -45,6 +48,7 @@ export class ResourceComponent implements OnInit {
     isDateError: boolean;
     searchText = "";
     constructor(
+        private _fuseConfigService: FuseConfigService,
         private _formBuilder: FormBuilder,
         private _router: Router,
         public snackBar: MatSnackBar,
@@ -54,6 +58,7 @@ export class ResourceComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
+        this.SetUserPreference();
         const retrievedObject = localStorage.getItem("authorizationData");
         if (retrievedObject) {
             this.authenticationDetails = JSON.parse(
@@ -76,6 +81,14 @@ export class ResourceComponent implements OnInit {
         }
         // this.InitializeSearchFormGroup();
         // this.GetAllPayments();
+    }
+    SetUserPreference(): void {
+        this._fuseConfigService.config
+            .subscribe((config) => {
+                this.fuseConfig = config;
+                this.BGClassName = config;
+            });
+        // this._fuseConfigService.config = this.fuseConfig;
     }
 
     // InitializeSearchFormGroup(): void {

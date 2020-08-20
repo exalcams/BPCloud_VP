@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
+import { FuseConfigService } from '@fuse/services/config.service';
 
 @Component({
   selector: 'app-po-schedules',
@@ -8,12 +9,16 @@ import { MatTableDataSource } from '@angular/material';
 })
 export class PoSchedulesComponent implements OnInit {
   poschedules: PoSchedule[] = [];
+  BGClassName: any;
+  fuseConfig: any;
   DisplayedColumn: string[] = ['PO', 'Item', 'DelDate', 'Material', 'MaterialText', 'OpenQty', 'Action'];
   PoDataSource: MatTableDataSource<any>;
-  constructor() { }
+  constructor( private _fuseConfigService: FuseConfigService) { }
 
   ngOnInit(): void {
+    this.SetUserPreference();
     this.GetPOSchduleDetails();
+
   }
   GetPOSchduleDetails(): void {
     this.poschedules = [
@@ -27,6 +32,14 @@ export class PoSchedulesComponent implements OnInit {
     ];
     this.PoDataSource = new MatTableDataSource(this.poschedules);
   }
+  SetUserPreference(): void {
+    this._fuseConfigService.config
+        .subscribe((config) => {
+            this.fuseConfig = config;
+            this.BGClassName = config;
+        });
+    // this._fuseConfigService.config = this.fuseConfig;
+}
 }
 
 export class PoSchedule {

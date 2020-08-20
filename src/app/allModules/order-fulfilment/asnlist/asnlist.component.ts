@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
+import { FuseConfigService } from '@fuse/services/config.service';
 
 @Component({
   selector: 'app-asnlist',
@@ -7,6 +8,8 @@ import { MatTableDataSource } from '@angular/material';
   styleUrls: ['./asnlist.component.scss']
 })
 export class ASNListComponent implements OnInit {
+  BGClassName: any;
+    fuseConfig: any;
   tableDetails: {
     ASN: string; PO: string; AWB: string; Truck: string; Material: string; MaterialText: string;
     ASN_Qty: string; Status: string
@@ -17,10 +20,10 @@ export class ASNListComponent implements OnInit {
   truck_url = "assets/images/mover-truck.png ";
   ship_url = "assets/images/cargo-ship.png ";
   delivery_url = "assets/images/delivery.png ";
-  constructor() { }
+  constructor( private _fuseConfigService: FuseConfigService) { }
 
   ngOnInit(): void {
-    this.GetASNListDetails();
+    this.SetUserPreference();
   }
   GetASNListDetails(): void {
     this.tableDetails = [
@@ -49,4 +52,12 @@ export class ASNListComponent implements OnInit {
     this.TableDetailsDataSource = new MatTableDataSource(this.tableDetails);
 
   }
+  SetUserPreference(): void {
+    this._fuseConfigService.config
+        .subscribe((config) => {
+            this.fuseConfig = config;
+            this.BGClassName = config;
+        });
+    // this._fuseConfigService.config = this.fuseConfig;
+}
 }

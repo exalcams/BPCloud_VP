@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { fuseAnimations } from '@fuse/animations';
+import { FuseConfigService } from '@fuse/services/config.service';
 
 @Component({
   selector: 'app-gate-entry',
@@ -10,16 +11,18 @@ import { fuseAnimations } from '@fuse/animations';
   animations: fuseAnimations
 })
 export class GateEntryComponent implements OnInit {
-
+  BGClassName: any;
+  fuseConfig: any;
   tabledata: any[] = [];
   bool = true;
   COUNT = 0;
   displayedColumns = ['Item', 'MaterialText', 'DeliveryDate', 'OrderQty', 'GRQty', 'PipelineQty', 'OpenQty', 'UOM'];
 
   dataSource: MatTableDataSource<any>;
-  constructor() { }
+  constructor(private _fuseConfigService: FuseConfigService) { }
 
   ngOnInit(): void {
+    this.SetUserPreference();
     this.tabledata = [
       {
 
@@ -78,6 +81,14 @@ export class GateEntryComponent implements OnInit {
     console.log(this.tabledata);
     this.dataSource = new MatTableDataSource(this.tabledata);
   }
+  SetUserPreference(): void {
+    this._fuseConfigService.config
+        .subscribe((config) => {
+            this.fuseConfig = config;
+            this.BGClassName = config;
+        });
+    // this._fuseConfigService.config = this.fuseConfig;
+}
   check(): any {
     if (this.bool) {
       this.bool = false;

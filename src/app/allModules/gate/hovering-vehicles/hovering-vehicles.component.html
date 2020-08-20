@@ -38,7 +38,8 @@
 
           <ng-container matColumnDef="EntryDate">
             <th mat-header-cell *matHeaderCellDef align="center"
-              style="font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;font-size: 11px;border: none; color: white;">
+              style="font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;font-size: 11px;border: none; color: white;"
+              [ngClass]="BGClassName?.layout?.toolbar?.background">
 
               Date </th>
             <td mat-cell style="border-right: none;font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;"
@@ -53,7 +54,8 @@
 
           <ng-container matColumnDef="EntryTime">
             <th mat-header-cell *matHeaderCellDef
-              style="font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;font-size: 11px;border: none;color: white;">
+              style="font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;font-size: 11px;border: none;color: white;"
+              [ngClass]="BGClassName?.layout?.toolbar?.background">
               Time </th>
             <td mat-cell style="font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;border-right: none;"
               *matCellDef="let element"> {{element.EntryTime}} </td>
@@ -61,14 +63,16 @@
 
 
           <ng-container matColumnDef="Truck">
-            <th mat-header-cell *matHeaderCellDef style="font-size: 11px;border: none;color: white;"> Truck </th>
+            <th mat-header-cell *matHeaderCellDef style="font-size: 11px;border: none;color: white;"
+            [ngClass]="BGClassName?.layout?.toolbar?.background"> Truck </th>
             <td mat-cell style="border-right: none;" *matCellDef="let element"> {{element.Truck}} </td>
           </ng-container>
 
 
           <ng-container matColumnDef="Partner">
             <th mat-header-cell *matHeaderCellDef
-              style="font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;font-size: 11px;border: none;color: white;">
+              style="font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;font-size: 11px;border: none;color: white;"
+              [ngClass]="BGClassName?.layout?.toolbar?.background">
               Partner </th>
             <td mat-cell style="font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;border-right: none;"
               *matCellDef="let element"> {{element.Partner}} </td>
@@ -77,7 +81,8 @@
 
           <ng-container matColumnDef="DocNo">
             <th mat-header-cell *matHeaderCellDef
-              style="font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;font-size: 11px;border: none;color: white;">
+              style="font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;font-size: 11px;border: none;color: white;"
+              [ngClass]="BGClassName?.layout?.toolbar?.background">
               Doc No </th>
             <td mat-cell style="font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;border-right: none;"
               *matCellDef="let element"> {{element.DocNo}} </td>
@@ -85,7 +90,8 @@
 
           <ng-container matColumnDef="Transporter">
             <th mat-header-cell *matHeaderCellDef
-              style="font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;font-size: 11px; border: none;color: white;">
+              style="font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;font-size: 11px; border: none;color: white;"
+              [ngClass]="BGClassName?.layout?.toolbar?.background">
               Transporter </th>
             <td mat-cell style="font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;border-right: none;"
               *matCellDef="let element"> {{element.Transporter}} </td>
@@ -93,7 +99,8 @@
 
           <ng-container matColumnDef="Gate">
             <th mat-header-cell *matHeaderCellDef
-              style="font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;font-size: 11px; border: none;color: white;">
+              style="font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;font-size: 11px; border: none;color: white;"
+              [ngClass]="BGClassName?.layout?.toolbar?.background">
               Gate </th>
             <td mat-cell style="font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;border-right: none;"
               *matCellDef="let element"> {{element.Gate}} </td>
@@ -101,7 +108,8 @@
 
           <ng-container matColumnDef="Plant">
             <th mat-header-cell *matHeaderCellDef
-              style="font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;font-size: 11px; border: none;color: white;">
+              style="font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;font-size: 11px; border: none;color: white;"
+              [ngClass]="BGClassName?.layout?.toolbar?.background">
               Plant </th>
             <td mat-cell style="font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;border-right: none;"
               *matCellDef="let element"> {{element.Plant}} </td>

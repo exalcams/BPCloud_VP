@@ -22,6 +22,8 @@ import { MasterService } from 'app/services/master.service';
   animations: fuseAnimations
 })
 export class InvoiceComponent implements OnInit {
+  BGClassName: any;
+  fuseConfig: any;
   authenticationDetails: AuthenticationDetails;
   currentUserID: Guid;
   currentUserName: string;
@@ -72,6 +74,7 @@ export class InvoiceComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.SetUserPreference();
     // Retrive authorizationData
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
@@ -194,7 +197,14 @@ export class InvoiceComponent implements OnInit {
       this.ShowValidationErrors(this.SearchFormGroup);
     }
   }
-
+  SetUserPreference(): void {
+    this._fuseConfigService.config
+        .subscribe((config) => {
+            this.fuseConfig = config;
+            this.BGClassName = config;
+        });
+    // this._fuseConfigService.config = this.fuseConfig;
+}
   DateSelected(): void {
     const FROMDATEVAL = this.SearchFormGroup.get('FromDate').value as Date;
     const TODATEVAL = this.SearchFormGroup.get('ToDate').value as Date;

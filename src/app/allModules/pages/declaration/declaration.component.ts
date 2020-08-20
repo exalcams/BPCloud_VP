@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
+import { FuseConfigService } from '@fuse/services/config.service';
 
 @Component({
   selector: 'app-declaration',
@@ -9,10 +10,19 @@ import { fuseAnimations } from '@fuse/animations';
   animations: fuseAnimations
 })
 export class DeclarationComponent implements OnInit {
-
-  constructor() { }
+  BGClassName: any;
+  fuseConfig: any;
+  constructor( private _fuseConfigService: FuseConfigService) { }
 
   ngOnInit() {
+    this.SetUserPreference();
   }
-
+  SetUserPreference(): void {
+    this._fuseConfigService.config
+        .subscribe((config) => {
+            this.fuseConfig = config;
+            this.BGClassName = config;
+        });
+    // this._fuseConfigService.config = this.fuseConfig;
+}
 }

@@ -14,7 +14,8 @@
       <div fxLayout="row" fxFlex="100%" fxLayoutAlign="space-around center">
         <div fxFlex="40%">
           <h2><strong>Resources</strong></h2>
-          <hr class="rightFlexHr">
+          <!-- <hr class="rightFlexHr"> -->
+          <div [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="rightFlexHr"></div>
         </div>
         <div fxFlex="60%">
           <div class="search-wrapper" fxFlex fxLayout="row" fxLayoutAlign="start center">

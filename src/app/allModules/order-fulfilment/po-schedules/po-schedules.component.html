@@ -36,7 +36,7 @@
             </div>
           </div>
           <div style="text-align:end;">
-            <button mat-raised-button class="search_button">Search</button>
+            <button mat-raised-button class="search_button" [ngClass]="BGClassName?.layout?.navbar?.primaryBackground">Search</button>
           </div>
         </div>
       </div>
@@ -61,7 +61,7 @@
 
         <ng-container matColumnDef="PO">
           <th mat-header-cell *matHeaderCellDef style="color:white;border: none !important;
-              font-size: 15px;width:11%;">PO </th>
+              font-size: 15px;width:11%;"  [ngClass]="BGClassName?.layout?.toolbar?.background">PO </th>
           <td mat-cell *matCellDef="let element;let odd=odd" class="pl-0" style=" border-right: none;font-size: 15px;">
             <div fxLayout>
               <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
@@ -71,21 +71,21 @@
         </ng-container>
 
         <ng-container matColumnDef="Item">
-          <th mat-header-cell *matHeaderCellDef style="color: white; width:11%;font-size: 15px; border: none;">Item</th>
+          <th mat-header-cell *matHeaderCellDef style="color: white; width:11%;font-size: 15px; border: none;"  [ngClass]="BGClassName?.layout?.toolbar?.background">Item</th>
           <td mat-cell style="font-size: 15px;border-right: none;" *matCellDef="let element">
             <span>{{element.Item}}</span> </td>
         </ng-container>
 
 
         <ng-container matColumnDef="DelDate">
-          <th mat-header-cell *matHeaderCellDef style="font-size: 15px;color: white;width:11%;border: none;">Del Date
+          <th mat-header-cell *matHeaderCellDef style="font-size: 15px;color: white;width:11%;border: none;"  [ngClass]="BGClassName?.layout?.toolbar?.background">Del Date
           </th>
           <td mat-cell style="font-size: 15px;border-right: none;" *matCellDef="let element"> {{element.DelDate}} </td>
         </ng-container>
 
 
         <ng-container matColumnDef="Material">
-          <th mat-header-cell *matHeaderCellDef style=" width:12%;font-size: 15px;color: white;border: none;"> Material
+          <th mat-header-cell *matHeaderCellDef style=" width:12%;font-size: 15px;color: white;border: none;"  [ngClass]="BGClassName?.layout?.toolbar?.background"> Material
           </th>
           <td mat-cell style=" font-size: 15px;border-right: none;" *matCellDef="let element"> {{element.Material}}
           </td>
@@ -93,7 +93,7 @@
 
 
         <ng-container matColumnDef="MaterialText">
-          <th mat-header-cell *matHeaderCellDef style=" width:20%;font-size: 15px;color: white;border: none;">
+          <th mat-header-cell *matHeaderCellDef style=" width:20%;font-size: 15px;color: white;border: none;"  [ngClass]="BGClassName?.layout?.toolbar?.background">
             MaterialText </th>
           <td mat-cell style="font-size: 15px;border-right: none;" *matCellDef="let element"> {{element.MaterialText}}
           </td>
@@ -101,7 +101,7 @@
 
 
         <ng-container matColumnDef="OpenQty">
-          <th mat-header-cell *matHeaderCellDef style="font-size: 15px;color: white;width:11%;border: none;"> Open Qty
+          <th mat-header-cell *matHeaderCellDef style="font-size: 15px;color: white;width:11%;border: none;"  [ngClass]="BGClassName?.layout?.toolbar?.background"> Open Qty
           </th>
           <td mat-cell style="font-size: 15px;border-right: none;" *matCellDef="let element"> {{element.OpenQty}} </td>
         </ng-container>
@@ -109,7 +109,7 @@
 
 
         <ng-container matColumnDef="Action">
-          <th mat-header-cell *matHeaderCellDef style="font-size: 15px;color: white;width:10%;border: none;"> Action
+          <th mat-header-cell *matHeaderCellDef style="font-size: 15px;color: white;width:10%;border: none;"  [ngClass]="BGClassName?.layout?.toolbar?.background"> Action
           </th>
           <td mat-cell style="font-size: 15px;border-right: none;" *matCellDef="let element">
             <div style="margin-left: 10px;">

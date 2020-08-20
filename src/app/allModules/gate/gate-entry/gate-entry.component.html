@@ -76,9 +76,9 @@
           </div>
           <mat-divider vertical class="cl_large_divider"></mat-divider>
           <div fxFlex.xs="grow">
-            <button mat-raised-button class="cl_post_btn">
-              <img src="assets/images/send-mail.png" class="cl_post_mail"> Post</button><br>
-            <button mat-raised-button class="cl_return_btn">Return
+            <button mat-raised-button class="cl_post_btn"  [ngClass]="BGClassName?.layout?.navbar?.primaryBackground">
+              <img src="assets/images/send-mail.png"  class="cl_post_mail"> Post</button><br>
+            <button mat-raised-button class="cl_return_btn" >Return
             </button>
           </div>
         </div>
@@ -96,7 +96,7 @@
             </ng-template>
             <mat-table [dataSource]="dataSource" class="cl_mat-table" matSort>
               <ng-container matColumnDef="Item">
-                <mat-header-cell *matHeaderCellDef mat-sort-header><span class="cl_table_itemLabel"> Item</span>
+                <mat-header-cell *matHeaderCellDef mat-sort-header  [ngClass]="BGClassName?.layout?.toolbar?.background"><span class="cl_table_itemLabel"> Item</span>
                 </mat-header-cell>
                 <mat-cell *matCellDef="let element ;index as i">
                   <p class="cl_box" [ngStyle]="{'background-color': i%2==0 ? '#d87e39':'#6f52ed'}"></p>
@@ -105,14 +105,14 @@
                 </mat-cell>
               </ng-container>
               <ng-container matColumnDef="MaterialText">
-                <mat-header-cell *matHeaderCellDef><span class="cl_material_text"> Material Text</span>
+                <mat-header-cell *matHeaderCellDef style="width: 10%;" [ngClass]="BGClassName?.layout?.toolbar?.background"><span class="cl_material_text"> Material Text</span>
                 </mat-header-cell>
                 <mat-cell *matCellDef="let element"> <span
                     [ngStyle]="{'font-size':'12px','font-family': 'Segoe UI','letter-spacing': '0.5px'}">{{element.material_text}}</span>
                 </mat-cell>
               </ng-container>
               <ng-container matColumnDef="DeliveryDate">
-                <mat-header-cell *matHeaderCellDef class="cl_delivery_date"><span class="cl_material_text"> Delivery
+                <mat-header-cell *matHeaderCellDef class="cl_delivery_date" [ngClass]="BGClassName?.layout?.toolbar?.background"><span class="cl_material_text"> Delivery
                     Date</span>
                 </mat-header-cell>
                 <mat-cell *matCellDef="let element"><b
@@ -120,7 +120,7 @@
                 </mat-cell>
               </ng-container>
               <ng-container matColumnDef="OrderQty">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> <span class="cl_material_text">Order Qty</span>
+                <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background"> <span class="cl_material_text">Order Qty</span>
                 </mat-header-cell>
                 <mat-cell *matCellDef="let element" class="cl_qty"><b
                     [ngStyle]="{'font-size':'11px','font-family': 'Segoe UI','margin-left': '28px'}">
@@ -129,14 +129,14 @@
               </ng-container>
 
               <ng-container matColumnDef="GRQty">
-                <mat-header-cell *matHeaderCellDef mat-sort-header><span class="cl_material_text"> GR Qty </span>
+                <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background"><span class="cl_material_text"> GR Qty </span>
                 </mat-header-cell>
                 <mat-cell *matCellDef="let element" class="cl_gr_qty"> <span
                     [ngStyle]="{'font-size':'12px','font-family': 'Segoe UI','margin-left': '25px'}">{{element.gr_qty}}</span>
                 </mat-cell>
               </ng-container>
               <ng-container matColumnDef="PipelineQty">
-                <mat-header-cell *matHeaderCellDef mat-sort-header><span class="cl_material_text"> Pipeline Qty</span>
+                <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background"><span class="cl_material_text"> Pipeline Qty</span>
                 </mat-header-cell>
                 <mat-cell *matCellDef="let element" class="cl_pip_qty"> <span
                     [ngStyle]="{'font-size':'12px','font-family': 'Segoe UI','margin-left': '47px'}">{{element.pipeline_qty}}
@@ -144,7 +144,7 @@
               </ng-container>
 
               <ng-container matColumnDef="OpenQty">
-                <mat-header-cell *matHeaderCellDef mat-sort-header><span class="cl_material_text"> Open Qty </span>
+                <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background"><span class="cl_material_text"> Open Qty </span>
                 </mat-header-cell>
                 <mat-cell *matCellDef="let element"><span
                     [ngStyle]="{'font-size':'12px','font-family': 'Segoe UI','margin-left': '34px'}">{{element.open_qty}}
@@ -152,7 +152,7 @@
               </ng-container>
 
               <ng-container matColumnDef="UOM">
-                <mat-header-cell *matHeaderCellDef mat-sort-header><span class="cl_material_text"> UOM</span>
+                <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background"><span class="cl_material_text"> UOM</span>
                 </mat-header-cell>
                 <mat-cell *matCellDef="let element"><span
                     [ngStyle]="{'font-size':'12px','font-family': 'Segoe UI' }">{{element.uom}}

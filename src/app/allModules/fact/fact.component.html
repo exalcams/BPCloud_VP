@@ -21,7 +21,9 @@
                     <div fxFlex="100">
                       <div class="SectionTitle mb-8">
                         <strong>Basic Details</strong>
+                        <div [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="borderbottom" ></div>
                       </div>
+                     
                     </div>
                     <div fxFlex="66">
                       <mat-form-field class="pl-8 pr-80" style="width: 100%;">
@@ -69,7 +71,9 @@
                     <div fxFlex="100">
                       <div class="SectionTitle mb-8">
                         <strong>Contact Person Info.</strong>
+                        <div [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="borderbottom"></div>
                       </div>
+                     
                     </div>
 
                     <div fxFlex="50" fxLayout>
@@ -140,6 +144,7 @@
                     <div fxFlex="100">
                       <div class="SectionTitle mb-8">
                         <strong>Address</strong>
+                        <div [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="borderbottom"></div>
                       </div>
                     </div>
                     <div fxFlex="50">
@@ -216,7 +221,9 @@
               <div style="margin-left: 7px">
                 <div class="SectionTitle">
                   <strong>Contact Person Table</strong>
+                  <div [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="borderbottom"></div>
                 </div>
+              
               </div>
               <div class="mt-8">
                 <!-- <form autocomplete="off" fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto" name="form" novalidate
@@ -279,13 +286,17 @@
                   [dataSource]="ContactPersonDataSource" matSort>
 
                   <ng-container matColumnDef="Name">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Name </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"
+                    [ngClass]="BGClassName?.layout?.toolbar?.background"
+                    > Name </th>
                     <td mat-cell *matCellDef="let element" style="width: 20%;" class="tableLeftBorder">
                       {{element.Name}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="ContactPersonID">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Contact Person ID </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"
+                    [ngClass]="BGClassName?.layout?.toolbar?.background"
+                    > Contact Person ID </th>
                     <td mat-cell *matCellDef="let element" style="width: 20%;"> {{element.ContactPersonID}} </td>
                   </ng-container>
 
@@ -295,12 +306,16 @@
                   </ng-container> -->
 
                   <ng-container matColumnDef="ContactNumber">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"> Contact Number </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"
+                    [ngClass]="BGClassName?.layout?.toolbar?.background"
+                    > Contact Number </th>
                     <td mat-cell *matCellDef="let element" style="width: 15%;"> {{element.ContactNumber}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="Email">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Email </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"
+                    [ngClass]="BGClassName?.layout?.toolbar?.background"
+                    > Email </th>
                     <td mat-cell *matCellDef="let element" style="width: 20%;"> {{element.Email}} </td>
                   </ng-container>
 
@@ -327,6 +342,7 @@
               <div style="margin-left: 7px">
                 <div class="SectionTitle">
                   <strong>Bank Table</strong>
+                  <div [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="borderbottom"></div>
                 </div>
               </div>
               <div class="mt-8">
@@ -391,14 +407,18 @@
                     matSort>
 
                     <ng-container matColumnDef="AccountName">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> Account Name </th>
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"
+                      [ngClass]="BGClassName?.layout?.toolbar?.background"
+                      > Account Name </th>
                       <td mat-cell *matCellDef="let element" class="tableLeftBorder" style="width: 10%;">
                         {{element.AccountName}} </td>
                     </ng-container>
 
 
                     <ng-container matColumnDef="AccountNumber">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"> Account Number </th>
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"
+                      [ngClass]="BGClassName?.layout?.toolbar?.background"
+                      > Account Number </th>
                       <td mat-cell *matCellDef="let element" style="width: 15%;">
                         {{element.AccountNumber}} </td>
                     </ng-container>
@@ -410,7 +430,9 @@
 
 
                     <ng-container matColumnDef="BankName">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"> Bank Name </th>
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"
+                      [ngClass]="BGClassName?.layout?.toolbar?.background"
+                      > Bank Name </th>
                       <td mat-cell *matCellDef="let element" style="width: 15%;"> {{element.BankName}} </td>
                     </ng-container>
 
@@ -421,7 +443,9 @@
                     </ng-container> -->
 
                     <ng-container matColumnDef="BankID">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"> Bank ID </th>
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"
+                      [ngClass]="BGClassName?.layout?.toolbar?.background"
+                      > Bank ID </th>
                       <td mat-cell *matCellDef="let element" style="width: 15%;"> {{element.BankID}} </td>
                     </ng-container>
 
@@ -458,6 +482,7 @@
               <div style="margin-left: 7px">
                 <div class="SectionTitle">
                   <strong>KRA Table</strong>
+                  <div [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="borderbottom"></div>
                 </div>
               </div>
               <div class="mt-8">
@@ -510,23 +535,31 @@
                 <table *ngIf="KRAsByPartnerID?.length" class="table" mat-table [dataSource]="KRADataSource" matSort>
 
                   <ng-container matColumnDef="KRA">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;"> KRA </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;"
+                    [ngClass]="BGClassName?.layout?.toolbar?.background"
+                    > KRA </th>
                     <td mat-cell *matCellDef="let element" style="width: 25%;" class="tableLeftBorder">
                       {{element.KRA}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="KRAText">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;"> Text </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;"
+                    [ngClass]="BGClassName?.layout?.toolbar?.background"
+                    > Text </th>
                     <td mat-cell *matCellDef="let element" style="width: 25%;"> {{element.KRAText}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="KRAValue">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;"> Value </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;"
+                    [ngClass]="BGClassName?.layout?.toolbar?.background"
+                    > Value </th>
                     <td mat-cell *matCellDef="let element" style="width: 25%;"> {{element.KRAValue}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="EvalDate">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;"> Eval Date </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;"
+                    [ngClass]="BGClassName?.layout?.toolbar?.background"
+                    > Eval Date </th>
                     <td mat-cell *matCellDef="let element" style="width: 25%;">
                       {{element.EvalDate | date : 'dd/MM/yyyy'}} </td>
                   </ng-container>
@@ -717,24 +750,32 @@
                   [dataSource]="CertificateDataSource" matSort>
 
                   <ng-container matColumnDef="CertificateType">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;"> Certificate Type </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;"
+                    [ngClass]="BGClassName?.layout?.toolbar?.background"
+                    > Certificate Type </th>
                     <td mat-cell *matCellDef="let element" style="width: 25%;" class="tableLeftBorder">
                       {{element.CertificateType}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="CertificateName">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;"> Certificate Name </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;"
+                    [ngClass]="BGClassName?.layout?.toolbar?.background"
+                    > Certificate Name </th>
                     <td mat-cell *matCellDef="let element" style="width: 25%;"> {{element.CertificateName}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="Validity">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Validity </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"
+                    [ngClass]="BGClassName?.layout?.toolbar?.background"
+                    > Validity </th>
                     <td mat-cell *matCellDef="let element" style="width: 20%;">
                       {{element.Validity | date :'dd/MM/yyyy'}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="Attachment">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;"> Attachment </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;"
+                    [ngClass]="BGClassName?.layout?.toolbar?.background"
+                    > Attachment </th>
                     <td mat-cell *matCellDef="let element" style="width: 25%;">
                       <span class="linkClass">{{element.Attachment}}
                       </span>
@@ -767,7 +808,7 @@
       <div fxLayout fxFlex class="my-8 px-24" fxLayoutAlign="end">
         <!-- <button (click)="SaveClicked()" class="SaveAsDraftBtn mr-8" mat-stroked-button>
           Save as Draft</button> -->
-        <button (click)="SaveClicked()" class="SaveBtn" mat-raised-button>
+        <button (click)="SaveClicked()" [ngClass]="BGClassName?.layout?.navbar?.primaryBackground" class="SaveBtn" mat-raised-button>
           Save</button>
       </div>
     </div>

@@ -448,6 +448,15 @@
     left: 52%;
     transform: translate(-50%);
   }
+  .borderbottom{
+    height: 3px;
+    width: 90%;
+    background-color: #efb577;
+    position: absolute;
+    bottom: -0.2em;
+    left: 52%;
+    transform: translate(-50%);
+  }
   @mixin md-icon-size($size: 24px) {
     font-size: $size;
     height: $size;

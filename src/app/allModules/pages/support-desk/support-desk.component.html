@@ -27,7 +27,7 @@
             </div>
             <div fxLayout="row" fxLayoutAlign="start">
               <div fxLayoutAlign="start" style="margin-top: 10%;">
-                <button mat-button class="Btn1" style="width: 140%;" (click)="addSupportTicketClicked()">Connect with Us
+                <button mat-button class="Btn1" style="width: 140%;"  [ngClass]="BGClassName?.layout?.navbar?.primaryBackground" (click)="addSupportTicketClicked()">Connect with Us
                   !
                 </button>
               </div>
