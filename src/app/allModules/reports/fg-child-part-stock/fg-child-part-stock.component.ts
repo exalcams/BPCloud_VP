@@ -18,6 +18,7 @@ import { MasterService } from 'app/services/master.service';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { fuseAnimations } from '@fuse/animations';
 import { ChartType } from 'chart.js';
+import { FuseConfigService } from '@fuse/services/config.service';
 @Component({
   selector: 'app-fg-child-part-stock',
   templateUrl: './fg-child-part-stock.component.html',
@@ -26,6 +27,8 @@ import { ChartType } from 'chart.js';
   animations: fuseAnimations,
 })
 export class FGChildPartStockComponent implements OnInit {
+  BGClassName: any;
+  fuseConfig: any;
   authenticationDetails: AuthenticationDetails;
   currentUserID: Guid;
   currentUserName: string;
@@ -213,6 +216,7 @@ export class FGChildPartStockComponent implements OnInit {
      backgroundColor: ['#6dd7d3']
    }];
   constructor(
+    private _fuseConfigService: FuseConfigService,
     private _reportService: ReportService,
     private formBuilder: FormBuilder,
     private _router: Router,
@@ -234,6 +238,7 @@ export class FGChildPartStockComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.SetUserPreference();
     // Retrive authorizationData
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
@@ -255,7 +260,14 @@ export class FGChildPartStockComponent implements OnInit {
     // this.initializeSearchForm();
     // this.searchButtonClicked();
   }
-
+  SetUserPreference(): void {
+    this._fuseConfigService.config
+        .subscribe((config) => {
+            this.fuseConfig = config;
+            this.BGClassName = config;
+        });
+    // this._fuseConfigService.config = this.fuseConfig;
+}
   CreateAppUsage(): void {
     const appUsage: AppUsage = new AppUsage();
     appUsage.UserID = this.currentUserID;

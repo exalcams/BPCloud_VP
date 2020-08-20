@@ -38,6 +38,8 @@ import * as FileSaver from 'file-saver';
     animations: fuseAnimations
 })
 export class ASNComponent implements OnInit {
+    BGClassName: any;
+    fuseConfig: any;
     authenticationDetails: AuthenticationDetails;
     currentUserID: Guid;
     currentUserName: string;
@@ -168,6 +170,7 @@ export class ASNComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.SetUserPreference();
         // Retrive authorizationData
         const retrievedObject = localStorage.getItem('authorizationData');
         if (retrievedObject) {
@@ -1561,6 +1564,14 @@ export class ASNComponent implements OnInit {
             }
         );
     }
+    SetUserPreference(): void {
+        this._fuseConfigService.config
+            .subscribe((config) => {
+                this.fuseConfig = config;
+                this.BGClassName = config;
+            });
+        // this._fuseConfigService.config = this.fuseConfig;
+    }
 }
 
 export function MustValid(NetWeight: string, GrossWeight: string): ValidationErrors | null {
@@ -1580,5 +1591,6 @@ export function MustValid(NetWeight: string, GrossWeight: string): ValidationErr
             GrossWeightcontrol.setErrors(null);
         }
     };
+   
 }
 

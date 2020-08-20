@@ -72,7 +72,7 @@
             </div>
             </div>
             <div style="width:100%;height:100%;text-align: end;margin-top: 57px;" >
-              <button mat-flat-button class="cl_searchBtn" >
+              <button mat-flat-button class="cl_searchBtn" [ngClass]="BGClassName?.layout?.navbar?.primaryBackground" >
                 Search
               </button>
             </div>
@@ -105,7 +105,9 @@
     <mat-table  id="excel-table"  class="cl_table" [dataSource]="TableDetailsDataSource" >
       <!-- Material Column -->
       <ng-container matColumnDef="ASN" >
-        <mat-header-cell *matHeaderCellDef fxFlex="12" style="margin-left: 5px;" class="tableHeader"> ASN </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef fxFlex="12"  class="tableHeader" 
+        [ngClass]="BGClassName?.layout?.toolbar?.background"
+        > ASN </mat-header-cell>
         <mat-cell fxFlex="12" *matCellDef="let element ;index as i">
           <p class="cl_box" [ngStyle]="{'background-color': i%2==0 ? '#d87e39':'#6f52ed'}"></p>
           <p style="margin-left: 5px;"  class="tableElement" >{{element.ASN }} </p>
@@ -113,27 +115,27 @@
       </ng-container>
     
       <ng-container matColumnDef="PO">
-        <mat-header-cell *matHeaderCellDef fxFlex="10" class="tableHeader"> PO </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef fxFlex="10" class="tableHeader" [ngClass]="BGClassName?.layout?.toolbar?.background"> PO </mat-header-cell>
         <mat-cell fxFlex="10" *matCellDef="let element">
           <p class="tableElement" >{{element.PO}}</p>
         </mat-cell>
       </ng-container>
       <ng-container matColumnDef="AWB">
-        <mat-header-cell fxFlex="7" *matHeaderCellDef class="tableHeader"> AWB </mat-header-cell>
+        <mat-header-cell fxFlex="7" *matHeaderCellDef class="tableHeader" [ngClass]="BGClassName?.layout?.toolbar?.background"> AWB </mat-header-cell>
         <mat-cell fxFlex="7" *matCellDef="let element">
           <p class="tableElement" >{{element.AWB}}</p>
         </mat-cell>
       </ng-container>
     
       <ng-container matColumnDef="Truck">
-        <mat-header-cell fxFlex="7" *matHeaderCellDef class="tableHeader" > Truck </mat-header-cell>
+        <mat-header-cell fxFlex="7" *matHeaderCellDef class="tableHeader" [ngClass]="BGClassName?.layout?.toolbar?.background" > Truck </mat-header-cell>
         <mat-cell fxFlex="7" *matCellDef="let element">
           <p class="tableElement">{{element.Truck}} </p>
         </mat-cell>
       </ng-container>
     
       <ng-container matColumnDef="Material">
-        <mat-header-cell fxFlex="10" *matHeaderCellDef class="tableHeader" > Material </mat-header-cell>
+        <mat-header-cell fxFlex="10" *matHeaderCellDef class="tableHeader" [ngClass]="BGClassName?.layout?.toolbar?.background" > Material </mat-header-cell>
         <mat-cell fxFlex="10" *matCellDef="let element">
           <p class="tableElement">{{element.Material}} </p>
         </mat-cell>
@@ -141,7 +143,7 @@
     
       <!-- MaterialText Column -->
       <ng-container matColumnDef="MaterialText">
-        <mat-header-cell fxFlex="23" *matHeaderCellDef class="tableHeader" > Material Text </mat-header-cell>
+        <mat-header-cell fxFlex="23" *matHeaderCellDef class="tableHeader" [ngClass]="BGClassName?.layout?.toolbar?.background"> Material Text </mat-header-cell>
         <mat-cell  fxFlex="23" *matCellDef="let element">
           <p class="tableElement">{{element.MaterialText}} </p>
         </mat-cell>
@@ -149,7 +151,7 @@
     
       <!-- AcceptedQuantity Column -->
       <ng-container matColumnDef="ASN_Qty">
-        <mat-header-cell fxFlex="9" *matHeaderCellDef class="tableHeader"> ASN Qty </mat-header-cell>
+        <mat-header-cell fxFlex="9" *matHeaderCellDef class="tableHeader" [ngClass]="BGClassName?.layout?.toolbar?.background"> ASN Qty </mat-header-cell>
         <mat-cell fxFlex="9" *matCellDef="let element">
           <p class="tableElement">{{element.ASN_Qty}} </p>
         </mat-cell>
@@ -157,14 +159,14 @@
     
       <!-- RejectedQuantity Column -->
       <ng-container matColumnDef="Status">
-        <mat-header-cell fxFlex="8" *matHeaderCellDef class="tableHeader"> Status </mat-header-cell>
+        <mat-header-cell fxFlex="8" *matHeaderCellDef class="tableHeader" [ngClass]="BGClassName?.layout?.toolbar?.background"> Status </mat-header-cell>
         <mat-cell fxFlex="8" *matCellDef="let element">
           <img [src]="element.Status == 'ship' ? ship_url : element.Status == 'truck' ? truck_url: delivery_url" height="22px" width="26px" >
           </mat-cell>
       </ng-container>
     
       <ng-container matColumnDef="Action">
-        <mat-header-cell fxFlex="15" *matHeaderCellDef class="tableHeader"> Action </mat-header-cell>
+        <mat-header-cell fxFlex="15" *matHeaderCellDef class="tableHeader" [ngClass]="BGClassName?.layout?.toolbar?.background"> Action </mat-header-cell>
         <mat-cell fxFlex="15" *matCellDef="let element">
           <img src="assets/images/lightning.png" width="11px" height="14px" class="lightning_img">
           <select class="selectInput_table" >

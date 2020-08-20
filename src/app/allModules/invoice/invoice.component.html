@@ -15,7 +15,9 @@
         <div fxFlex="100%">
           <div class="SectionTitle">
             <strong>Invoice</strong>
+           
           </div>
+          <div [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" style="width: 70px;height: 2px;"></div>
         </div>
       </div>
     </div>
@@ -85,7 +87,7 @@
                   <mat-radio-button value="Closed" class="ml-40">Closed</mat-radio-button>
                 </mat-radio-group>
                 <div fxFlex fxLayoutAlign="end center" class="ml-8">
-                  <button mat-raised-button class="SaveBtn" (click)="SearchClicked()">Search</button>
+                  <button mat-raised-button class="SaveBtn" (click)="SearchClicked()" [ngClass]="BGClassName?.layout?.navbar?.primaryBackground">Search</button>
                 </div>
               </div>
               <!-- </mat-form-field> -->
@@ -112,7 +114,9 @@
       </div>
       <table class="table" mat-table [dataSource]="InvoiceDataSource" matSort>
         <ng-container matColumnDef="InvoiceNo">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice No </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header
+          [ngClass]="BGClassName?.layout?.toolbar?.background"
+          > Invoice No </th>
           <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
             <div fxLayout>
               <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
@@ -122,36 +126,48 @@
         </ng-container>
 
         <ng-container matColumnDef="InvoiceDate">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice Dt </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header
+          [ngClass]="BGClassName?.layout?.toolbar?.background"
+          > Invoice Dt </th>
           <td mat-cell *matCellDef="let element"> {{element.InvoiceDate | date :'dd/MM/yyyy'}} </td>
         </ng-container>
 
         <ng-container matColumnDef="PoReference">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Purchase order </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header
+          [ngClass]="BGClassName?.layout?.toolbar?.background"
+          > Purchase order </th>
           <td mat-cell *matCellDef="let element">
             {{element.PoReference}} </td>
         </ng-container>
 
         <ng-container matColumnDef="InvoiceAmount">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice Amount </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header
+          [ngClass]="BGClassName?.layout?.toolbar?.background"
+          > Invoice Amount </th>
           <td mat-cell class="AmountClass" *matCellDef="let element">
             {{element.InvoiceAmount}} </td>
         </ng-container>
 
         <ng-container matColumnDef="PaidAmount">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Paid Amount </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header
+          [ngClass]="BGClassName?.layout?.toolbar?.background"
+          > Paid Amount </th>
           <td mat-cell class="AmountClass" *matCellDef="let element">
             {{element.PaidAmount}} </td>
         </ng-container>
 
         <ng-container matColumnDef="DateofPayment">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Payment Date </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header
+          [ngClass]="BGClassName?.layout?.toolbar?.background"
+          > Payment Date </th>
           <td mat-cell *matCellDef="let element">
             {{element.DateofPayment | date : 'dd/MM/yyyy'}} </td>
         </ng-container>
 
         <ng-container matColumnDef="Status">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header
+          [ngClass]="BGClassName?.layout?.toolbar?.background"
+          > Status </th>
           <td mat-cell *matCellDef="let element">
             <span class="p-4" [style.background-color]="getBackGroundColor(element.Status)">
               {{element.Status}}
@@ -160,7 +176,9 @@
         </ng-container>
 
         <ng-container matColumnDef="AttID">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Document </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header
+          [ngClass]="BGClassName?.layout?.toolbar?.background"
+          > Document </th>
           <td mat-cell *matCellDef="let element">
             <span class="linkClass">{{element.AttID}}
             </span>

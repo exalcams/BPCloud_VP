@@ -14,9 +14,9 @@
     <div fxFlex fxLayout>
       <div class="tile mx-20" fxFlex="17" fxLayout="column" fxLayoutAlign="start">
         <div fxLayoutAlign="start center" class="pt-8">
-          <span
-            class="boldClass orangeBorderBottom pl-8">{{'ORDER_FULFILMENT_CENTER.ON_TIME_IN_FULL_OTIF' | translate}}</span>
+          <span class="boldClass pl-8">{{'ORDER_FULFILMENT_CENTER.ON_TIME_IN_FULL_OTIF' | translate}}</span>
         </div>
+        <span [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="orangeBorderBottom1"></span>
         <div fxFlex fxLayoutAlign="center" class="pt-8">
           <svg height="140" width="140" viewBox="0 0 140 140" class="progress__svg">
             <circle class="progress__meter" [style.strokeDasharray]="2" cx="70" cy="70" [attr.r]="radius"
@@ -33,8 +33,9 @@
       </div>
       <div class="tile mx-20" fxFlex="17" fxLayout="column" fxLayoutAlign="start">
         <div fxLayoutAlign="start center" class="pt-8">
-          <span class="boldClass orangeBorderBottom pl-8"> Quality Index</span>
-        </div>
+          <span class="boldClass  pl-8">Quality Index</span>
+         </div>
+        <span [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="orangeBorderBottom"></span>
         <div fxFlex fxLayoutAlign="center" class="pt-8">
           <svg height="140" width="140" viewBox="0 0 140 140" class="progress__svg">
             <circle class="progress__meter" [style.strokeDasharray]="2" cx="70" cy="70" [attr.r]="radius"
@@ -123,7 +124,7 @@
           </div>
           <div fxFlex="20%">
             <div fxLayout fxLayoutAlign="start center">
-              <button class="mt-12" style="background-color: #efb577;color: white;" mat-raised-button
+              <button class="mt-12" [ngClass]="BGClassName?.layout?.navbar?.primaryBackground" mat-raised-button
                 (click)="getOfsByOptionClicked()">Search</button>
               <button class="ml-12 mt-12" style="color: #efb577;background-color: white;" mat-stroked-button
                 (click)="ResetClicked()">Reset</button>
@@ -139,7 +140,7 @@
       <table class="abnormal" mat-table [dataSource]="ofDetailsDataSource" matSort>
         <ng-container matColumnDef="DocNumber">
           <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"
-            [ngClass]="BGClassName?.layout?.toolbar?.background">
+          [ngClass]="BGClassName?.layout?.toolbar?.background">
             Doc Number </th>
           <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
             <div fxLayout>
@@ -151,35 +152,35 @@
 
         <ng-container matColumnDef="DocVersion">
           <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 8%;"
-            [ngClass]="BGClassName?.layout?.toolbar?.background"> Version </th>
+          [ngClass]="BGClassName?.layout?.toolbar?.background"> Version </th>
           <td mat-cell *matCellDef="let element" (click)="acknowledgementClicked(element.DocNumber)">
             {{element.DocVersion}} </td>
         </ng-container>
 
         <ng-container matColumnDef="DocType">
           <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 8%;"
-            [ngClass]="BGClassName?.layout?.toolbar?.background"> Type </th>
+          [ngClass]="BGClassName?.layout?.toolbar?.background"> Type </th>
           <td mat-cell *matCellDef="let element" (click)="acknowledgementClicked(element.DocNumber)">
             {{element.DocType}} </td>
         </ng-container>
 
         <ng-container matColumnDef="DocDate">
           <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 8%;"
-            [ngClass]="BGClassName?.layout?.toolbar?.background"> Date </th>
+          [ngClass]="BGClassName?.layout?.toolbar?.background"> Date </th>
           <td mat-cell *matCellDef="let element"> {{element.DocDate | date :'dd/MM/yyyy'}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="PlantName">
           <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 8%;"
-            [ngClass]="BGClassName?.layout?.toolbar?.background"> Plant Name </th>
+          [ngClass]="BGClassName?.layout?.toolbar?.background"> Plant Name </th>
           <td mat-cell *matCellDef="let element" (click)="acknowledgementClicked(element.DocNumber)">
             {{element.PlantName}} </td>
         </ng-container>
 
         <ng-container matColumnDef="Status">
           <th mat-header-cell *matHeaderCellDef style="min-width: 50%;"
-            [ngClass]="BGClassName?.layout?.toolbar?.background"> Order Fulfilment Status </th>
+          [ngClass]="BGClassName?.layout?.toolbar?.background"> Order Fulfilment Status </th>
           <td mat-cell *matCellDef="let element" style="min-width: 310px !important;">
             <div fxLayout class="mt-4 mx-8">
               <div fxFlex="30" fxLayout>
@@ -225,8 +226,9 @@
 
         <ng-container matColumnDef="Document">
           <th mat-header-cell *matHeaderCellDef style="width: 10%;"
-            [ngClass]="BGClassName?.layout?.toolbar?.background"> Document </th>
-          <td mat-cell *matCellDef="let element" (click)="viewOfAttachmentClicked(element)" style="text-align: center;">
+          [ngClass]="BGClassName?.layout?.toolbar?.background"> Document </th>
+          <td mat-cell *matCellDef="let element" (click)="viewOfAttachmentClicked(element)"
+            style="text-align: center;">
             <div style="margin-top: 3px; margin-left: 15px;">
               <span [matBadge]="element.DocCount" matBadgeColor="accent" matBadgeOverlap="false"></span>
             </div>
@@ -236,7 +238,7 @@
 
         <ng-container matColumnDef="NextProcess">
           <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"
-            [ngClass]="BGClassName?.layout?.toolbar?.background"> Next Process </th>
+          [ngClass]="BGClassName?.layout?.toolbar?.background"> Next Process </th>
           <td mat-cell *matCellDef="let element" style="text-align: center;">
             <span>
               <div [class]="getNextProcess(element)"></div>
@@ -248,7 +250,7 @@
 
         <ng-container matColumnDef="Action">
           <th mat-header-cell *matHeaderCellDef style="width: 10%;"
-            [ngClass]="BGClassName?.layout?.toolbar?.background">Action </th>
+          [ngClass]="BGClassName?.layout?.toolbar?.background">Action </th>
           <td mat-cell *matCellDef="let element;let i= index;" style="text-align: center;">
             <mat-form-field appearance="outline" style="width: 120px;">
               <mat-icon matPrefix svgIcon="thunderBlackIcon" height="20px"></mat-icon>

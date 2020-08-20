@@ -8,6 +8,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { Router, ActivatedRoute } from '@angular/router';
+import { FuseConfigService } from '@fuse/services/config.service';
 @Component({
   selector: 'app-support-desk',
   templateUrl: './support-desk.component.html',
@@ -17,6 +18,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 
 export class SupportDeskComponent implements OnInit {
+  BGClassName: any;
+  fuseConfig: any;
   // private paginator: MatPaginator; private sort: MatSort;
   authenticationDetails: AuthenticationDetails;
   currentUserID: Guid;
@@ -42,6 +45,7 @@ export class SupportDeskComponent implements OnInit {
   isSupport: boolean;
 
   constructor(
+    private _fuseConfigService: FuseConfigService,
     public _supportdeskService: SupportDeskService,
     private _router: Router,
     private _activatedRoute: ActivatedRoute) {
@@ -51,6 +55,7 @@ export class SupportDeskComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.SetUserPreference();
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
@@ -72,6 +77,14 @@ export class SupportDeskComponent implements OnInit {
     });
     this.LoadBotChat();
   }
+  SetUserPreference(): void {
+    this._fuseConfigService.config
+        .subscribe((config) => {
+            this.fuseConfig = config;
+            this.BGClassName = config;
+        });
+    // this._fuseConfigService.config = this.fuseConfig;
+}
 
   LoadBotChat(): void {
     // (function (d, m) {

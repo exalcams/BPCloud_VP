@@ -17,6 +17,7 @@ import { ExcelService } from 'app/services/excel.service';
 import { MasterService } from 'app/services/master.service';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { fuseAnimations } from '@fuse/animations';
+import { FuseConfigService } from '@fuse/services/config.service';
 @Component({
   selector: 'app-gr-receipts',
   templateUrl: './gr-receipts.component.html',
@@ -25,6 +26,8 @@ import { fuseAnimations } from '@fuse/animations';
   animations: fuseAnimations,
 })
 export class GRReceiptsComponent implements OnInit {
+  BGClassName: any;
+    fuseConfig: any;
   authenticationDetails: AuthenticationDetails;
   currentUserID: Guid;
   currentUserName: string;
@@ -172,6 +175,7 @@ export class GRReceiptsComponent implements OnInit {
   ];
 
   constructor(
+    private _fuseConfigService: FuseConfigService,
     private _reportService: ReportService,
     private formBuilder: FormBuilder,
     private _router: Router,
@@ -193,6 +197,7 @@ export class GRReceiptsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.SetUserPreference();
     // Retrive authorizationData
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
@@ -213,7 +218,19 @@ export class GRReceiptsComponent implements OnInit {
     this.GetGRReceiptsReports();
     this.initializeSearchForm();
     // this.searchButtonClicked();
+
+
+    
   }
+
+  SetUserPreference(): void {
+    this._fuseConfigService.config
+        .subscribe((config) => {
+            this.fuseConfig = config;
+            this.BGClassName = config;
+        });
+    // this._fuseConfigService.config = this.fuseConfig;
+}
 
   CreateAppUsage(): void {
     const appUsage: AppUsage = new AppUsage();
@@ -230,6 +247,7 @@ export class GRReceiptsComponent implements OnInit {
       }
     );
   }
+  
 
   GetGRReceiptsReports(): void {
     this.isProgressBarVisibile = true;
@@ -444,6 +462,8 @@ export class GRReceiptsComponent implements OnInit {
     }
     return this.data;
   }
+
+ 
 }
 
 

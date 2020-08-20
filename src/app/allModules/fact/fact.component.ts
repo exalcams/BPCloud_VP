@@ -21,6 +21,8 @@ import { BPCFact, BPCFactView, BPCFactContactPerson, BPCKRA, BPCFactBank, BPCAIA
   styleUrls: ['./fact.component.scss']
 })
 export class FactComponent implements OnInit {
+  BGClassName: any;
+  fuseConfig: any;
   MenuItems: string[];
   AllMenuApps: MenuApp[] = [];
   SelectedMenuApp: MenuApp;
@@ -145,6 +147,7 @@ export class FactComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.SetUserPreference();
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
@@ -184,6 +187,14 @@ export class FactComponent implements OnInit {
       }
     );
   }
+  SetUserPreference(): void {
+    this._fuseConfigService.config
+        .subscribe((config) => {
+            this.fuseConfig = config;
+            this.BGClassName = config;
+        });
+    // this._fuseConfigService.config = this.fuseConfig;
+}
   InitializeFactFormGroup(): void {
     this.FactFormGroup = this._formBuilder.group({
       Client: ['', Validators.required],

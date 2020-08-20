@@ -13,8 +13,9 @@
     <div fxFlex fxLayout *ngIf="!isExpanded" @expandCollapse>
       <div class="tile mx-20" fxFlex="40" fxLayout="column" fxLayoutAlign="start">
         <div fxLayoutAlign="start" class="pt-8">
-          <span class="boldClass orangeBorderBottom pl-8">GRN Count</span>
+          <span class="boldClass  pl-8">GRN Count</span>
         </div>
+        <span [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="orangeBorderBottom"></span>
         <div fxLayout="row" fxLayoutAlign="center center">
           <div>
             <canvas class="leftsideCanvas" id="leftsidechart" baseChart [datasets]="DoughnutChartData2"
@@ -32,8 +33,9 @@
       </div>
       <div class="tile mx-20" fxFlex="35" fxLayout="column" fxLayoutAlign="start">
         <div fxLayoutAlign="start center" class="pt-8">
-          <span class="boldClass orangeBorderBottom pl-8">OnTime/Delayed</span>
+          <span class="boldClass  pl-8">OnTime/Delayed</span>
         </div>
+        <span [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="orangeBorderBottom1"></span>
         <div *ngIf="labels.length" id="barChart" fxFlex fxLayoutAlign="start" class="pt-8 pl-8 pr-4">
           <canvas baseChart [chartType]="'bar'" [datasets]="chartData" [labels]="labels" [options]="chartOptions"
             [legend]="false" [colors]="colors">
@@ -84,7 +86,7 @@
           </div> -->
           <div fxLayout="row" fxLayoutAlign="start center">
             <div fxFlex align="end">
-              <button mat-raised-button class="SaveBtn" (click)="searchButtonClicked()">Search</button>
+              <button mat-raised-button class="SaveBtn" (click)="searchButtonClicked()"  [ngClass]="BGClassName?.layout?.navbar?.primaryBackground">Search</button>
             </div>
           </div>
         </form>
@@ -115,7 +117,8 @@
       <table class="table" mat-table [dataSource]="grReceiptsReportDataSource" matSort>
 
         <ng-container matColumnDef="Material">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Material </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"
+          [ngClass]="BGClassName?.layout?.toolbar?.background">Material </th>
           <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
             <div fxLayout>
               <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
@@ -125,14 +128,18 @@
         </ng-container>
 
         <ng-container matColumnDef="MaterialText">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Material Text </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header
+          [ngClass]="BGClassName?.layout?.toolbar?.background"
+          >Material Text </th>
           <td mat-cell *matCellDef="let element;">
             {{element.MaterialText}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="OrderQty">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Order Qty</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header
+          [ngClass]="BGClassName?.layout?.toolbar?.background"
+          >Order Qty</th>
           <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
             {{element.OrderQty}}
           </td>
@@ -146,21 +153,27 @@
         </ng-container> -->
 
         <ng-container matColumnDef="ReceivedQty">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Received Qty </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header
+          [ngClass]="BGClassName?.layout?.toolbar?.background"
+          >Received Qty </th>
           <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
             {{element.ReceivedQty}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="RejectedPPM">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Rejected PPM </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header
+          [ngClass]="BGClassName?.layout?.toolbar?.background"
+          >Rejected PPM </th>
           <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
             {{element.RejectedPPM}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="ReworkQty">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Rework Qty </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header
+          [ngClass]="BGClassName?.layout?.toolbar?.background"
+          >Rework Qty </th>
           <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
             {{element.ReworkQty}}
           </td>
