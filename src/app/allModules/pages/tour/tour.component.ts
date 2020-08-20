@@ -15,7 +15,7 @@ export class TourComponent implements OnInit {
     tourStatus: TourStatusModel = {
         TourStatus: false,
     };
-    isFinal = true;
+    isFinal = false;
     slides = [
         {
             image: "assets/images/BPCloud1.png",
