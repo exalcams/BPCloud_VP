@@ -14,6 +14,7 @@ import { BPCPayment } from 'app/models/ReportModel';
 import { DatePipe } from '@angular/common';
 import { ExcelService } from 'app/services/excel.service';
 import { MasterService } from 'app/services/master.service';
+import { FuseConfigService } from '@fuse/services/config.service';
 
 @Component({
   selector: 'app-account-statement',
@@ -47,11 +48,14 @@ export class AccountStatementComponent implements OnInit {
     'CreditAmount',
     'ItemText'
   ];
+  fuseConfig: any;
+  BGClassName: any;
   tableDataSource: MatTableDataSource<BPCPayAccountStatement>;
   @ViewChild(MatPaginator) tablePaginator: MatPaginator;
   @ViewChild(MatMenuTrigger) matMenuTrigger: MatMenuTrigger;
   @ViewChild(MatSort) tableSort: MatSort;
   constructor(
+    private _fuseConfigService: FuseConfigService,
     private formBuilder: FormBuilder,
     private _router: Router,
     public snackBar: MatSnackBar,
@@ -75,6 +79,7 @@ export class AccountStatementComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.SetUserPreference();
     // Retrive authorizationData
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
@@ -245,6 +250,15 @@ export class AccountStatementComponent implements OnInit {
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.tableDataSource.filter = filterValue.trim().toLowerCase();
+  }
+  SetUserPreference(): void {
+    this._fuseConfigService.config
+      .subscribe((config) => {
+        this.fuseConfig = config;
+        this.BGClassName = config;
+      });
+      console.log("Account-statement",this.BGClassName);
+    // this._fuseConfigService.config = this.fuseConfig;
   }
 }
 

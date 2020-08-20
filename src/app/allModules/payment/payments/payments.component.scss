@@ -430,14 +430,20 @@
         font-size: 18px;
     }
 
-    .SectionTitle strong:after {
-        content: "";
-        height: 3px;
-        width: 90%;
-        background-color: #efb577;
-        position: absolute;
-        bottom: -0.2em;
-        left: 52%;
-        transform: translate(-50%);
+    // .SectionTitle strong:after {
+    //     content: "";
+    //     height: 3px;
+    //     width: 90%;
+    //     background-color: #efb577;
+    //     position: absolute;
+    //     bottom: -0.2em;
+    //     left: 52%;
+    //     transform: translate(-50%);
+    // }
+    .underline{
+        height: 2.5px;
+        width: 53px;
+        margin-top: 0px;
+        margin-left: 16px;
     }
 }

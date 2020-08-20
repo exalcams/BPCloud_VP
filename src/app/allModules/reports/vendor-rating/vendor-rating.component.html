@@ -13,8 +13,11 @@
     <div fxFlex fxLayout *ngIf="!isExpanded" @expandCollapse>
       <div class="tile mx-20" fxFlex="33" fxLayout="column" fxLayoutAlign="start">
         <div fxLayoutAlign="start center" class="pt-8">
-          <span class="boldClass orangeBorderBottom pl-8"> Overall Delivery </span>
+          <span class="boldClass  pl-8"> Overall Delivery </span>
+          <p [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="underline1"></p>
+
         </div>
+
         <!-- <div id="gaugeChart1" fxFlex class="pt-8 pl-8 pr-4 pb-12">
           <rg-gauge-chart [canvasWidth]="canvasWidth" [needleValue]="needleValue" [centralLabel]="centralLabel"
             [options]="options" [bottomLabel]="bottomLabel">
@@ -42,8 +45,11 @@
       </div>
       <div class="tile mx-20" fxFlex="33" fxLayout="column" fxLayoutAlign="start">
         <div fxLayoutAlign="start center" class="pt-8">
-          <span class="boldClass orangeBorderBottom pl-8"> Overall Quality </span>
+          <span class="boldClass  pl-8"> Overall Quality </span>
+          <p [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="underline2"></p>
+
         </div>
+
         <div fxLayout="row" fxLayoutAlign="center center">
           <div style="margin-top: -38px;margin-left: -60px;">
             <rg-gauge-chart style="margin-top: -30px;" [canvasWidth]="canvasWidth" [needleValue]="needleValue"
@@ -66,8 +72,11 @@
       </div>
       <div class="tile mx-20" fxFlex="33" fxLayout="column" fxLayoutAlign="start">
         <div fxLayoutAlign="start center" class="pt-8">
-          <span class="boldClass orangeBorderBottom pl-8"> Overall Score </span>
+          <span class="boldClass  pl-8"> Overall Score </span>
+        <p [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="underline3"></p>
+
         </div>
+
         <div fxLayout="row" fxLayoutAlign="center center">
           <div style="margin-top: -38px;margin-left: -60px;">
             <rg-gauge-chart style="margin-top: -30px;" [canvasWidth]="canvasWidth" [needleValue]="needleValue"
@@ -163,7 +172,7 @@
       <table class="table" mat-table [dataSource]="vendorRatingReportDataSource" matSort>
 
         <ng-container matColumnDef="Material">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Material </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background"> Material </th>
           <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
             <div fxLayout>
               <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
@@ -173,14 +182,14 @@
         </ng-container>
 
         <ng-container matColumnDef="MaterialText">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Material Text </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">Material Text </th>
           <td mat-cell *matCellDef="let element;">
             {{element.MaterialText}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="OrderQty">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Order Qty</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">Order Qty</th>
           <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
             {{element.OrderQty}}
           </td>
@@ -194,21 +203,21 @@
         </ng-container> -->
 
         <ng-container matColumnDef="ReceivedQty">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Received Qty </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">Received Qty </th>
           <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
             {{element.ReceivedQty}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="RejectedPPM">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Rejected PPM </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">Rejected PPM </th>
           <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
             {{element.RejectedPPM}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="ReworkQty">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Rework Qty </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">Rework Qty </th>
           <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
             {{element.ReworkQty}}
           </td>

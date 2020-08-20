@@ -55,7 +55,8 @@
           <mat-card class="cl_card matshadow">
             <mat-card-title>
               <p class="overall">Overall Score</p>
-              <mat-divider class="cl_matdividerflex cl_divider1"></mat-divider>
+              <!-- <mat-divider class="cl_matdividerflex cl_divider1"></mat-divider> -->
+              <p [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="underline1"></p>
             </mat-card-title>
             <mat-card-content>
               <div fxLayout="row" fxLayoutAlign="center center" fxFlex="110" fxFlex.lg="60" fxFlex.gt-sm="40"
@@ -93,7 +94,9 @@
           <mat-card class="cl_card matshadow">
             <mat-card-title>
               <p class="Quality">Quality Index (PPM)</p>
-              <mat-divider class="cl_matdividerflex2  cl_divider6"></mat-divider>
+              <!-- <mat-divider class="cl_matdividerflex2  cl_divider6"></mat-divider> -->
+              <p [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="underline2"></p>
+
             </mat-card-title>
             <mat-card-content>
               <div fxLayout="row" fxLayoutAlign="center center" fxFlex="110" fxFlex.lg="60" fxFlex.gt-sm="40"
@@ -131,7 +134,9 @@
           <mat-card class="cl_card matshadow">
             <mat-card-title>
               <p class="overall">On Time In Full (OTIF)</p>
-              <mat-divider class="cl_matdividerflex cl_divider2"></mat-divider>
+              <!-- <mat-divider class="cl_matdividerflex cl_divider2"></mat-divider> -->
+              <p [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="underline3"></p>
+
             </mat-card-title>
             <mat-card-content>
               <div fxLayout="row" fxLayoutAlign="center center" fxFlex="110" fxFlex.lg="60" fxFlex.gt-sm="40"
@@ -177,7 +182,9 @@
           <mat-card class="cl_card matshadow">
             <mat-card-title>
               <p class="overall">Price Variation</p>
-              <mat-divider class="cl_matdividerflex2  cl_divider3"></mat-divider>
+              <!-- <mat-divider class="cl_matdividerflex2  cl_divider3"></mat-divider> -->
+              <p [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="underline4"></p>
+
             </mat-card-title>
 
             <mat-card-content>
@@ -217,7 +224,9 @@
           <mat-card class="cl_card matshadow">
             <mat-card-title>
               <p class="overall">Responsiveness</p>
-              <mat-divider class="cl_matdividerflex cl_divider4"></mat-divider>
+              <!-- <mat-divider class="cl_matdividerflex cl_divider4"></mat-divider> -->
+              <p [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="underline5"></p>
+
             </mat-card-title>
             <mat-card-content>
               <div fxLayout="row" fxLayoutAlign="center center" fxFlex="110" fxFlex.lg="60" fxFlex.gt-sm="40"
@@ -252,8 +261,11 @@
       </div>
 
       <div class="supplier mt-16 mb-4">SCOC (Supplier’s Code of Conduct)</div>
-      <mat-divider class="divider_underline"></mat-divider>
-      <mat-card class="supplierconduct" [innerHtml]="selectedSCOCMessage?.SCOCMessage">
+      <!-- <mat-divider class="divider_underline"></mat-divider> -->
+      <p [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="underline6"></p>
+
+      <mat-card class="supplierconduct">
+
       </mat-card>
     </div>
     <!-- <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">

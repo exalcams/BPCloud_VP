@@ -13,8 +13,9 @@
       <div fxLayout="row" fxFlex="100%" fxLayoutAlign="space-around center">
         <div fxFlex="100%">
           <div class="SectionTitle">
-            <strong>TDS</strong>
+            <strong >TDS</strong>
           </div>
+          <span [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground"   class="underline"></span>
         </div>
       </div>
     </div>
@@ -47,7 +48,7 @@
               </div>
             </div>
             <div fxFlex="20" class="ml-44" fxlayoutAlign="start center">
-              <button mat-raised-button class="SaveBtn" (click)="SearchClicked()">Search</button>
+              <button mat-raised-button class="SaveBtn" [ngClass]="BGClassName?.layout?.navbar?.primaryBackground" (click)="SearchClicked()">Search</button>
             </div>
           </div>
         </form>
@@ -71,7 +72,7 @@
       </div>
       <table class="table" mat-table [dataSource]="tableDataSource" matSort>
         <ng-container matColumnDef="CompanyCode">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Company Code </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background"> Company Code </th>
           <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
             <div fxLayout>
               <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
@@ -81,48 +82,48 @@
         </ng-container>
 
         <ng-container matColumnDef="DocumentID">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Document </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background"> Document </th>
           <td mat-cell *matCellDef="let element">
             <span class="pdfLinkClass"> {{element.DocumentID}} </span>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="PostingDate">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background"> Date </th>
           <td mat-cell *matCellDef="let element"> {{element.PostingDate   | date :'dd/MM/yyyy'}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="BaseAmount">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Base Amount </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background"> Base Amount </th>
           <td mat-cell *matCellDef="let element">
             {{element.BaseAmount}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="TDSCategory">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> TDS Category </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background"> TDS Category </th>
           <td mat-cell *matCellDef="let element">
             {{element.TDSCategory }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="TDSAmount">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>TDS Amount </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">TDS Amount </th>
           <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
             {{element.TDSAmount}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="Currency">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Currency </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">Currency </th>
           <td mat-cell *matCellDef="let element;let i= index;">
             {{element.Currency}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="FYear">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Financial Year </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">Financial Year </th>
           <td mat-cell *matCellDef="let element;let i= index;">
             {{element.FYear}}
           </td>

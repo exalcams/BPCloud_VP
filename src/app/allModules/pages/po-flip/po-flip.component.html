@@ -211,6 +211,7 @@
             <div fxFlex fxLayout="column" fxLayoutGap="20px" class="px-12 mt-12">
               <div fxFlex>
                 <span class="title"><strong>Other Cost</strong></span>
+                <p [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="underline"></p>
               </div>
               <div fxFlex>
                 <form autocomplete="off" fxLayout="row" fxLayoutAlign="start" fxLayoutGap="50px" fxFlex="1 0 auto"
@@ -260,7 +261,7 @@
                   <table *ngIf="flipCosts?.length" class="table" mat-table [dataSource]="flipCostDataSource" matSort>
 
                     <ng-container matColumnDef="ExpenceType">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;"> Type </th>
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;" [ngClass]="BGClassName?.layout?.toolbar?.background"> Type </th>
                       <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
                         <div fxLayout>
                           <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
@@ -270,19 +271,19 @@
                     </ng-container>
 
                     <ng-container matColumnDef="Amount">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;"> Amount </th>
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;" [ngClass]="BGClassName?.layout?.toolbar?.background"> Amount </th>
                       <td class="QtyClass" mat-cell *matCellDef="let element">
                         {{element.Amount}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="Remark">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 39%;"> Remark </th>
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 39%;" [ngClass]="BGClassName?.layout?.toolbar?.background"> Remark </th>
                       <td mat-cell *matCellDef="let element">
                         {{element.Remarks}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="Action">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header> ... </th>
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background"> ... </th>
                       <td mat-cell *matCellDef="let element">
                         <img class="m-8" style="height: 20px;" src="assets/images/line.png"
                           (click)="removeFlipCostFromTable(element)"> </td>
@@ -389,7 +390,7 @@
                     <!-- *ngIf="(poItems && poItems.length)|| (selectedFlipView?.FlipItems && selectedFlipView?.FlipItems?.length)" -->
                     <table class="table" mat-table [dataSource]="flipItemDataSource" formArrayName="flipItems">
                       <ng-container matColumnDef="Item">
-                        <th mat-header-cell *matHeaderCellDef> Item </th>
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="BGClassName?.layout?.toolbar?.background"> Item </th>
                         <td mat-cell *matCellDef="let element;let odd=odd;let index=index" [formGroupName]="index"
                           class="tableLeftBorder pl-0">
                           <div fxLayout>
@@ -400,7 +401,7 @@
                       </ng-container>
 
                       <ng-container matColumnDef="MaterialText">
-                        <th mat-header-cell *matHeaderCellDef> Material Text </th>
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="BGClassName?.layout?.toolbar?.background"> Material Text </th>
                         <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
                           <input matInput formControlName="MaterialText"> </td>
                       </ng-container>
@@ -414,27 +415,27 @@
                       </ng-container> -->
 
                       <ng-container matColumnDef="OrderedQty">
-                        <th mat-header-cell *matHeaderCellDef> Order Qty </th>
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="BGClassName?.layout?.toolbar?.background"> Order Qty </th>
                         <td mat-cell class="QtyClass" *matCellDef="let element; let index = index"
                           [formGroupName]="index">
                           <input matInput formControlName="OrderedQty"> </td>
                       </ng-container>
 
                       <ng-container matColumnDef="OpenQty">
-                        <th mat-header-cell *matHeaderCellDef> Open Qty</th>
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="BGClassName?.layout?.toolbar?.background"> Open Qty</th>
                         <td mat-cell class="QtyClass" *matCellDef="let element; let index = index"
                           [formGroupName]="index">
                           <input matInput formControlName="OpenQty"> </td>
                       </ng-container>
 
                       <ng-container matColumnDef="HSN">
-                        <th mat-header-cell *matHeaderCellDef> HSN </th>
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="BGClassName?.layout?.toolbar?.background"> HSN </th>
                         <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
                           <input matInput formControlName="HSN"> </td>
                       </ng-container>
 
                       <ng-container matColumnDef="InvoiceQty">
-                        <th mat-header-cell *matHeaderCellDef style="width: 120px;">Invoice Qty</th>
+                        <th mat-header-cell *matHeaderCellDef style="width: 120px;" [ngClass]="BGClassName?.layout?.toolbar?.background">Invoice Qty</th>
                         <td mat-cell class="QtyClass editable" *matCellDef="let element; let index = index"
                           [formGroupName]="index" style="width: 120px;">
                           <mat-form-field class="pl-8 pr-12" appearance="outline" style="width: 100px;">
@@ -450,7 +451,7 @@
                       <!-- (blur)="GetLocationByPincode($event)" -->
 
                       <ng-container matColumnDef="Price">
-                        <th mat-header-cell *matHeaderCellDef style="width: 120px;">Price</th>
+                        <th mat-header-cell *matHeaderCellDef style="width: 120px;" [ngClass]="BGClassName?.layout?.toolbar?.background">Price</th>
                         <td mat-cell class="QtyClass editable" *matCellDef="let element; let index = index"
                           [formGroupName]="index" style="width: 120px;">
                           <mat-form-field class="pl-8 pr-12" appearance="outline" style="width: 100px;">
@@ -463,7 +464,7 @@
                       </ng-container>
 
                       <ng-container matColumnDef="Tax">
-                        <th mat-header-cell *matHeaderCellDef>Tax</th>
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="BGClassName?.layout?.toolbar?.background">Tax</th>
                         <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
                           <input matInput formControlName="Tax">
                           <!-- style="color:#ef8377" -->
@@ -480,7 +481,7 @@
                       </ng-container> -->
 
                       <ng-container matColumnDef="Amount">
-                        <th mat-header-cell *matHeaderCellDef style="width: 120px;">Amount</th>
+                        <th mat-header-cell *matHeaderCellDef style="width: 120px;" [ngClass]="BGClassName?.layout?.toolbar?.background">Amount</th>
                         <td mat-cell class="QtyClass editable" *matCellDef="let element; let index = index"
                           [formGroupName]="index" style="width: 120px;">
                           <mat-form-field class="pl-8 pr-12" appearance="outline" style="width: 100px;">
@@ -560,7 +561,7 @@
             </div>
             <div fxFlex fxLayout="column" class="mx-20 my-12">
               <div fxLayoutAlign="center">
-                <button class="Btn1" mat-button>Preview and Download</button>
+                <button class="Btn1" mat-button [ngClass]="BGClassName?.layout?.navbar?.primaryBackground" >Preview and Download</button>
               </div>
             </div>
           </div>
@@ -580,7 +581,7 @@
             <button (click)="deleteClicked()" *ngIf="selectedFlip?.FLIPID" mat-stroked-button
               class="DeleteBtn mr-4 mb-8" mat-raised-button>
               Delete</button>
-            <button (click)="saveClicked()" *ngIf="selectedFlip?.FLIPID" class="SaveBtn" mat-raised-button>
+            <button (click)="saveClicked()" *ngIf="selectedFlip?.FLIPID" class="SaveBtn" mat-raised-button [ngClass]="BGClassName?.layout?.navbar?.primaryBackground">
               Update</button>
           </div>
         </mat-card-actions>

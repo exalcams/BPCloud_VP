@@ -16,6 +16,7 @@
           <div class="SectionTitle">
             <strong>Payment Advise</strong>
           </div>
+          <p [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="underline"></p>
         </div>
       </div>
     </div>
@@ -49,7 +50,7 @@
               </div>
             </div>
             <div fxFlex="20" class="ml-44" fxlayoutAlign="start center">
-              <button mat-raised-button class="SaveBtn" (click)="SearchClicked()">Search</button>
+              <button mat-raised-button class="SaveBtn" [ngClass]="BGClassName?.layout?.navbar?.primaryBackground" (click)="SearchClicked()">Search</button>
             </div>
           </div>
         </form>
@@ -73,7 +74,7 @@
       </div>
       <table class="table" mat-table [dataSource]="PaymentDataSource" matSort>
         <ng-container matColumnDef="PaymentDoc">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Payment Doc </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;" [ngClass]="BGClassName?.layout?.toolbar?.background"> Payment Doc </th>
           <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
             <div fxLayout>
               <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
@@ -83,19 +84,19 @@
         </ng-container>
 
         <ng-container matColumnDef="Date">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Date </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;" [ngClass]="BGClassName?.layout?.toolbar?.background"> Date </th>
           <td mat-cell *matCellDef="let element">
             {{element.Date | date : 'dd/MM/yyyy'}} </td>
         </ng-container>
 
         <ng-container matColumnDef="Amount">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Amount </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;" [ngClass]="BGClassName?.layout?.toolbar?.background"> Amount </th>
           <td mat-cell *matCellDef="let element">
             {{element.Amount}} </td>
         </ng-container>
 
         <ng-container matColumnDef="Attachment">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Attachment </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;" [ngClass]="BGClassName?.layout?.toolbar?.background"> Attachment </th>
           <td mat-cell *matCellDef="let element">
             <div class="rectangle">
               <div fxLayout="row" fxFlex="100%" fxLayoutAlign="stretch">
@@ -112,7 +113,7 @@
         </ng-container>
 
         <ng-container matColumnDef="Remark">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Remark </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;" [ngClass]="BGClassName?.layout?.toolbar?.background"> Remark </th>
           <td mat-cell *matCellDef="let element">
             {{element.Remark}} </td>
         </ng-container>

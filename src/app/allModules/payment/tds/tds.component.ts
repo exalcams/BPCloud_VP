@@ -12,6 +12,7 @@ import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { ExcelService } from 'app/services/excel.service';
 import { MasterService } from 'app/services/master.service';
+import { FuseConfigService } from '@fuse/services/config.service';
 @Component({
   selector: 'app-tds',
   templateUrl: './tds.component.html',
@@ -45,12 +46,18 @@ export class TDSComponent implements OnInit {
     'Currency',
     'FYear'
   ];
+  Theme: any[];
+
+  fuseConfig: any;
+  BGClassName: any;
+
   tableDataSource: MatTableDataSource<BPCPayTDS>;
   @ViewChild(MatPaginator) tablePaginator: MatPaginator;
   @ViewChild(MatMenuTrigger) matMenuTrigger: MatMenuTrigger;
   @ViewChild(MatSort) tableSort: MatSort;
 
   constructor(
+    private _fuseConfigService: FuseConfigService,
     private formBuilder: FormBuilder,
     private _router: Router,
     public snackBar: MatSnackBar,
@@ -74,6 +81,7 @@ export class TDSComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.SetUserPreference();
     // Retrive authorizationData
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
@@ -91,6 +99,8 @@ export class TDSComponent implements OnInit {
     } else {
       this._router.navigate(['/auth/login']);
     }
+    // this.Theme = JSON.parse(localStorage.getItem('userPreferenceData'));
+    // console.log("Colors", this.Theme);
     this.CreateAppUsage();
     this.InitializeSearchForm();
     this.SearchClicked();
@@ -189,7 +199,7 @@ export class TDSComponent implements OnInit {
   ShowValidationErrors(formGroup: FormGroup): void {
     Object.keys(formGroup.controls).forEach(key => {
       if (!formGroup.get(key).valid) {
-        console.log(key);
+        console.log("Data:", key);
       }
       formGroup.get(key).markAsTouched();
       formGroup.get(key).markAsDirty();
@@ -243,6 +253,15 @@ export class TDSComponent implements OnInit {
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.tableDataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  SetUserPreference(): void {
+    this._fuseConfigService.config
+      .subscribe((config) => {
+        this.fuseConfig = config;
+        this.BGClassName = config;
+      });
+    // this._fuseConfigService.config = this.fuseConfig;
   }
 }
 

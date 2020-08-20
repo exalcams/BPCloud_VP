@@ -125,7 +125,7 @@
           <table class="table" mat-table [dataSource]="ppmHeaderReportDataSource" matSort>
 
             <ng-container matColumnDef="Period">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Period </th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background"> Period </th>
               <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
                 <div fxLayout>
                   <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
@@ -135,7 +135,7 @@
             </ng-container>
 
             <ng-container matColumnDef="ReceiptQty">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Receipt Qty</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">Receipt Qty</th>
               <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
                 {{element.ReceiptQty}}
               </td>
@@ -149,21 +149,21 @@
             </ng-container> -->
 
             <ng-container matColumnDef="RejectedQty">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Rejection Qty </th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">Rejection Qty </th>
               <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
                 {{element.RejectedQty}}
               </td>
             </ng-container>
 
             <ng-container matColumnDef="PPM">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>PPM</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">PPM</th>
               <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
                 {{element.PPM}}
               </td>
             </ng-container>
 
             <ng-container matColumnDef="TotalPPM">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Overall PPM</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">Overall PPM</th>
               <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
                 {{element.TotalPPM}}
               </td>
@@ -225,7 +225,7 @@
                 </div>
                 <div fxLayout="row" fxLayoutAlign="start center">
                   <div fxFlex align="end">
-                    <button mat-raised-button class="SaveBtn" (click)="searchButtonClicked()">Search</button>
+                    <button mat-raised-button class="SaveBtn" [ngClass]="BGClassName?.layout?.navbar?.primaryBackground" (click)="searchButtonClicked()">Search</button>
                   </div>
                 </div>
               </form>
@@ -234,7 +234,7 @@
               <table class="table" mat-table [dataSource]="ppmItemReportDataSource" matSort>
 
                 <ng-container matColumnDef="Material">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Material </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background"> Material </th>
                   <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
                     <div fxLayout>
                       <div class="tableCellBorder" [style.background-color]="odd?'#0000fe':'#41754e'"></div>
@@ -244,28 +244,28 @@
                 </ng-container>
 
                 <ng-container matColumnDef="MaterialText">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Material Desc </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">Material Desc </th>
                   <td mat-cell *matCellDef="let element;">
                     {{element.MaterialText}}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="ReceiptQty">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Receipt Qty</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">Receipt Qty</th>
                   <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
                     {{element.ReceiptQty}}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="RejQty">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Rej Qty </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">Rej Qty </th>
                   <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
                     {{element.RejQty}}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="PPM">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>PPM</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">PPM</th>
                   <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
                     {{element.PPM}}
                   </td>

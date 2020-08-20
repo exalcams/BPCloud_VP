@@ -13,6 +13,7 @@ import { MatSnackBar, MatDialog, MatDialogConfig } from '@angular/material';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { TourComponent } from '../tour/tour.component';
+import { FuseConfigService } from '@fuse/services/config.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,7 +21,8 @@ import { TourComponent } from '../tour/tour.component';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-
+  fuseConfig: any;
+  BGClassName: any;
   menuItems: string[];
   authenticationDetails: AuthenticationDetails;
   currentUserID: Guid;
@@ -43,6 +45,8 @@ export class DashboardComponent implements OnInit {
   aIACTsView: BPCOFAIACT[] = [];
   SetIntervalID: any;
   constructor(
+    private _fuseConfigService: FuseConfigService,
+
       private _factService: FactService,
       private _masterService: MasterService,
       private _dashboardService: DashboardService,
@@ -61,6 +65,8 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.SetUserPreference();
+
       const retrievedObject = localStorage.getItem("authorizationData");
       this.authenticationDetails = JSON.parse(
           retrievedObject
@@ -439,5 +445,12 @@ export class DashboardComponent implements OnInit {
               return "";
       }
   }
-
+  SetUserPreference(): void {
+    this._fuseConfigService.config
+      .subscribe((config) => {
+        this.fuseConfig = config;
+        this.BGClassName = config;
+      });
+    // this._fuseConfigService.config = this.fuseConfig;
+  }
 }

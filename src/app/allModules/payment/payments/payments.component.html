@@ -15,6 +15,7 @@
           <div class="SectionTitle">
             <strong>Payment</strong>
           </div>
+          <p [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="underline"></p>
         </div>
       </div>
     </div>
@@ -47,7 +48,7 @@
               </div>
             </div>
             <div fxFlex="20" class="ml-44" fxlayoutAlign="start center">
-              <button mat-raised-button class="SaveBtn" (click)="SearchClicked()">Search</button>
+              <button mat-raised-button class="SaveBtn"  [ngClass]="BGClassName?.layout?.navbar?.primaryBackground" (click)="SearchClicked()">Search</button>
             </div>
           </div>
         </form>
@@ -71,7 +72,7 @@
       </div>
       <table class="table" mat-table [dataSource]="tableDataSource" matSort>
         <ng-container matColumnDef="PaymentDate">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background"> Date </th>
           <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
             <div fxLayout>
               <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
@@ -81,21 +82,21 @@
         </ng-container>
 
         <ng-container matColumnDef="PaymentType">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Cheque/Transfer </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background"> Cheque/Transfer </th>
           <td mat-cell *matCellDef="let element">
             {{element.PaymentType}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="PaidAmount">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Paid Amount </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">Paid Amount </th>
           <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
             {{element.PaidAmount}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="BankName">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Bank Name </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background"> Bank Name </th>
           <td mat-cell *matCellDef="let element">
             {{element.BankName }}
           </td>
@@ -103,14 +104,14 @@
 
 
         <ng-container matColumnDef="BankAccount">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Bank Account </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">Bank Account </th>
           <td mat-cell *matCellDef="let element;let i= index;">
             {{element.BankAccount}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="DocumentNumber">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Document Number </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">Document Number </th>
           <td mat-cell *matCellDef="let element;let i= index;">
             {{element.DocumentNumber}}
           </td>

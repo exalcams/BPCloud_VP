@@ -13,6 +13,7 @@ import { ExcelService } from 'app/services/excel.service';
 import { DatePipe } from '@angular/common';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { MasterService } from 'app/services/master.service';
+import { FuseConfigService } from '@fuse/services/config.service';
 
 @Component({
   selector: "app-payment",
@@ -38,6 +39,9 @@ export class PaymentComponent implements OnInit {
     "Attachment",
     "Remark",
   ];
+  fuseConfig: any;
+  BGClassName: any;
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   SearchFormGroup: FormGroup;
@@ -48,6 +52,8 @@ export class PaymentComponent implements OnInit {
   SelectValue: string;
   isExpanded: boolean;
   constructor(
+    private _fuseConfigService: FuseConfigService,
+
     private _formBuilder: FormBuilder,
     private _router: Router,
     public snackBar: MatSnackBar,
@@ -70,6 +76,7 @@ export class PaymentComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.SetUserPreference();
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
@@ -238,6 +245,14 @@ export class PaymentComponent implements OnInit {
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.PaymentDataSource.filter = filterValue.trim().toLowerCase();
+  }
+  SetUserPreference(): void {
+    this._fuseConfigService.config
+      .subscribe((config) => {
+        this.fuseConfig = config;
+        this.BGClassName = config;
+      });
+    // this._fuseConfigService.config = this.fuseConfig;
   }
 }
 
