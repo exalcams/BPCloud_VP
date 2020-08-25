@@ -1333,7 +1333,7 @@
                 class="DeleteBtn mr-4 mb-8" (click)="DeleteClicked()">Delete</button>
             </div>
             <div fxFlex align="end">
-              <button *ngIf="( SelectedASNHeader?.ASNNumber|| PO?.DocNumber) && !SelectedASNHeader?.IsSubmitted"
+              <button *ngIf="( SelectedASNHeader?.ASNNumber|| PO?.DocNumber) && IsInvoiceDetailsFormGroupEnabled"
                 mat-raised-button class="SaveBtn" (click)="SubmitClicked()">Release</button>
               <button *ngIf="( SelectedASNHeader?.ASNNumber|| PO?.DocNumber) && !SelectedASNHeader?.IsSubmitted"
                 mat-raised-button class="SaveBtn" (click)="SaveClicked()">Save</button>
