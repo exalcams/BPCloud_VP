@@ -76,6 +76,7 @@ import { TranslateModule } from "@ngx-translate/core";
 import { ImprovementComponent } from "./improvement/improvement.component";
 import { DeclarationComponent } from './declaration/declaration.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { AsnPrintDialogComponent } from './asn-print-dialog/asn-print-dialog.component';
 
 // import 'chart.piecelabel.js';
 
@@ -239,8 +240,9 @@ const routes = [
         DeclarationComponent,
         TourComponent,
         DashboardComponent,
+        AsnPrintDialogComponent,
     ],
     providers: [DecimalPipe],
-    entryComponents: [TourComponent],
+    entryComponents: [TourComponent, AsnPrintDialogComponent],
 })
-export class PagesModule {}
+export class PagesModule { }

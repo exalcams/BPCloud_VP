@@ -30,6 +30,7 @@ import { ASNReleaseDialogComponent } from 'app/notifications/asnrelease-dialog/a
 import { ExcelService } from 'app/services/excel.service';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
+import { AsnPrintDialogComponent } from '../asn-print-dialog/asn-print-dialog.component';
 @Component({
     selector: 'app-asn',
     templateUrl: './asn.component.html',
@@ -52,6 +53,7 @@ export class ASNComponent implements OnInit {
     ASNItemFormGroup: FormGroup;
     ASNPackFormGroup: FormGroup;
     InvoiceDetailsFormGroup: FormGroup;
+    IsInvoiceDetailsFormGroupEnabled: boolean;
     DocumentCenterFormGroup: FormGroup;
     AllUserWithRoles: UserWithRole[] = [];
     SelectedDocNumber: string;
@@ -167,6 +169,7 @@ export class ASNComponent implements OnInit {
         this.selectedDocCenterMaster = new BPCDocumentCenterMaster();
         this.ArrivalDateInterval = 1;
         this.IsAtleastOneASNQty = false;
+        this.IsInvoiceDetailsFormGroupEnabled = true;
     }
 
     ngOnInit(): void {
@@ -269,7 +272,7 @@ export class ASNComponent implements OnInit {
             InvoiceNumber: ['', [Validators.minLength(1), Validators.maxLength(16)]],
             POBasicPrice: ['', [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,2})?$')]],
             TaxAmount: ['', [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,2})?$')]],
-            InvoiceAmount: ['', [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,2})?$')]],
+            InvoiceAmount: ['', [Validators.pattern('^([0-9]{0,10})([.][0-9]{1,2})?$')]],
             InvoiceAmountUOM: [''],
             InvoiceDate: [''],
             InvoiceAttachment: [''],
@@ -308,6 +311,7 @@ export class ASNComponent implements OnInit {
         this.isPOBasicPriceError = false;
         this.selectedDocCenterMaster = new BPCDocumentCenterMaster();
         this.IsAtleastOneASNQty = false;
+        this.IsInvoiceDetailsFormGroupEnabled = true;
     }
 
     ResetASNFormGroup(): void {
@@ -315,6 +319,7 @@ export class ASNComponent implements OnInit {
     }
     ResetInvoiceDetailsFormGroup(): void {
         this.ResetFormGroup(this.InvoiceDetailsFormGroup);
+        this.InvoiceDetailsFormGroup.get('InvoiceAmount').disable();
     }
     ResetDocumentCenterFormGroup(): void {
         this.ResetFormGroup(this.DocumentCenterFormGroup);
@@ -708,6 +713,59 @@ export class ASNComponent implements OnInit {
         this.GetInvoiceAttachmentByASN();
         this.SetASNHeaderValues();
         this.SetInvoiceDetailValues();
+        this.CheckForEnableInvoiceDetailsFormGroup();
+    }
+
+    CheckForEnableInvoiceDetailsFormGroup(): void {
+        if (this.SelectedASNHeader.IsSubmitted) {
+            this.DisableAllFormGroup();
+            const diff = Math.abs(this.maxDate.getTime() - new Date(this.SelectedASNHeader.ASNDate as string).getTime());
+            const diffDays = Math.ceil(diff / (1000 * 3600 * 24));
+            if (diffDays < 31) {
+                this.EnableInvoiceDetailsFormGroup();
+                this.IsInvoiceDetailsFormGroupEnabled = true;
+            } else {
+                this.DisableInvoiceDetailsFormGroup();
+                this.IsInvoiceDetailsFormGroupEnabled = false;
+            }
+        } else {
+            this.EnableAllFormGroup();
+        }
+        this.InvoiceDetailsFormGroup.get('InvoiceAmount').disable();
+    }
+    DisableAllFormGroup(): void {
+        this.ASNFormGroup.disable();
+        this.ASNItemFormGroup.disable();
+        this.ASNPackFormGroup.disable();
+        this.InvoiceDetailsFormGroup.disable();
+    }
+    DisableASNFormGroup(): void {
+        this.ASNFormGroup.disable();
+    }
+    DisableASNItemFormGroup(): void {
+        this.ASNItemFormGroup.disable();
+    }
+    DisableASNPackFormGroup(): void {
+        this.ASNPackFormGroup.disable();
+    }
+    DisableInvoiceDetailsFormGroup(): void {
+        this.InvoiceDetailsFormGroup.disable();
+    }
+    EnableAllFormGroup(): void {
+        this.ASNFormGroup.enable();
+        this.ASNItemFormGroup.enable();
+        this.ASNPackFormGroup.enable();
+        this.InvoiceDetailsFormGroup.enable();
+    }
+    EnableASNItemFormGroup(): void {
+        this.ASNItemFormGroup.enable();
+    }
+    EnableASNPackFormGroup(): void {
+        this.ASNPackFormGroup.enable();
+    }
+
+    EnableInvoiceDetailsFormGroup(): void {
+        this.InvoiceDetailsFormGroup.enable();
     }
 
     GetASNItemsByASN(): void {
@@ -719,6 +777,11 @@ export class ASNComponent implements OnInit {
                     this.SelectedASNView.ASNItems.forEach(x => {
                         this.InsertASNItemsFormGroup(x);
                     });
+                }
+                if (this.SelectedASNHeader.IsSubmitted) {
+                    this.DisableASNItemFormGroup();
+                } else {
+                    this.EnableASNItemFormGroup();
                 }
             },
             (err) => {
@@ -736,6 +799,11 @@ export class ASNComponent implements OnInit {
                     this.SelectedASNView.ASNPacks.forEach(x => {
                         this.InsertASNPacksFormGroup(x);
                     });
+                }
+                if (this.SelectedASNHeader.IsSubmitted) {
+                    this.DisableASNPackFormGroup();
+                } else {
+                    this.EnableASNPackFormGroup();
                 }
             },
             (err) => {
@@ -906,6 +974,7 @@ export class ASNComponent implements OnInit {
         this.InvoiceDetailsFormGroup.get('TaxAmount').patchValue(this.SelectedASNHeader.TaxAmount);
         this.InvoiceDetailsFormGroup.get('InvoiceAmount').patchValue(this.SelectedASNHeader.InvoiceAmount);
         this.InvoiceDetailsFormGroup.get('InvoiceAmountUOM').patchValue(this.SelectedASNHeader.InvoiceAmountUOM);
+        this.InvoiceDetailsFormGroup.get('InvoiceAmount').disable();
     }
 
     GetASNValues(): void {
@@ -1108,6 +1177,7 @@ export class ASNComponent implements OnInit {
     }
 
     SaveClicked(): void {
+        this.InvoiceDetailsFormGroup.get('InvoiceAmount').disable();
         if (this.ASNFormGroup.valid) {
             if (!this.isWeightError) {
                 if (this.ASNItemFormGroup.valid) {
@@ -1149,6 +1219,8 @@ export class ASNComponent implements OnInit {
         }
     }
     SubmitClicked(): void {
+        this.EnableAllFormGroup();
+        this.InvoiceDetailsFormGroup.get('InvoiceAmount').disable()
         if (this.ASNFormGroup.valid) {
             if (!this.isWeightError) {
                 if (this.ASNItemFormGroup.valid) {
@@ -1226,7 +1298,11 @@ export class ASNComponent implements OnInit {
                     } else {
                         this.CreateASN(Actiontype);
                     }
+                } else {
+                    this.CheckForEnableInvoiceDetailsFormGroup();
                 }
+            }, (err) => {
+                this.CheckForEnableInvoiceDetailsFormGroup();
             });
     }
 
@@ -1270,10 +1346,14 @@ export class ASNComponent implements OnInit {
                     if (this.fileToUploadList && this.fileToUploadList.length) {
                         this.AddDocumentCenterAttachment(Actiontype);
                     } else {
-                        this.ResetControl();
                         this.notificationSnackBarComponent.openSnackBar(`ASN ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
                         this.IsProgressBarVisibile = false;
-                        this.GetASNBasedOnCondition();
+                        if (Actiontype === 'Submit') {
+                            this.CreateASNPdf();
+                        } else {
+                            this.ResetControl();
+                            this.GetASNBasedOnCondition();
+                        }
                     }
                 }
             },
@@ -1289,10 +1369,14 @@ export class ASNComponent implements OnInit {
                 if (this.fileToUploadList && this.fileToUploadList.length) {
                     this.AddDocumentCenterAttachment(Actiontype);
                 } else {
-                    this.ResetControl();
                     this.notificationSnackBarComponent.openSnackBar(`ASN ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
                     this.IsProgressBarVisibile = false;
-                    this.GetASNBasedOnCondition();
+                    if (Actiontype === 'Submit') {
+                        this.CreateASNPdf();
+                    } else {
+                        this.ResetControl();
+                        this.GetASNBasedOnCondition();
+                    }
                 }
             },
             (err) => {
@@ -1302,10 +1386,14 @@ export class ASNComponent implements OnInit {
     AddDocumentCenterAttachment(Actiontype: string): void {
         this._ASNService.AddDocumentCenterAttachment(this.SelectedASNHeader.ASNNumber, this.currentUserID.toString(), this.fileToUploadList).subscribe(
             (dat) => {
-                this.ResetControl();
                 this.notificationSnackBarComponent.openSnackBar(`ASN ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
                 this.IsProgressBarVisibile = false;
-                this.GetASNBasedOnCondition();
+                if (Actiontype === 'Submit') {
+                    this.CreateASNPdf();
+                } else {
+                    this.ResetControl();
+                    this.GetASNBasedOnCondition();
+                }
             },
             (err) => {
                 this.showErrorNotificationSnackBar(err);
@@ -1334,10 +1422,14 @@ export class ASNComponent implements OnInit {
                     if (this.fileToUploadList && this.fileToUploadList.length) {
                         this.AddDocumentCenterAttachment(Actiontype);
                     } else {
-                        this.ResetControl();
                         this.notificationSnackBarComponent.openSnackBar(`ASN ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
                         this.IsProgressBarVisibile = false;
-                        this.GetASNBasedOnCondition();
+                        if (Actiontype === 'Submit') {
+                            this.CreateASNPdf();
+                        } else {
+                            this.ResetControl();
+                            this.GetASNBasedOnCondition();
+                        }
                     }
                 }
             },
@@ -1471,6 +1563,25 @@ export class ASNComponent implements OnInit {
         });
     }
 
+    OpenASNPrintDialog(FileName: string, blob: Blob): void {
+        const attachmentDetails: AttachmentDetails = {
+            FileName: FileName,
+            blob: blob
+        };
+        const dialogConfig: MatDialogConfig = {
+            data: attachmentDetails,
+            panelClass: 'asn-print-dialog'
+        };
+        const dialogRef = this.dialog.open(AsnPrintDialogComponent, dialogConfig);
+        dialogRef.afterClosed().subscribe(result => {
+            this.ResetControl();
+            this.GetASNBasedOnCondition();
+        }, (err) => {
+            this.ResetControl();
+            this.GetASNBasedOnCondition();
+        });
+    }
+
     AmountSelected(): void {
         const GrossWeightVAL = +this.ASNFormGroup.get('GrossWeight').value;
         const NetWeightVAL = + this.ASNFormGroup.get('NetWeight').value;
@@ -1551,16 +1662,24 @@ export class ASNComponent implements OnInit {
         this._ASNService.CreateASNPdf(this.SelectedASNHeader.ASNNumber).subscribe(
             data => {
                 if (data) {
+                    this.IsProgressBarVisibile = false;
                     const fileType = 'application/pdf';
                     const blob = new Blob([data], { type: fileType });
                     const currentDateTime = this._datePipe.transform(new Date(), 'ddMMyyyyHHmmss');
-                    FileSaver.saveAs(blob, this.SelectedASNHeader.ASNNumber + '_' + currentDateTime + '.pdf');
+                    const FileName = this.SelectedASNHeader.ASNNumber + '_' + currentDateTime + '.pdf';
+                    this.OpenASNPrintDialog(FileName, blob);
+                    // FileSaver.saveAs(blob, this.SelectedASNHeader.ASNNumber + '_' + currentDateTime + '.pdf');
+                } else {
+                    this.IsProgressBarVisibile = false;
+                    this.ResetControl();
+                    this.GetASNBasedOnCondition();
                 }
-                this.IsProgressBarVisibile = false;
             },
             error => {
                 console.error(error);
                 this.IsProgressBarVisibile = false;
+                this.ResetControl();
+                this.GetASNBasedOnCondition();
             }
         );
     }
@@ -1591,6 +1710,6 @@ export function MustValid(NetWeight: string, GrossWeight: string): ValidationErr
             GrossWeightcontrol.setErrors(null);
         }
     };
-   
+
 }
 
