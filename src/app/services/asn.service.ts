@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import {
     BPCASNHeader, BPCASNView, BPCASNItem, DocumentCenter, BPCInvoiceAttachment,
-    BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster, BPCASNPack
+    BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster, BPCASNPack, ASNListView
 } from 'app/models/ASN';
 
 @Injectable({
@@ -45,6 +45,17 @@ export class ASNService {
 
     GetAllASNByPartnerID(PartnerID: string): Observable<BPCASNHeader[] | string> {
         return this._httpClient.get<BPCASNHeader[]>(`${this.baseAddress}poapi/ASN/GetAllASNByPartnerID?PartnerID=${PartnerID}`)
+            .pipe(catchError(this.errorHandler));
+    }
+
+    GetAllASNListByPartnerID(PartnerID: string): Observable<ASNListView[] | string> {
+        return this._httpClient.get<ASNListView[]>(`${this.baseAddress}poapi/ASN/GetAllASNListByPartnerID?PartnerID=${PartnerID}`)
+            .pipe(catchError(this.errorHandler));
+    }
+
+    FilterASNListByPartnerID(PartnerID: string, ASNNumber: string, DocNumber: string, Material: string, Status: string, ASNFromDate: string, ASNToDate: string): Observable<ASNListView[] | string> {
+        return this._httpClient.get<ASNListView[]>
+            (`${this.baseAddress}poapi/ASN/FilterASNListByPartnerID?PartnerID=${PartnerID}&ASNNumber=${ASNNumber}&DocNumber=${DocNumber}&Material=${Material}&Status=${Status}&ASNFromDate=${ASNFromDate}&ASNToDate=${ASNToDate}`)
             .pipe(catchError(this.errorHandler));
     }
 
@@ -176,7 +187,7 @@ export class ASNService {
             .pipe(catchError(this.errorHandler));
     }
 
-    
+
     CreateASNPdf(ASNNumber: string): Observable<Blob | string> {
         return this._httpClient.get(`${this.baseAddress}poapi/ASN/CreateASNPdf?ASNNumber=${ASNNumber}`, {
             responseType: 'blob',
