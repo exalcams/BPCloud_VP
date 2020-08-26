@@ -227,4 +227,20 @@ export class ASNItemXLSX {
     ExpiryDate: Date | string | null;
 }
 
+export class ASNListView {
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
+    ASNNumber: string;
+    ASNDate: Date | string | null;
+    DocNumber: string;
+    VessleNumber: string;
+    AWBNumber: string;
+    Material: string;
+    MaterialText: string;
+    ASNQty: number;
+    Status: string;
+}
+
 
