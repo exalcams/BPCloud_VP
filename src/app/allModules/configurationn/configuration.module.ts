@@ -16,8 +16,13 @@ import { SessionMasterComponent } from './session-master/session-master.componen
 import { SupportDeskMasterComponent } from './support-desk-master/support-desk-master.component';
 import { CEOMessageComponent } from './ceomessage/ceomessage.component';
 import { SCOCMessageComponent } from './scocmessage/scocmessage.component';
+import { AsnFieldMasterComponent } from './asn-field-master/asn-field-master.component';
 
 const menuRoutes: Routes = [
+    {
+        path: 'asnfield',
+        component: AsnFieldMasterComponent,
+    },
     {
         path: 'doctype',
         component: DocTypeMasterComponent,
@@ -45,7 +50,8 @@ const menuRoutes: Routes = [
         SessionMasterComponent,
         SupportDeskMasterComponent,
         CEOMessageComponent,
-        SCOCMessageComponent
+        SCOCMessageComponent,
+        AsnFieldMasterComponent
     ],
     imports: [
         MatButtonModule,

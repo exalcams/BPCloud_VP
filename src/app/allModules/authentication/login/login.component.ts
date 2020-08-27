@@ -990,6 +990,15 @@ export class LoginComponent implements OnInit {
                 url: "/configuration/doctype",
             });
         }
+        if (this.menuItems.indexOf("ASNField") >= 0) {
+            this.configSubChildren.push({
+                id: "asnfield",
+                title: "ASN Fields",
+                translate: "NAV.ADMIN.ASN_DOCTYPE",
+                type: "item",
+                url: "/configuration/asnfield",
+            });
+        }
         if (this.menuItems.indexOf("Session") >= 0) {
             this.configSubChildren.push({
                 id: "session",

@@ -12,7 +12,7 @@ import { ASNService } from 'app/services/asn.service';
 import { ShareParameterService } from 'app/services/share-parameters.service';
 import {
     BPCASNHeader, BPCASNItem, DocumentCenter, BPCASNView, BPCInvoiceAttachment,
-    BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster, BPCASNPack, ASNItemXLSX
+    BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster, BPCASNPack, ASNItemXLSX, BPCASNFieldMaster
 } from 'app/models/ASN';
 import { BehaviorSubject } from 'rxjs';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
@@ -137,6 +137,9 @@ export class ASNComponent implements OnInit {
     arrayBuffer: any;
     ASNItemXLSXs: ASNItemXLSX[] = [];
     IsAtleastOneASNQty: boolean;
+
+    AllASNFieldMaster: BPCASNFieldMaster[] = [];
+
     constructor(
         private _fuseConfigService: FuseConfigService,
         private _masterService: MasterService,
@@ -196,6 +199,7 @@ export class ASNComponent implements OnInit {
         });
         this.CreateAppUsage();
         this.InitializeASNFormGroup();
+        this.GetAllASNFieldMaster();
         this.InitializeASNItemFormGroup();
         this.InitializeASNPackFormGroup();
         this.InitializeInvoiceDetailsFormGroup();
@@ -231,7 +235,7 @@ export class ASNComponent implements OnInit {
             GrossWeight: ['', [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
             GrossWeightUOM: ['KG', Validators.required],
             VolumetricWeight: ['', [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
-            VolumetricWeightUOM: [''],
+            VolumetricWeightUOM: ['KG'],
             DepartureDate: [new Date(), Validators.required],
             ArrivalDate: [this.minDate, Validators.required],
             NumberOfPacks: ['1', [Validators.pattern('^[1-9][0-9]*$')]],
@@ -242,6 +246,16 @@ export class ASNComponent implements OnInit {
             AccessibleValue: ['', [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,2})?$')]],
             ContactPerson: ['', Validators.maxLength(40)],
             ContactPersonNo: ['', [Validators.pattern('^(\\+91[\\-\\s]?)?[0]?(91)?[6789]\\d{9}$')]],
+            Field1: [''],
+            Field2: [''],
+            Field3: [''],
+            Field4: [''],
+            Field5: [''],
+            Field6: [''],
+            Field7: [''],
+            Field8: [''],
+            Field9: [''],
+            Field10: [''],
         });
         // this.DynamicallyAddAcceptedValidation();
         this.RefreshPackages();
@@ -251,6 +265,7 @@ export class ASNComponent implements OnInit {
         this.ASNFormGroup.get('AWBDate').patchValue(new Date());
         // this.ASNFormGroup.get('NetWeightUOM').patchValue('KG');
         this.ASNFormGroup.get('GrossWeightUOM').patchValue('KG');
+        this.ASNFormGroup.get('VolumetricWeightUOM').patchValue('KG');
         this.ASNFormGroup.get('DepartureDate').patchValue(new Date());
         this.ASNFormGroup.get('ArrivalDate').patchValue(this.minDate);
         this.ASNFormGroup.get('CountryOfOrigin').patchValue('IND');
@@ -302,6 +317,7 @@ export class ASNComponent implements OnInit {
         this.ResetASNFormGroup();
         this.ResetASNPacksFormGroup();
         this.SetInitialValueForASNFormGroup();
+        this.InitializeASNFormGroupByFieldMaster();
         this.ResetInvoiceDetailsFormGroup();
         this.ResetDocumentCenterFormGroup();
         this.ResetAttachments();
@@ -608,6 +624,8 @@ export class ASNComponent implements OnInit {
         );
     }
 
+
+
     GetASNByDocAndPartnerID(): void {
         this._ASNService.GetASNByDocAndPartnerID(this.SelectedDocNumber, this.currentUserName).subscribe(
             (data) => {
@@ -857,6 +875,16 @@ export class ASNComponent implements OnInit {
         this.ASNFormGroup.get('AccessibleValue').patchValue(this.SelectedASNHeader.AccessibleValue);
         this.ASNFormGroup.get('ContactPerson').patchValue(this.SelectedASNHeader.ContactPerson);
         this.ASNFormGroup.get('ContactPersonNo').patchValue(this.SelectedASNHeader.ContactPersonNo);
+        this.ASNFormGroup.get('Field1').patchValue(this.SelectedASNHeader.Field1);
+        this.ASNFormGroup.get('Field2').patchValue(this.SelectedASNHeader.Field2);
+        this.ASNFormGroup.get('Field3').patchValue(this.SelectedASNHeader.Field3);
+        this.ASNFormGroup.get('Field4').patchValue(this.SelectedASNHeader.Field4);
+        this.ASNFormGroup.get('Field5').patchValue(this.SelectedASNHeader.Field5);
+        this.ASNFormGroup.get('Field6').patchValue(this.SelectedASNHeader.Field6);
+        this.ASNFormGroup.get('Field7').patchValue(this.SelectedASNHeader.Field7);
+        this.ASNFormGroup.get('Field8').patchValue(this.SelectedASNHeader.Field8);
+        this.ASNFormGroup.get('Field9').patchValue(this.SelectedASNHeader.Field9);
+        this.ASNFormGroup.get('Field10').patchValue(this.SelectedASNHeader.Field10);
     }
 
     InsertPOItemsFormGroup(poItem: BPCOFItem): void {
@@ -1012,7 +1040,16 @@ export class ASNComponent implements OnInit {
         this.SelectedASNHeader.AccessibleValue = this.SelectedASNView.AccessibleValue = this.ASNFormGroup.get('AccessibleValue').value;
         this.SelectedASNHeader.ContactPerson = this.SelectedASNView.ContactPerson = this.ASNFormGroup.get('ContactPerson').value;
         this.SelectedASNHeader.ContactPersonNo = this.SelectedASNView.ContactPersonNo = this.ASNFormGroup.get('ContactPersonNo').value;
-
+        this.SelectedASNHeader.Field1 = this.SelectedASNView.Field1 = this.ASNFormGroup.get('Field1').value;
+        this.SelectedASNHeader.Field2 = this.SelectedASNView.Field2 = this.ASNFormGroup.get('Field2').value;
+        this.SelectedASNHeader.Field3 = this.SelectedASNView.Field3 = this.ASNFormGroup.get('Field3').value;
+        this.SelectedASNHeader.Field4 = this.SelectedASNView.Field4 = this.ASNFormGroup.get('Field4').value;
+        this.SelectedASNHeader.Field5 = this.SelectedASNView.Field5 = this.ASNFormGroup.get('Field5').value;
+        this.SelectedASNHeader.Field6 = this.SelectedASNView.Field6 = this.ASNFormGroup.get('Field6').value;
+        this.SelectedASNHeader.Field7 = this.SelectedASNView.Field7 = this.ASNFormGroup.get('Field7').value;
+        this.SelectedASNHeader.Field8 = this.SelectedASNView.Field8 = this.ASNFormGroup.get('Field8').value;
+        this.SelectedASNHeader.Field9 = this.SelectedASNView.Field9 = this.ASNFormGroup.get('Field9').value;
+        this.SelectedASNHeader.Field10 = this.SelectedASNView.Field10 = this.ASNFormGroup.get('Field10').value;
         if (this.SelectedDocNumber && this.PO) {
             this.SelectedASNHeader.Client = this.SelectedASNView.Client = this.PO.Client;
             this.SelectedASNHeader.Company = this.SelectedASNView.Company = this.PO.Company;
@@ -1586,7 +1623,11 @@ export class ASNComponent implements OnInit {
         const GrossWeightVAL = +this.ASNFormGroup.get('GrossWeight').value;
         const NetWeightVAL = + this.ASNFormGroup.get('NetWeight').value;
         if (GrossWeightVAL < NetWeightVAL) {
-            this.isWeightError = true;
+            if (this.ASNFormGroup.get('GrossWeight').hasError('required')) {
+                this.isWeightError = false;
+            } else {
+                this.isWeightError = true;
+            }
         } else {
             this.isWeightError = false;
         }
@@ -1690,6 +1731,122 @@ export class ASNComponent implements OnInit {
                 this.BGClassName = config;
             });
         // this._fuseConfigService.config = this.fuseConfig;
+    }
+
+    // ASN Field related
+    GetAllASNFieldMaster(): void {
+        this._ASNService.GetAllASNFieldMaster().subscribe(
+            (data) => {
+                this.AllASNFieldMaster = data as BPCASNFieldMaster[];
+                this.InitializeASNFormGroupByFieldMaster();
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
+
+    GetASNFieldLabel(field: string): string {
+        if (this.AllASNFieldMaster && this.AllASNFieldMaster.length) {
+            const fieldMaster = this.AllASNFieldMaster.filter(x => x.Field === field)[0];
+            if (fieldMaster) {
+                return fieldMaster.Text;
+            }
+        }
+        return field;
+    }
+
+    GetASNFieldVisibility(field: string): string {
+        if (this.AllASNFieldMaster && this.AllASNFieldMaster.length) {
+            const fieldMaster = this.AllASNFieldMaster.filter(x => x.Field === field)[0];
+            if (fieldMaster) {
+                if (fieldMaster.Invisible) {
+                    return 'none';
+                }
+            }
+        }
+        return 'inherit';
+    }
+    GetASNFieldMaster(field: string): BPCASNFieldMaster {
+        if (this.AllASNFieldMaster && this.AllASNFieldMaster.length) {
+            return this.AllASNFieldMaster.filter(x => x.Field === field)[0];
+        }
+        return null;
+    }
+
+    InitializeASNFormGroupByFieldMaster(): void {
+        Object.keys(this.ASNFormGroup.controls).forEach(key => {
+            const fieldMaster = this.GetASNFieldMaster(key);
+            if (fieldMaster) {
+                if (fieldMaster.Invisible) {
+                    this.ASNFormGroup.get(key).clearValidators();
+                    this.ASNFormGroup.get(key).updateValueAndValidity();
+                } else {
+                    if (fieldMaster.DefaultValue) {
+                        // switch (key) {
+                        //     case 'AWBDate':
+                        //         if (!isNaN(Date.parse(fieldMaster.DefaultValue))) {
+                        //             this.ASNFormGroup.get(key).patchValue(Date.parse(fieldMaster.DefaultValue));
+                        //         }
+                        //         break;
+                        //     case 'DepartureDate':
+                        //         if (!isNaN(Date.parse(fieldMaster.DefaultValue))) {
+                        //             this.ASNFormGroup.get(key).patchValue(Date.parse(fieldMaster.DefaultValue));
+                        //         }
+                        //         break;
+                        //     case 'ArrivalDate':
+                        //         if (!isNaN(Date.parse(fieldMaster.DefaultValue))) {
+                        //             this.ASNFormGroup.get(key).patchValue(Date.parse(fieldMaster.DefaultValue));
+                        //         }
+                        //         break;
+                        //     default:
+                        //         this.ASNFormGroup.get(key).patchValue(fieldMaster.DefaultValue);
+                        // }
+                        if (key === 'AWBDate' || key === 'DepartureDate' || key === 'ArrivalDate') {
+                            if (!isNaN(Date.parse(fieldMaster.DefaultValue))) {
+                                this.ASNFormGroup.get(key).patchValue(Date.parse(fieldMaster.DefaultValue));
+                            } else {
+                                this.ASNFormGroup.get(key).patchValue('');
+                            }
+                        } else {
+                            this.ASNFormGroup.get(key).patchValue(fieldMaster.DefaultValue);
+                        }
+                    } else {
+                        this.ASNFormGroup.get(key).patchValue('');
+                    }
+                    if (fieldMaster.Mandatory) {
+                        if (key === 'NetWeight' || key === 'GrossWeight' || key === 'VolumetricWeight') {
+                            this.ASNFormGroup.get(key).setValidators([Validators.required, Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]);
+                        } else if (key === 'NumberOfPacks') {
+                            this.ASNFormGroup.get(key).setValidators([Validators.required, Validators.pattern('^[1-9][0-9]*$')]);
+                        } else if (key === 'AccessibleValue') {
+                            this.ASNFormGroup.get(key).setValidators([Validators.required, Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,2})?$')]);
+                        } else if (key === 'ContactPersonNo') {
+                            this.ASNFormGroup.get(key).setValidators([Validators.required, Validators.pattern('^(\\+91[\\-\\s]?)?[0]?(91)?[6789]\\d{9}$')]);
+                        }
+                        else {
+                            this.ASNFormGroup.get(key).setValidators(Validators.required);
+                        }
+                        this.ASNFormGroup.get(key).updateValueAndValidity();
+                    } else {
+                        if (key === 'NetWeight' || key === 'GrossWeight' || key === 'VolumetricWeight') {
+                            this.ASNFormGroup.get(key).setValidators([Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]);
+                        } else if (key === 'NumberOfPacks') {
+                            this.ASNFormGroup.get(key).setValidators([Validators.pattern('^[1-9][0-9]*$')]);
+                        } else if (key === 'AccessibleValue') {
+                            this.ASNFormGroup.get(key).setValidators([Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,2})?$')]);
+                        } else if (key === 'ContactPersonNo') {
+                            this.ASNFormGroup.get(key).setValidators([Validators.pattern('^(\\+91[\\-\\s]?)?[0]?(91)?[6789]\\d{9}$')]);
+                        }
+                        else {
+                            this.ASNFormGroup.get(key).clearValidators();
+                        }
+                        this.ASNFormGroup.get(key).updateValueAndValidity();
+                    }
+
+                }
+            }
+        });
     }
 }
 
