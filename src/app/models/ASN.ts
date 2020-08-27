@@ -1,4 +1,5 @@
 import { CommonClass } from './common';
+import { ClassGetter } from '@angular/compiler/src/output/output_ast';
 export class BPCASNHeader extends CommonClass {
     Client: string;
     Company: string;
@@ -37,6 +38,16 @@ export class BPCASNHeader extends CommonClass {
     AccessibleValue: number | null;
     ContactPerson: string;
     ContactPersonNo: string;
+    Field1: string;
+    Field2: string;
+    Field3: string;
+    Field4: string;
+    Field5: string;
+    Field6: string;
+    Field7: string;
+    Field8: string;
+    Field9: string;
+    Field10: string;
 }
 
 export class BPCASNItem extends CommonClass {
@@ -83,6 +94,16 @@ export class BPCASNPack extends CommonClass {
     NetWeightUOM: string;
     VolumetricWeight: number | null;
     VolumetricWeightUOM: string;
+}
+
+export class BPCASNFieldMaster extends CommonClass {
+    ID: number;
+    Field: string;
+    FieldName: string;
+    Text: string;
+    DefaultValue: string;
+    Mandatory: boolean;
+    Invisible: boolean;
 }
 export class BPCFLIPHeader extends CommonClass {
     ID: number;
@@ -165,6 +186,16 @@ export class BPCASNView extends CommonClass {
     AccessibleValue: number | null;
     ContactPerson: string;
     ContactPersonNo: string;
+    Field1: string;
+    Field2: string;
+    Field3: string;
+    Field4: string;
+    Field5: string;
+    Field6: string;
+    Field7: string;
+    Field8: string;
+    Field9: string;
+    Field10: string;
     ASNItems: BPCASNItem[];
     ASNPacks: BPCASNPack[];
     DocumentCenters: DocumentCenter[];

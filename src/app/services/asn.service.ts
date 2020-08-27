@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import {
     BPCASNHeader, BPCASNView, BPCASNItem, DocumentCenter, BPCInvoiceAttachment,
-    BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster, BPCASNPack, ASNListView
+    BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster, BPCASNPack, ASNListView, BPCASNFieldMaster
 } from 'app/models/ASN';
 
 @Injectable({
@@ -104,6 +104,20 @@ export class ASNService {
     DeleteASN(ASN: BPCASNHeader): Observable<any> {
         return this._httpClient.post<any>(`${this.baseAddress}poapi/ASN/DeleteASN`,
             ASN,
+            {
+                headers: new HttpHeaders({
+                    'Content-Type': 'application/json'
+                })
+            })
+            .pipe(catchError(this.errorHandler));
+    }
+    GetAllASNFieldMaster(): Observable<BPCASNFieldMaster[] | string> {
+        return this._httpClient.get<BPCASNFieldMaster[]>(`${this.baseAddress}poapi/ASN/GetAllASNFieldMaster`)
+            .pipe(catchError(this.errorHandler));
+    }
+    UpdateASNFieldMaster(ASNField: BPCASNFieldMaster): Observable<any> {
+        return this._httpClient.post<any>(`${this.baseAddress}poapi/ASN/UpdateASNFieldMaster`,
+            ASNField,
             {
                 headers: new HttpHeaders({
                     'Content-Type': 'application/json'
