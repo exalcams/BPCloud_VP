@@ -17,6 +17,8 @@ import { SupportDeskMasterComponent } from './support-desk-master/support-desk-m
 import { CEOMessageComponent } from './ceomessage/ceomessage.component';
 import { SCOCMessageComponent } from './scocmessage/scocmessage.component';
 import { AsnFieldMasterComponent } from './asn-field-master/asn-field-master.component';
+import { CardUpdateComponent } from './card-update/card-update.component';
+import { NgxDropzoneModule } from 'ngx-dropzone';
 
 const menuRoutes: Routes = [
     {
@@ -42,6 +44,10 @@ const menuRoutes: Routes = [
     {
         path: 'scocmsg',
         component: SCOCMessageComponent
+    },
+    {
+        path: 'cardupdate',
+        component: CardUpdateComponent
     }
 ];
 @NgModule({
@@ -51,7 +57,8 @@ const menuRoutes: Routes = [
         SupportDeskMasterComponent,
         CEOMessageComponent,
         SCOCMessageComponent,
-        AsnFieldMasterComponent
+        AsnFieldMasterComponent,
+        CardUpdateComponent
     ],
     imports: [
         MatButtonModule,
@@ -71,6 +78,7 @@ const menuRoutes: Routes = [
         FuseSharedModule,
         FileUploadModule,
         CKEditorModule,
+        NgxDropzoneModule,
         RouterModule.forChild(menuRoutes)
     ],
     providers: [

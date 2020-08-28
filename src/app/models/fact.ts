@@ -1,6 +1,5 @@
 import { CommonClass } from './common';
 export class BPCFact extends CommonClass {
-    ID: number;
     Client: string;
     Company: string;
     Type: string;

@@ -67,7 +67,7 @@ export class HomeComponent implements OnInit {
             if (!this.authenticationDetails.TourStatus) {
                 this.openTourScreenDialog();
             }
-            this.LoadBotChat();
+            // this.LoadBotChat();
             this.GetCEOMessage();
             this.GetSCOCMessage();
             this.LoadCharts();

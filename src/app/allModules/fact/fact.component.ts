@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { MenuApp, AuthenticationDetails, AppUsage } from 'app/models/master';
+import { MenuApp, AuthenticationDetails, AppUsage, UserWithRole } from 'app/models/master';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { MatTableDataSource, MatSnackBar, MatDialog, MatDialogConfig } from '@angular/material';
@@ -14,6 +14,8 @@ import { NotificationDialogComponent } from 'app/notifications/notification-dial
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { Guid } from 'guid-typescript';
 import { BPCFact, BPCFactView, BPCFactContactPerson, BPCKRA, BPCFactBank, BPCAIACT, BPCCertificate } from 'app/models/fact';
+import { SupportDeskService } from 'app/services/support-desk.service';
+import { SupportHeaderView, SupportMaster, SupportHeader } from 'app/models/support-desk';
 
 @Component({
   selector: 'app-fact',
@@ -111,11 +113,18 @@ export class FactComponent implements OnInit {
   fileToUpload: File;
   fileToUploadList: File[] = [];
   math = Math;
+
+  Users: UserWithRole[] = [];
+  FilteredUsers: UserWithRole[] = [];
+  SupportMasters: SupportMaster[] = [];
+  SupportHeader: SupportHeader;
+
   constructor(
     private _fuseConfigService: FuseConfigService,
     private _masterService: MasterService,
     private _FactService: FactService,
     private _vendorMasterService: VendorMasterService,
+    public _supportDeskService: SupportDeskService,
     private _router: Router,
     public snackBar: MatSnackBar,
     private dialog: MatDialog,
@@ -167,7 +176,8 @@ export class FactComponent implements OnInit {
       this.InitializeContactPersonFormGroup();
       this.InitializeAIACTFormGroup();
       this.GetFactByPartnerIDAndType();
-     
+      this.GetSupportMasters();
+      this.GetUsers();
     } else {
       this._router.navigate(['/auth/login']);
     }
@@ -189,12 +199,12 @@ export class FactComponent implements OnInit {
   }
   SetUserPreference(): void {
     this._fuseConfigService.config
-        .subscribe((config) => {
-            this.fuseConfig = config;
-            this.BGClassName = config;
-        });
+      .subscribe((config) => {
+        this.fuseConfig = config;
+        this.BGClassName = config;
+      });
     // this._fuseConfigService.config = this.fuseConfig;
-}
+  }
   InitializeFactFormGroup(): void {
     this.FactFormGroup = this._formBuilder.group({
       Client: ['', Validators.required],
@@ -344,7 +354,36 @@ export class FactComponent implements OnInit {
       }
     );
   }
+  GetSupportMasters(): void {
+    this.IsProgressBarVisibile = true;
+    this._supportDeskService
+      .GetSupportMasters()
+      .subscribe((data) => {
+        if (data) {
+          this.SupportMasters = <SupportMaster[]>data;
+        }
+        this.IsProgressBarVisibile = false;
+      },
+        (err) => {
+          console.error(err);
+          this.IsProgressBarVisibile = false;
+        });
+  }
 
+  GetUsers(): void {
+    this.IsProgressBarVisibile = true;
+    this._masterService.GetAllUsers().subscribe(
+      (data) => {
+        this.IsProgressBarVisibile = false;
+        this.Users = <UserWithRole[]>data;
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+      }
+    );
+  }
   GetLocationByPincode(event): void {
     const Pincode = event.target.value;
     if (Pincode) {
@@ -823,10 +862,7 @@ export class FactComponent implements OnInit {
     this.IsProgressBarVisibile = true;
     this._FactService.UpdateFact(this.SelectedBPCFactView).subscribe(
       (data) => {
-        this.ResetControl();
-        this.notificationSnackBarComponent.openSnackBar('Fact details updated successfully', SnackBarStatus.success);
-        this.IsProgressBarVisibile = false;
-        this.GetFactByPartnerIDAndType();
+        this.CreateSupportTicket();
       },
       (err) => {
         console.error(err);
@@ -855,7 +891,63 @@ export class FactComponent implements OnInit {
       }
     );
   }
+  GetSupportTicket(): SupportHeaderView {
+    const SupportTicketView: SupportHeaderView = new SupportHeaderView();
+    SupportTicketView.Client = this.SelectedBPCFact.Client;
+    SupportTicketView.Company = this.SelectedBPCFact.Company;
+    SupportTicketView.Type = this.SelectedBPCFact.Type;
+    SupportTicketView.PatnerID = this.SelectedBPCFact.PatnerID;
+    SupportTicketView.ReasonCode = '1236';
+    SupportTicketView.Reason = 'Master Data Change';
+    SupportTicketView.DocumentRefNo = this.SelectedBPCFact.PatnerID;
+    SupportTicketView.CreatedBy = this.CurrentUserID.toString();
+    let supportMaster = new SupportMaster();
+    supportMaster = this.SupportMasters.find(x => x.ReasonCode === SupportTicketView.ReasonCode);
+    if (supportMaster) {
+      this.GetFilteredUsers(supportMaster);
+    }
+    console.log(this.FilteredUsers);
+    SupportTicketView.Users = this.FilteredUsers;
+    return SupportTicketView;
+  }
 
+  GetFilteredUsers(supportMaster: SupportMaster): any {
+    if (supportMaster.Person1 && supportMaster.Person1 != null) {
+      let user = new UserWithRole();
+      user = this.Users.find(x => x.UserName.toLowerCase() === supportMaster.Person1.toLowerCase());
+      this.FilteredUsers.push(user);
+    }
+    else if (supportMaster.Person2 && supportMaster.Person2 != null) {
+      let user = new UserWithRole();
+      user = this.Users.find(x => x.UserName.toLowerCase() === supportMaster.Person2.toLowerCase());
+      this.FilteredUsers.push(user);
+    }
+    else if (supportMaster.Person3 && supportMaster.Person3 != null) {
+      let user = new UserWithRole();
+      user = this.Users.find(x => x.UserName.toLowerCase() === supportMaster.Person3.toLowerCase());
+      this.FilteredUsers.push(user);
+    }
+  }
+  CreateSupportTicket(): void {
+    this.IsProgressBarVisibile = true;
+    const SupportTicketView = this.GetSupportTicket();
+    this._supportDeskService.CreateSupportTicket(SupportTicketView).subscribe(
+      (data) => {
+        this.ResetControl();
+        this.notificationSnackBarComponent.openSnackBar('Fact details updated successfully', SnackBarStatus.success);
+        this.IsProgressBarVisibile = false;
+        this.GetFactByPartnerIDAndType();
+      },
+      (err) => {
+        this.ShowErrorNotificationSnackBar(err);
+      }
+    );
+  }
+  ShowErrorNotificationSnackBar(err: any): void {
+    console.error(err);
+    this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+    this.IsProgressBarVisibile = false;
+  }
   ShowValidationErrors(formGroup: FormGroup): void {
     Object.keys(formGroup.controls).forEach(key => {
       if (!formGroup.get(key).valid) {

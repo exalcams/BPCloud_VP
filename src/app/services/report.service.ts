@@ -48,8 +48,7 @@ export class ReportService {
 
   GetFilteredInvoicesByPartnerID(PartnerID: string, InvoiceNo: string, PoReference: string, FromDate: string, ToDate: string, Status: string): Observable<BPCInvoice[] | string> {
     return this._httpClient.get<BPCInvoice[]>
-      (`${this.baseAddress}reportapi/InvoiceReport/GetFilteredInvoicesByPartnerID?
-      PartnerID=${PartnerID}&InvoiceNo=${InvoiceNo}&PoReference=${PoReference}&FromDate=${FromDate}&ToDate=${ToDate}&Status=${Status}`)
+      (`${this.baseAddress}reportapi/InvoiceReport/GetFilteredInvoicesByPartnerID?PartnerID=${PartnerID}&InvoiceNo=${InvoiceNo}&PoReference=${PoReference}&FromDate=${FromDate}&ToDate=${ToDate}&Status=${Status}`)
       .pipe(catchError(this.errorHandler));
   }
 

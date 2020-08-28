@@ -75,16 +75,16 @@ export class SupportDeskComponent implements OnInit {
     this._activatedRoute.queryParams.subscribe(params => {
       this.docRefNo = params['id'];
     });
-    this.LoadBotChat();
+    // this.LoadBotChat();
   }
   SetUserPreference(): void {
     this._fuseConfigService.config
-        .subscribe((config) => {
-            this.fuseConfig = config;
-            this.BGClassName = config;
-        });
+      .subscribe((config) => {
+        this.fuseConfig = config;
+        this.BGClassName = config;
+      });
     // this._fuseConfigService.config = this.fuseConfig;
-}
+  }
 
   LoadBotChat(): void {
     // (function (d, m) {
@@ -101,61 +101,61 @@ export class SupportDeskComponent implements OnInit {
       var h = document.getElementsByTagName("head")[0]; h.appendChild(s);
       (window as any).kommunicate = m; m._globals = kommunicateSettings;
     })(document, (window as any).kommunicate || {});
-}
-
-loadSupportDeskBasedOnCondition(): void {
-  if(this.docRefNo) {
-  this._router.navigate(['/pages/supportticket'], { queryParams: { DocRefNo: this.docRefNo } });
-}
-    else {
-  this.GetSupportMasters();
-  this.GetSupportTicketsByPartnerID();
-}
   }
 
-GetSupportTicketsByPartnerID(): void {
-  this.isProgressBarVisibile = true;
-  this._supportdeskService
-    .GetSupportTicketsByPartnerID(this.authenticationDetails.UserName)
-    .subscribe((data) => {
-      if (data) {
-        this.supports = <SupportHeader[]>data;
-        if (this.supports && this.supports.length === 0) {
-          this.isSupport = true;
+  loadSupportDeskBasedOnCondition(): void {
+    if (this.docRefNo) {
+      this._router.navigate(['/pages/supportticket'], { queryParams: { DocRefNo: this.docRefNo } });
+    }
+    else {
+      this.GetSupportMasters();
+      this.GetSupportTicketsByPartnerID();
+    }
+  }
+
+  GetSupportTicketsByPartnerID(): void {
+    this.isProgressBarVisibile = true;
+    this._supportdeskService
+      .GetSupportTicketsByPartnerID(this.authenticationDetails.UserName)
+      .subscribe((data) => {
+        if (data) {
+          this.supports = <SupportHeader[]>data;
+          if (this.supports && this.supports.length === 0) {
+            this.isSupport = true;
+          }
+          this.supportDataSource = new MatTableDataSource(this.supports);
+          this.supportDataSource.paginator = this.paginator;
+          this.supportDataSource.sort = this.sort;
         }
-        this.supportDataSource = new MatTableDataSource(this.supports);
-        this.supportDataSource.paginator = this.paginator;
-        this.supportDataSource.sort = this.sort;
-      }
-      this.isProgressBarVisibile = false;
-    },
-      (err) => {
-        console.error(err);
         this.isProgressBarVisibile = false;
-      });
-}
+      },
+        (err) => {
+          console.error(err);
+          this.isProgressBarVisibile = false;
+        });
+  }
 
-GetSupportMasters(): void {
-  this.isProgressBarVisibile = true;
-  this._supportdeskService
-    .GetSupportMasters()
-    .subscribe((data) => {
-      if (data) {
-        this.supportMasters = <SupportMaster[]>data;
-      }
-      this.isProgressBarVisibile = false;
-    },
-      (err) => {
-        console.error(err);
+  GetSupportMasters(): void {
+    this.isProgressBarVisibile = true;
+    this._supportdeskService
+      .GetSupportMasters()
+      .subscribe((data) => {
+        if (data) {
+          this.supportMasters = <SupportMaster[]>data;
+        }
         this.isProgressBarVisibile = false;
-      });
-}
+      },
+        (err) => {
+          console.error(err);
+          this.isProgressBarVisibile = false;
+        });
+  }
 
-addSupportTicketClicked(): void {
-  this._router.navigate(['/pages/supportticket']);
-}
+  addSupportTicketClicked(): void {
+    this._router.navigate(['/pages/supportticket']);
+  }
 
-onSupportRowClicked(row: any): void {
-  this._router.navigate(['/pages/supportchat'], { queryParams: { SupportID: row.SupportID } });
-}
+  onSupportRowClicked(row: any): void {
+    this._router.navigate(['/pages/supportchat'], { queryParams: { SupportID: row.SupportID } });
+  }
 }
