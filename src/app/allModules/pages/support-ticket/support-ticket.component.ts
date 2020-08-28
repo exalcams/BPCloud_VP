@@ -12,6 +12,8 @@ import { SupportMaster, SupportHeader, SupportHeaderView } from 'app/models/supp
 import { SupportDeskService } from 'app/services/support-desk.service';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { MasterService } from 'app/services/master.service';
+import { BPCFact } from 'app/models/fact';
+import { FactService } from 'app/services/fact.service';
 
 @Component({
   selector: 'app-support-ticket',
@@ -31,6 +33,7 @@ export class SupportTicketComponent implements OnInit {
   fileToUploadList: File[] = [];
   math = Math;
   IsProgressBarVisibile: boolean;
+  SelectedBPCFact: BPCFact;
   SupportTicketFormGroup: FormGroup;
   SupportTicket: SupportHeader;
   SupportTicketView: SupportHeaderView;
@@ -46,13 +49,15 @@ export class SupportTicketComponent implements OnInit {
     private dialog: MatDialog,
     private _formBuilder: FormBuilder,
     public _supportDeskService: SupportDeskService,
-    private _masterService: MasterService
+    private _masterService: MasterService,
+    private _FactService: FactService,
   ) {
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.authenticationDetails = new AuthenticationDetails();
     this.dateOfCreation = new Date();
     this.SupportTicketView = new SupportHeaderView();
     this.SupportTicket = new SupportHeader();
+    this.SelectedBPCFact = new BPCFact();
   }
 
   ngOnInit(): void {
@@ -81,10 +86,10 @@ export class SupportTicketComponent implements OnInit {
     if (!this.docRefNo) {
       this.docRefNo = '';
     }
-
     this.InitializeSupportTicketFormGroup();
     this.GetSupportMasters();
     this.GetUsers();
+    this.GetFactByPartnerIDAndType();
   }
   CreateAppUsage(): void {
     const appUsage: AppUsage = new AppUsage();
@@ -123,7 +128,16 @@ export class SupportTicketComponent implements OnInit {
     this.SupportTicketView = null;
     this.ClearSupportTicketForm();
   }
-
+  GetFactByPartnerIDAndType(): void {
+    this._FactService.GetFactByPartnerIDAndType(this.currentUserName, 'V').subscribe(
+      (data) => {
+        this.SelectedBPCFact = data as BPCFact;
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
   GetSupportMasters(): void {
     this.IsProgressBarVisibile = true;
     this._supportDeskService
@@ -171,6 +185,12 @@ export class SupportTicketComponent implements OnInit {
   }
 
   GetSupportTicket(): void {
+    if (this.SelectedBPCFact) {
+      this.SupportTicket.Client = this.SupportTicketView.Client = this.SelectedBPCFact.Client;
+      this.SupportTicket.Company = this.SupportTicketView.Company = this.SelectedBPCFact.Company;
+      this.SupportTicket.Type = this.SupportTicketView.Type = this.SelectedBPCFact.Type;
+      this.SupportTicket.PatnerID = this.SupportTicketView.PatnerID = this.SelectedBPCFact.PatnerID;
+    }
     this.SupportTicket.ReasonCode = this.SupportTicketView.ReasonCode = this.SupportTicketFormGroup.get('ReasonCode').value;
     this.SupportTicket.ReasonRemarks = this.SupportTicketView.ReasonRemarks = this.SupportTicketFormGroup.get('Remarks').value;
     this.SupportTicket.DocumentRefNo = this.SupportTicketView.DocumentRefNo = this.SupportTicketFormGroup.get('DocumentRefNo').value;
