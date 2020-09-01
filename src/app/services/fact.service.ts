@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpEvent, HttpResponse } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { BPCFactContactPerson, BPCFactBank, BPCKRA, BPCAIACT, BPCFactView, BPCFact, BPCCertificate, BPCFactXLSX, BPCFactBankXLSX } from 'app/models/fact';
+import { AnimationKeyframesSequenceMetadata } from '@angular/animations';
 // import { BPCFactContactPerson, BPCFactBank, BPCKRA, BPCAIACT, BPCFactView, BPCFact, BPCFactBankXLSX, BPCFactXLSX } from 'app/models/fact';
 
 @Injectable({
@@ -155,5 +156,74 @@ export class FactService {
       // }
     ).pipe(catchError(this.errorHandler));
   }
+  SaveDashboardCards(CreatedBy: string, selectedFiles: File[]): Observable<any> {
+    const formData: FormData = new FormData();
+    if (selectedFiles && selectedFiles.length) {
+      selectedFiles.forEach(x => {
+        formData.append(x.name, x, x.name);
+      });
+    }
+    formData.append('CreatedBy', CreatedBy.toString());
 
+    return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/SaveDashboardCards`,
+      formData,
+      // {
+      //   headers: new HttpHeaders({
+      //     'Content-Type': 'application/json'
+      //   })
+      // }
+    ).pipe(catchError(this.errorHandler));
+  }
+
+  GetDashboardCard1(): Observable<any | string> {
+    return this._httpClient.get(`${this.baseAddress}factapi/Fact/GetDashboardCard1`, {
+      observe: 'response',
+      responseType: 'blob',
+      // headers: new HttpHeaders().append('Content-Type', 'application/json')
+    })
+      .pipe(
+        map(response => {
+          let fileName = 'file';
+          const header = response.headers.get('Content-Disposition');
+          const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+          const matches = filenameRegex.exec(header);
+          if (matches != null && matches[1]) {
+            fileName = matches[1].replace(/['"]/g, '');
+          }
+          const data = {
+            image: new Blob([response.body], { type: response.headers.get('Content-Type') }),
+            type: response.headers.get('Content-Type'),
+            filename: fileName
+          };
+          return data;
+        }),
+        catchError(this.errorHandler)
+      );
+  }
+  GetDashboardCard2(): Observable<any | string> {
+    return this._httpClient.get(`${this.baseAddress}factapi/Fact/GetDashboardCard2`, {
+      observe: 'response',
+      responseType: 'blob',
+      // headers: new HttpHeaders().append('Content-Type', 'application/json')
+    })
+      // .pipe(catchError(this.errorHandler));
+      .pipe(
+        map(response => {
+          let fileName = 'file';
+          const header = response.headers.get('Content-Disposition');
+          const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+          const matches = filenameRegex.exec(header);
+          if (matches != null && matches[1]) {
+            fileName = matches[1].replace(/['"]/g, '');
+          }
+          const data = {
+            image: new Blob([response.body], { type: response.headers.get('Content-Type') }),
+            type: response.headers.get('Content-Type'),
+            filename: fileName
+          };
+          return data;
+        }),
+        catchError(this.errorHandler)
+      );
+  }
 }
