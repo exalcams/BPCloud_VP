@@ -1040,6 +1040,13 @@ export class LoginComponent implements OnInit {
             type: "item",
             url: "/configuration/scocmsg",
         });
+        this.configSubChildren.push({
+            id: "cardupdate",
+            title: "Card Update",
+            translate: "NAV.ADMIN.SUPPORT",
+            type: "item",
+            url: "/configuration/cardupdate",
+        });
         if (
             this.menuItems.indexOf("Doctype") >= 0 ||
             this.menuItems.indexOf("Session") >= 0 ||

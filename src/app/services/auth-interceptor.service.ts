@@ -38,7 +38,7 @@ export class AuthInterceptorService implements HttpInterceptor {
       }
     }
 
-    if (!request.headers.has('Content-Type') && !request.url.includes('Attachment')) {
+    if (!request.headers.has('Content-Type') && !request.url.includes('Attachment') && !request.url.includes('SaveDashboardCards')) {
       request = request.clone({ headers: request.headers.set('Content-Type', 'application/json') });
     }
 

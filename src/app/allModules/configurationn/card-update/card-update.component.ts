@@ -2,6 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
+import { AuthenticationDetails } from 'app/models/master';
+import { Guid } from 'guid-typescript';
+import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
+import { Router } from '@angular/router';
+import { MatSnackBar, MatDialog } from '@angular/material';
+import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
+import { FactService } from 'app/services/fact.service';
 
 @Component({
   selector: 'app-card-update',
@@ -10,126 +17,215 @@ import { HttpClient } from '@angular/common/http';
 })
 export class CardUpdateComponent implements OnInit {
 
-  files: File;
-  files1: File;
-
-  onSelect(event) {
-
-    console.log(event);
-
-    this.files = event.addedFiles[0];
-    console.log("hi" + this.files);
-    this.changeFile(this.files).then((base64: string): any => {
-      console.log(base64);
-      this.url = base64;
-      this.url_1 = this.sanitizer.bypassSecurityTrustResourceUrl(this.url);
-
-    });
-  }
-  onSelect1(event) {
-
-    console.log(event);
-
-    this.files1 = event.addedFiles[0];
-    console.log("hi" + this.files1);
-    this.changeFile1(this.files1).then((base64: string): any => {
-      console.log(base64);
-      this.url1 = base64;
-      this.url_1_new = this.sanitizer.bypassSecurityTrustResourceUrl(this.url1);
-
-    });
-  }
-  onRemove(event) {
-    console.log(event);
-  }
-  onRemove1(event) {
-    console.log(event);
-  }
-  url: any;
-  var_file: File;
-  file: File;
-  url1: any;
-  objectURL: URL
+  MenuItems: string[];
+  authenticationDetails: AuthenticationDetails;
+  currentUserID: Guid;
+  currentUserName: string;
+  currentUserRole = "";
+  currentDisplayName: string;
+  notificationSnackBarComponent: NotificationSnackBarComponent;
+  fileToUpload: File;
+  fileToUpload1: File;
+  fileToUploadList: File[] = [];
   uploadForm: FormGroup;
-  uploadForm1: FormGroup;
-  variable_name: SafeUrl;
-  fileBlob: any;
-  b64Blob: any;
-  url_1: SafeUrl;
-  url_1_new: SafeUrl;
+  AttachmentData: SafeUrl;
+  AttachmentData1: SafeUrl;
+  IsProgressBarVisibile: boolean;
 
-  constructor(private formBuilder: FormBuilder, private httpClient: HttpClient, private sanitizer: DomSanitizer) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private httpClient: HttpClient,
+    private sanitizer: DomSanitizer,
+    private _FactService: FactService,
+    private _router: Router,
+    public snackBar: MatSnackBar,
+    private dialog: MatDialog
+  ) {
+    this.IsProgressBarVisibile = false;
+    this.authenticationDetails = new AuthenticationDetails();
+    this.notificationSnackBarComponent = new NotificationSnackBarComponent(
+      this.snackBar
+    );
+  }
 
   ngOnInit(): void {
-    this.uploadForm = this.formBuilder.group({
-      profile: ['']
-    });
-    this.uploadForm1 = this.formBuilder.group({
-      profile1: ['']
-    });
-  }
-  changeFile(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-    });
-  }
-  changeFile1(file1) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file1);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-    });
-  }
-  onFileSelect(event) {
-    if (event.target.value) {
-      const file = event.target.files[0];
-      const type = file.type;
-      this.changeFile(file).then((base64: string): any => {
-        console.log(base64);
-        this.url = base64;
-        this.url_1 = this.sanitizer.bypassSecurityTrustResourceUrl(this.url);
-        // this.fileBlob = this.b64Blob([base64], type);
-        const blob = new Blob([base64], { type: 'application/octet-stream' });
-        console.log(blob);
-        const objectURL = URL.createObjectURL(blob);
-        console.log(objectURL)
-        var url1 = window.URL.createObjectURL(blob);
-        // reader.readAsDataURL(file);
-        console.log("url1:" + url1);
-        // console.log(this.fileBlob)
+
+    // Retrive authorizationData
+    const retrievedObject = localStorage.getItem('authorizationData');
+    if (retrievedObject) {
+      this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+      this.currentUserID = this.authenticationDetails.UserID;
+      this.currentUserName = this.authenticationDetails.UserName;
+      this.currentUserRole = this.authenticationDetails.UserRole;
+      this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
+      // if (this.MenuItems.indexOf('ASN') < 0) {
+      //     this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
+      //     );
+      //     this._router.navigate(['/auth/login']);
+      // }
+      this.uploadForm = this.formBuilder.group({
+        profile: ['']
       });
-    } else alert('Nothing')
+      this.GetDashboardCard1();
+      this.GetDashboardCard2();
+    } else {
+      this._router.navigate(['/auth/login']);
+    }
   }
-  onFileSelect1(event) {
+  ResetAttachments(): void {
+    this.fileToUpload = null;
+    this.fileToUpload1 = null;
+    this.fileToUploadList = [];
+  }
+  GetDashboardCard1(): void {
+    this._FactService.GetDashboardCard1().subscribe(
+      res => {
+        if (res) {
+          const blob = res.image;
+          console.log(res.filename);
+          if (blob && res.filename && res.type) {
+            this.fileToUpload = new File([blob], res.filename, { type: res.type, lastModified: Date.now() });
+          }
+          const fileURL = URL.createObjectURL(blob);
+          this.AttachmentData = this.sanitizer.bypassSecurityTrustResourceUrl(fileURL);
+        }
+        this.IsProgressBarVisibile = false;
+      },
+      error => {
+        console.error(error);
+        this.IsProgressBarVisibile = false;
+      }
+    );
+  }
+  GetDashboardCard2(): void {
+    this._FactService.GetDashboardCard2().subscribe(
+      res => {
+        if (res) {
+          const blob = res.image;
+          console.log(res.filename);
+          if (blob && res.filename && res.type) {
+            this.fileToUpload1 = new File([blob], res.filename, { type: res.type, lastModified: Date.now() });
+          }
+          const fileURL = URL.createObjectURL(blob);
+          this.AttachmentData1 = this.sanitizer.bypassSecurityTrustResourceUrl(fileURL);
+        }
+        this.IsProgressBarVisibile = false;
+      },
+      error => {
+        console.error(error);
+        this.IsProgressBarVisibile = false;
+      }
+    );
+  }
+  onSelect(event): void {
+    this.fileToUpload = event.addedFiles[0];
+    const blob = new Blob([this.fileToUpload], { type: this.fileToUpload.type });
+    const fileURL = URL.createObjectURL(blob);
+    this.AttachmentData = this.sanitizer.bypassSecurityTrustResourceUrl(fileURL);
+    // console.log("hi" + this.files);
+    // this.changeFile(this.files).then((base64: string): any => {
+    //     console.log(base64);
+    //     this.url = base64;
+    //     this.AttachmentData = this.sanitizer.bypassSecurityTrustResourceUrl(this.url);
+
+    // });
+  }
+  onSelect1(event): void {
+    this.fileToUpload1 = event.addedFiles[0];
+    const blob = new Blob([this.fileToUpload1], { type: this.fileToUpload1.type });
+    const fileURL = URL.createObjectURL(blob);
+    this.AttachmentData1 = this.sanitizer.bypassSecurityTrustResourceUrl(fileURL);
+    // console.log("hi" + this.files);
+    // this.changeFile(this.files).then((base64: string): any => {
+    //     console.log(base64);
+    //     this.url = base64;
+    //     this.AttachmentData = this.sanitizer.bypassSecurityTrustResourceUrl(this.url);
+
+    // });
+  }
+  // changeFile(file) {
+  //     return new Promise((resolve, reject) => {
+  //         const reader = new FileReader();
+  //         reader.readAsDataURL(file);
+  //         reader.onload = () => resolve(reader.result);
+  //         reader.onerror = error => reject(error);
+  //     });
+  // }
+  onFileSelect(event): void {
     if (event.target.value) {
-      const file1 = event.target.files[0];
-      const type = file1.type;
-      this.changeFile1(file1).then((base64: string): any => {
-        console.log(base64);
-        this.url = base64;
-        this.url_1_new = this.sanitizer.bypassSecurityTrustResourceUrl(this.url1);
-        // this.fileBlob = this.b64Blob([base64], type);
-        const blob = new Blob([base64], { type: 'application/octet-stream' });
-        console.log(blob);
-        const objectURL = URL.createObjectURL(blob);
-        console.log(objectURL)
-        var url1 = window.URL.createObjectURL(blob);
-        // reader.readAsDataURL(file);
-        console.log("url1:" + url1);
-        // console.log(this.fileBlob)
-      });
-    } else alert('Nothing')
+      this.fileToUpload = event.target.files[0] as File;
+      const blob = new Blob([this.fileToUpload], { type: this.fileToUpload.type });
+      const fileURL = URL.createObjectURL(blob);
+      this.AttachmentData = this.sanitizer.bypassSecurityTrustResourceUrl(fileURL);
+      // const type = file.type;
+      // this.changeFile(file).then((base64: string): any => {
+      //     console.log(base64);
+      //     this.url = base64;
+      //     this.AttachmentData = this.sanitizer.bypassSecurityTrustResourceUrl(this.url);
+      //     // this.fileBlob = this.b64Blob([base64], type);
+      //     const blob = new Blob([base64], { type: 'application/octet-stream' });
+      //     console.log(blob);
+      //     const objectURL = URL.createObjectURL(blob);
+      //     console.log(objectURL)
+      //     var url1 = window.URL.createObjectURL(blob);
+      //     // reader.readAsDataURL(file);
+      //     console.log("url1:" + url1);
+      //     // console.log(this.fileBlob)
+      // });
+    } else {
+      alert('Nothing');
+    }
   }
-  onSubmit() {
-    const formData = new FormData();
-    formData.append('file', this.uploadForm.get('profile').value);
+  onFileSelect1(event): void {
+    if (event.target.value) {
+      this.fileToUpload1 = event.target.files[0] as File;
+      const blob = new Blob([this.fileToUpload1], { type: this.fileToUpload1.type });
+      const fileURL = URL.createObjectURL(blob);
+      this.AttachmentData1 = this.sanitizer.bypassSecurityTrustResourceUrl(fileURL);
+      // const type = file.type;
+      // this.changeFile(file).then((base64: string): any => {
+      //     console.log(base64);
+      //     this.url = base64;
+      //     this.AttachmentData = this.sanitizer.bypassSecurityTrustResourceUrl(this.url);
+      //     // this.fileBlob = this.b64Blob([base64], type);
+      //     const blob = new Blob([base64], { type: 'application/octet-stream' });
+      //     console.log(blob);
+      //     const objectURL = URL.createObjectURL(blob);
+      //     console.log(objectURL)
+      //     var url1 = window.URL.createObjectURL(blob);
+      //     // reader.readAsDataURL(file);
+      //     console.log("url1:" + url1);
+      //     // console.log(this.fileBlob)
+      // });
+    } else {
+      alert('Nothing');
+    }
   }
-  onSubmit1() {
-    const formData = new FormData();
-    formData.append('file', this.uploadForm1.get('profile1').value);
+  SaveDashboardCards(): void {
+    this.fileToUploadList = [];
+    if (this.fileToUpload && this.fileToUpload.size) {
+      this.fileToUploadList.push(this.fileToUpload);
+    }
+    if (this.fileToUpload1 && this.fileToUpload1.size) {
+      this.fileToUploadList.push(this.fileToUpload1);
+    }
+    if (this.fileToUploadList && this.fileToUploadList.length) {
+      this.IsProgressBarVisibile = true;
+      this._FactService.SaveDashboardCards(this.currentUserID.toString(), this.fileToUploadList).subscribe(
+        (dat) => {
+          this.ResetAttachments();
+          this.notificationSnackBarComponent.openSnackBar(`Card images uploaded successfully`, SnackBarStatus.success);
+          this.IsProgressBarVisibile = false;
+          this.GetDashboardCard1();
+          this.GetDashboardCard2();
+        },
+        (err) => {
+          console.error(err);
+          this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+          this.IsProgressBarVisibile = false;
+        });
+    } else {
+      this.notificationSnackBarComponent.openSnackBar('Please select atleast one image file to upload', SnackBarStatus.danger);
+    }
   }
 }
