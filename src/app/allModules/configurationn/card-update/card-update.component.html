@@ -16,21 +16,21 @@
             <!-- <form [formGroup]="uploadForm"> -->
             <mat-card-content class="mat_card_content p-8">
               <div class="cl_div">
-                <ngx-dropzone *ngIf="!AttachmentData" accept="image/x-png,image/gif,image/jpeg,,image/jpg"
-                  (change)="onSelect($event)" class="dropzone">
+                <ngx-dropzone *ngIf="!AttachmentData1" accept="image/x-png,image/gif,image/jpeg,,image/jpg"
+                  (change)="onSelect1($event)" class="dropzone">
                   <ngx-dropzone-label>Drop your file here!</ngx-dropzone-label>
                   <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
                     <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
                   </ngx-dropzone-preview>
                 </ngx-dropzone>
-                <img *ngIf="AttachmentData" [src]="AttachmentData" class="iframe" />
+                <img *ngIf="AttachmentData1" [src]="AttachmentData1" class="iframe" />
                 <!-- <iframe *ngIf="AttachmentData" [src]="AttachmentData" class="iframe"></iframe> -->
               </div>
             </mat-card-content>
             <mat-card-actions class="m-0 px-12 cardActions" *ngIf="(currentUserRole | lowercase)==='administrator'">
               <div fxLayout fxLayoutAlign="space-between center">
                 <input style="display: none;" type="file" name="profile"
-                  accept="image/x-png,image/gif,image/jpeg,,image/jpg" id="upload" (change)="onFileSelect($event)"
+                  accept="image/x-png,image/gif,image/jpeg,,image/jpg" id="upload" (change)="onFileSelect1($event)"
                   #fileinput>
                 <button type="button" mat-stroked-button (click)="fileinput.click()" class="DeleteBtn">Select
                   File</button>
@@ -42,21 +42,21 @@
             <!-- <form [formGroup]="uploadForm"> -->
             <mat-card-content class="mat_card_content p-8">
               <div class="cl_div">
-                <ngx-dropzone *ngIf="!AttachmentData1" accept="image/x-png,image/gif,image/jpeg,,image/jpg"
-                  (change)="onSelect1($event)" class="dropzone">
+                <ngx-dropzone *ngIf="!AttachmentData2" accept="image/x-png,image/gif,image/jpeg,,image/jpg"
+                  (change)="onSelect2($event)" class="dropzone">
                   <ngx-dropzone-label>Drop your file here!</ngx-dropzone-label>
                   <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
                     <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
                   </ngx-dropzone-preview>
                 </ngx-dropzone>
-                <img *ngIf="AttachmentData1" [src]="AttachmentData1" class="iframe" />
+                <img *ngIf="AttachmentData2" [src]="AttachmentData2" class="iframe" />
                 <!-- <iframe *ngIf="AttachmentData1" [src]="AttachmentData1" class="iframe"></iframe> -->
               </div>
             </mat-card-content>
             <mat-card-actions class="m-0 px-12 cardActions" *ngIf="(currentUserRole | lowercase)==='administrator'">
               <div fxLayout fxLayoutAlign="space-between center">
                 <input style="display: none;" type="file" name="profile"
-                  accept="image/x-png,image/gif,image/jpeg,,image/jpg" id="upload" (change)="onFileSelect1($event)"
+                  accept="image/x-png,image/gif,image/jpeg,,image/jpg" id="upload" (change)="onFileSelect2($event)"
                   #fileinput1>
                 <button type="button" mat-stroked-button (click)="fileinput1.click()" class="DeleteBtn">Select
                   File</button>
@@ -72,9 +72,9 @@
         </mat-card-actions>
       </mat-card>
     </div>
-    <!-- <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
+    <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
     </mat-progress-spinner>
-    <div id="overlay" *ngIf="isProgressBarVisibile">
-    </div> -->
+    <div id="overlay" *ngIf="IsProgressBarVisibile">
+    </div>
   </div>
 </div>
