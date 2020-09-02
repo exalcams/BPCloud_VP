@@ -678,9 +678,8 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     }
 
     goToSubconClicked(po: string): void {
-        // this._router.navigate(['/subcon/productionlog'], { queryParams: { id: po } });
-
-        this._router.navigate(["/subcon"], { queryParams: { id: po } });
+        this._router.navigate(['/subcon/productionlog'], { queryParams: { id: po } });
+        // this._router.navigate(["/subcon"], { queryParams: { id: po } });
     }
 
     goToPrintPOClicked(po: string): void {
