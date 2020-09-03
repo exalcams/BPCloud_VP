@@ -14,6 +14,8 @@ import { NotificationSnackBarComponent } from 'app/notifications/notification-sn
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { MasterService } from 'app/services/master.service';
+import { FactService } from 'app/services/fact.service';
+import { BPCFact } from 'app/models/fact';
 
 @Component({
   selector: 'app-support-chat',
@@ -26,10 +28,12 @@ export class SupportChatComponent implements OnInit {
 
   authenticationDetails: AuthenticationDetails;
   currentUserID: Guid;
+  currentUserName: string;
   currentUserRole: string;
   Users: UserWithRole[] = [];
   PartnerID: string;
   SupportID: string;
+  SelectedBPCFact: BPCFact;
   SupportDetails: SupportDetails = new SupportDetails();
   SupportHeader: SupportHeader = new SupportHeader();
   SupportLogs: SupportLog[] = [];
@@ -49,6 +53,7 @@ export class SupportChatComponent implements OnInit {
     private route: ActivatedRoute,
     public _supportDeskService: SupportDeskService,
     private _masterService: MasterService,
+    private _FactService: FactService,
     private _router: Router,
     public snackBar: MatSnackBar,
     private _dialog: MatDialog,
@@ -58,6 +63,7 @@ export class SupportChatComponent implements OnInit {
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.SelectedSupportLog = new SupportLog();
     this.SelectedSupportLogView = new SupportLog();
+    this.SelectedBPCFact = new BPCFact();
   }
 
   ngOnInit(): void {
@@ -65,6 +71,7 @@ export class SupportChatComponent implements OnInit {
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
       this.currentUserID = this.authenticationDetails.UserID;
+      this.currentUserName = this.authenticationDetails.UserName;
       this.PartnerID = this.authenticationDetails.UserName;
       this.currentUserRole = this.authenticationDetails.UserRole;
       // this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
@@ -85,6 +92,7 @@ export class SupportChatComponent implements OnInit {
     this.GetUsers();
     this.GetSupportDetailsByPartnerAndSupportID();
     this.InitializeSupportLogFormGroup();
+    this.GetFactByPartnerID();
   }
 
   InitializeSupportLogFormGroup(): void {
@@ -107,7 +115,16 @@ export class SupportChatComponent implements OnInit {
     this.SelectedSupportLog = new SupportLog();
     this.SelectedSupportLogView = new SupportLog();
   }
-
+  GetFactByPartnerID(): void {
+    this._FactService.GetFactByPartnerID(this.currentUserName).subscribe(
+      (data) => {
+        this.SelectedBPCFact = data as BPCFact;
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
   GetSupportDetailsByPartnerAndSupportID(): void {
     this.IsProgressBarVisibile = true;
     this._supportDeskService.GetSupportDetailsByPartnerAndSupportID(this.SupportID, this.PartnerID).subscribe(
@@ -226,8 +243,14 @@ export class SupportChatComponent implements OnInit {
   }
 
   GetSupportLogValues(): void {
+    if (this.SelectedBPCFact) {
+      this.SelectedSupportLog.Client = this.SelectedSupportLogView.Client = this.SelectedBPCFact.Client;
+      this.SelectedSupportLog.Company = this.SelectedSupportLogView.Company = this.SelectedBPCFact.Company;
+      this.SelectedSupportLog.Type = this.SelectedSupportLogView.Type = this.SelectedBPCFact.Type;
+      this.SelectedSupportLog.PatnerID = this.SelectedSupportLogView.PatnerID = this.SelectedBPCFact.PatnerID;
+    }
     this.SelectedSupportLog.SupportID = this.SelectedSupportLogView.SupportID = this.SupportID;
-    this.SelectedSupportLog.PatnerID = this.SelectedSupportLogView.PatnerID = this.PartnerID;
+    // this.SelectedSupportLog.PatnerID = this.SelectedSupportLogView.PatnerID = this.PartnerID;
     this.SelectedSupportLog.Remarks = this.SelectedSupportLogView.Remarks = this.SupportLogFormGroup.get('Comments').value;
     this.SelectedSupportLog.CreatedBy = this.SelectedSupportLogView.CreatedBy = this.authenticationDetails.UserName;
     let user = new UserWithRole();
