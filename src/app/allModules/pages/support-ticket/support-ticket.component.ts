@@ -89,7 +89,7 @@ export class SupportTicketComponent implements OnInit {
     this.InitializeSupportTicketFormGroup();
     this.GetSupportMasters();
     this.GetUsers();
-    this.GetFactByPartnerIDAndType();
+    this.GetFactByPartnerID();
   }
   CreateAppUsage(): void {
     const appUsage: AppUsage = new AppUsage();
@@ -128,8 +128,8 @@ export class SupportTicketComponent implements OnInit {
     this.SupportTicketView = null;
     this.ClearSupportTicketForm();
   }
-  GetFactByPartnerIDAndType(): void {
-    this._FactService.GetFactByPartnerIDAndType(this.currentUserName, 'V').subscribe(
+  GetFactByPartnerID(): void {
+    this._FactService.GetFactByPartnerID(this.currentUserName).subscribe(
       (data) => {
         this.SelectedBPCFact = data as BPCFact;
       },
@@ -173,9 +173,20 @@ export class SupportTicketComponent implements OnInit {
     if (this.SupportTicketFormGroup.valid) {
       this.GetSupportTicket();
       this.OpenNotificationDialog();
+    } else {
+      this.ShowValidationErrors(this.SupportTicketFormGroup);
     }
   }
+  ShowValidationErrors(formGroup: FormGroup): void {
+    Object.keys(formGroup.controls).forEach(key => {
+      if (!formGroup.get(key).valid) {
+        console.log(key);
+      }
+      formGroup.get(key).markAsTouched();
+      formGroup.get(key).markAsDirty();
+    });
 
+  }
   OnFileClicked(evt): void {
     if (evt.target.files && evt.target.files.length > 0) {
       this.fileToUpload = evt.target.files[0];
