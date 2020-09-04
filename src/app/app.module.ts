@@ -85,6 +85,10 @@ const appRoutes: Routes = [
         loadChildren: './allModules/customer/customer.module#CustomerModule'
     },
     {
+        path: 'supplier',
+        loadChildren: './allModules/supplier/supplier.module#SupplierModule'
+    },
+    {
         path: 'subcon',
         loadChildren: './allModules/subcon/subcon.module#SubconModule'
     },

@@ -29,7 +29,7 @@ import { FuseConfigService } from '@fuse/services/config.service';
 })
 export class PoFlipComponent implements OnInit {
 
-  
+
   fuseConfig: any;
   BGClassName: any;
 
@@ -153,7 +153,7 @@ export class PoFlipComponent implements OnInit {
 
   ngOnInit(): void {
     this.SetUserPreference();
-        this._route.queryParams.subscribe(params => {
+    this._route.queryParams.subscribe(params => {
       this.selectedDocNumber = params['id'];
     });
     // Retrive authorizationData
@@ -595,6 +595,17 @@ export class PoFlipComponent implements OnInit {
       item.Price = x.get('Price').value;
       item.Tax = x.get('Tax').value;
       item.Amount = x.get('Amount').value;
+      if (this.selectedDocNumber && this.poHeader) {
+        item.Client = this.poHeader.Client;
+        item.Company = this.poHeader.Company;
+        item.Type = this.poHeader.Type;
+        item.PatnerID = this.poHeader.PatnerID;
+      } else {
+        item.Client = this.selectedFlip.Client;
+        item.Company = this.selectedFlip.Company;
+        item.Type = this.selectedFlip.Type;
+        item.PatnerID = this.selectedFlip.PatnerID;
+      }
       this.selectedFlipView.FLIPItems.push(item);
     });
   }
@@ -629,6 +640,17 @@ export class PoFlipComponent implements OnInit {
       bPCFlipCost.ExpenceType = this.flipCostFormGroup.get('ExpenceType').value;
       if (!this.flipCosts || !this.flipCosts.length) {
         this.flipCosts = [];
+      }
+      if (this.selectedDocNumber && this.poHeader) {
+        bPCFlipCost.Client = this.poHeader.Client;
+        bPCFlipCost.Company = this.poHeader.Company;
+        bPCFlipCost.Type = this.poHeader.Type;
+        bPCFlipCost.PatnerID = this.poHeader.PatnerID;
+      } else {
+        bPCFlipCost.Client = this.selectedFlip.Client;
+        bPCFlipCost.Company = this.selectedFlip.Company;
+        bPCFlipCost.Type = this.selectedFlip.Type;
+        bPCFlipCost.PatnerID = this.selectedFlip.PatnerID;
       }
       this.flipCosts.push(bPCFlipCost);
       this.flipCostDataSource = new MatTableDataSource(this.flipCosts);

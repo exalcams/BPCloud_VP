@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationDetails, UserWithRole, AppUsage } from 'app/models/master';
 import { Guid } from 'guid-typescript';
+import { BPCFact } from 'app/models/fact';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SupportHeader, SupportHeaderView, SupportMaster } from 'app/models/support-desk';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
@@ -8,12 +9,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar, MatDialog, MatDialogConfig } from '@angular/material';
 import { SupportDeskService } from 'app/services/support-desk.service';
 import { MasterService } from 'app/services/master.service';
+import { FactService } from 'app/services/fact.service';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { AttachmentDetails } from 'app/models/task';
 import { AttachmentDialogComponent } from 'app/allModules/pages/attachment-dialog/attachment-dialog.component';
-import { BPCFact } from 'app/models/fact';
-import { FactService } from 'app/services/fact.service';
 
 @Component({
   selector: 'app-support-ticket',
@@ -246,7 +246,7 @@ export class SupportTicketComponent implements OnInit {
           this.ResetControl();
           this.notificationSnackBarComponent.openSnackBar(`Ticket Created successfully`, SnackBarStatus.success);
           this.IsProgressBarVisibile = false;
-          this._router.navigate(['/customer/supportdesk']);
+          this._router.navigate(['/supplier/supportdesk']);
         }
       },
       (err) => {
@@ -254,14 +254,13 @@ export class SupportTicketComponent implements OnInit {
       }
     );
   }
-
   AddSupportAttachment(): void {
     this._supportDeskService.AddSupportAttachment(this.SupportHeader.SupportID, this.currentUserID.toString(), this.fileToUploadList).subscribe(
       (dat) => {
         this.notificationSnackBarComponent.openSnackBar('Ticket Created successfully', SnackBarStatus.success);
         this.IsProgressBarVisibile = false;
         this.ResetControl();
-        this._router.navigate(['/customer/supportdesk']);
+        this._router.navigate(['/supplier/supportdesk']);
       },
       (err) => {
         this.ShowErrorNotificationSnackBar(err);

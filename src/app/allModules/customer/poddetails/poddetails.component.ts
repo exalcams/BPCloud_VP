@@ -23,6 +23,7 @@ import { NotesDialogComponent } from '../notes-dialog/notes-dialog.component';
 import { AttachmentDetails } from 'app/models/task';
 import { AttachmentDialogComponent } from 'app/allModules/pages/attachment-dialog/attachment-dialog.component';
 import { PODItemAttachmentDialogComponent } from '../poditem-attachment-dialog/poditem-attachment-dialog.component';
+import { BPCFact } from 'app/models/fact';
 
 @Component({
   selector: 'app-poddetails',
@@ -40,6 +41,7 @@ export class PODDetailsComponent implements OnInit {
   MenuItems: string[];
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
+  SelectedBPCFact: BPCFact;
   AllPODHeaders: BPCPODHeader[] = [];
   PODFormGroup: FormGroup;
   PODItemFormGroup: FormGroup;
@@ -136,9 +138,10 @@ export class PODDetailsComponent implements OnInit {
     this.CreateAppUsage();
     this.InitializePODFormGroup();
     this.InitializePODItemFormGroup();
-    this.GetPODBasedOnCondition();
+    this.GetFactByPartnerID();
     this.GetAllBPCCurrencyMasters();
     this.GetAllReasonMaster();
+    this.GetPODBasedOnCondition();
   }
   CreateAppUsage(): void {
     const appUsage: AppUsage = new AppUsage();
@@ -216,7 +219,16 @@ export class PODDetailsComponent implements OnInit {
     this.fileToUploadList = [];
     this.invoiceAttachment = null;
   }
-
+  GetFactByPartnerID(): void {
+    this._FactService.GetFactByPartnerID(this.currentUserName).subscribe(
+      (data) => {
+        this.SelectedBPCFact = data as BPCFact;
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
   GetPODBasedOnCondition(): void {
     if (this.SelectedInvoiceNumber) {
       this.GetPODByInvAndPartnerID();
@@ -423,6 +435,12 @@ export class PODDetailsComponent implements OnInit {
 
 
   GetPODValues(): void {
+    if (this.SelectedBPCFact) {
+      this.SelectedPODHeader.Client = this.SelectedPODView.Client = this.SelectedBPCFact.Client;
+      this.SelectedPODHeader.Company = this.SelectedPODView.Company = this.SelectedBPCFact.Company;
+      this.SelectedPODHeader.Type = this.SelectedPODView.Type = this.SelectedBPCFact.Type;
+      this.SelectedPODHeader.PatnerID = this.SelectedPODView.PatnerID = this.SelectedBPCFact.PatnerID;
+    }
     this.SelectedPODHeader.TruckNumber = this.SelectedPODView.TruckNumber = this.PODFormGroup.get('TruckNumber').value;
     this.SelectedPODHeader.VessleNumber = this.SelectedPODView.VessleNumber = this.PODFormGroup.get('VessleNumber').value;
     this.SelectedPODHeader.InvoiceNumber = this.SelectedPODView.InvoiceNumber = this.PODFormGroup.get('InvoiceNumber').value;
@@ -450,6 +468,12 @@ export class PODDetailsComponent implements OnInit {
     const PODItemFormArray = this.PODItemFormGroup.get('PODItems') as FormArray;
     PODItemFormArray.controls.forEach((x, i) => {
       const item: BPCPODItem = new BPCPODItem();
+      if (this.SelectedBPCFact) {
+        item.Client = this.SelectedBPCFact.Client;
+        item.Company = this.SelectedBPCFact.Company;
+        item.Type = this.SelectedBPCFact.Type;
+        item.PatnerID = this.SelectedBPCFact.PatnerID;
+      }
       item.Item = x.get('Item').value;
       item.Material = x.get('Material').value;
       item.MaterialText = x.get('MaterialText').value;

@@ -20,6 +20,10 @@ export class BPCFLIPHeader extends CommonClass {
     bPCFLIPCosts: BPCFLIPCost[];
 }
 export class BPCFLIPCost extends CommonClass {
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
     FLIPID: string;
     Amount: string;
     Remarks: string;
