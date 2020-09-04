@@ -24,6 +24,7 @@ import { CustomerService } from 'app/services/customer.service';
 import { ASNService } from 'app/services/asn.service';
 import { fuseAnimations } from '@fuse/animations';
 import { PO } from 'app/models/Dashboard';
+import { BPCFact } from 'app/models/fact';
 
 @Component({
     selector: 'app-purchase-indent',
@@ -41,6 +42,7 @@ export class PurchaseIndentComponent implements OnInit {
     MenuItems: string[];
     notificationSnackBarComponent: NotificationSnackBarComponent;
     IsProgressBarVisibile: boolean;
+    SelectedBPCFact: BPCFact;
     AllPurchaseIndentHeaders: BPCPIHeader[] = [];
     PurchaseIndentFormGroup: FormGroup;
     PurchaseIndentItemFormGroup: FormGroup;
@@ -142,6 +144,7 @@ export class PurchaseIndentComponent implements OnInit {
         this.InitializePurchaseIndentItemFormGroup();
         this.GetAllBPCCountryMasters();
         this.GetAllBPCCurrencyMasters();
+        this.GetFactByPartnerID();
         this.GetAllProducts();
         this.GetPurchaseIndentBasedOnCondition();
     }
@@ -232,7 +235,16 @@ export class PurchaseIndentComponent implements OnInit {
         this.fileToUploadList = [];
         this.invoiceAttachment = null;
     }
-
+    GetFactByPartnerID(): void {
+        this._FactService.GetFactByPartnerID(this.currentUserName).subscribe(
+            (data) => {
+                this.SelectedBPCFact = data as BPCFact;
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
     GetPurchaseIndentBasedOnCondition(): void {
         if (this.SelectedPIRNumber) {
             this.GetPurchaseIndentByPIAndPartnerID();
@@ -444,6 +456,12 @@ export class PurchaseIndentComponent implements OnInit {
     }
 
     GetPurchaseIndentValues(): void {
+        if (this.SelectedBPCFact) {
+            this.SelectedPurchaseIndentHeader.Client = this.SelectedPurchaseIndentView.Client = this.SelectedBPCFact.Client;
+            this.SelectedPurchaseIndentHeader.Company = this.SelectedPurchaseIndentView.Company = this.SelectedBPCFact.Company;
+            this.SelectedPurchaseIndentHeader.Type = this.SelectedPurchaseIndentView.Type = this.SelectedBPCFact.Type;
+            this.SelectedPurchaseIndentHeader.PatnerID = this.SelectedPurchaseIndentView.PatnerID = this.SelectedBPCFact.PatnerID;
+        }
         const depDate = this.PurchaseIndentFormGroup.get('Date').value;
         if (depDate) {
             this.SelectedPurchaseIndentHeader.Date = this.SelectedPurchaseIndentView.Date = this._datePipe.transform(depDate, 'yyyy-MM-dd HH:mm:ss');
@@ -459,15 +477,11 @@ export class PurchaseIndentComponent implements OnInit {
             // this.SelectedPurchaseIndentHeader.Company = this.SelectedPurchaseIndentView.Company = this.PO.Company;
             // this.SelectedPurchaseIndentHeader.Type = this.SelectedPurchaseIndentView.Type = this.PO.Type;
             // this.SelectedPurchaseIndentHeader.PatnerID = this.SelectedPurchaseIndentView.PatnerID = this.PO.PatnerID;
-            this.SelectedPurchaseIndentHeader.Type = this.SelectedPurchaseIndentView.Type = 'Customer';
-            this.SelectedPurchaseIndentHeader.PatnerID = this.SelectedPurchaseIndentView.PatnerID = this.currentUserName;
             this.SelectedPurchaseIndentHeader.Status = this.SelectedPurchaseIndentView.Status = this.SelectedPurchaseIndentHeader.Status;
         }
         else {
             // this.SelectedPurchaseIndentHeader.Client = this.SelectedPurchaseIndentView.Client = this.SelectedPurchaseIndentHeader.Client;
             // this.SelectedPurchaseIndentHeader.Company = this.SelectedPurchaseIndentView.Company = this.SelectedPurchaseIndentHeader.Company;
-            this.SelectedPurchaseIndentHeader.Type = this.SelectedPurchaseIndentView.Type = 'Customer';
-            this.SelectedPurchaseIndentHeader.PatnerID = this.SelectedPurchaseIndentView.PatnerID = this.currentUserName;
             this.SelectedPurchaseIndentHeader.Status = this.SelectedPurchaseIndentView.Status = 'Open';
         }
     }
@@ -482,8 +496,12 @@ export class PurchaseIndentComponent implements OnInit {
     GetPurchaseIndentItemValues(): void {
         this.SelectedPurchaseIndentView.Items = [];
         this.AllPurchaseIndentItems.forEach(x => {
-            x.Type = 'Customer';
-            x.PatnerID = this.currentUserName;
+            if (this.SelectedBPCFact) {
+                x.Client = this.SelectedBPCFact.Client;
+                x.Company = this.SelectedBPCFact.Company;
+                x.Type = this.SelectedBPCFact.Type;
+                x.PatnerID = this.SelectedBPCFact.PatnerID;
+            }
             this.SelectedPurchaseIndentView.Items.push(x);
         });
     }

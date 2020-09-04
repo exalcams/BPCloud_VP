@@ -1,21 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationDetails, UserWithRole } from 'app/models/master';
 import { Guid } from 'guid-typescript';
+import { BPCFact } from 'app/models/fact';
 import { SupportDetails, SupportHeader, SupportLog, BPCSupportAttachment } from 'app/models/support-desk';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SupportDeskService } from 'app/services/support-desk.service';
 import { MasterService } from 'app/services/master.service';
+import { FactService } from 'app/services/fact.service';
 import { MatSnackBar, MatDialog, MatDialogConfig } from '@angular/material';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { AttachmentDetails } from 'app/models/task';
 import { AttachmentDialogComponent } from 'app/allModules/pages/attachment-dialog/attachment-dialog.component';
-import { BPCFact } from 'app/models/fact';
-import { FactService } from 'app/services/fact.service';
+
 @Component({
-  selector: 'cust-support-chat',
+  selector: 'app-support-chat',
   templateUrl: './support-chat.component.html',
   styleUrls: ['./support-chat.component.scss']
 })
@@ -121,7 +122,7 @@ export class SupportChatComponent implements OnInit {
   }
   GetSupportDetailsByPartnerAndSupportIDAndType(): void {
     this.IsProgressBarVisibile = true;
-    this._supportDeskService.GetSupportDetailsByPartnerAndSupportIDAndType(this.SupportID, this.PartnerID, 'C').subscribe(
+    this._supportDeskService.GetSupportDetailsByPartnerAndSupportIDAndType(this.SupportID, this.PartnerID, 'S').subscribe(
       data => {
         if (data) {
           this.SupportDetails = data as SupportDetails;

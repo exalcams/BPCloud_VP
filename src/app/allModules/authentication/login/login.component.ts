@@ -49,6 +49,7 @@ export class LoginComponent implements OnInit {
     configSubChildren: FuseNavigation[] = [];
     customerOrderFulfilmentSubChildren: FuseNavigation[] = [];
     customerSupportSubChildren: FuseNavigation[] = [];
+    supplierSupportSubChildren: FuseNavigation[] = [];
     private _unsubscribeAll: Subject<any>;
     message = "Snack Bar opened.";
     actionButtonLabel = "Retry";
@@ -394,6 +395,7 @@ export class LoginComponent implements OnInit {
 
         this.GetOrderFulfilmetMenus();
         this.GetCustomerMenus();
+        this.GetSupplierMenus();
         this.GetAdminMenus();
         this.GetGateMenus();
         this.GetQualityMenus();
@@ -920,6 +922,57 @@ export class LoginComponent implements OnInit {
                 isSvgIcon: true,
                 // icon: 'view_list',
                 children: this.customerSupportSubChildren,
+            });
+        }
+    }
+
+    GetSupplierMenus(): void {
+        
+        if (this.menuItems.indexOf("SupplierASNList") >= 0) {
+            this.children.push({
+                id: "supplierasnlist",
+                title: "ASN List",
+                translate: "NAV.CUSTOMER.GET_SUPPORT",
+                type: "item",
+                icon: "asnIcon",
+                isSvgIcon: true,
+                url: "/supplier/asnlist",
+            });
+        }
+
+        if (this.menuItems.indexOf("SupplierSupportDesk") >= 0) {
+            this.supplierSupportSubChildren.push({
+                id: "suppliersupportdesk",
+                title: "Get Support",
+                translate: "NAV.CUSTOMER.GET_SUPPORT",
+                type: "item",
+                url: "/supplier/supportdesk",
+            });
+        }
+
+        if (this.menuItems.indexOf("SupplierFact") >= 0) {
+            this.supplierSupportSubChildren.push({
+                id: "supplierfact",
+                title: "My Details",
+                translate: "NAV.CUSTOMER.MY_DETAILS",
+                type: "item",
+                // icon: 'dashboard',
+                url: "/supplier/fact",
+            });
+        }
+        if (
+            this.menuItems.indexOf("SupplierSupportDesk") >= 0 ||
+            this.menuItems.indexOf("SupplierFact") >= 0
+        ) {
+            this.children.push({
+                id: "master",
+                title: "Support",
+                translate: "NAV.VENDOR.SUPPORT",
+                type: "collapsable",
+                icon: "supportIcon",
+                isSvgIcon: true,
+                // icon: 'view_list',
+                children: this.supplierSupportSubChildren,
             });
         }
     }

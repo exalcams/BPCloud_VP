@@ -47,12 +47,19 @@ export class ASNService {
         return this._httpClient.get<BPCASNHeader[]>(`${this.baseAddress}poapi/ASN/GetAllASNByPartnerID?PartnerID=${PartnerID}`)
             .pipe(catchError(this.errorHandler));
     }
-
+    GetAllASNList(): Observable<ASNListView[] | string> {
+        return this._httpClient.get<ASNListView[]>(`${this.baseAddress}poapi/ASN/GetAllASNList`)
+            .pipe(catchError(this.errorHandler));
+    }
     GetAllASNListByPartnerID(PartnerID: string): Observable<ASNListView[] | string> {
         return this._httpClient.get<ASNListView[]>(`${this.baseAddress}poapi/ASN/GetAllASNListByPartnerID?PartnerID=${PartnerID}`)
             .pipe(catchError(this.errorHandler));
     }
-
+    FilterASNList(VendorCode: string, ASNNumber: string, DocNumber: string, Material: string, Status: string, ASNFromDate: string, ASNToDate: string): Observable<ASNListView[] | string> {
+        return this._httpClient.get<ASNListView[]>
+            (`${this.baseAddress}poapi/ASN/FilterASNList?VendorCode=${VendorCode}&ASNNumber=${ASNNumber}&DocNumber=${DocNumber}&Material=${Material}&Status=${Status}&ASNFromDate=${ASNFromDate}&ASNToDate=${ASNToDate}`)
+            .pipe(catchError(this.errorHandler));
+    }
     FilterASNListByPartnerID(PartnerID: string, ASNNumber: string, DocNumber: string, Material: string, Status: string, ASNFromDate: string, ASNToDate: string): Observable<ASNListView[] | string> {
         return this._httpClient.get<ASNListView[]>
             (`${this.baseAddress}poapi/ASN/FilterASNListByPartnerID?PartnerID=${PartnerID}&ASNNumber=${ASNNumber}&DocNumber=${DocNumber}&Material=${Material}&Status=${Status}&ASNFromDate=${ASNFromDate}&ASNToDate=${ASNToDate}`)

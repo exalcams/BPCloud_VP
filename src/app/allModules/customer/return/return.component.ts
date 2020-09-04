@@ -22,6 +22,7 @@ import { NotificationDialogComponent } from 'app/notifications/notification-dial
 import { AttachmentDetails } from 'app/models/task';
 import { AttachmentDialogComponent } from 'app/allModules/pages/attachment-dialog/attachment-dialog.component';
 import { BPCPIHeader, BPCPIView, BPCPIItem, BPCProd } from 'app/models/customer';
+import { BPCFact } from 'app/models/fact';
 
 @Component({
   selector: 'app-return',
@@ -37,6 +38,7 @@ export class ReturnComponent implements OnInit {
   MenuItems: string[];
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
+  SelectedBPCFact: BPCFact;
   AllReturnHeaders: BPCPIHeader[] = [];
   ReturnFormGroup: FormGroup;
   ReturnItemFormGroup: FormGroup;
@@ -140,6 +142,7 @@ export class ReturnComponent implements OnInit {
     this.InitializeReturnItemFormGroup();
     this.GetAllBPCCountryMasters();
     this.GetAllBPCCurrencyMasters();
+    this.GetFactByPartnerID();
     this.GetAllProducts();
     this.GetReturnBasedOnCondition();
   }
@@ -230,7 +233,16 @@ export class ReturnComponent implements OnInit {
     this.fileToUploadList = [];
     this.invoiceAttachment = null;
   }
-
+  GetFactByPartnerID(): void {
+    this._FactService.GetFactByPartnerID(this.currentUserName).subscribe(
+      (data) => {
+        this.SelectedBPCFact = data as BPCFact;
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
   GetReturnBasedOnCondition(): void {
     if (this.SelectedPIRNumber) {
       this.GetReturnByRetAndPartnerID();
@@ -442,6 +454,12 @@ export class ReturnComponent implements OnInit {
   }
 
   GetReturnValues(): void {
+    if (this.SelectedBPCFact) {
+      this.SelectedReturnHeader.Client = this.SelectedReturnView.Client = this.SelectedBPCFact.Client;
+      this.SelectedReturnHeader.Company = this.SelectedReturnView.Company = this.SelectedBPCFact.Company;
+      this.SelectedReturnHeader.Type = this.SelectedReturnView.Type = this.SelectedBPCFact.Type;
+      this.SelectedReturnHeader.PatnerID = this.SelectedReturnView.PatnerID = this.SelectedBPCFact.PatnerID;
+    }
     const depDate = this.ReturnFormGroup.get('Date').value;
     if (depDate) {
       this.SelectedReturnHeader.Date = this.SelectedReturnView.Date = this._datePipe.transform(depDate, 'yyyy-MM-dd HH:mm:ss');
@@ -455,15 +473,11 @@ export class ReturnComponent implements OnInit {
       // this.SelectedReturnHeader.Company = this.SelectedReturnView.Company = this.PO.Company;
       // this.SelectedReturnHeader.Type = this.SelectedReturnView.Type = this.PO.Type;
       // this.SelectedReturnHeader.PatnerID = this.SelectedReturnView.PatnerID = this.PO.PatnerID;
-      this.SelectedReturnHeader.Type = this.SelectedReturnView.Type = 'Customer';
-      this.SelectedReturnHeader.PatnerID = this.SelectedReturnView.PatnerID = this.currentUserName;
       this.SelectedReturnHeader.Status = this.SelectedReturnView.Status = this.SelectedReturnHeader.Status;
     }
     else {
       // this.SelectedReturnHeader.Client = this.SelectedReturnView.Client = this.SelectedReturnHeader.Client;
       // this.SelectedReturnHeader.Company = this.SelectedReturnView.Company = this.SelectedReturnHeader.Company;
-      this.SelectedReturnHeader.Type = this.SelectedReturnView.Type = 'Customer';
-      this.SelectedReturnHeader.PatnerID = this.SelectedReturnView.PatnerID = this.currentUserName;
       this.SelectedReturnHeader.Status = this.SelectedReturnView.Status = 'Open';
     }
   }
@@ -478,8 +492,12 @@ export class ReturnComponent implements OnInit {
   GetReturnItemValues(): void {
     this.SelectedReturnView.Items = [];
     this.AllReturnItems.forEach(x => {
-      x.Type = 'Customer';
-      x.PatnerID = this.currentUserName;
+      if (this.SelectedBPCFact) {
+        x.Client = this.SelectedBPCFact.Client;
+        x.Company = this.SelectedBPCFact.Company;
+        x.Type = this.SelectedBPCFact.Type;
+        x.PatnerID = this.SelectedBPCFact.PatnerID;
+      }
       this.SelectedReturnView.Items.push(x);
     });
   }

@@ -23,6 +23,7 @@ import { NotificationDialogComponent } from 'app/notifications/notification-dial
 import { AttachmentDetails } from 'app/models/task';
 import { AttachmentDialogComponent } from 'app/allModules/pages/attachment-dialog/attachment-dialog.component';
 import { ASNService } from 'app/services/asn.service';
+import { BPCFact } from 'app/models/fact';
 
 @Component({
   selector: 'app-pod',
@@ -40,6 +41,7 @@ export class PODComponent implements OnInit {
   MenuItems: string[];
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
+  SelectedBPCFact: BPCFact;
   AllPODHeaders: BPCPODHeader[] = [];
   PODDisplayedColumns: string[] = [
     'InvoiceNumber',
@@ -95,6 +97,7 @@ export class PODComponent implements OnInit {
       this._router.navigate(['/auth/login']);
     }
     this.CreateAppUsage();
+    this.GetFactByPartnerID();
     this.GetAllPODByPartnerID();
   }
   CreateAppUsage(): void {
@@ -106,6 +109,16 @@ export class PODComponent implements OnInit {
     appUsage.ModifiedBy = this.currentUserName;
     this._masterService.CreateAppUsage(appUsage).subscribe(
       (data) => {
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+  GetFactByPartnerID(): void {
+    this._FactService.GetFactByPartnerID(this.currentUserName).subscribe(
+      (data) => {
+        this.SelectedBPCFact = data as BPCFact;
       },
       (err) => {
         console.error(err);

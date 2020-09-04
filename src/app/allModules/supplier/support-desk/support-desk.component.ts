@@ -9,13 +9,12 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 
 @Component({
-  selector: 'cust-support-desk',
+  selector: 'app-support-desk',
   templateUrl: './support-desk.component.html',
   styleUrls: ['./support-desk.component.scss']
 })
 export class SupportDeskComponent implements OnInit {
 
-  // private paginator: MatPaginator; private sort: MatSort;
   authenticationDetails: AuthenticationDetails;
   currentUserID: Guid;
   currentUserRole: string;
@@ -57,7 +56,7 @@ export class SupportDeskComponent implements OnInit {
       this.currentUserID = this.authenticationDetails.UserID;
       this.currentUserRole = this.authenticationDetails.UserRole;
       this.menuItems = this.authenticationDetails.MenuItemNames.split(',');
-      if (this.menuItems.indexOf('CustomerSupportDesk') < 0) {
+      if (this.menuItems.indexOf('SupplierSupportDesk') < 0) {
         this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
         );
         this._router.navigate(['/auth/login']);
@@ -74,7 +73,7 @@ export class SupportDeskComponent implements OnInit {
 
   loadSupportDeskBasedOnCondition(): void {
     if (this.docRefNo) {
-      this._router.navigate(['/customer/supportticket'], { queryParams: { DocRefNo: this.docRefNo } });
+      this._router.navigate(['/supplier/supportticket'], { queryParams: { DocRefNo: this.docRefNo } });
     }
     else {
       this.GetSupportMasters();
@@ -85,7 +84,7 @@ export class SupportDeskComponent implements OnInit {
   GetSupportTicketsByPartnerIDAndType(): void {
     this.isProgressBarVisibile = true;
     this._supportdeskService
-      .GetSupportTicketsByPartnerIDAndType(this.authenticationDetails.UserName, 'C')
+      .GetSupportTicketsByPartnerIDAndType(this.authenticationDetails.UserName, 'S')
       .subscribe((data) => {
         if (data) {
           this.supports = <SupportHeader[]>data;
@@ -121,10 +120,10 @@ export class SupportDeskComponent implements OnInit {
   }
 
   addSupportTicketClicked(): void {
-    this._router.navigate(['/customer/supportticket']);
+    this._router.navigate(['/supplier/supportticket']);
   }
 
   onSupportRowClicked(row: any): void {
-    this._router.navigate(['/customer/supportchat'], { queryParams: { SupportID: row.SupportID } });
+    this._router.navigate(['/supplier/supportchat'], { queryParams: { SupportID: row.SupportID } });
   }
 }
