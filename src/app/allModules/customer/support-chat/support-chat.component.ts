@@ -249,7 +249,7 @@ export class SupportChatComponent implements OnInit {
     this.SelectedSupportLog.CreatedBy = this.SelectedSupportLogView.CreatedBy = this.authenticationDetails.UserName;
     let user = new UserWithRole();
     user = this.Users.find(x => x.UserName.toLowerCase() === this.SupportHeader.PatnerID.toLowerCase());
-    this.SelectedSupportLog.PatnerEmail = this.SelectedSupportLogView.PatnerEmail = user.Email;
+    // this.SelectedSupportLog.PatnerEmail = this.SelectedSupportLogView.PatnerEmail = user.Email;
   }
 
   CreateSupportLog(): void {
@@ -295,7 +295,7 @@ export class SupportChatComponent implements OnInit {
   }
 
   AddSupportLogAttachment(): void {
-    this._supportDeskService.AddSupportLogAttachment(this.SupportHeader.SupportID.toString(), this.SelectedSupportLog.ID.toString(),
+    this._supportDeskService.AddSupportLogAttachment(this.SupportHeader.SupportID.toString(), this.SelectedSupportLog.SupportLogID.toString(),
       this.currentUserID.toString(), this.fileToUploadList).subscribe(
         (dat) => {
           this.notificationSnackBarComponent.openSnackBar('Support Log created successfully', SnackBarStatus.success);

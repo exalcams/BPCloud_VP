@@ -23,7 +23,14 @@ export class POService {
   }
 
   // POs
-
+  GetAllPOList(): Observable<BPCOFHeader[] | string> {
+    return this._httpClient.get<BPCOFHeader[]>(`${this.baseAddress}poapi/PO/GetAllPOList`)
+      .pipe(catchError(this.errorHandler));
+  }
+  FilterPOList(VendorCode: string, PONumber: string, Status: string, FromDate: string, ToDate: string): Observable<BPCOFHeader[] | string> {
+    return this._httpClient.get<BPCOFHeader[]>(`${this.baseAddress}poapi/PO/FilterPOList?VendorCode=${VendorCode}&PONumber=${PONumber}&Status=${Status}&FromDate=${FromDate}&ToDate=${ToDate}`)
+      .pipe(catchError(this.errorHandler));
+  }
   GetPOByDoc(DocNumber: string): Observable<BPCOFHeader | string> {
     return this._httpClient.get<any>(`${this.baseAddress}poapi/PO/GetPOByDoc?DocNumber=${DocNumber}`)
       .pipe(catchError(this.errorHandler));
@@ -159,55 +166,55 @@ export class POService {
       .pipe(catchError(this.errorHandler));
   }
 
-     // SCOCMessage
-     CreateSCOCMessage(SCOCMessage: BPCSCOCMessage): Observable<any> {
-      return this._httpClient
-        .post<any>(
-          `${this.baseAddress}poapi/Message/CreateSCOCMessage`,
-          SCOCMessage,
-          {
-            headers: new HttpHeaders({
-              "Content-Type": "application/json",
-            }),
-          }
-        )
-        .pipe(catchError(this.errorHandler));
-    }
-  
-    GetSCOCMessage(): Observable<BPCSCOCMessage | string> {
-      return this._httpClient
-        .get<BPCSCOCMessage>(
-          `${this.baseAddress}poapi/Message/GetSCOCMessage`
-        )
-        .pipe(catchError(this.errorHandler));
-    }
-  
-    UpdateSCOCMessage(SCOCMessage: BPCSCOCMessage): Observable<any> {
-      return this._httpClient
-        .post<any>(
-          `${this.baseAddress}poapi/Message/UpdateSCOCMessage`,
-          SCOCMessage,
-          {
-            headers: new HttpHeaders({
-              "Content-Type": "application/json",
-            }),
-          }
-        )
-        .pipe(catchError(this.errorHandler));
-    }
-  
-    DeleteSCOCMessage(SCOCMessage: BPCSCOCMessage): Observable<any> {
-      return this._httpClient
-        .post<any>(
-          `${this.baseAddress}poapi/Message/DeleteSCOCMessage`,
-          SCOCMessage,
-          {
-            headers: new HttpHeaders({
-              "Content-Type": "application/json",
-            }),
-          }
-        )
-        .pipe(catchError(this.errorHandler));
-    }
+  // SCOCMessage
+  CreateSCOCMessage(SCOCMessage: BPCSCOCMessage): Observable<any> {
+    return this._httpClient
+      .post<any>(
+        `${this.baseAddress}poapi/Message/CreateSCOCMessage`,
+        SCOCMessage,
+        {
+          headers: new HttpHeaders({
+            "Content-Type": "application/json",
+          }),
+        }
+      )
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetSCOCMessage(): Observable<BPCSCOCMessage | string> {
+    return this._httpClient
+      .get<BPCSCOCMessage>(
+        `${this.baseAddress}poapi/Message/GetSCOCMessage`
+      )
+      .pipe(catchError(this.errorHandler));
+  }
+
+  UpdateSCOCMessage(SCOCMessage: BPCSCOCMessage): Observable<any> {
+    return this._httpClient
+      .post<any>(
+        `${this.baseAddress}poapi/Message/UpdateSCOCMessage`,
+        SCOCMessage,
+        {
+          headers: new HttpHeaders({
+            "Content-Type": "application/json",
+          }),
+        }
+      )
+      .pipe(catchError(this.errorHandler));
+  }
+
+  DeleteSCOCMessage(SCOCMessage: BPCSCOCMessage): Observable<any> {
+    return this._httpClient
+      .post<any>(
+        `${this.baseAddress}poapi/Message/DeleteSCOCMessage`,
+        SCOCMessage,
+        {
+          headers: new HttpHeaders({
+            "Content-Type": "application/json",
+          }),
+        }
+      )
+      .pipe(catchError(this.errorHandler));
+  }
 
 }

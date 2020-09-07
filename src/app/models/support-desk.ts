@@ -17,16 +17,15 @@ export class SupportHeader extends CommonClass {
     IsResolved: boolean;
 }
 export class SupportLog extends CommonClass {
-    ID: number;
-    SupportID: string;
     Client: string;
     Company: string;
     Type: string;
     PatnerID: string;
+    SupportID: string;
+    SupportLogID: string;
     Status: string;
     Remarks: string;
     IsResolved: boolean;
-    PatnerEmail: string;
 }
 export class SupportDetails extends CommonClass {
     supportHeader: SupportHeader;
