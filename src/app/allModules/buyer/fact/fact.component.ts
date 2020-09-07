@@ -14,15 +14,15 @@ import { Router } from '@angular/router';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { CBPLocation } from 'app/models/vendor-master';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
-import { SupportMaster, SupportHeader, SupportHeaderView } from 'app/models/support-desk';
+import { SupportHeaderView, SupportMaster, SupportHeader } from 'app/models/support-desk';
 import { SupportDeskService } from 'app/services/support-desk.service';
 
 @Component({
-  selector: 'app-customer-fact',
-  templateUrl: './customer-fact.component.html',
-  styleUrls: ['./customer-fact.component.scss']
+  selector: 'app-fact',
+  templateUrl: './fact.component.html',
+  styleUrls: ['./fact.component.scss']
 })
-export class CustomerFactComponent implements OnInit {
+export class FactComponent implements OnInit {
 
   MenuItems: string[];
   AllMenuApps: MenuApp[] = [];
@@ -160,7 +160,7 @@ export class CustomerFactComponent implements OnInit {
       this.currentUserName = this.authenticationDetails.UserName;
       this.CurrentUserRole = this.authenticationDetails.UserRole;
       this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
-      if (this.MenuItems.indexOf('CustomerFact') < 0) {
+      if (this.MenuItems.indexOf('BuyerFact') < 0) {
         this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
         );
         this._router.navigate(['/auth/login']);
@@ -328,7 +328,7 @@ export class CustomerFactComponent implements OnInit {
   }
 
   GetFactByPartnerIDAndType(): void {
-    this._FactService.GetFactByPartnerIDAndType(this.currentUserName, 'C').subscribe(
+    this._FactService.GetFactByPartnerIDAndType(this.currentUserName, 'B').subscribe(
       (data) => {
         const fact = data as BPCFact;
         if (fact) {
@@ -876,7 +876,6 @@ export class CustomerFactComponent implements OnInit {
       }
     );
   }
-
   GetSupportTicket(): SupportHeaderView {
     const SupportTicketView: SupportHeaderView = new SupportHeaderView();
     SupportTicketView.Client = this.SelectedBPCFact.Client;
@@ -934,7 +933,6 @@ export class CustomerFactComponent implements OnInit {
     this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
     this.IsProgressBarVisibile = false;
   }
-
   ShowValidationErrors(formGroup: FormGroup): void {
     Object.keys(formGroup.controls).forEach(key => {
       if (!formGroup.get(key).valid) {
@@ -1062,4 +1060,5 @@ export class CustomerFactComponent implements OnInit {
   //     }
   //   });
   // }
+
 }

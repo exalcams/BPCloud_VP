@@ -122,7 +122,7 @@ export class SupportChatComponent implements OnInit {
   }
   GetSupportDetailsByPartnerAndSupportIDAndType(): void {
     this.IsProgressBarVisibile = true;
-    this._supportDeskService.GetSupportDetailsByPartnerAndSupportIDAndType(this.SupportID, this.PartnerID, 'S').subscribe(
+    this._supportDeskService.GetSupportDetailsByPartnerAndSupportIDAndType(this.SupportID, this.PartnerID, 'B').subscribe(
       data => {
         if (data) {
           this.SupportDetails = data as SupportDetails;

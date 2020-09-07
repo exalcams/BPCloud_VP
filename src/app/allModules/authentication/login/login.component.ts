@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
     configSubChildren: FuseNavigation[] = [];
     customerOrderFulfilmentSubChildren: FuseNavigation[] = [];
     customerSupportSubChildren: FuseNavigation[] = [];
-    supplierSupportSubChildren: FuseNavigation[] = [];
+    buyerSupportSubChildren: FuseNavigation[] = [];
     private _unsubscribeAll: Subject<any>;
     message = "Snack Bar opened.";
     actionButtonLabel = "Retry";
@@ -272,7 +272,10 @@ export class LoginComponent implements OnInit {
             this._router.navigate(["pages/supportdesk"]);
         } else if (data.UserRole === "CustomerHelpDeskAdmin") {
             this._router.navigate(["customer/supportdesk"]);
-        } else {
+        } else if (data.UserRole === "Buyer") {
+            this._router.navigate(["buyer/polist"]);
+        }
+        else {
             this._router.navigate(["pages/home"]);
         }
     }
@@ -395,7 +398,7 @@ export class LoginComponent implements OnInit {
 
         this.GetOrderFulfilmetMenus();
         this.GetCustomerMenus();
-        this.GetSupplierMenus();
+        this.GetBuyerMenus();
         this.GetAdminMenus();
         this.GetGateMenus();
         this.GetQualityMenus();
@@ -926,43 +929,55 @@ export class LoginComponent implements OnInit {
         }
     }
 
-    GetSupplierMenus(): void {
-        
-        if (this.menuItems.indexOf("SupplierASNList") >= 0) {
+    GetBuyerMenus(): void {
+
+        if (this.menuItems.indexOf("BuyerPOList") >= 0) {
             this.children.push({
-                id: "supplierasnlist",
+                id: "buyerpolist",
+                title: "PO List",
+                translate: "NAV.CUSTOMER.GET_SUPPORT",
+                type: "item",
+                icon: "billIcon",
+                isSvgIcon: true,
+                url: "/buyer/polist",
+            });
+        }
+        
+        if (this.menuItems.indexOf("BuyerASNList") >= 0) {
+            this.children.push({
+                id: "buyerasnlist",
                 title: "ASN List",
                 translate: "NAV.CUSTOMER.GET_SUPPORT",
                 type: "item",
                 icon: "asnIcon",
                 isSvgIcon: true,
-                url: "/supplier/asnlist",
+                url: "/buyer/asnlist",
             });
         }
 
-        if (this.menuItems.indexOf("SupplierSupportDesk") >= 0) {
-            this.supplierSupportSubChildren.push({
-                id: "suppliersupportdesk",
+        if (this.menuItems.indexOf("BuyerSupportDesk") >= 0) {
+            this.buyerSupportSubChildren.push({
+                id: "buyersupportdesk",
                 title: "Get Support",
                 translate: "NAV.CUSTOMER.GET_SUPPORT",
                 type: "item",
-                url: "/supplier/supportdesk",
+                url: "/buyer/supportdesk",
             });
         }
 
-        if (this.menuItems.indexOf("SupplierFact") >= 0) {
-            this.supplierSupportSubChildren.push({
-                id: "supplierfact",
+        if (this.menuItems.indexOf("BuyerFact") >= 0) {
+            this.buyerSupportSubChildren.push({
+                id: "buyerfact",
                 title: "My Details",
                 translate: "NAV.CUSTOMER.MY_DETAILS",
                 type: "item",
                 // icon: 'dashboard',
-                url: "/supplier/fact",
+                url: "/buyer/fact",
             });
         }
         if (
-            this.menuItems.indexOf("SupplierSupportDesk") >= 0 ||
-            this.menuItems.indexOf("SupplierFact") >= 0
+            this.menuItems.indexOf("BuyerSupportDesk") >= 0 ||
+            this.menuItems.indexOf("BuyerFact") >= 0
         ) {
             this.children.push({
                 id: "master",
@@ -972,7 +987,7 @@ export class LoginComponent implements OnInit {
                 icon: "supportIcon",
                 isSvgIcon: true,
                 // icon: 'view_list',
-                children: this.supplierSupportSubChildren,
+                children: this.buyerSupportSubChildren,
             });
         }
     }
