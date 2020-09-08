@@ -89,6 +89,10 @@ const appRoutes: Routes = [
         loadChildren: './allModules/buyer/buyer.module#BuyerModule'
     },
     {
+        path: 'rfq',
+        loadChildren: './allModules/rfq/rfq.module#RFQModule'
+    },
+    {
         path: 'subcon',
         loadChildren: './allModules/subcon/subcon.module#SubconModule'
     },
@@ -104,7 +108,6 @@ const appRoutes: Routes = [
         path: 'payment',
         loadChildren: './allModules/payment/payment.module#PaymentModule'
     },
-
     {
         path: '**',
         redirectTo: 'auth/login'

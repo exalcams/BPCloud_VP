@@ -396,15 +396,11 @@ export class LoginComponent implements OnInit {
             });
         }
 
-        this.GetOrderFulfilmetMenus();
+        this.GetVendorMenus();
         this.GetCustomerMenus();
         this.GetBuyerMenus();
         this.GetAdminMenus();
-        this.GetGateMenus();
-        this.GetQualityMenus();
-        this.GetSubconMenus();
-        this.GetPaymentMenus();
-        this.GetSupportMenus();
+
         // this.GetCustomerMenus();
         // this.GetAdminMenus();
 
@@ -818,6 +814,16 @@ export class LoginComponent implements OnInit {
         }
     }
 
+    GetVendorMenus(): void {
+        this.GetOrderFulfilmetMenus();
+        this.GetGateMenus();
+        this.GetQualityMenus();
+        this.GetSubconMenus();
+        this.GetPaymentMenus();
+        this.GetRFQMenus();
+        this.GetSupportMenus();
+    }
+
     GetCustomerMenus(): void {
         if (this.menuItems.indexOf("CustomerDashboard") >= 0) {
             this.children.push({
@@ -942,7 +948,7 @@ export class LoginComponent implements OnInit {
                 url: "/buyer/polist",
             });
         }
-        
+
         if (this.menuItems.indexOf("BuyerASNList") >= 0) {
             this.children.push({
                 id: "buyerasnlist",
@@ -954,7 +960,7 @@ export class LoginComponent implements OnInit {
                 url: "/buyer/asnlist",
             });
         }
-
+        this.GetRFQMenus();
         if (this.menuItems.indexOf("BuyerSupportDesk") >= 0) {
             this.buyerSupportSubChildren.push({
                 id: "buyersupportdesk",
@@ -1154,6 +1160,39 @@ export class LoginComponent implements OnInit {
         //         url: "/pages/improvement",
         //     });
         // }
+    }
+
+    GetRFQMenus(): void {
+        if (this.menuItems.indexOf("RFQCreation") >= 0) {
+            if (this.children.findIndex(x => x.id === 'rfqcreation') < 0) {
+                this.children.push({
+                    id: "rfqcreation",
+                    title: "RFQ Creation",
+                    translate: "NAV.CUSTOMER.ORDER_FULFILMENT",
+                    type: "item",
+                    icon: "rfxIcon",
+                    isSvgIcon: true,
+                    // icon: 'dashboard',
+                    // children: this.customerOrderFulfilmentSubChildren,
+                    url: "/rfq/creation"
+                });
+            }
+        }
+        if (this.menuItems.indexOf("RFQResponse") >= 0) {
+            if (this.children.findIndex(x => x.id === 'rfqresponse') < 0) {
+                this.children.push({
+                    id: "rfqresponse",
+                    title: "RFQ Response",
+                    translate: "NAV.CUSTOMER.ORDER_FULFILMENT",
+                    type: "item",
+                    icon: "rfxIcon",
+                    isSvgIcon: true,
+                    // icon: 'dashboard',
+                    // children: this.customerOrderFulfilmentSubChildren,
+                    url: "/rfq/response"
+                });
+            }
+        }
     }
 
     typeMessage(): void {
