@@ -1,6 +1,6 @@
-import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { FuseSidebarModule } from '@fuse/components';
+import { NgModule } from "@angular/core";
+import { RouterModule, Route, Routes } from "@angular/router";
+import { FuseSidebarModule } from "@fuse/components";
 
 import {
     MatFormFieldModule,
@@ -38,56 +38,53 @@ import {
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
-    MatTreeModule
-} from '@angular/material';
-
-import { NgxChartsModule } from '@swimlane/ngx-charts';
+    MatTreeModule,
+} from "@angular/material";
+import { NgxChartsModule } from "@swimlane/ngx-charts";
+import { NgxDonutChartModule } from "ngx-doughnut-chart";
+import { NgxDropzoneModule } from 'ngx-dropzone';
 import {
     FuseCountdownModule,
     FuseHighlightModule,
     FuseMaterialColorPickerModule,
-    FuseWidgetModule
-} from '@fuse/components';
-
-import { FuseSharedModule } from '@fuse/shared.module';
-import { FormsModule } from '@angular/forms';
+    FuseWidgetModule,
+} from "@fuse/components";
+import { FuseSharedModule } from "@fuse/shared.module";
+import { FormsModule } from "@angular/forms";
+import { DecimalPipe } from "@angular/common";
 import { ChartsModule } from "ng2-charts";
 import "chartjs-plugin-labels";
 import "chartjs-plugin-annotation";
-import { CKEditorModule } from 'ngx-ckeditor';
-import { DecimalPipe } from '@angular/common';
+import { CreationComponent } from './creation/creation.component';
+import { SelectdialogComponent } from './selectdialog/selectdialog.component';
+import { EngineComponent } from './engine/engine.component';
+import { ResponseComponent } from './response/response.component';
+import { ResponddialogComponent } from './responddialog/responddialog.component';
 
-import { AsnListComponent } from './asn-list/asn-list.component';
-import { SupportDeskComponent } from './support-desk/support-desk.component';
-import { SupportTicketComponent } from './support-ticket/support-ticket.component';
-import { SupportChatComponent } from './support-chat/support-chat.component';
 
-const routes = [
+// import 'chart.piecelabel.js';
+
+const routes: Routes = [
     {
-        path: 'asnlist',
-        component: AsnListComponent
+        path: 'creation',
+        component: CreationComponent
     },
     {
-        path: 'supportchat',
-        component: SupportChatComponent
+        path: 'engine',
+        component: EngineComponent
     },
     {
-        path: 'supportdesk',
-        component: SupportDeskComponent
+        path: 'response',
+        component: ResponseComponent
     },
     {
-        path: 'supportticket',
-        component: SupportTicketComponent
+        path: "**",
+        redirectTo: "/auth/login",
     },
-    {
-        path: '**',
-        redirectTo: '/auth/login'
-    }
 ];
 
 @NgModule({
     imports: [
-        RouterModule.forChild(routes),
         // HttpClientModule,
         // TranslateModule,
         MatFormFieldModule,
@@ -128,6 +125,9 @@ const routes = [
         MatTreeModule,
 
         NgxChartsModule,
+        NgxDonutChartModule,
+        NgxDropzoneModule,
+        ChartsModule,
 
         FuseSharedModule,
         FuseSidebarModule,
@@ -136,15 +136,18 @@ const routes = [
         FuseHighlightModule,
         FuseMaterialColorPickerModule,
         FuseWidgetModule,
+        // NgMultiSelectDropDownModule,
 
         FormsModule,
-        ChartsModule,
-        CKEditorModule
+        RouterModule.forChild(routes),
     ],
-    declarations: [AsnListComponent, SupportChatComponent, SupportDeskComponent, SupportTicketComponent],
-    providers: [
-        DecimalPipe
-    ],
-    entryComponents: []
+    declarations: [
+        CreationComponent,
+        SelectdialogComponent,
+        EngineComponent,
+        ResponseComponent,
+        ResponddialogComponent],
+    providers: [DecimalPipe],
+    entryComponents: [SelectdialogComponent],
 })
-export class SupplierModule { }
+export class RFQModule { }
