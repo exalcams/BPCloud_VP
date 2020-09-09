@@ -15,8 +15,8 @@ export class EngineComponent implements OnInit {
 
   array1: any = [];
   i: number;
-  a: any;
-  b: any = "#1f76d3";
+  a: any = 1;
+  b: any = "#f3705a";
   color_75: any = [];
   color_90: any = [];
 
@@ -131,15 +131,27 @@ export class EngineComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    for (this.i = 0; this.i <= 100; this.i++) {
+      this.array1[this.i] = this.a;
+    }
+
+
+    for (this.i = 0; this.i <= 75; this.i++) {
+      this.color_75[this.i] = this.b
+    }
+    for (this.i = 0; this.i <= 90; this.i++) {
+      this.color_90[this.i] = this.b
+    }
     new Chart('doughnut1', {
       type: 'doughnut',
       options: {
         responsive: false,
-        maintainAspectRatio: true,
-        cutoutPercentage: 80,
+        maintainAspectRatio: false,
+        cutoutPercentage: 70,
 
-
-
+        plugins: {
+          labels: false
+        },
 
         title: {
           display: false,
@@ -158,53 +170,19 @@ export class EngineComponent implements OnInit {
         }
       },
       data: {
-
-        datasets: [
-          {
-            data: [1, 1, 1, 1,
-              1, 1, 1, 1
-              , 1, 1, 1, 1
-              , 1, 1, 1, 1
-              , 1, 1, 1, 1
-              , 1, 1, 1, 1
-              , 1, 1, 1, 1
-              , 1, 1, 1, 1
-              , 1, 1, 1, 1
-              , 1, 1, 1, 1
-              , 1, 1, 1, 1
-              , 1, 1, 1, 1
-              , 1, 1, 1, 1
-              , 1, 1, 1, 1
-              , 1, 1, 1, 1
-              , 1, 1, 1, 1
-              , 1, 1, 1, 1
-              , 1, 1, 1, 1],
-            backgroundColor: ["#ee4057", "#ee4057", "#ee4057", "#ee4057", "#ee4057", "#ee4057",
-              "#ee4057", "#ee4057", "#ee4057", "#ee4057", "#ee4057", "#ee4057",
-              "#ee4057", "#ee4057", "#ee4057", "#ee4057", "#ee4057", "#ee4057",
-              "#ee4057", "#ee4057", "#ee4057", "#ee4057", "#ee4057", "#ee4057"
-              , "#ee4057", "#ee4057", "#ee4057", "#ee4057", "#ee4057", "#ee4057",
-              "#ee4057", "#ee4057", "#ee4057", "#ee4057", "#ee4057", "#ee4057",
-              "#ee4057", "#ee4057", "#ee4057", "#ee4057", "#ee4057", "#ee4057",
-              "#ee4057", "#ee4057", "#ee4057", "#ee4057", "#ee4057", "#ee4057",
-              "#ee4057", "#ee4057", "#ee4057", "#ee4057", "#ee4057", "#ee4057",
-              "#ee4057", "#ee4057", "#ee4057", "#ee4057", "#ee4057", "#ee4057",
-              "#ee4057", "#ee4057", "#ee4057", "#ee4057", "#ee4057", "#ee4057",
-              "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed", "#ebebed"],
-            label: 'dataset1',
+        datasets: [{
+          data: this.array1,
+          backgroundColor: this.color_75,
 
 
+          label: 'dataset1'
 
-          }
-
-
-
-
+        }
 
         ],
 
 
-        // labels:['blue','orange','yellow','blue','pink','orange','orange','orange','orange','orange','orange','orange','orange','orange']
+
       }
     })
   }
