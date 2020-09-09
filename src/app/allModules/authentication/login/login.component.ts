@@ -1178,6 +1178,21 @@ export class LoginComponent implements OnInit {
                 });
             }
         }
+        if (this.menuItems.indexOf("RFQEngine") >= 0) {
+            if (this.children.findIndex(x => x.id === 'rfqengine') < 0) {
+                this.children.push({
+                    id: "rfqengine",
+                    title: "RFQ Engine",
+                    translate: "NAV.CUSTOMER.ORDER_FULFILMENT",
+                    type: "item",
+                    icon: "rfxIcon",
+                    isSvgIcon: true,
+                    // icon: 'dashboard',
+                    // children: this.customerOrderFulfilmentSubChildren,
+                    url: "/rfq/engine"
+                });
+            }
+        }
         if (this.menuItems.indexOf("RFQResponse") >= 0) {
             if (this.children.findIndex(x => x.id === 'rfqresponse') < 0) {
                 this.children.push({
