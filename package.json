@@ -24,6 +24,7 @@
     "@angular/common": "6.1.6",
     "@angular/compiler": "6.1.6",
     "@angular/core": "6.1.6",
+    "@angular/elements": "6.1.6",
     "@angular/flex-layout": "6.0.0-beta.16",
     "@angular/forms": "6.1.6",
     "@angular/http": "6.1.6",
@@ -83,7 +84,8 @@
     "tslib": "1.11.1",
     "web-animations-js": "2.3.1",
     "xlsx": "0.16.1",
-    "zone.js": "0.8.26"
+    "zone.js": "0.8.26",
+    "document-register-element": "^1.7.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "0.12.4",

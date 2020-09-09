@@ -77,6 +77,7 @@ import { ImprovementComponent } from "./improvement/improvement.component";
 import { DeclarationComponent } from './declaration/declaration.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AsnPrintDialogComponent } from './asn-print-dialog/asn-print-dialog.component';
+import { ElementModule } from '../chat/element.module';
 
 // import 'chart.piecelabel.js';
 
@@ -221,6 +222,7 @@ const routes = [
         RouterModule.forChild(routes),
         TranslateModule,
         MatCarouselModule,
+        ElementModule,
     ],
     declarations: [
         OrderFulFilmentCenterComponent,

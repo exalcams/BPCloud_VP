@@ -25,6 +25,7 @@ import { FuseConfigService } from '@fuse/services/config.service';
     styleUrls: ["./home.component.scss"],
 })
 export class HomeComponent implements OnInit {
+    public theme = 'blue';
     menuItems: string[] = [];
     authenticationDetails: AuthenticationDetails;
     IsProgressBarVisibile: boolean;
