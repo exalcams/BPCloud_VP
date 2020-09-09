@@ -693,7 +693,7 @@ export class ASNComponent implements OnInit {
         this._ASNService.GetArrivalDateIntervalByPOAndPartnerID(this.SelectedDocNumber, this.currentUserName).subscribe(
             (data) => {
                 this.ArrivalDateInterval = data as number;
-                if (this.ArrivalDateInterval) {
+                if (this.ArrivalDateInterval && this.ArrivalDateInterval >= 0) {
                     let today = new Date();
                     today.setDate(today.getDate() + this.ArrivalDateInterval);
                     this.ASNFormGroup.get('ArrivalDate').patchValue(today);
@@ -1803,16 +1803,17 @@ export class ASNComponent implements OnInit {
                         //         this.ASNFormGroup.get(key).patchValue(fieldMaster.DefaultValue);
                         // }
                         if (key === 'AWBDate' || key === 'DepartureDate' || key === 'ArrivalDate') {
-                            if (!isNaN(Date.parse(fieldMaster.DefaultValue))) {
-                                this.ASNFormGroup.get(key).patchValue(Date.parse(fieldMaster.DefaultValue));
-                            } else {
-                                this.ASNFormGroup.get(key).patchValue('');
-                            }
+                            // if (!isNaN(Date.parse(fieldMaster.DefaultValue))) {
+                            //     this.ASNFormGroup.get(key).patchValue(Date.parse(fieldMaster.DefaultValue));
+                            // }
+                            // else {
+                            //     this.ASNFormGroup.get(key).patchValue('');
+                            // }
                         } else {
                             this.ASNFormGroup.get(key).patchValue(fieldMaster.DefaultValue);
                         }
                     } else {
-                        this.ASNFormGroup.get(key).patchValue('');
+                        // this.ASNFormGroup.get(key).patchValue('');
                     }
                     if (fieldMaster.Mandatory) {
                         if (key === 'NetWeight' || key === 'GrossWeight' || key === 'VolumetricWeight') {

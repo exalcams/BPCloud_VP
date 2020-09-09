@@ -34,6 +34,7 @@ import { FormsModule } from '@angular/forms';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { NgxDonutChartModule } from 'ngx-doughnut-chart';
 import { ChartsModule } from 'ng2-charts';
+import { ElementModule } from './allModules/chat/element.module';
 
 const appRoutes: Routes = [
     {
@@ -209,6 +210,7 @@ const appRoutes: Routes = [
         // NgMultiSelectDropDownModule,
 
         FormsModule,
+        // ElementModule
         // AuditModule,
     ],
     providers: [

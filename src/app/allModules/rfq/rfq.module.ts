@@ -60,6 +60,7 @@ import { SelectdialogComponent } from './selectdialog/selectdialog.component';
 import { EngineComponent } from './engine/engine.component';
 import { ResponseComponent } from './response/response.component';
 import { ResponddialogComponent } from './responddialog/responddialog.component';
+import { PurchaseRequisitionComponent } from './purchase-requisition/purchase-requisition.component';
 
 
 // import 'chart.piecelabel.js';
@@ -76,6 +77,10 @@ const routes: Routes = [
     {
         path: 'response',
         component: ResponseComponent
+    },
+    {
+        path: 'pr',
+        component: PurchaseRequisitionComponent
     },
     {
         path: "**",
@@ -146,7 +151,8 @@ const routes: Routes = [
         SelectdialogComponent,
         EngineComponent,
         ResponseComponent,
-        ResponddialogComponent],
+        ResponddialogComponent,
+        PurchaseRequisitionComponent],
     providers: [DecimalPipe],
     entryComponents: [SelectdialogComponent],
 })
