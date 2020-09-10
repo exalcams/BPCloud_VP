@@ -11,7 +11,7 @@
 }
 .accent1 {
   background-color: rgba($color: #ffffff, $alpha: 0.1);
-  color: #ffffff;
+  color: #ffffff !important;
   border-bottom: 4px solid #efb577;
   mat-icon {
     opacity: 1;

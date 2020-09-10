@@ -50,6 +50,7 @@ export class LoginComponent implements OnInit {
     customerOrderFulfilmentSubChildren: FuseNavigation[] = [];
     customerSupportSubChildren: FuseNavigation[] = [];
     buyerSupportSubChildren: FuseNavigation[] = [];
+    rfqSubChildren: FuseNavigation[] = [];
     private _unsubscribeAll: Subject<any>;
     message = "Snack Bar opened.";
     actionButtonLabel = "Retry";
@@ -1163,15 +1164,30 @@ export class LoginComponent implements OnInit {
     }
 
     GetRFQMenus(): void {
+        if (this.menuItems.indexOf("PurchaseRequisition") >= 0) {
+            if (this.rfqSubChildren.findIndex(x => x.id === 'purchaserequisition') < 0) {
+                this.rfqSubChildren.push({
+                    id: "purchaserequisition",
+                    title: "Purchase Requisition",
+                    translate: "NAV.CUSTOMER.ORDER_FULFILMENT",
+                    type: "item",
+                    // icon: "rfxIcon",
+                    // isSvgIcon: true,
+                    // icon: 'dashboard',
+                    // children: this.customerOrderFulfilmentSubChildren,
+                    url: "/rfq/pr"
+                });
+            }
+        }
         if (this.menuItems.indexOf("RFQCreation") >= 0) {
-            if (this.children.findIndex(x => x.id === 'rfqcreation') < 0) {
-                this.children.push({
+            if (this.rfqSubChildren.findIndex(x => x.id === 'rfqcreation') < 0) {
+                this.rfqSubChildren.push({
                     id: "rfqcreation",
                     title: "RFQ Creation",
                     translate: "NAV.CUSTOMER.ORDER_FULFILMENT",
                     type: "item",
-                    icon: "rfxIcon",
-                    isSvgIcon: true,
+                    // icon: "rfxIcon",
+                    // isSvgIcon: true,
                     // icon: 'dashboard',
                     // children: this.customerOrderFulfilmentSubChildren,
                     url: "/rfq/creation"
@@ -1179,14 +1195,14 @@ export class LoginComponent implements OnInit {
             }
         }
         if (this.menuItems.indexOf("RFQEngine") >= 0) {
-            if (this.children.findIndex(x => x.id === 'rfqengine') < 0) {
-                this.children.push({
+            if (this.rfqSubChildren.findIndex(x => x.id === 'rfqengine') < 0) {
+                this.rfqSubChildren.push({
                     id: "rfqengine",
                     title: "RFQ Engine",
                     translate: "NAV.CUSTOMER.ORDER_FULFILMENT",
                     type: "item",
-                    icon: "rfxIcon",
-                    isSvgIcon: true,
+                    // icon: "rfxIcon",
+                    // isSvgIcon: true,
                     // icon: 'dashboard',
                     // children: this.customerOrderFulfilmentSubChildren,
                     url: "/rfq/engine"
@@ -1194,17 +1210,36 @@ export class LoginComponent implements OnInit {
             }
         }
         if (this.menuItems.indexOf("RFQResponse") >= 0) {
-            if (this.children.findIndex(x => x.id === 'rfqresponse') < 0) {
-                this.children.push({
+            if (this.rfqSubChildren.findIndex(x => x.id === 'rfqresponse') < 0) {
+                this.rfqSubChildren.push({
                     id: "rfqresponse",
                     title: "RFQ Response",
                     translate: "NAV.CUSTOMER.ORDER_FULFILMENT",
                     type: "item",
-                    icon: "rfxIcon",
-                    isSvgIcon: true,
+                    // icon: "rfxIcon",
+                    // isSvgIcon: true,
                     // icon: 'dashboard',
                     // children: this.customerOrderFulfilmentSubChildren,
                     url: "/rfq/response"
+                });
+            }
+        }
+
+        if (this.menuItems.indexOf("PurchaseRequisition") >= 0 ||
+            this.menuItems.indexOf("RFQCreation") >= 0 ||
+            this.menuItems.indexOf("RFQEngine") >= 0 ||
+            this.menuItems.indexOf("RFQResponse") >= 0) {
+            if (this.children.findIndex(x => x.id === 'rfq') < 0) {
+                this.children.push({
+                    id: "rfq",
+                    title: "RFQ",
+                    translate: "NAV.CUSTOMER.ORDER_FULFILMENT",
+                    type: "collapsable",
+                    icon: "rfxIcon",
+                    isSvgIcon: true,
+                    // icon: 'dashboard',
+                    children: this.rfqSubChildren,
+                    // url: "/rfq/response"
                 });
             }
         }
