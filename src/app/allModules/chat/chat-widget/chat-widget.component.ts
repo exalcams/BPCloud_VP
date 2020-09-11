@@ -1,6 +1,6 @@
-import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
-import { Subject } from 'rxjs';
-import { fadeIn, fadeInOut } from '../animations';
+import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core'
+import { Subject } from 'rxjs'
+import { fadeIn, fadeInOut } from '../animations'
 
 const randomMessages = [
   'Angular is a platform and Framework.',
@@ -18,7 +18,7 @@ const getRandomMessage = () => randomMessages[rand(randomMessages.length)]
 })
 export class ChatWidgetComponent implements OnInit {
   @ViewChild('bottom') bottom: ElementRef
-  @Input() public theme: 'blue' | 'grey' | 'red' = 'blue';
+  @Input() public theme: 'blue' | 'grey' | 'red' = 'blue'
 
   public _visible = false
 
@@ -77,7 +77,7 @@ export class ChatWidgetComponent implements OnInit {
   }
 
   ngOnInit() {
-    setTimeout(() => this.visible = true, 1000)
+    setTimeout(() => this.visible = false, 1000)
     setTimeout(() => {
       this.addMessage(this.operator, 'Hi, how can we help you?', 'received')
     }, 1500)
