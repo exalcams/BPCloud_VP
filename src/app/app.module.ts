@@ -34,7 +34,7 @@ import { FormsModule } from '@angular/forms';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { NgxDonutChartModule } from 'ngx-doughnut-chart';
 import { ChartsModule } from 'ng2-charts';
-import { ElementModule } from './allModules/chat/element.module';
+// import { ChatModule } from './allModules/chat/chat.module';
 
 const appRoutes: Routes = [
     {
@@ -212,6 +212,7 @@ const appRoutes: Routes = [
         FormsModule,
         // ElementModule
         // AuditModule,
+        // ChatModule
     ],
     providers: [
         DatePipe,

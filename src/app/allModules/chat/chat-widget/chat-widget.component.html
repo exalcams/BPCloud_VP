@@ -1,4 +1,4 @@
-<div class="wrapper {{theme}}">
+<div class="wrapper">
   <div class="chat-box" *ngIf="visible" [@fadeInOut]="visible">
     <div class="chat-box-header">
       <div class="">
@@ -7,7 +7,7 @@
           <span class="operator-status-online">●</span>
           <button class="chat-button-header" (click)="toggleChat()">✕</button>
         </div>
-        <chat-avatar [image]="operator.avatar"></chat-avatar>
+    
         <h3 class="operator-name">
           {{operator.name}}
         </h3>
@@ -20,7 +20,7 @@
              [@fadeIn]
              [class.chat-message-sent]="message.type === 'sent'">
           <div >
-            <chat-avatar [image]="message.from.avatar" class="chat-message-from-avatar"></chat-avatar>
+            
             <div class="chat-message-text">
               {{message.text}}
             </div>

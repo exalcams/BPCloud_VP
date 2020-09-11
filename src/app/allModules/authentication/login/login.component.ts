@@ -1179,21 +1179,6 @@ export class LoginComponent implements OnInit {
                 });
             }
         }
-        if (this.menuItems.indexOf("RFQCreation") >= 0) {
-            if (this.rfqSubChildren.findIndex(x => x.id === 'rfqcreation') < 0) {
-                this.rfqSubChildren.push({
-                    id: "rfqcreation",
-                    title: "RFQ Creation",
-                    translate: "NAV.CUSTOMER.ORDER_FULFILMENT",
-                    type: "item",
-                    // icon: "rfxIcon",
-                    // isSvgIcon: true,
-                    // icon: 'dashboard',
-                    // children: this.customerOrderFulfilmentSubChildren,
-                    url: "/rfq/creation"
-                });
-            }
-        }
         if (this.menuItems.indexOf("RFQEngine") >= 0) {
             if (this.rfqSubChildren.findIndex(x => x.id === 'rfqengine') < 0) {
                 this.rfqSubChildren.push({
@@ -1206,6 +1191,21 @@ export class LoginComponent implements OnInit {
                     // icon: 'dashboard',
                     // children: this.customerOrderFulfilmentSubChildren,
                     url: "/rfq/engine"
+                });
+            }
+        }
+        if (this.menuItems.indexOf("RFQCreation") >= 0) {
+            if (this.rfqSubChildren.findIndex(x => x.id === 'rfqcreation') < 0) {
+                this.rfqSubChildren.push({
+                    id: "rfqcreation",
+                    title: "RFQ Creation",
+                    translate: "NAV.CUSTOMER.ORDER_FULFILMENT",
+                    type: "item",
+                    // icon: "rfxIcon",
+                    // isSvgIcon: true,
+                    // icon: 'dashboard',
+                    // children: this.customerOrderFulfilmentSubChildren,
+                    url: "/rfq/creation"
                 });
             }
         }
@@ -1226,8 +1226,8 @@ export class LoginComponent implements OnInit {
         }
 
         if (this.menuItems.indexOf("PurchaseRequisition") >= 0 ||
-            this.menuItems.indexOf("RFQCreation") >= 0 ||
             this.menuItems.indexOf("RFQEngine") >= 0 ||
+            this.menuItems.indexOf("RFQCreation") >= 0 ||
             this.menuItems.indexOf("RFQResponse") >= 0) {
             if (this.children.findIndex(x => x.id === 'rfq') < 0) {
                 this.children.push({
