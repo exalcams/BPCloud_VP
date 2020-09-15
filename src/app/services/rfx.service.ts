@@ -5,7 +5,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { ResHC, ResHeader, ResIC, ResItem, ResOD, ResponseView, RFxHC, RFxHeader, RFxIC, RFxItem, RFxOD, RFxPartner, RFxVendor, RFxView } from 'app/models/RFx';
+import { ResHC, ResHeader, ResIC, ResItem, ResOD, ResponseView, RFxHC, RFxHeader, RFxIC, RFxItem, RFxOD, RFxPartner, RFxVendor, RFxVendorView, RFxView } from 'app/models/RFx';
 
 
 @Injectable({
@@ -69,7 +69,10 @@ export class RFxService {
         return this._httpClient.get<RFxVendor[]>(`${this.baseAddress}rfxapi/RFx/GetRFxVendorsByRFxID?RFxID=${RFxID}`)
             .pipe(catchError(this.errorHandler));
     }
-
+    GetRFxVendorViewsByRFxID(RFxID: string): Observable<RFxVendorView[] | string> {
+        return this._httpClient.get<RFxVendorView[]>(`${this.baseAddress}rfxapi/RFx/GetRFxVendorViewsByRFxID?RFxID=${RFxID}`)
+            .pipe(catchError(this.errorHandler));
+    }
     GetRFxODsByRFxID(RFxID: string): Observable<RFxOD[] | string> {
         return this._httpClient.get<RFxOD[]>(`${this.baseAddress}rfxapi/RFx/GetRFxODsByRFxID?RFxID=${RFxID}`)
             .pipe(catchError(this.errorHandler));

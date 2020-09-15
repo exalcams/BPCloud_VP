@@ -17,7 +17,7 @@ import { RFxService } from 'app/services/rfx.service';
 import { SupportDeskService } from 'app/services/support-desk.service';
 import { VendorMasterService } from 'app/services/vendor-master.service';
 import { Guid } from 'guid-typescript';
-import { RFxHC, RFxHeader, RFxIC, RFxItem, RFxOD, RFxPartner, RFxVendor, RFxView } from 'app/models/RFx';
+import { RFxHC, RFxHeader, RFxIC, RFxItem, RFxOD, RFxPartner, RFxVendor, RFxVendorView, RFxView } from 'app/models/RFx';
 
 @Component({
   selector: 'app-creation',
@@ -46,7 +46,8 @@ export class CreationComponent implements OnInit {
   RFxHCDetailsFormGroup: FormGroup;
   RFxICFormGroup: FormGroup;
   RFxPartnerFormGroup: FormGroup;
-  CertificateFormGroup: FormGroup;
+  RFxVendorFormGroup: FormGroup;
+  RFxODFormGroup: FormGroup;
   searchText = '';
   AllRFxs: RFxHeader[] = [];
   SelectedRFxID: string;
@@ -57,6 +58,8 @@ export class CreationComponent implements OnInit {
   RFxICs: RFxIC[] = [];
   RFxPartners: RFxPartner[] = [];
   RFxVendors: RFxVendor[] = [];
+  RFxVendorViews: RFxVendorView[] = [];
+  RFxODs: RFxOD[] = [];
 
   displayedColumns: string[] = ['select', 'criteria', 'description', 'Action'];
   displayedRatingColumns: string[] = ['select', 'criteria', 'description', 'Action'];
@@ -70,7 +73,7 @@ export class CreationComponent implements OnInit {
   RFxHCDataSource: MatTableDataSource<RFxHC>;
   RFxICDataSource: MatTableDataSource<RFxIC>;
   RFxPartnerDataSource: MatTableDataSource<RFxPartner>;
-  RFxVendorDataSource: MatTableDataSource<RFxVendor>;
+  RFxVendorDataSource: MatTableDataSource<RFxVendorView>;
   RFxODDataSource: MatTableDataSource<RFxOD>;
 
   selection = new SelectionModel<CriteriaData>(true, []);
@@ -142,7 +145,7 @@ export class CreationComponent implements OnInit {
       this.currentUserName = this.authenticationDetails.UserName;
       this.CurrentUserRole = this.authenticationDetails.UserRole;
       this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
-      if (this.MenuItems.indexOf('RFx') < 0) {
+      if (this.MenuItems.indexOf('RFQCreation') < 0) {
         this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
         );
         this._router.navigate(['/auth/login']);
@@ -153,6 +156,8 @@ export class CreationComponent implements OnInit {
       this.InitializeRFxHCDetailsFormGroup();
       this.InitializeRFxICFormGroup();
       this.InitializeRFxPartnerFormGroup();
+      this.InitializeRFxVendorFormGroup();
+      this.InitializeRFxODFormGroup();
       this.GetRFxByRFxID();
       this.GetSupportMasters();
       this.GetUsers();
@@ -163,7 +168,7 @@ export class CreationComponent implements OnInit {
   CreateAppUsage(): void {
     const appUsage: AppUsage = new AppUsage();
     appUsage.UserID = this.CurrentUserID;
-    appUsage.AppName = 'My details';
+    appUsage.AppName = 'RFQ Creation';
     appUsage.UsageCount = 1;
     appUsage.CreatedBy = this.currentUserName;
     appUsage.ModifiedBy = this.currentUserName;
@@ -187,65 +192,65 @@ export class CreationComponent implements OnInit {
     this.RFxFormGroup = this._formBuilder.group({
       Client: ['', Validators.required],
       Company: ['', Validators.required],
-      LegalName: ['', Validators.required],
-      AddressLine1: ['', Validators.required],
-      AddressLine2: ['', Validators.required],
-      City: ['', Validators.required],
-      State: ['', Validators.required],
-      Country: ['', Validators.required],
-      PinCode: ['', Validators.required],
-      Type: [''],
-      Phone1: ['', [Validators.required, Validators.pattern('^(\\+91[\\-\\s]?)?[0]?(91)?[6789]\\d{9}$')]],
-      Phone2: ['', [Validators.pattern('^(\\+91[\\-\\s]?)?[0]?(91)?[6789]\\d{9}$')]],
-      Email1: ['', [Validators.required, Validators.email]],
-      Email2: ['', [Validators.email]],
+      Plant: ['', Validators.required],
+      RFxType: ['', Validators.required],
+      RFxGroup: ['', Validators.required],
+      ValidityStartDate: ['', Validators.required],
+      ValidityEndDate: ['', Validators.required],
+      ResponseStartDate: ['', Validators.required],
+      ResponseEndDate: ['', Validators.required],
+      Title: ['', Validators.required],
+      Currency: ['', Validators.required],
     });
-    this.RFxFormGroup.get('City').disable();
-    this.RFxFormGroup.get('State').disable();
-    this.RFxFormGroup.get('Country').disable();
   }
 
   InitializeRFxItemFormGroup(): void {
     this.RFxItemFormGroup = this._formBuilder.group({
-      Type: ['', Validators.required],
-      RFxItemText: ['', Validators.required],
-      EvalDate: ['', Validators.required],
+      Item: ['', Validators.required],
+      Material: ['', Validators.required],
+      MaterialText: ['', Validators.required],
+      TotalQty: ['', Validators.required],
+      PerScheduleQty: ['', Validators.required],
+      TotalSchedules: ['', Validators.required],
+      BiddingPriceLow: ['', Validators.required],
     });
   }
 
   InitializeRFxHCDetailsFormGroup(): void {
     this.RFxHCDetailsFormGroup = this._formBuilder.group({
-      AccountNumber: ['', Validators.required],
-      AccountName: ['', Validators.required],
-      RFxHCName: ['', Validators.required],
-      RFxHCID: ['', Validators.required],
+      CriteriaID: ['', Validators.required],
+      Text: ['', Validators.required],
     });
   }
 
   InitializeRFxICFormGroup(): void {
     this.RFxICFormGroup = this._formBuilder.group({
-      Name: ['', Validators.required],
-      RFxICID: ['', Validators.required],
-      ContactNumber: ['', [Validators.required, Validators.pattern('^(\\+91[\\-\\s]?)?[0]?(91)?[6789]\\d{9}$')]],
-      Email: ['', [Validators.required, Validators.email]],
+      Item: ['', Validators.required],
+      Criteria: ['', Validators.required],
+      Text: ['', Validators.required],
     });
   }
 
   InitializeRFxPartnerFormGroup(): void {
     this.RFxPartnerFormGroup = this._formBuilder.group({
-      SeqNo: ['', Validators.required],
-      Date: ['', Validators.required],
-      Time: ['', Validators.required],
-      ActionText: ['', Validators.required],
+      Type: ['', Validators.required],
+      User: ['', Validators.required],
     });
   }
 
-  InitializeCertificateFormGroup(): void {
-    this.CertificateFormGroup = this._formBuilder.group({
-      CertificateType: ['', Validators.required],
-      CertificateName: ['', Validators.required],
-      Validity: ['', Validators.required],
-      Attachment: ['', Validators.required],
+  InitializeRFxVendorFormGroup(): void {
+    this.RFxVendorFormGroup = this._formBuilder.group({
+      Type: ['', Validators.required],
+      VendorName: ['', Validators.required],
+      GSTNumber: ['', Validators.required],
+      City: ['', Validators.required],
+    });
+  }
+
+  InitializeRFxODFormGroup(): void {
+    this.RFxODFormGroup = this._formBuilder.group({
+      Question: ['', Validators.required],
+      AnswerType: ['', Validators.required],
     });
   }
 
@@ -296,10 +301,16 @@ export class CreationComponent implements OnInit {
     });
   }
 
-  ClearCertificateFormGroup(): void {
-    this.CertificateFormGroup.reset();
-    Object.keys(this.CertificateFormGroup.controls).forEach(key => {
-      this.CertificateFormGroup.get(key).markAsUntouched();
+  ClearRFxVendorFormGroup(): void {
+    this.RFxVendorFormGroup.reset();
+    Object.keys(this.RFxVendorFormGroup.controls).forEach(key => {
+      this.RFxVendorFormGroup.get(key).markAsUntouched();
+    });
+  }
+  ClearRFxODFormGroup(): void {
+    this.RFxODFormGroup.reset();
+    Object.keys(this.RFxODFormGroup.controls).forEach(key => {
+      this.RFxODFormGroup.get(key).markAsUntouched();
     });
   }
   ClearRFxItemDataSource(): void {
@@ -324,7 +335,7 @@ export class CreationComponent implements OnInit {
       (data) => {
         const RFx = data as RFxHeader;
         if (RFx) {
-         // this.loadSelectedRFx(RFx);
+          // this.loadSelectedRFx(RFx);
         }
       },
       (err) => {
@@ -393,14 +404,14 @@ export class CreationComponent implements OnInit {
   }
 
 
-  // loadSelectedRFx(selectedRFx: RFxHeader): void {
-  //   this.ResetControl();
-  //   this.SelectedRFx = selectedRFx;
-  //   this.SelectedRFxID = selectedRFx.RFxID;
-  //   // this.EnableAllRFxTypes();
-  //   this.SetRFxValues();
-  //   this.GetRFxSubItems();
-  // }
+  loadSelectedRFx(selectedRFx: RFxHeader): void {
+    this.ResetControl();
+    this.SelectedRFx = selectedRFx;
+    this.SelectedRFxID = selectedRFx.RFxID;
+    // this.EnableAllRFxTypes();
+    this.SetRFxValues();
+    this.GetRFxSubItems();
+  }
   // typeSelected(event): void {
   //   const selectedType = event.value;
   //   if (event.value) {
@@ -416,183 +427,213 @@ export class CreationComponent implements OnInit {
   // //     this.RFxFormGroup.get(key).enable();
   // //   });
   // // }
-  // SetRFxValues(): void {
-  //   this.RFxFormGroup.get('Client').patchValue(this.SelectedRFx.Client);
-  //   this.RFxFormGroup.get('Type').patchValue(this.SelectedRFx.Type);
-  //   this.RFxFormGroup.get('Company').patchValue(this.SelectedRFx.Company);
-  //   this.RFxFormGroup.get('LegalName').patchValue(this.SelectedRFx.LegalName);
-  //   this.RFxFormGroup.get('AddressLine1').patchValue(this.SelectedRFx.AddressLine1);
-  //   this.RFxFormGroup.get('AddressLine2').patchValue(this.SelectedRFx.AddressLine2);
-  //   this.RFxFormGroup.get('PinCode').patchValue(this.SelectedRFx.PinCode);
-  //   this.RFxFormGroup.get('City').patchValue(this.SelectedRFx.City);
-  //   this.RFxFormGroup.get('State').patchValue(this.SelectedRFx.State);
-  //   this.RFxFormGroup.get('Country').patchValue(this.SelectedRFx.Country);
-  //   this.RFxFormGroup.get('Phone1').patchValue(this.SelectedRFx.Phone1);
-  //   this.RFxFormGroup.get('Phone2').patchValue(this.SelectedRFx.Phone2);
-  //   this.RFxFormGroup.get('Email1').patchValue(this.SelectedRFx.Email1);
-  //   this.RFxFormGroup.get('Email2').patchValue(this.SelectedRFx.Email2);
-  //   // this.RFxICFormGroup.get('Email').validator({}as AbstractControl);
-  // }
+  SetRFxValues(): void {
+    this.RFxFormGroup.get('Client').patchValue(this.SelectedRFx.Client);
+    this.RFxFormGroup.get('Company').patchValue(this.SelectedRFx.Company);
+    this.RFxFormGroup.get('Plant').patchValue(this.SelectedRFx.Plant);
+    this.RFxFormGroup.get('RFxType').patchValue(this.SelectedRFx.RFxType);
+    this.RFxFormGroup.get('RFxGroup').patchValue(this.SelectedRFx.RFxGroup);
+    this.RFxFormGroup.get('ValidityStartDate').patchValue(this.SelectedRFx.ValidityStartDate);
+    this.RFxFormGroup.get('ValidityEndDate').patchValue(this.SelectedRFx.ValidityEndDate);
+    this.RFxFormGroup.get('ResponseStartDate').patchValue(this.SelectedRFx.ResponseStartDate);
+    this.RFxFormGroup.get('ResponseEndDate').patchValue(this.SelectedRFx.ResponseEndDate);
+    this.RFxFormGroup.get('Title').patchValue(this.SelectedRFx.Title);
+    this.RFxFormGroup.get('Currency').patchValue(this.SelectedRFx.Currency);
+  }
 
-  // GetRFxSubItems(): void {
-  //   this.GetRFxItemsByRFxID();
-  //   this.GetRFxHCsByRFxID();
-  //   this.GetRFxICsByRFxID();
-  //   this.GetRFxPartnersByRFxID();
-  //   this.GetRFxVendorsByRFxID();
-  // }
+  GetRFxSubItems(): void {
+    this.GetRFxItemsByRFxID();
+    this.GetRFxHCsByRFxID();
+    this.GetRFxICsByRFxID();
+    this.GetRFxPartnersByRFxID();
+    this.GetRFxVendorsByRFxID();
+  }
 
-  // GetRFxItemsByRFxID(): void {
-  //   this.IsProgressBarVisibile = true;
-  //   this._RFxService.GetRFxItemsByRFxID(this.SelectedRFxID).subscribe(
-  //     (data) => {
-  //       this.IsProgressBarVisibile = false;
-  //       this.RFxItems = data as RFxItem[];
-  //       this.RFxItemDataSource = new MatTableDataSource(this.RFxItems);
-  //     },
-  //     (err) => {
-  //       console.error(err);
-  //       this.IsProgressBarVisibile = false;
-  //       // this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-  //     }
-  //   );
-  // }
+  GetRFxItemsByRFxID(): void {
+    this.IsProgressBarVisibile = true;
+    this._RFxService.GetRFxItemsByRFxID(this.SelectedRFxID).subscribe(
+      (data) => {
+        this.IsProgressBarVisibile = false;
+        this.RFxItems = data as RFxItem[];
+        this.RFxItemDataSource = new MatTableDataSource(this.RFxItems);
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+        // this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+      }
+    );
+  }
 
-  // GetRFxHCsByRFxID(): void {
-  //   this.IsProgressBarVisibile = true;
-  //   this._RFxService.GetRFxHCsByRFxID(this.SelectedRFxID).subscribe(
-  //     (data) => {
-  //       this.IsProgressBarVisibile = false;
-  //       this.RFxHCs = data as RFxHC[];
-  //       this.RFxHCDataSource = new MatTableDataSource(this.RFxHCs);
-  //     },
-  //     (err) => {
-  //       console.error(err);
-  //       this.IsProgressBarVisibile = false;
-  //       // this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-  //     }
-  //   );
-  // }
+  GetRFxHCsByRFxID(): void {
+    this.IsProgressBarVisibile = true;
+    this._RFxService.GetRFxHCsByRFxID(this.SelectedRFxID).subscribe(
+      (data) => {
+        this.IsProgressBarVisibile = false;
+        this.RFxHCs = data as RFxHC[];
+        this.RFxHCDataSource = new MatTableDataSource(this.RFxHCs);
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+        // this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+      }
+    );
+  }
 
-  // GetRFxICsByRFxID(): void {
-  //   this.IsProgressBarVisibile = true;
-  //   this._RFxService.GetRFxICsByRFxID(this.SelectedRFxID).subscribe(
-  //     (data) => {
-  //       this.IsProgressBarVisibile = false;
-  //       this.RFxICs = data as RFxIC[];
-  //       this.RFxICDataSource = new MatTableDataSource(this.RFxICs);
-  //     },
-  //     (err) => {
-  //       console.error(err);
-  //       this.IsProgressBarVisibile = false;
-  //       // this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-  //     }
-  //   );
-  // }
+  GetRFxICsByRFxID(): void {
+    this.IsProgressBarVisibile = true;
+    this._RFxService.GetRFxICsByRFxID(this.SelectedRFxID).subscribe(
+      (data) => {
+        this.IsProgressBarVisibile = false;
+        this.RFxICs = data as RFxIC[];
+        this.RFxICDataSource = new MatTableDataSource(this.RFxICs);
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+        // this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+      }
+    );
+  }
 
-  // GetRFxPartnersByRFxID(): void {
-  //   this.IsProgressBarVisibile = true;
-  //   this._RFxService.GetRFxPartnersByRFxID(this.SelectedRFxID).subscribe(
-  //     (data) => {
-  //       this.IsProgressBarVisibile = false;
-  //       this.RFxPartners = data as RFxPartner[];
-  //       this.RFxPartnerDataSource = new MatTableDataSource(this.RFxPartners);
-  //     },
-  //     (err) => {
-  //       console.error(err);
-  //       this.IsProgressBarVisibile = false;
-  //       // this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-  //     }
-  //   );
-  // }
+  GetRFxPartnersByRFxID(): void {
+    this.IsProgressBarVisibile = true;
+    this._RFxService.GetRFxPartnersByRFxID(this.SelectedRFxID).subscribe(
+      (data) => {
+        this.IsProgressBarVisibile = false;
+        this.RFxPartners = data as RFxPartner[];
+        this.RFxPartnerDataSource = new MatTableDataSource(this.RFxPartners);
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+        // this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+      }
+    );
+  }
 
-  // GetRFxVendorsByRFxID(): void {
-  //   this.IsProgressBarVisibile = true;
-  //   this._RFxService.GetRFxVendorsByRFxID(this.SelectedRFxID).subscribe(
-  //     (data) => {
-  //       this.IsProgressBarVisibile = false;
-  //       this.RFxVendors = data as RFxVendor[];
-  //       this.RFxVendorDataSource = new MatTableDataSource(this.RFxVendors);
-  //     },
-  //     (err) => {
-  //       console.error(err);
-  //       this.IsProgressBarVisibile = false;
-  //       // this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-  //     }
-  //   );
-  // }
+  GetRFxVendorsByRFxID(): void {
+    this.IsProgressBarVisibile = true;
+    this._RFxService.GetRFxVendorsByRFxID(this.SelectedRFxID).subscribe(
+      (data) => {
+        this.IsProgressBarVisibile = false;
+        this.RFxVendors = data as RFxVendor[];
+        // this.RFxVendorDataSource = new MatTableDataSource(this.RFxVendors);
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+        // this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+      }
+    );
+  }
+  GetRFxVendorViewsByRFxID(): void {
+    this.IsProgressBarVisibile = true;
+    this._RFxService.GetRFxVendorViewsByRFxID(this.SelectedRFxID).subscribe(
+      (data) => {
+        this.IsProgressBarVisibile = false;
+        this.RFxVendorViews = data as RFxVendorView[];
+        this.RFxVendorDataSource = new MatTableDataSource(this.RFxVendorViews);
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+        // this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+      }
+    );
+  }
+  AddRFxItemToTable(): void {
+    if (this.RFxItemFormGroup.valid) {
+      const FxItem = new RFxItem();
+      FxItem.Item = this.RFxItemFormGroup.get('Item').value;
+      FxItem.Material = this.RFxItemFormGroup.get('Material').value;
+      FxItem.MaterialText = this.RFxItemFormGroup.get('MaterialText').value;
+      FxItem.TotalQty = this.RFxItemFormGroup.get('TotalQty').value;
+      FxItem.PerScheduleQty = this.RFxItemFormGroup.get('PerScheduleQty').value;
+      FxItem.TotalSchedules = this.RFxItemFormGroup.get('TotalSchedules').value;
+      FxItem.BiddingPriceLow = this.RFxItemFormGroup.get('BiddingPriceLow').value;
+      if (!this.RFxItems || !this.RFxItems.length) {
+        this.RFxItems = [];
+      }
+      this.RFxItems.push(FxItem);
+      this.RFxItemDataSource = new MatTableDataSource(this.RFxItems);
+      this.ClearRFxItemFormGroup();
+    } else {
+      this.ShowValidationErrors(this.RFxItemFormGroup);
+    }
+  }
 
-  // AddRFxItemToTable(): void {
-  //   if (this.RFxItemFormGroup.valid) {
-  //     const FxItem = new RFxItem();
-  //     RFxItem.Type = this.RFxItemFormGroup.get('Type').value;
-  //     RFxItem.RFxItemText = this.RFxItemFormGroup.get('RFxItemText').value;
-  //     RFxItem.EvalDate = this.RFxItemFormGroup.get('EvalDate').value;
-  //     if (!this.RFxItems || !this.RFxItems.length) {
-  //       this.RFxItems = [];
-  //     }
-  //     this.RFxItems.push(RFxItem);
-  //     this.RFxItemDataSource = new MatTableDataSource(this.RFxItems);
-  //     this.ClearRFxItemFormGroup();
-  //   } else {
-  //     this.ShowValidationErrors(this.RFxItemFormGroup);
-  //   }
-  // }
-
-  // AddRFxHCToTable(): void {
-  //   if (this.RFxHCDetailsFormGroup.valid) {
-  //     const RFxHC = new RFxHC();
-  //     RFxHC.AccountNumber = this.RFxHCDetailsFormGroup.get('AccountNumber').value;
-  //     RFxHC.AccountName = this.RFxHCDetailsFormGroup.get('AccountName').value;
-  //     RFxHC.RFxHCName = this.RFxHCDetailsFormGroup.get('RFxHCName').value;
-  //     RFxHC.RFxHCID = this.RFxHCDetailsFormGroup.get('RFxHCID').value;
-  //     if (!this.RFxHCs || !this.RFxHCs.length) {
-  //       this.RFxHCs = [];
-  //     }
-  //     this.RFxHCs.push(RFxHC);
-  //     this.RFxHCDetailsDataSource = new MatTableDataSource(this.RFxHCs);
-  //     this.ClearRFxHCDetailsFormGroup();
-  //   } else {
-  //     this.ShowValidationErrors(this.RFxHCDetailsFormGroup);
-  //   }
-  // }
+  AddRFxHCToTable(): void {
+    if (this.RFxHCDetailsFormGroup.valid) {
+      const FxHC = new RFxHC();
+      FxHC.CriteriaID = this.RFxHCDetailsFormGroup.get('CriteriaID').value;
+      FxHC.Text = this.RFxHCDetailsFormGroup.get('Text').value;
+      if (!this.RFxHCs || !this.RFxHCs.length) {
+        this.RFxHCs = [];
+      }
+      this.RFxHCs.push(FxHC);
+      this.RFxHCDataSource = new MatTableDataSource(this.RFxHCs);
+      this.ClearRFxHCDetailsFormGroup();
+    } else {
+      this.ShowValidationErrors(this.RFxHCDetailsFormGroup);
+    }
+  }
 
 
-  // AddRFxICToTable(): void {
-  //   if (this.RFxICFormGroup.valid) {
-  //     const RFxIC = new RFxIC();
-  //     RFxIC.Name = this.RFxICFormGroup.get('Name').value;
-  //     RFxIC.RFxICID = this.RFxICFormGroup.get('RFxICID').value;
-  //     RFxIC.ContactNumber = this.RFxICFormGroup.get('ContactNumber').value;
-  //     RFxIC.Email = this.RFxICFormGroup.get('Email').value;
-  //     if (!this.RFxICs || !this.RFxICs.length) {
-  //       this.RFxICs = [];
-  //     }
-  //     this.RFxICs.push(RFxIC);
-  //     this.RFxICDataSource = new MatTableDataSource(this.RFxICs);
-  //     this.ClearRFxICFormGroup();
-  //   } else {
-  //     this.ShowValidationErrors(this.RFxICFormGroup);
-  //   }
-  // }
+  AddRFxICToTable(): void {
+    if (this.RFxICFormGroup.valid) {
+      const FxIC = new RFxIC();
+      FxIC.Item = this.RFxICFormGroup.get('Item').value;
+      FxIC.Criteria = this.RFxICFormGroup.get('Criteria').value;
+      FxIC.Text = this.RFxICFormGroup.get('Text').value;
+      if (!this.RFxICs || !this.RFxICs.length) {
+        this.RFxICs = [];
+      }
+      this.RFxICs.push(FxIC);
+      this.RFxICDataSource = new MatTableDataSource(this.RFxICs);
+      this.ClearRFxICFormGroup();
+    } else {
+      this.ShowValidationErrors(this.RFxICFormGroup);
+    }
+  }
 
-  // AddRFxPartnerToTable(): void {
-  //   if (this.RFxPartnerFormGroup.valid) {
-  //     const RFxPartner = new RFxPartner();
-  //     RFxPartner.SeqNo = this.RFxPartnerFormGroup.get('SeqNo').value;
-  //     RFxPartner.Date = this.RFxPartnerFormGroup.get('Date').value;
-  //     RFxPartner.Time = this.RFxPartnerFormGroup.get('Time').value;
-  //     RFxPartner.ActionText = this.RFxPartnerFormGroup.get('ActionText').value;
-  //     if (!this.RFxPartners || !this.RFxPartners.length) {
-  //       this.RFxPartners = [];
-  //     }
-  //     this.RFxPartners.push(RFxPartner);
-  //     this.RFxPartnerDataSource = new MatTableDataSource(this.RFxPartners);
-  //     this.ClearRFxPartnerFormGroup();
-  //   } else {
-  //     this.ShowValidationErrors(this.RFxPartnerFormGroup);
-  //   }
-  // }
+  AddRFxPartnerToTable(): void {
+    if (this.RFxPartnerFormGroup.valid) {
+      const FxPartner = new RFxPartner();
+      FxPartner.Type = this.RFxPartnerFormGroup.get('Type').value;
+      FxPartner.User = this.RFxPartnerFormGroup.get('User').value;
+      if (!this.RFxPartners || !this.RFxPartners.length) {
+        this.RFxPartners = [];
+      }
+      this.RFxPartners.push(FxPartner);
+      this.RFxPartnerDataSource = new MatTableDataSource(this.RFxPartners);
+      this.ClearRFxPartnerFormGroup();
+    } else {
+      this.ShowValidationErrors(this.RFxPartnerFormGroup);
+    }
+  }
+
+  AddRFxVendorToTable(): void {
+    if (this.RFxVendorFormGroup.valid) {
+      const FxVendorView = new RFxVendorView();
+      FxVendorView.Type = this.RFxPartnerFormGroup.get('Type').value;
+      FxVendorView.VendorName = this.RFxPartnerFormGroup.get('VendorName').value;
+      FxVendorView.GSTNumber = this.RFxPartnerFormGroup.get('GSTNumber').value;
+      FxVendorView.City = this.RFxPartnerFormGroup.get('City').value;
+      if (!this.RFxVendors || !this.RFxVendors.length) {
+        this.RFxVendors = [];
+      }
+      if (!this.RFxVendorViews || !this.RFxVendorViews.length) {
+        this.RFxVendorViews = [];
+      }
+      this.RFxVendorViews.push(FxVendorView);
+      this.RFxVendorDataSource = new MatTableDataSource(this.RFxVendorViews);
+      this.ClearRFxPartnerFormGroup();
+    } else {
+      this.ShowValidationErrors(this.RFxPartnerFormGroup);
+    }
+  }
 
   // RFxItemEnterKeyDown(): boolean {
   //   this.EvalDate.nativeElement.blur();
@@ -681,38 +722,54 @@ export class CreationComponent implements OnInit {
   // }
 
 
-  // RemoveRFxItemFromTable(RFxItem: RFxItem): void {
-  //   const index: number = this.RFxItems.indexOf(RFxItem);
-  //   if (index > -1) {
-  //     this.RFxItems.splice(index, 1);
-  //   }
-  //   this.RFxItemDataSource = new MatTableDataSource(this.RFxItems);
-  // }
+  RemoveRFxItemFromTable(FxItem: RFxItem): void {
+    const index: number = this.RFxItems.indexOf(FxItem);
+    if (index > -1) {
+      this.RFxItems.splice(index, 1);
+    }
+    this.RFxItemDataSource = new MatTableDataSource(this.RFxItems);
+  }
 
-  // RemoveRFxHCFromTable(RFxHC: RFxHC): void {
-  //   const index: number = this.RFxHCs.indexOf(RFxHC);
-  //   if (index > -1) {
-  //     this.RFxHCs.splice(index, 1);
-  //   }
-  //   this.RFxHCDetailsDataSource = new MatTableDataSource(this.RFxHCs);
-  // }
+  RemoveRFxHCFromTable(FxHC: RFxHC): void {
+    const index: number = this.RFxHCs.indexOf(FxHC);
+    if (index > -1) {
+      this.RFxHCs.splice(index, 1);
+    }
+    this.RFxHCDataSource = new MatTableDataSource(this.RFxHCs);
+  }
 
 
-  // RemoveRFxICFromTable(RFxIC: RFxIC): void {
-  //   const index: number = this.RFxICs.indexOf(RFxIC);
-  //   if (index > -1) {
-  //     this.RFxICs.splice(index, 1);
-  //   }
-  //   this.RFxICDataSource = new MatTableDataSource(this.RFxICs);
-  // }
+  RemoveRFxICFromTable(FxIC: RFxIC): void {
+    const index: number = this.RFxICs.indexOf(FxIC);
+    if (index > -1) {
+      this.RFxICs.splice(index, 1);
+    }
+    this.RFxICDataSource = new MatTableDataSource(this.RFxICs);
+  }
 
-  // RemoveRFxPartnerFromTable(RFxPartner: RFxPartner): void {
-  //   const index: number = this.RFxPartners.indexOf(RFxPartner);
-  //   if (index > -1) {
-  //     this.RFxPartners.splice(index, 1);
-  //   }
-  //   this.RFxPartnerDataSource = new MatTableDataSource(this.RFxPartners);
-  // }
+  RemoveRFxPartnerFromTable(FxPartner: RFxPartner): void {
+    const index: number = this.RFxPartners.indexOf(FxPartner);
+    if (index > -1) {
+      this.RFxPartners.splice(index, 1);
+    }
+    this.RFxPartnerDataSource = new MatTableDataSource(this.RFxPartners);
+  }
+
+  RemoveRFxVendorFromTable(FxVendorView: RFxVendorView): void {
+    const index: number = this.RFxVendorViews.indexOf(FxVendorView);
+    if (index > -1) {
+      this.RFxVendorViews.splice(index, 1);
+    }
+    this.RFxVendorDataSource = new MatTableDataSource(this.RFxVendorViews);
+  }
+  
+  RemoveRFxODFromTable(FxOD: RFxOD): void {
+    const index: number = this.RFxODs.indexOf(FxOD);
+    if (index > -1) {
+      this.RFxODs.splice(index, 1);
+    }
+    this.RFxODDataSource = new MatTableDataSource(this.RFxODs);
+  }
 
   // OpenConfirmationDialog(Actiontype: string, Catagory: string): void {
   //   const dialogConfig: MatDialogConfig = {
@@ -740,65 +797,58 @@ export class CreationComponent implements OnInit {
   //     });
   // }
 
-  // GetRFxValues(): void {
-  //   this.SelectedRFx.Client = this.SelectedRFxView.Client = this.RFxFormGroup.get('Client').value;
-  //   this.SelectedRFx.Type = this.SelectedRFxView.Type = this.RFxFormGroup.get('Type').value;
-  //   this.SelectedRFx.Company = this.SelectedRFxView.Company = this.RFxFormGroup.get('Company').value;
-  //   this.SelectedRFx.LegalName = this.SelectedRFxView.LegalName = this.RFxFormGroup.get('LegalName').value;
-  //   this.SelectedRFx.AddressLine1 = this.SelectedRFxView.AddressLine1 = this.RFxFormGroup.get('AddressLine1').value;
-  //   this.SelectedRFx.AddressLine2 = this.SelectedRFxView.AddressLine2 = this.RFxFormGroup.get('AddressLine2').value;
-  //   this.SelectedRFx.City = this.SelectedRFxView.City = this.RFxFormGroup.get('City').value;
-  //   this.SelectedRFx.State = this.SelectedRFxView.State = this.RFxFormGroup.get('State').value;
-  //   this.SelectedRFx.Country = this.SelectedRFxView.Country = this.RFxFormGroup.get('Country').value;
-  //   this.SelectedRFx.PinCode = this.SelectedRFxView.PinCode = this.RFxFormGroup.get('PinCode').value;
-  //   this.SelectedRFx.Phone1 = this.SelectedRFxView.Phone1 = this.RFxFormGroup.get('Phone1').value;
-  //   this.SelectedRFx.Phone2 = this.SelectedRFxView.Phone2 = this.RFxFormGroup.get('Phone2').value;
-  //   this.SelectedRFx.Email1 = this.SelectedRFxView.Email1 = this.RFxFormGroup.get('Email1').value;
-  //   this.SelectedRFx.Email2 = this.SelectedRFxView.Email2 = this.RFxFormGroup.get('Email2').value;
-  //   // this.SelectedRFx.VendorCode = this.SelectedRFxView.VendorCode = this.RFxFormGroup.get('VendorCode').value;
-  //   // this.SelectedRFx.ParentVendor = this.SelectedRFxView.ParentVendor = this.RFxFormGroup.get('ParentVendor').value;
-  //   // this.SelectedRFx.Status = this.SelectedRFxView.Status = this.RFxFormGroup.get('Status').value;
+  GetRFxValues(): void {
+    this.SelectedRFx.Client = this.SelectedRFxView.Client = this.RFxFormGroup.get('Client').value;
+    this.SelectedRFx.Company = this.SelectedRFxView.Company = this.RFxFormGroup.get('Company').value;
+    this.SelectedRFx.Plant = this.SelectedRFxView.Plant = this.RFxFormGroup.get('Plant').value;
+    this.SelectedRFx.RFxType = this.SelectedRFxView.RFxType = this.RFxFormGroup.get('RFxType').value;
+    this.SelectedRFx.RFxGroup = this.SelectedRFxView.RFxGroup = this.RFxFormGroup.get('RFxGroup').value;
+    this.SelectedRFx.ValidityStartDate = this.SelectedRFxView.ValidityStartDate = this.RFxFormGroup.get('ValidityStartDate').value;
+    this.SelectedRFx.ValidityEndDate = this.SelectedRFxView.ValidityEndDate = this.RFxFormGroup.get('ValidityEndDate').value;
+    this.SelectedRFx.ResponseStartDate = this.SelectedRFxView.ResponseStartDate = this.RFxFormGroup.get('ResponseStartDate').value;
+    this.SelectedRFx.ResponseEndDate = this.SelectedRFxView.ResponseEndDate = this.RFxFormGroup.get('ResponseEndDate').value;
+    this.SelectedRFx.Title = this.SelectedRFxView.Title = this.RFxFormGroup.get('Title').value;
+    this.SelectedRFx.Currency = this.SelectedRFxView.Currency = this.RFxFormGroup.get('Currency').value;
+  }
 
-  // }
+  GetRFxSubItemValues(): void {
+    this.GetRFxItemValues();
+    this.GetRFxHCValues();
+    this.GetRFxICValues();
+    this.GetRFxPartnerValues();
+  }
 
-  // GetRFxSubItemValues(): void {
-  //   this.GetRFxItemValues();
-  //   this.GetRFxHCValues();
-  //   this.GetRFxICValues();
-  //   this.GetRFxPartnerValues();
-  // }
+  GetRFxItemValues(): void {
+    this.SelectedRFxView.RFxItems = [];
+    // this.SelectedRFxView.bPIdentities.push(...this.RFxItems);
+    this.RFxItems.forEach(x => {
+      this.SelectedRFxView.RFxItems.push(x);
+    });
+  }
 
-  // GetRFxItemValues(): void {
-  //   this.SelectedRFxView.RFxItems = [];
-  //   // this.SelectedRFxView.bPIdentities.push(...this.RFxItems);
-  //   this.RFxItems.forEach(x => {
-  //     this.SelectedRFxView.RFxItems.push(x);
-  //   });
-  // }
+  GetRFxHCValues(): void {
+    this.SelectedRFxView.RFxHCs = [];
+    // this.SelectedRFxView.RFxHCs.push(...this.RFxHCs);
+    this.RFxHCs.forEach(x => {
+      this.SelectedRFxView.RFxHCs.push(x);
+    });
+  }
 
-  // GetRFxHCValues(): void {
-  //   this.SelectedRFxView.RFxHCs = [];
-  //   // this.SelectedRFxView.RFxHCs.push(...this.RFxHCs);
-  //   this.RFxHCs.forEach(x => {
-  //     this.SelectedRFxView.RFxHCs.push(x);
-  //   });
-  // }
+  GetRFxICValues(): void {
+    this.SelectedRFxView.RFxICs = [];
+    // this.SelectedRFxView.bPIdentities.push(...this.RFxItems);
+    this.RFxICs.forEach(x => {
+      this.SelectedRFxView.RFxICs.push(x);
+    });
+  }
 
-  // GetRFxICValues(): void {
-  //   this.SelectedRFxView.RFxICs = [];
-  //   // this.SelectedRFxView.bPIdentities.push(...this.RFxItems);
-  //   this.RFxICs.forEach(x => {
-  //     this.SelectedRFxView.RFxICs.push(x);
-  //   });
-  // }
-
-  // GetRFxPartnerValues(): void {
-  //   this.SelectedRFxView.RFxPartners = [];
-  //   // this.SelectedRFxView.RFxHCs.push(...this.RFxHCs);
-  //   this.RFxPartners.forEach(x => {
-  //     this.SelectedRFxView.RFxPartners.push(x);
-  //   });
-  // }
+  GetRFxPartnerValues(): void {
+    this.SelectedRFxView.RFxPartners = [];
+    // this.SelectedRFxView.RFxHCs.push(...this.RFxHCs);
+    this.RFxPartners.forEach(x => {
+      this.SelectedRFxView.RFxPartners.push(x);
+    });
+  }
 
   // SaveClicked(): void {
   //   if (this.RFxFormGroup.valid) {
@@ -810,65 +860,67 @@ export class CreationComponent implements OnInit {
   //   }
   // }
 
-  // CreateRFx(): void {
-  //   // this.GetRFxValues();
-  //   // this.GetRFxSubItemValues();
-  //   // this.SelectedRFxView.CreatedBy = this.authenticationDetails.userID.toString();
-  //   this.IsProgressBarVisibile = true;
-  //   this._RFxService.CreateRFx(this.SelectedRFxView).subscribe(
-  //     (data) => {
-  //       this.SelectedRFx.PatnerID = data;
-  //       this.ResetControl();
-  //       this.notificationSnackBarComponent.openSnackBar('Vendor registered successfully', SnackBarStatus.success);
-  //       this.IsProgressBarVisibile = false;
-  //       // this.GetRegisteredRFxs();
-  //     },
-  //     (err) => {
-  //       console.error(err);
-  //       this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-  //       this.IsProgressBarVisibile = false;
-  //     }
-  //   );
+  CreateRFx(): void {
+    // this.GetRFxValues();
+    // this.GetRFxSubItemValues();
+    // this.SelectedRFxView.CreatedBy = this.authenticationDetails.userID.toString();
+    this.IsProgressBarVisibile = true;
+    this._RFxService.CreateRFx(this.SelectedRFxView).subscribe(
+      (data) => {
+        this.SelectedRFx.RFxID = data;
+        this.ResetControl();
+        this.notificationSnackBarComponent.openSnackBar('RFQ Created successfully', SnackBarStatus.success);
+        this.IsProgressBarVisibile = false;
+        // this.GetRegisteredRFxs();
+      },
+      (err) => {
+        console.error(err);
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+        this.IsProgressBarVisibile = false;
+      }
+    );
 
-  // }
+  }
 
-  // UpdateRFx(): void {
-  //   this.GetRFxValues();
-  //   this.GetRFxSubItemValues();
-  //   this.SelectedRFxView.PatnerID = this.SelectedRFx.PatnerID;
-  //   this.SelectedRFxView.ModifiedBy = this.authenticationDetails.UserID.toString();
-  //   this.IsProgressBarVisibile = true;
-  //   this._RFxService.UpdateRFx(this.SelectedRFxView).subscribe(
-  //     (data) => {
-  //       this.CreateSupportTicket();
-  //     },
-  //     (err) => {
-  //       console.error(err);
-  //       this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-  //       this.IsProgressBarVisibile = false;
-  //     }
-  //   );
-  // }
+  UpdateRFx(): void {
+    this.GetRFxValues();
+    this.GetRFxSubItemValues();
+    this.SelectedRFxView.RFxID = this.SelectedRFx.RFxID;
+    // this.SelectedRFxView.ModifiedBy = this.authenticationDetails.UserID.toString();
+    this.IsProgressBarVisibile = true;
+    this._RFxService.UpdateRFx(this.SelectedRFxView).subscribe(
+      (data) => {
+        this.ResetControl();
+        this.notificationSnackBarComponent.openSnackBar('RFQ Updated successfully', SnackBarStatus.success);
+        this.IsProgressBarVisibile = false;
+      },
+      (err) => {
+        console.error(err);
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+        this.IsProgressBarVisibile = false;
+      }
+    );
+  }
 
-  // DeleteRFx(): void {
-  //   this.GetRFxValues();
-  //   // this.SelectedRFx.ModifiedBy = this.authenticationDetails.userID.toString();
-  //   this.IsProgressBarVisibile = true;
-  //   this._RFxService.DeleteRFx(this.SelectedRFx).subscribe(
-  //     (data) => {
-  //       // console.log(data);
-  //       this.ResetControl();
-  //       this.notificationSnackBarComponent.openSnackBar('Vendor deleted successfully', SnackBarStatus.success);
-  //       this.IsProgressBarVisibile = false;
-  //       // this.GetRegisteredRFxs();
-  //     },
-  //     (err) => {
-  //       console.error(err);
-  //       this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-  //       this.IsProgressBarVisibile = false;
-  //     }
-  //   );
-  // }
+  DeleteRFx(): void {
+    this.GetRFxValues();
+    // this.SelectedRFx.ModifiedBy = this.authenticationDetails.userID.toString();
+    this.IsProgressBarVisibile = true;
+    this._RFxService.DeleteRFx(this.SelectedRFx).subscribe(
+      (data) => {
+        // console.log(data);
+        this.ResetControl();
+        this.notificationSnackBarComponent.openSnackBar('Vendor deleted successfully', SnackBarStatus.success);
+        this.IsProgressBarVisibile = false;
+        // this.GetRegisteredRFxs();
+      },
+      (err) => {
+        console.error(err);
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+        this.IsProgressBarVisibile = false;
+      }
+    );
+  }
   // GetSupportTicket(): SupportHeaderView {
   //   const SupportTicketView: SupportHeaderView = new SupportHeaderView();
   //   SupportTicketView.Client = this.SelectedRFx.Client;
@@ -926,34 +978,34 @@ export class CreationComponent implements OnInit {
   //   this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
   //   this.IsProgressBarVisibile = false;
   // }
-  // ShowValidationErrors(formGroup: FormGroup): void {
-  //   Object.keys(formGroup.controls).forEach(key => {
-  //     if (!formGroup.get(key).valid) {
-  //       console.log(key);
-  //     }
-  //     formGroup.get(key).markAsTouched();
-  //     formGroup.get(key).markAsDirty();
-  //     if (formGroup.get(key) instanceof FormArray) {
-  //       const FormArrayControls = formGroup.get(key) as FormArray;
-  //       Object.keys(FormArrayControls.controls).forEach(key1 => {
-  //         if (FormArrayControls.get(key1) instanceof FormGroup) {
-  //           const FormGroupControls = FormArrayControls.get(key1) as FormGroup;
-  //           Object.keys(FormGroupControls.controls).forEach(key2 => {
-  //             FormGroupControls.get(key2).markAsTouched();
-  //             FormGroupControls.get(key2).markAsDirty();
-  //             if (!FormGroupControls.get(key2).valid) {
-  //               console.log(key2);
-  //             }
-  //           });
-  //         } else {
-  //           FormArrayControls.get(key1).markAsTouched();
-  //           FormArrayControls.get(key1).markAsDirty();
-  //         }
-  //       });
-  //     }
-  //   });
+  ShowValidationErrors(formGroup: FormGroup): void {
+    Object.keys(formGroup.controls).forEach(key => {
+      if (!formGroup.get(key).valid) {
+        console.log(key);
+      }
+      formGroup.get(key).markAsTouched();
+      formGroup.get(key).markAsDirty();
+      if (formGroup.get(key) instanceof FormArray) {
+        const FormArrayControls = formGroup.get(key) as FormArray;
+        Object.keys(FormArrayControls.controls).forEach(key1 => {
+          if (FormArrayControls.get(key1) instanceof FormGroup) {
+            const FormGroupControls = FormArrayControls.get(key1) as FormGroup;
+            Object.keys(FormGroupControls.controls).forEach(key2 => {
+              FormGroupControls.get(key2).markAsTouched();
+              FormGroupControls.get(key2).markAsDirty();
+              if (!FormGroupControls.get(key2).valid) {
+                console.log(key2);
+              }
+            });
+          } else {
+            FormArrayControls.get(key1).markAsTouched();
+            FormArrayControls.get(key1).markAsDirty();
+          }
+        });
+      }
+    });
 
-  // }
+  }
 
   // ApproveClicked(): void {
   //   if (this.RFxFormGroup.valid) {
