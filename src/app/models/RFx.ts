@@ -83,7 +83,7 @@ export class RFxOD extends CommonClass {
     Company: string;
     RFxID: string;
     SlNo: string;
-    Qusetion: string;
+    Question: string;
     AnswerType: string;
 }
 
@@ -97,7 +97,15 @@ export class RFxVendor extends CommonClass {
     Responded: string;
     RespondedOn: Date | string | null;
 }
-
+export class RFxVendorView extends CommonClass {
+    Client: string;
+    Company: string;
+    RFxID: string;
+    Type: string;
+    VendorName: Date | string;
+    GSTNumber: boolean;
+    City: string;
+}
 export class RFxPartner extends CommonClass {
     Client: string;
     Company: string;
