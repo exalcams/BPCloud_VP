@@ -720,11 +720,10 @@
     .title {
         border-bottom: 4px solid #efb577;
         font-size: 20px;
-
         border-radius: 2px;
         font-size: 20px;
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        margin-left: 30px;
+        margin-left: 20px;
     }
     .sendIcon {
         height: 25px;
@@ -776,7 +775,8 @@
     td.mat-cell:first-of-type,
     td.mat-footer-cell:first-of-type {
         padding-left: 0px;
-        background-color: #d6d6d6;
+        // background-color: #d6d6d6;
+        border-left: 1px solid rgba(0, 0, 0, 0.12);
     }
     .checkbox_style {
         background-color: white !important;
