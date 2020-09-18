@@ -61,13 +61,13 @@ export class CreationComponent implements OnInit {
   RFxVendorViews: RFxVendorView[] = [];
   RFxODs: RFxOD[] = [];
 
-  displayedColumns: string[] = ['select', 'criteria', 'description', 'Action'];
-  displayedRatingColumns: string[] = ['select', 'criteria', 'description', 'Action'];
-  displayedPartnerColumns: string[] = ['select', 'type', 'usertable', 'Action'];
-  displayedVendorColumns: string[] = ['select', 'type', 'vendor', 'gst', 'city', 'Action'];
-  displayedOtherColumns: string[] = ['select', 'question', 'answer', 'Action'];
+  RFxHCDisplayedColumns: string[] = ['CriteriaID', 'Text', 'Action'];
+  RFxItemDisplayedColumns: string[] = ['Item', 'Material', 'MaterialText', 'TotalQty', 'PerScheduleQty', 'TotalSchedules', 'BiddingPriceLow', 'Action']
+  RFxICDisplayedColumns: string[] = ['Criteria', 'Text', 'Action'];
+  RFxPartnerDisplayedColumns: string[] = ['Type', 'User', 'Action'];
+  RFxVendorDisplayedColumns: string[] = ['Type', 'VendorName', 'GSTNumber', 'City', 'Action'];
+  RFxODDisplayedColumns: string[] = ['Question', 'AnswerType', 'Action'];
   displayedAttachedColumns: string[] = ['select', 'document', 'remarks', 'Action'];
-  displayedItemsColumns: string[] = ['select', 'item', 'material', 'materialtext', 'totalqty', 'per.sche qty', 'no.of.sche', 'biddingprice']
 
   RFxItemDataSource: MatTableDataSource<RFxItem>;
   RFxHCDataSource: MatTableDataSource<RFxHC>;
@@ -225,7 +225,7 @@ export class CreationComponent implements OnInit {
 
   InitializeRFxICFormGroup(): void {
     this.RFxICFormGroup = this._formBuilder.group({
-      Item: ['', Validators.required],
+      Item: ['10', Validators.required],
       Criteria: ['', Validators.required],
       Text: ['', Validators.required],
     });
@@ -617,10 +617,10 @@ export class CreationComponent implements OnInit {
   AddRFxVendorToTable(): void {
     if (this.RFxVendorFormGroup.valid) {
       const FxVendorView = new RFxVendorView();
-      FxVendorView.Type = this.RFxPartnerFormGroup.get('Type').value;
-      FxVendorView.VendorName = this.RFxPartnerFormGroup.get('VendorName').value;
-      FxVendorView.GSTNumber = this.RFxPartnerFormGroup.get('GSTNumber').value;
-      FxVendorView.City = this.RFxPartnerFormGroup.get('City').value;
+      FxVendorView.Type = this.RFxVendorFormGroup.get('Type').value;
+      FxVendorView.VendorName = this.RFxVendorFormGroup.get('VendorName').value;
+      FxVendorView.GSTNumber = this.RFxVendorFormGroup.get('GSTNumber').value;
+      FxVendorView.City = this.RFxVendorFormGroup.get('City').value;
       if (!this.RFxVendors || !this.RFxVendors.length) {
         this.RFxVendors = [];
       }
@@ -629,12 +629,26 @@ export class CreationComponent implements OnInit {
       }
       this.RFxVendorViews.push(FxVendorView);
       this.RFxVendorDataSource = new MatTableDataSource(this.RFxVendorViews);
-      this.ClearRFxPartnerFormGroup();
+      this.ClearRFxVendorFormGroup();
     } else {
-      this.ShowValidationErrors(this.RFxPartnerFormGroup);
+      this.ShowValidationErrors(this.RFxVendorFormGroup);
     }
   }
-
+  AddRFxODToTable(): void {
+    if (this.RFxODFormGroup.valid) {
+      const FxOD = new RFxOD();
+      FxOD.Question = this.RFxODFormGroup.get('Question').value;
+      FxOD.AnswerType = this.RFxODFormGroup.get('AnswerType').value;
+      if (!this.RFxODs || !this.RFxODs.length) {
+        this.RFxODs = [];
+      }
+      this.RFxODs.push(FxOD);
+      this.RFxODDataSource = new MatTableDataSource(this.RFxODs);
+      this.ClearRFxODFormGroup();
+    } else {
+      this.ShowValidationErrors(this.RFxODFormGroup);
+    }
+  }
   // RFxItemEnterKeyDown(): boolean {
   //   this.EvalDate.nativeElement.blur();
   //   this.AddRFxItemToTable();
@@ -762,7 +776,7 @@ export class CreationComponent implements OnInit {
     }
     this.RFxVendorDataSource = new MatTableDataSource(this.RFxVendorViews);
   }
-  
+
   RemoveRFxODFromTable(FxOD: RFxOD): void {
     const index: number = this.RFxODs.indexOf(FxOD);
     if (index > -1) {
