@@ -1,4 +1,3 @@
-import { TourComponent } from "./tour/tour.component";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { FuseSidebarModule } from "@fuse/components";
@@ -58,38 +57,16 @@ import { NgCircleProgressModule } from "ng-circle-progress";
 import { ChartsModule } from "ng2-charts";
 import "chartjs-plugin-labels";
 import "chartjs-plugin-annotation";
-import { HomeComponent } from "./home/home.component";
-import { PoFactsheetComponent } from "./po-factsheet/po-factsheet.component";
-import { PerformanceComponent } from "./performance/performance.component";
-import { NgImageSliderModule } from "ng-image-slider";
-import { TranslateModule } from "@ngx-translate/core";
-import { ImprovementComponent } from "./improvement/improvement.component";
-
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { ChatModule } from '../chat/chat.module';
+import { ASNComponent } from './asn.component';
+import { AsnPrintDialogComponent } from './asn-print-dialog/asn-print-dialog.component';
 // import { ChatModule } from '../chat';
 // import 'chart.piecelabel.js';
 
 const routes = [
     {
-        path: "dashboard",
-        component: DashboardComponent,
-    },
-    {
-        path: "home",
-        component: HomeComponent,
-    },
-    {
-        path: "polookup",
-        component: PoFactsheetComponent,
-    },
-    {
-        path: "performance",
-        component: PerformanceComponent,
-    },
-    {
-        path: "improvement",
-        component: ImprovementComponent,
+        path: "",
+        component: ASNComponent,
     },
     {
         path: "**",
@@ -163,21 +140,15 @@ const routes = [
             showInnerStroke: true,
             animationDuration: 300,
         }),
-        NgImageSliderModule,
         RouterModule.forChild(routes),
-        TranslateModule,
         MatCarouselModule,
         ChatModule,
     ],
     declarations: [
-        HomeComponent,
-        PoFactsheetComponent,
-        PerformanceComponent,
-        ImprovementComponent,
-        TourComponent,
-        DashboardComponent,
+        ASNComponent,
+        AsnPrintDialogComponent,
     ],
     providers: [DecimalPipe],
-    entryComponents: [TourComponent],
+    entryComponents: [AsnPrintDialogComponent],
 })
-export class PagesModule { }
+export class ASNModule { }

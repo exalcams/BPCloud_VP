@@ -23,7 +23,12 @@ import { FuseSidebarModule, FuseCountdownModule, FuseHighlightModule, FuseMateri
 import { FormsModule } from '@angular/forms';
 import { PaymentsComponent } from './payments/payments.component';
 import { TDSComponent } from './tds/tds.component';
+import { PaymentComponent } from './payment.component';
 const routes: Routes = [
+  {
+    path: "advise",
+    component: PaymentComponent,
+  },
   {
     path: 'payments',
     component: PaymentsComponent
@@ -42,7 +47,7 @@ const routes: Routes = [
   }
 ];
 @NgModule({
-  declarations: [AccountStatementComponent, PayableComponent, PaymentsComponent, TDSComponent],
+  declarations: [PaymentComponent, AccountStatementComponent, PayableComponent, PaymentsComponent, TDSComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

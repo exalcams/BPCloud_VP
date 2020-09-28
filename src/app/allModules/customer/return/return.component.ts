@@ -20,7 +20,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { AttachmentDetails } from 'app/models/task';
-import { AttachmentDialogComponent } from 'app/allModules/pages/attachment-dialog/attachment-dialog.component';
+import { AttachmentDialogComponent } from 'app/notifications/attachment-dialog/attachment-dialog.component';
 import { BPCPIHeader, BPCPIView, BPCPIItem, BPCProd } from 'app/models/customer';
 import { BPCFact } from 'app/models/fact';
 

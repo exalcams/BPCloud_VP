@@ -47,7 +47,7 @@ import { BPCKRA, CustomerBarChartData } from "app/models/fact";
 import { MasterService } from "app/services/master.service";
 import { OfAttachmentData } from "app/models/OrderFulFilment";
 import { BPCInvoiceAttachment } from "app/models/ASN";
-import { AttachmentViewDialogComponent } from "app/allModules/pages/attachment-view-dialog/attachment-view-dialog.component";
+import { AttachmentViewDialogComponent } from 'app/notifications/attachment-view-dialog/attachment-view-dialog.component';
 
 @Component({
     selector: "app-customer-orderfulfilment",
@@ -647,7 +647,7 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
     //   this._router.navigate(['/pages/polookup'], { queryParams: { id: po } });
     // }
     // POFlip(po: string): void {
-    //   this._router.navigate(['/pages/poflip'], { queryParams: { id: po } });
+    //   this._router.navigate(['/poflip'], { queryParams: { id: po } });
     // }
     // Checked(po: string): void {
     //   this._router.navigate(['/pages/polookup'], { queryParams: { id: po } });

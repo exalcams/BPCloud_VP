@@ -105,7 +105,7 @@ export class SupportDeskComponent implements OnInit {
 
   loadSupportDeskBasedOnCondition(): void {
     if (this.docRefNo) {
-      this._router.navigate(['/pages/supportticket'], { queryParams: { DocRefNo: this.docRefNo } });
+      this._router.navigate(['/support/supportticket'], { queryParams: { DocRefNo: this.docRefNo } });
     }
     else {
       this.GetSupportMasters();
@@ -152,10 +152,10 @@ export class SupportDeskComponent implements OnInit {
   }
 
   addSupportTicketClicked(): void {
-    this._router.navigate(['/pages/supportticket']);
+    this._router.navigate(['/support/supportticket']);
   }
 
   onSupportRowClicked(row: any): void {
-    this._router.navigate(['/pages/supportchat'], { queryParams: { SupportID: row.SupportID } });
+    this._router.navigate(['/support/supportchat'], { queryParams: { SupportID: row.SupportID } });
   }
 }

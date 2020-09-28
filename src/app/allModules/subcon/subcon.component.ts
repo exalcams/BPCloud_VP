@@ -18,7 +18,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { AttachmentDetails } from 'app/models/task';
-import { AttachmentDialogComponent } from '../pages/attachment-dialog/attachment-dialog.component';
+import { AttachmentDialogComponent } from 'app/notifications/attachment-dialog/attachment-dialog.component';
 import { SubconService } from 'app/services/subcon.service';
 
 @Component({

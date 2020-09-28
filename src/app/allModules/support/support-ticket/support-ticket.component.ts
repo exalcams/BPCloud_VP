@@ -6,7 +6,7 @@ import { MatSnackBar, MatDialogConfig, MatDialog } from '@angular/material';
 import { AttachmentDetails } from 'app/models/task';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AttachmentDialogComponent } from '../attachment-dialog/attachment-dialog.component';
+import { AttachmentDialogComponent } from 'app/notifications/attachment-dialog/attachment-dialog.component';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { SupportMaster, SupportHeader, SupportHeaderView } from 'app/models/support-desk';
 import { SupportDeskService } from 'app/services/support-desk.service';
@@ -244,7 +244,7 @@ export class SupportTicketComponent implements OnInit {
           this.ResetControl();
           this.notificationSnackBarComponent.openSnackBar(`Ticket Created successfully`, SnackBarStatus.success);
           this.IsProgressBarVisibile = false;
-          this._router.navigate(['/pages/supportdesk']);
+          this._router.navigate(['/support/supportdesk']);
         }
       },
       (err) => {
@@ -259,7 +259,7 @@ export class SupportTicketComponent implements OnInit {
         this.notificationSnackBarComponent.openSnackBar('Ticket Created successfully', SnackBarStatus.success);
         this.IsProgressBarVisibile = false;
         this.ResetControl();
-        this._router.navigate(['/pages/supportdesk']);
+        this._router.navigate(['/support/supportdesk']);
       },
       (err) => {
         this.ShowErrorNotificationSnackBar(err);

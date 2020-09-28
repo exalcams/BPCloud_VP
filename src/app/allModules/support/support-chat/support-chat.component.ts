@@ -9,7 +9,7 @@ import { SupportDeskService } from 'app/services/support-desk.service';
 import { SupportDetails, SupportHeader, SupportLog, BPCSupportAttachment } from 'app/models/support-desk';
 import { MatDialogConfig, MatDialog, MatSnackBar } from '@angular/material';
 import { AttachmentDetails } from 'app/models/task';
-import { AttachmentDialogComponent } from '../attachment-dialog/attachment-dialog.component';
+import { AttachmentDialogComponent } from 'app/notifications/attachment-dialog/attachment-dialog.component';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';

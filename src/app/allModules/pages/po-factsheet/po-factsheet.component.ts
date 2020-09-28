@@ -406,7 +406,7 @@ export class PoFactsheetComponent implements OnInit {
         this.isProgressBarVisibile = true;
         this._dashboardService.CreateAcknowledgement(this.acknowledgement).subscribe(
             (data) => {
-                this._router.navigate(['/pages/orderfulfilmentCenter']);
+                this._router.navigate(['/orderfulfilment/orderfulfilmentCenter']);
                 this.isProgressBarVisibile = false;
             },
             (err) => {
@@ -589,7 +589,7 @@ export class PoFactsheetComponent implements OnInit {
 
     goToASNClicked(po: string): void {
         // alert(po);
-        this._router.navigate(['/pages/asn'], { queryParams: { id: po } });
+        this._router.navigate(['/asn'], { queryParams: { id: po } });
     }
 
     getItems(): void {
