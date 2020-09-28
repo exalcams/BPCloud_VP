@@ -268,9 +268,9 @@ export class LoginComponent implements OnInit {
         if (data.UserRole === "Customer") {
             this._router.navigate(["customer/dashboard"]);
         } else if (data.UserRole === "Administrator") {
-            this._router.navigate(["pages/datamigration"]);
+            this._router.navigate(["configuration/datamigration"]);
         } else if (data.UserRole === "HelpDeskAdmin") {
-            this._router.navigate(["pages/supportdesk"]);
+            this._router.navigate(["support/supportdesk"]);
         } else if (data.UserRole === "CustomerHelpDeskAdmin") {
             this._router.navigate(["customer/supportdesk"]);
         } else if (data.UserRole === "Buyer") {
@@ -468,7 +468,7 @@ export class LoginComponent implements OnInit {
                 title: "Fulfilment Center",
                 translate: "NAV.VENDOR.FULFILMENT_CENTER",
                 type: "item",
-                url: "/pages/orderfulfilmentCenter",
+                url: "/orderfulfilment/orderfulfilmentCenter",
             });
         }
 
@@ -486,7 +486,7 @@ export class LoginComponent implements OnInit {
                 title: "ASN",
                 translate: "NAV.VENDOR.ASN",
                 type: "item",
-                url: "/pages/asn",
+                url: "/asn",
             });
         }
 
@@ -686,7 +686,7 @@ export class LoginComponent implements OnInit {
                 title: "PO Flip",
                 translate: "NAV.VENDOR.PO_FLIP",
                 type: "item",
-                url: "/pages/poflip",
+                url: "/poflip",
             });
         }
 
@@ -723,7 +723,7 @@ export class LoginComponent implements OnInit {
                 title: "Payment Advise",
                 translate: "NAV.VENDOR.PAYMENT_ADVISE",
                 type: "item",
-                url: "/pages/payment",
+                url: "/payment/advise",
             });
         }
         if (this.menuItems.indexOf("TDS") >= 0) {
@@ -764,7 +764,7 @@ export class LoginComponent implements OnInit {
                 title: "Get Support",
                 translate: "NAV.VENDOR.GET_SUPPORT",
                 type: "item",
-                url: "/pages/supportdesk",
+                url: "/support/supportdesk",
             });
         }
 
@@ -774,7 +774,7 @@ export class LoginComponent implements OnInit {
                 title: "Declaration",
                 translate: "NAV.VENDOR.GET_SUPPORT",
                 type: "item",
-                url: "/pages/declaration",
+                url: "/support/declaration",
             });
         }
 
@@ -784,7 +784,7 @@ export class LoginComponent implements OnInit {
                 title: "Resource",
                 translate: "NAV.VENDOR.RESOURCE",
                 type: "item",
-                url: "/pages/resource",
+                url: "/support/resource",
             });
         }
         if (this.menuItems.indexOf("Fact") >= 0) {
@@ -1009,7 +1009,7 @@ export class LoginComponent implements OnInit {
                 icon: "receiptIcon",
                 isSvgIcon: true,
                 // icon: 'receipt',
-                url: "/pages/datamigration",
+                url: "/configuration/datamigration",
             });
         }
 

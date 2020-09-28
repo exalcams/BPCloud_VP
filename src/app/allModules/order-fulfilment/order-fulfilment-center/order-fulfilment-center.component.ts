@@ -40,7 +40,7 @@ import {
 import { DatePipe } from "@angular/common";
 import { BPCOFHeader, OfAttachmentData } from "app/models/OrderFulFilment";
 import { DashboardService } from "app/services/dashboard.service";
-import { AttachmentViewDialogComponent } from "../attachment-view-dialog/attachment-view-dialog.component";
+import { AttachmentViewDialogComponent } from "app/notifications/attachment-view-dialog/attachment-view-dialog.component";
 import { BPCInvoiceAttachment } from "app/models/ASN";
 import { MasterService } from "app/services/master.service";
 import * as FileSaver from "file-saver";
@@ -664,17 +664,17 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     }
 
     goToPOFlipClicked(po: string): void {
-        this._router.navigate(["/pages/poflip"], { queryParams: { id: po } });
+        this._router.navigate(["/poflip"], { queryParams: { id: po } });
     }
 
     goToSupportDeskClicked(po: string): void {
-        this._router.navigate(["/pages/supportticket"], {
+        this._router.navigate(["/support/supportticket"], {
             queryParams: { id: po },
         });
     }
 
     goToASNClicked(po: string): void {
-        this._router.navigate(["/pages/asn"], { queryParams: { id: po } });
+        this._router.navigate(["/asn"], { queryParams: { id: po } });
     }
 
     goToSubconClicked(po: string): void {
@@ -710,7 +710,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
                 queryParams: { id: po },
             });
         } else if (nextProcess === "ASN") {
-            this._router.navigate(["/pages/asn"], { queryParams: { id: po } });
+            this._router.navigate(["/asn"], { queryParams: { id: po } });
         }
     }
 

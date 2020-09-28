@@ -13,7 +13,8 @@ import 'hammerjs';
 
 import { FuseModule } from '@fuse/fuse.module';
 import { FuseSharedModule } from '@fuse/shared.module';
-import { FuseProgressBarModule, FuseSidebarModule, FuseThemeOptionsModule, FuseCountdownModule, FuseHighlightModule, FuseMaterialColorPickerModule, FuseWidgetModule } from '@fuse/components';
+import { FuseProgressBarModule, FuseSidebarModule, FuseThemeOptionsModule, FuseCountdownModule, 
+    FuseHighlightModule, FuseMaterialColorPickerModule, FuseWidgetModule } from '@fuse/components';
 
 import { fuseConfig } from 'app/fuse-config';
 
@@ -24,9 +25,7 @@ import { DatePipe } from '@angular/common';
 import { NotificationDialogComponent } from './notifications/notification-dialog/notification-dialog.component';
 import { WINDOW_PROVIDERS } from './window.providers';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
-import { AttachmentDialogComponent } from './allModules/pages/attachment-dialog/attachment-dialog.component';
 import { PaymentModule } from './allModules/payment/payment.module';
-import { AttachmentViewDialogComponent } from './allModules/pages/attachment-view-dialog/attachment-view-dialog.component';
 import { BnNgIdleService } from 'bn-ng-idle';
 import { InformationDialogComponent } from './notifications/information-dialog/information-dialog.component';
 import { ASNReleaseDialogComponent } from './notifications/asnrelease-dialog/asnrelease-dialog.component';
@@ -34,6 +33,8 @@ import { FormsModule } from '@angular/forms';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { NgxDonutChartModule } from 'ngx-doughnut-chart';
 import { ChartsModule } from 'ng2-charts';
+import { AttachmentViewDialogComponent } from './notifications/attachment-view-dialog/attachment-view-dialog.component';
+import { AttachmentDialogComponent } from './notifications/attachment-dialog/attachment-dialog.component';
 // import { ChatModule } from './allModules/chat/chat.module';
 
 const appRoutes: Routes = [
@@ -44,6 +45,14 @@ const appRoutes: Routes = [
     {
         path: 'pages',
         loadChildren: './allModules/pages/pages.module#PagesModule'
+    },
+    {
+        path: 'asn',
+        loadChildren: './allModules/asn/asn.module#ASNModule'
+    },
+    {
+        path: 'poflip',
+        loadChildren: './allModules/po-flip/po-flip.module#POFlipModule'
     },
     {
         path: 'gate',
@@ -102,12 +111,8 @@ const appRoutes: Routes = [
         loadChildren: './allModules/payment/payment.module#PaymentModule'
     },
     {
-        path: 'payment',
-        loadChildren: './allModules/payment/payment.module#PaymentModule'
-    },
-    {
-        path: 'payment',
-        loadChildren: './allModules/payment/payment.module#PaymentModule'
+        path: 'support',
+        loadChildren: './allModules/support/support.module#SupportModule'
     },
     {
         path: '**',

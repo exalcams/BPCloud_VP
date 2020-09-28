@@ -306,7 +306,7 @@ export class CustomerDashboardComponent implements OnInit {
         this.OpenConfirmationDialog(Actiontype, Catagory);
       } else if (aIACTByPartnerID.ActionText.toLowerCase() === "view") {
         console.log("view called");
-        this._router.navigate(['/pages/orderfulfilmentCenter'], { queryParams: { id: aIACTByPartnerID.DocNumber } });
+        this._router.navigate(['/orderfulfilment/orderfulfilmentCenter'], { queryParams: { id: aIACTByPartnerID.DocNumber } });
       }
     }
     else {

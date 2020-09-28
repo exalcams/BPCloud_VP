@@ -200,7 +200,7 @@ export class ResourceComponent implements OnInit {
     // }
 
     onFAQClicked(): void {
-        this._router.navigate(["pages/faq"]);
+        this._router.navigate(["support/faq"]);
     }
 
     onArticlesClicked(): void {

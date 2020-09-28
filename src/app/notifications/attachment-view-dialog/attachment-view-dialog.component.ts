@@ -177,7 +177,7 @@ export class AttachmentViewDialogComponent implements OnInit {
           this.notificationSnackBarComponent.openSnackBar(`Attachment uploaded successfully`, SnackBarStatus.success);
           this.resetControl();
           this.closeClicked(docNumber);
-          // this._router.navigate(['/pages/orderfulfilmentCenter']);
+          // this._router.navigate(['/orderfulfilment/orderfulfilmentCenter']);
         }
         // this.GetOfAttachmentsByPartnerIDAndDocNumber(docNumber);
         this.isProgressBarVisibile = false;
@@ -187,7 +187,7 @@ export class AttachmentViewDialogComponent implements OnInit {
         this.closeClicked(docNumber);
         this.resetControl();
         // this.GetOfAttachmentsByPartnerIDAndDocNumber(docNumber);
-        // this._router.navigate(['/pages/orderfulfilmentCenter']);
+        // this._router.navigate(['/orderfulfilment/orderfulfilmentCenter']);
         this.notificationSnackBarComponent.openSnackBar(`Attachment uploaded successfully`, SnackBarStatus.success);
       }
     );
@@ -200,7 +200,7 @@ export class AttachmentViewDialogComponent implements OnInit {
         this.notificationSnackBarComponent.openSnackBar(`Attachment uploaded successfully`, SnackBarStatus.success);
         this.resetControl();
         this.closeClicked(docNumber);
-        // this._router.navigate(['/pages/orderfulfilmentCenter']);
+        // this._router.navigate(['/orderfulfilment/orderfulfilmentCenter']);
         this.isProgressBarVisibile = false;
       },
       (err) => {

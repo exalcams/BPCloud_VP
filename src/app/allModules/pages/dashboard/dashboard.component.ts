@@ -407,7 +407,7 @@ export class DashboardComponent implements OnInit {
                     queryParams: { id: aIACTByPartnerID.DocNumber },
                 });
             } else if (aIACTByPartnerID.ActionText.toLowerCase() === "asn") {
-                this._router.navigate(["/pages/asn"], {
+                this._router.navigate(["/asn"], {
                     queryParams: { id: aIACTByPartnerID.DocNumber },
                 });
             } else if (aIACTByPartnerID.ActionText.toLowerCase() === "grn") {

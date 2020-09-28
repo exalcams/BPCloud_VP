@@ -23,14 +23,14 @@ import { POService } from 'app/services/po.service';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { BPCOFItem, BPCOFHeader, BPCOFSubconView } from 'app/models/OrderFulFilment';
 import { AttachmentDetails } from 'app/models/task';
-import { AttachmentDialogComponent } from '../attachment-dialog/attachment-dialog.component';
 import { DatePipe } from '@angular/common';
 import { SubconService } from 'app/services/subcon.service';
 import { ASNReleaseDialogComponent } from 'app/notifications/asnrelease-dialog/asnrelease-dialog.component';
 import { ExcelService } from 'app/services/excel.service';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
-import { AsnPrintDialogComponent } from '../asn-print-dialog/asn-print-dialog.component';
+import { AsnPrintDialogComponent } from './asn-print-dialog/asn-print-dialog.component';
+import { AttachmentDialogComponent } from 'app/notifications/attachment-dialog/attachment-dialog.component';
 @Component({
     selector: 'app-asn',
     templateUrl: './asn.component.html',

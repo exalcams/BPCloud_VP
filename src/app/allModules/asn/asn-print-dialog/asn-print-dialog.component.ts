@@ -1,9 +1,9 @@
 import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { AttachmentDialogComponent } from '../attachment-dialog/attachment-dialog.component';
 import { AttachmentDetails } from 'app/models/task';
 import { DomSanitizer } from '@angular/platform-browser';
 import { fuseAnimations } from '@fuse/animations';
+import { AttachmentDialogComponent } from 'app/notifications/attachment-dialog/attachment-dialog.component';
 
 @Component({
   selector: 'app-asn-print-dialog',

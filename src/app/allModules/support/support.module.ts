@@ -1,4 +1,3 @@
-import { TourComponent } from "./tour/tour.component";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { FuseSidebarModule } from "@fuse/components";
@@ -44,6 +43,7 @@ import {
 } from "@angular/material";
 import { NgxChartsModule } from "@swimlane/ngx-charts";
 import { NgxDonutChartModule } from "ngx-doughnut-chart";
+import { TranslateModule } from "@ngx-translate/core";
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import {
     FuseCountdownModule,
@@ -58,38 +58,41 @@ import { NgCircleProgressModule } from "ng-circle-progress";
 import { ChartsModule } from "ng2-charts";
 import "chartjs-plugin-labels";
 import "chartjs-plugin-annotation";
-import { HomeComponent } from "./home/home.component";
-import { PoFactsheetComponent } from "./po-factsheet/po-factsheet.component";
-import { PerformanceComponent } from "./performance/performance.component";
-import { NgImageSliderModule } from "ng-image-slider";
-import { TranslateModule } from "@ngx-translate/core";
-import { ImprovementComponent } from "./improvement/improvement.component";
 
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { ChatModule } from '../chat/chat.module';
+import { SupportChatComponent } from './support-chat/support-chat.component';
+import { SupportDeskComponent } from './support-desk/support-desk.component';
+import { SupportTicketComponent } from './support-ticket/support-ticket.component';
+import { FaqComponent } from "./faq/faq.component";
+import { DeclarationComponent } from './declaration/declaration.component';
+import { ResourceComponent } from "./resource/resource.component";
 // import { ChatModule } from '../chat';
 // import 'chart.piecelabel.js';
 
 const routes = [
     {
-        path: "dashboard",
-        component: DashboardComponent,
+        path: "supportdesk",
+        component: SupportDeskComponent,
     },
     {
-        path: "home",
-        component: HomeComponent,
+        path: "supportticket",
+        component: SupportTicketComponent,
     },
     {
-        path: "polookup",
-        component: PoFactsheetComponent,
+        path: "supportchat",
+        component: SupportChatComponent,
     },
     {
-        path: "performance",
-        component: PerformanceComponent,
+        path: "faq",
+        component: FaqComponent,
     },
     {
-        path: "improvement",
-        component: ImprovementComponent,
+        path: "declaration",
+        component: DeclarationComponent,
+    },
+    {
+        path: "resource",
+        component: ResourceComponent,
     },
     {
         path: "**",
@@ -163,21 +166,20 @@ const routes = [
             showInnerStroke: true,
             animationDuration: 300,
         }),
-        NgImageSliderModule,
         RouterModule.forChild(routes),
-        TranslateModule,
         MatCarouselModule,
         ChatModule,
+        TranslateModule
     ],
     declarations: [
-        HomeComponent,
-        PoFactsheetComponent,
-        PerformanceComponent,
-        ImprovementComponent,
-        TourComponent,
-        DashboardComponent,
+        SupportDeskComponent,
+        SupportTicketComponent,
+        SupportChatComponent,
+        FaqComponent,
+        DeclarationComponent,
+        ResourceComponent
     ],
     providers: [DecimalPipe],
-    entryComponents: [TourComponent],
+    entryComponents: [],
 })
-export class PagesModule { }
+export class SupportModule { }

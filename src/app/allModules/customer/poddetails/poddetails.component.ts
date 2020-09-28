@@ -21,7 +21,7 @@ import { NotificationDialogComponent } from 'app/notifications/notification-dial
 import { fuseAnimations } from '@fuse/animations';
 import { NotesDialogComponent } from '../notes-dialog/notes-dialog.component';
 import { AttachmentDetails } from 'app/models/task';
-import { AttachmentDialogComponent } from 'app/allModules/pages/attachment-dialog/attachment-dialog.component';
+import { AttachmentDialogComponent } from 'app/notifications/attachment-dialog/attachment-dialog.component';
 import { PODItemAttachmentDialogComponent } from '../poditem-attachment-dialog/poditem-attachment-dialog.component';
 import { BPCFact } from 'app/models/fact';
 
