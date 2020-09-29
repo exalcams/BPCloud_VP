@@ -57,48 +57,13 @@ import "chartjs-plugin-labels";
 import "chartjs-plugin-annotation";
 import { NgImageSliderModule } from "ng-image-slider";
 import { TranslateModule } from '@ngx-translate/core';
-import { PPMComponent } from './ppm/ppm.component';
 import { ReportComponent } from './report/report.component';
-import { VendorRatingComponent } from './vendor-rating/vendor-rating.component';
-import { OverviewComponent } from './overview/overview.component';
-import { DOLComponent } from './dol/dol.component';
-import { FGChildPartStockComponent } from './fg-child-part-stock/fg-child-part-stock.component';
-import { InspectionPlanComponent } from './inspection-plan/inspection-plan.component';
-import { GRReceiptsComponent } from './gr-receipts/gr-receipts.component';
 // import 'chart.piecelabel.js';
 
 const routes = [
     {
         path: "report",
         component: ReportComponent,
-    },
-    {
-        path: "ppm",
-        component: PPMComponent,
-    },
-    {
-        path: "dol",
-        component: DOLComponent,
-    },
-    {
-        path: "vendorRating",
-        component: VendorRatingComponent,
-    },
-    {
-        path: "overview",
-        component: OverviewComponent,
-    },
-    {
-        path: "fgChildPartStock",
-        component: FGChildPartStockComponent,
-    },
-    {
-        path: "inspectionPlan",
-        component: InspectionPlanComponent,
-    },
-    {
-        path: "grReceipts",
-        component: GRReceiptsComponent,
     },
     {
         path: "**",
@@ -178,14 +143,6 @@ const routes = [
     ],
     declarations: [
         ReportComponent,
-        PPMComponent,
-        DOLComponent,
-        VendorRatingComponent,
-        OverviewComponent,
-        FGChildPartStockComponent,
-        InspectionPlanComponent,
-        GRReceiptsComponent
-
     ],
     providers: [DecimalPipe],
     entryComponents: [],

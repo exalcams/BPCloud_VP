@@ -111,6 +111,10 @@ const appRoutes: Routes = [
         loadChildren: './allModules/payment/payment.module#PaymentModule'
     },
     {
+        path: 'quality',
+        loadChildren: './allModules/quality/quality.module#QaulityModule'
+    },
+    {
         path: 'support',
         loadChildren: './allModules/support/support.module#SupportModule'
     },
