@@ -434,7 +434,7 @@ export class LoginComponent implements OnInit {
         //         title: "GR Receipts",
         //         translate: "NAV.VENDOR.GR_RECEIPTS",
         //         type: "item",
-        //         url: "/reports/grReceipts",
+        //         url: "/orderfulfilment/grReceipts",
         //     });
         // }
 
@@ -444,7 +444,7 @@ export class LoginComponent implements OnInit {
         //         title: "GR Receipts",
         //         translate: "NAV.VENDOR.GR_RECEIPTS",
         //         type: "item",
-        //         url: "/reports/grReceipts",
+        //         url: "/orderfulfilment/grReceipts",
         //     });
         // }
 
@@ -503,7 +503,7 @@ export class LoginComponent implements OnInit {
                 title: "GRN List",
                 translate: "NAV.VENDOR.FULFILMENT_CENTER",
                 type: "item",
-                url: "/reports/grReceipts",
+                url: "/orderfulfilment/grReceipts",
             });
         }
 
@@ -593,7 +593,7 @@ export class LoginComponent implements OnInit {
                 title: "Rejections",
                 translate: "NAV.VENDOR.OVERVIEW",
                 type: "item",
-                url: "/reports/overview",
+                url: "/quality/overview",
             });
         }
 
@@ -603,7 +603,7 @@ export class LoginComponent implements OnInit {
                 title: "PPM",
                 translate: "NAV.VENDOR.PPM",
                 type: "item",
-                url: "/reports/ppm",
+                url: "/quality/ppm",
             });
         }
         if (this.menuItems.indexOf("DOL") >= 0) {
@@ -612,7 +612,7 @@ export class LoginComponent implements OnInit {
                 title: "DOL",
                 translate: "NAV.VENDOR.DOL",
                 type: "item",
-                url: "/reports/dol",
+                url: "/quality/dol",
             });
         }
         if (this.menuItems.indexOf("InspectionPlan") >= 0) {
@@ -630,7 +630,7 @@ export class LoginComponent implements OnInit {
                 title: "Vendor Rating",
                 translate: "NAV.VENDOR.VENDOR_RATING",
                 type: "item",
-                url: "/reports/vendorRating",
+                url: "/quality/vendorRating",
             });
         }
 
@@ -661,7 +661,7 @@ export class LoginComponent implements OnInit {
                 title: "FG Child Part Stock",
                 translate: "NAV.VENDOR.FG_CHILD_PART_STOCK",
                 type: "item",
-                url: "/reports/fgChildPartStock",
+                url: "/subcon/fgChildPartStock",
             });
         }
 

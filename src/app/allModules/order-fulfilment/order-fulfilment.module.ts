@@ -20,7 +20,7 @@ import "chartjs-plugin-annotation";
 import { OrderFulFilmentCenterComponent } from "./order-fulfilment-center/order-fulfilment-center.component";
 import { PoSchedulesComponent } from './po-schedules/po-schedules.component';
 import { ASNListComponent } from './asnlist/asnlist.component';
-import { GRNListComponent } from './grnlist/grnlist.component';
+import { GRReceiptsComponent } from './gr-receipts/gr-receipts.component';
 import { InvoiceListComponent } from './invoice-list/invoice-list.component';
 
 const route: Routes = [
@@ -37,8 +37,8 @@ const route: Routes = [
     component: ASNListComponent
   },
   {
-    path: 'grnlist',
-    component: GRNListComponent
+    path: 'grReceipts',
+    component: GRReceiptsComponent
   },
   {
     path: 'invoicelist',
@@ -50,7 +50,7 @@ const route: Routes = [
     OrderFulFilmentCenterComponent,
     PoSchedulesComponent,
     ASNListComponent,
-    GRNListComponent,
+    GRReceiptsComponent,
     InvoiceListComponent],
   imports: [
     CommonModule,
