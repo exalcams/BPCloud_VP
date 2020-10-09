@@ -284,6 +284,17 @@
     @extend .tab-round2;
     border-color: #e7f9e3;
   }
+  .return-round1 {
+    @extend .tab-round1;
+    border-color: #edb084;
+    .mat-badge-content {
+      background-color: #edb084 !important;
+    }
+  }
+  .return-round2 {
+    @extend .tab-round2;
+    border-color: #fef7e9;
+  }
   .qa-round1 {
     @extend .tab-round1;
     border-color: #f8d68f;

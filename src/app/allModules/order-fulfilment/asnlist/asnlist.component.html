@@ -118,8 +118,8 @@
           <!-- Material Column -->
           <ng-container matColumnDef="ASNNumber">
             <mat-header-cell *matHeaderCellDef fxFlex="12" class="tableHeader"
-              [ngClass]="BGClassName?.layout?.toolbar?.background"> ASN </mat-header-cell>
-            <mat-cell fxFlex="12" *matCellDef="let element ;index as i">
+              [ngClass]="BGClassName?.layout?.toolbar?.background" > ASN </mat-header-cell>
+            <mat-cell fxFlex="12" *matCellDef="let element ;index as i" (click)="ASNnumber(element.DocNumber)">
               <p class="cl_box" [ngStyle]="{'background-color': i%2==0 ? '#d87e39':'#6f52ed'}"></p>
               <p style="margin-left: 5px;" class="tableElement">{{element.ASNNumber }} </p>
             </mat-cell>
@@ -136,7 +136,7 @@
           <ng-container matColumnDef="DocNumber">
             <mat-header-cell *matHeaderCellDef fxFlex="10" class="tableHeader"
               [ngClass]="BGClassName?.layout?.toolbar?.background"> PO </mat-header-cell>
-            <mat-cell fxFlex="10" *matCellDef="let element">
+            <mat-cell fxFlex="10" *matCellDef="let element" >
               <p class="tableElement">{{element.DocNumber}}</p>
             </mat-cell>
           </ng-container>
@@ -156,29 +156,29 @@
             </mat-cell>
           </ng-container>
 
-          <ng-container matColumnDef="Material">
+          <ng-container matColumnDef="DepartureDate">
             <mat-header-cell fxFlex="10" *matHeaderCellDef class="tableHeader"
-              [ngClass]="BGClassName?.layout?.toolbar?.background"> Material </mat-header-cell>
+              [ngClass]="BGClassName?.layout?.toolbar?.background"> DispatchDate </mat-header-cell>
             <mat-cell fxFlex="10" *matCellDef="let element">
-              <p class="tableElement">{{element.Material}} </p>
+              <p class="tableElement">{{element.DepartureDate| date :'dd/MM/yyyy'}} </p>
             </mat-cell>
           </ng-container>
 
           <!-- MaterialText Column -->
-          <ng-container matColumnDef="MaterialText">
+          <ng-container matColumnDef="ArrivalDate">
             <mat-header-cell fxFlex="23" *matHeaderCellDef class="tableHeader"
-              [ngClass]="BGClassName?.layout?.toolbar?.background"> Material Text </mat-header-cell>
+              [ngClass]="BGClassName?.layout?.toolbar?.background"> Arrival Date</mat-header-cell>
             <mat-cell fxFlex="23" *matCellDef="let element">
-              <p class="tableElement">{{element.MaterialText}} </p>
+              <p class="tableElement">{{element.ArrivalDate| date :'dd/MM/yyyy'}} </p>
             </mat-cell>
           </ng-container>
 
           <!-- AcceptedQuantity Column -->
-          <ng-container matColumnDef="ASNQty">
+          <ng-container matColumnDef="TurnaroundTime">
             <mat-header-cell fxFlex="9" *matHeaderCellDef class="tableHeader"
-              [ngClass]="BGClassName?.layout?.toolbar?.background"> ASN Qty </mat-header-cell>
+              [ngClass]="BGClassName?.layout?.toolbar?.background"> 	TurnaroundTime </mat-header-cell>
             <mat-cell fxFlex="9" *matCellDef="let element">
-              <p class="tableElement">{{element.ASNQty}} </p>
+              <p class="tableElement">{{element.TurnaroundTime}} </p>
             </mat-cell>
           </ng-container>
 
@@ -195,12 +195,27 @@
           <ng-container matColumnDef="Action">
             <mat-header-cell fxFlex="15" *matHeaderCellDef class="tableHeader"
               [ngClass]="BGClassName?.layout?.toolbar?.background"> Action </mat-header-cell>
-            <mat-cell fxFlex="15" *matCellDef="let element">
-              <img src="assets/images/lightning.png" width="11px" height="14px" class="lightning_img">
+            <mat-cell fxFlex="15" *matCellDef="let element; index as i ">
+              <mat-form-field  appearance="outline" style="width: 120px; ">
+                <mat-icon matPrefix svgIcon="thunderBlackIcon" height="20px"></mat-icon>
+                <mat-label ng-mouseenter="$mdMenu.open()">Actions</mat-label>
+                <mat-select ng-mouseleave="$mdMenu.close()" class="selectInput2"  >
+                  <!-- <mat-select class="selectInput2" > -->
+                  <mat-option value="Create ASN" (click)="cancel(i)" >	Cancel</mat-option>
+                  <mat-option value="Print ASN" (click)="Pdfdownload(element.ASNNumber)">	Print ASN</mat-option>
+                 
+                  <mat-option value ="Get help" (click)="help(element.DocNumber)">Get help</mat-option>
+                </mat-select>
+                
+
+
+              </mat-form-field>
+
+              <!-- <img src="assets/images/lightning.png" width="11px" height="14px" class="lightning_img">
               <select class="selectInput_table">
                 <option>Action</option>
                 <option>option</option>
-              </select>
+              </select> -->
 
             </mat-cell>
           </ng-container>

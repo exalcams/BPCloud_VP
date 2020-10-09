@@ -831,7 +831,12 @@ export class FactComponent implements OnInit {
       this.ShowValidationErrors(this.FactFormGroup);
     }
   }
+  AddClicked(): void {
 
+  }
+  ChangeClicked(): void {
+
+  }
   CreateFact(): void {
     // this.GetBPCFactValues();
     // this.GetBPCFactSubItemValues();

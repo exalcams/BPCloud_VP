@@ -261,6 +261,11 @@ login {
         vertical-align: initial;
         animation: 1s blink linear infinite;
     }
+    .ScrollingText{
+        margin-top: 48px;
+        position: absolute;
+        margin-left: -80px;
+    }
     @keyframes blink {
         0%,
         49% {

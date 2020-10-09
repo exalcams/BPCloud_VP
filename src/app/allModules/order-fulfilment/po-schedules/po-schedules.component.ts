@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
+import { Router } from '@angular/router';
 import { FuseConfigService } from '@fuse/services/config.service';
 
 @Component({
@@ -13,13 +14,16 @@ export class PoSchedulesComponent implements OnInit {
   fuseConfig: any;
   DisplayedColumn: string[] = ['PO', 'Item', 'DelDate', 'Material', 'MaterialText', 'OpenQty', 'Action'];
   PoDataSource: MatTableDataSource<any>;
-  constructor( private _fuseConfigService: FuseConfigService) { }
+  selectedDay: any;
+ 
+  constructor( private _fuseConfigService: FuseConfigService,   private _router: Router) { }
 
   ngOnInit(): void {
     this.SetUserPreference();
     this.GetPOSchduleDetails();
 
   }
+  
   GetPOSchduleDetails(): void {
     this.poschedules = [
 
@@ -40,6 +44,23 @@ export class PoSchedulesComponent implements OnInit {
         });
     // this._fuseConfigService.config = this.fuseConfig;
 }
+ASN(po: string) {
+  this._router.navigate(["/asn"], { queryParams: { id: po } });
+  
+}
+help(po: string){
+  this._router.navigate(["/support/supportticket"], {
+    queryParams: { id: po },});
+  
+ 
+}
+// selectChangeHandler(event: any){
+//   this.selectedDay = event.target.value;
+// if(this.selectedDay=="Create ASN")
+// {
+  
+// }
+// }
 }
 
 export class PoSchedule {

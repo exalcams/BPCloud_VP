@@ -3,7 +3,7 @@
     <div class="outer" fxLayout>
       <div class="bg"></div>
       <div>
-        <h3 style="margin: 0px;padding-left: 10px;"><b>PO Schedules</b></h3>
+        <h3 style="margin: 0px;padding-left: 10px;"><b>My Next Schedules</b></h3>
       </div>
       <div fxFlex align="end">
         <span><img src="assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
@@ -112,18 +112,23 @@
           <th mat-header-cell *matHeaderCellDef style="font-size: 15px;color: white;width:10%;border: none;"  [ngClass]="BGClassName?.layout?.toolbar?.background"> Action
           </th>
           <td mat-cell style="font-size: 15px;border-right: none;" *matCellDef="let element">
-            <div style="margin-left: 10px;">
-              <img src="assets/images/lightning.png" class="lighting_image">
-              <select class="selectInput2">
-                <option>Action</option>
-                <option>Action1</option>
-              </select>
-            </div>
+            <!-- <div style="margin-left: 10px;"> -->
+              <mat-form-field  appearance="outline" style="width: 120px; ">
+              <!-- <img src="assets/images/lightning.png" class="lighting_image"> -->
+              <mat-icon matPrefix svgIcon="thunderBlackIcon" height="20px"></mat-icon>
+              <mat-label ng-mouseenter="$mdMenu.open()">Actions</mat-label>
+              <mat-select ng-mouseleave="$mdMenu.close()" class="selectInput2"  >
+                <!-- <mat-select class="selectInput2" > -->
+                <mat-option value="Create ASN" (click)= "ASN(element.PO)">	Create ASN</mat-option>
+                <mat-option value ="Get help" (click)="help(element.PO)">Get help</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <!-- </div> -->
           </td>
         </ng-container>
-        <tr mat-header-row style="background-color: #343436;height:40px;border: none !important;"
+        <tr mat-header-row style="background-color: #343436;height:10px;border: none !important;"
           *matHeaderRowDef="DisplayedColumn"></tr>
-        <tr mat-row style="height: 50px;border: none;" *matRowDef="let row; columns: DisplayedColumn;"></tr>
+        <tr mat-row style="height: 10px;border: none;" *matRowDef="let row; columns: DisplayedColumn;"></tr>
 
 
       </table>

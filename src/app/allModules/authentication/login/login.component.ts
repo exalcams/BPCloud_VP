@@ -25,6 +25,8 @@ import {
 import { ChangePasswordDialogComponent } from "../change-password-dialog/change-password-dialog.component";
 import { ForgetPasswordLinkDialogComponent } from "../forget-password-link-dialog/forget-password-link-dialog.component";
 import { Guid } from "guid-typescript";
+import { SoccDialogComponent } from '../socc-dialog/socc-dialog.component';
+import { CookieService } from 'angular2-cookie/services/cookies.service';
 
 @Component({
     selector: "login",
@@ -62,10 +64,11 @@ export class LoginComponent implements OnInit {
     isProgressBarVisibile: boolean;
     setIntervalID: any;
     currentIndex: number;
+    cookieLength: string[] = [];
     allTexts: string[] = [];
     currentText: string;
     fuseConfig: any;
-
+    Username = "";
     messages = [
         "Partner Collabarate",
         "Order fulfilment.",
@@ -77,7 +80,8 @@ export class LoginComponent implements OnInit {
         "RFQ process",
     ];
     currentMessage = 0;
-
+    public screenWidth: any;
+    public screenHeight: any;
     constructor(
         private _fuseConfigService: FuseConfigService,
         private _formBuilder: FormBuilder,
@@ -87,7 +91,8 @@ export class LoginComponent implements OnInit {
         private _compiler: Compiler,
         // private _loginService: LoginService,
         public dialog: MatDialog,
-        public snackBar: MatSnackBar
+        public snackBar: MatSnackBar,
+        private _cookieService: CookieService
     ) {
         localStorage.removeItem("authorizationData");
         localStorage.removeItem("menuItemsData");
@@ -127,10 +132,16 @@ export class LoginComponent implements OnInit {
             password: ["", Validators.required],
         });
 
+        if (undefined !== this._cookieService.get("key")) {
+            this.Username = this._cookieService.get("key");
+        }
+        // this._cookieService.put("Userid", "Starsb");
         // this.setCurrentText();
         // this.setIntervalID = setInterval(() => {
         //     this.setCurrentText();
         // }, 2000);
+        this.screenWidth = window.innerWidth;
+        this.screenHeight = window.innerHeight;
     }
 
     setCurrentText(): void {
@@ -179,6 +190,7 @@ export class LoginComponent implements OnInit {
                         } else {
                             this.saveUserDetails(dat);
                         }
+                        this._cookieService.put("key", this.Username);
                     },
                     (err) => {
                         this.isProgressBarVisibile = false;
@@ -1283,5 +1295,17 @@ export class LoginComponent implements OnInit {
                 this.currentText = str;
             }
         }, 50);
+    }
+
+    openDialog(): void {
+        // const dialogConfig: MatDialogConfig = {
+        //     data: [this.screenWidth, this.screenHeight],
+        //     panelClass:[]
+        // };
+        const dialogRef = this.dialog.open(
+            SoccDialogComponent,
+            { height: this.screenHeight, width: this.screenWidth },
+            // dialogConfig
+        );
     }
 }
