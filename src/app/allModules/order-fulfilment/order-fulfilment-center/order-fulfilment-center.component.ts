@@ -53,10 +53,14 @@ import { FuseConfigService } from "@fuse/services/config.service";
     animations: fuseAnimations,
 })
 export class OrderFulFilmentCenterComponent implements OnInit {
+    canvas: any;
+    ctx: any;
+    cx: any;
+    cy: any;
     BGClassName: any;
     fuseConfig: any;
     userPreference: UserPreference;
-
+    length: any;
     authenticationDetails: AuthenticationDetails;
     currentUserID: Guid;
     currentUserName: string;
@@ -73,11 +77,11 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     ofDetailsFormGroup: FormGroup;
     ofOption: OfOption;
     ofDetailsDisplayedColumns: string[] = [
-        "DocNumber",
+        "PONumber",
         "DocVersion",
         "DocType",
         "DocDate",
-        "PlantName",
+        "Plant",
         "Status",
         "Document",
         "NextProcess",
@@ -127,29 +131,45 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     // Doughnut Chart
     public doughnutChartOptions = {
         responsive: true,
+        centertext: "9",
         maintainAspectRatio: false,
+        title: {
+            display: true,
+            position: {
+                "margin-top": "40px",
+            },
+            text: 'Upcoming Meetings',
+            style: {
+                "margin-top": "40px",
+            }
+        },
         legend: {
             position: "left",
             labels: {
                 fontSize: 10,
                 padding: 20,
                 usePointStyle: true,
+                centertext: "123",
             },
+            centertext: "123",
         },
         cutoutPercentage: 80,
         elements: {
             arc: {
                 borderWidth: 0,
             },
+            centertext: "123",
         },
         plugins: {
             labels: {
                 // tslint:disable-next-line:typedef
                 render: function (args) {
                     return args.value + "%";
+
                 },
                 fontColor: "#000",
                 position: "outside",
+                centertext: "123"
             },
         },
     };
@@ -365,6 +385,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         this.GetOfDetails();
         this.GetOfGraphDetailsByPartnerID();
         this.GetOfStatusByPartnerID();
+        this.SetTextInsideDountChart();
         // this.GetOfAttachmentsByPartnerID();
     }
 
@@ -376,7 +397,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         appUsage.CreatedBy = this.currentUserName;
         appUsage.ModifiedBy = this.currentUserName;
         this._masterService.CreateAppUsage(appUsage).subscribe(
-            (data) => {},
+            (data) => { },
             (err) => {
                 console.error(err);
             }
@@ -388,10 +409,11 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         this._dashboardService.GetOfsByPartnerID(this.partnerID).subscribe(
             (data) => {
                 if (data) {
+                    this.length = data.length;
                     this.ofDetails = <BPCOFHeader[]>data;
-                    this.ofDetailsDataSource = new MatTableDataSource(
-                        this.ofDetails
-                    );
+
+                    this.ofDetailsDataSource = new MatTableDataSource(this.ofDetails);
+
                     this.ofDetailsDataSource.paginator = this.ofDetailsPaginator;
                     this.ofDetailsDataSource.sort = this.ofDetailsSort;
                 }
@@ -403,7 +425,23 @@ export class OrderFulFilmentCenterComponent implements OnInit {
             }
         );
     }
+    SetTextInsideDountChart(): any {
 
+
+        this.canvas = document.getElementById("myChart");
+        this.ctx = this.canvas.getContext("2d");
+        // this.ctx.fillText
+        this.cx = this.canvas.width / 2;
+        this.cy = this.canvas.height / 2;
+        this.ctx.textAlign = 'center';
+        return {
+            "margin-left": "23px",
+            "margin-top": "20px",
+            "position": "absolute"
+        };
+        // vertically align text around the specified point (cy)
+
+    }
     GetOfsByOption(ofOption: OfOption): void {
         this.isProgressBarVisibile = true;
         this._dashboardService.GetOfsByOption(ofOption).subscribe(
@@ -560,7 +598,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         });
     }
 
-    getOfDetailsFormValues(): void {}
+    getOfDetailsFormValues(): void { }
 
     getOfsByOptionClicked(): void {
         if (this.ofDetailsFormGroup.valid) {
@@ -753,26 +791,26 @@ export class OrderFulFilmentCenterComponent implements OnInit {
                 return element.Status === "DueForACK"
                     ? "gray"
                     : element.Status === "DueForASN"
-                    ? "#efb577"
-                    : "#34ad65";
+                        ? "#efb577"
+                        : "#34ad65";
             case "Gate":
                 return element.Status === "DueForACK"
                     ? "gray"
                     : element.Status === "DueForASN"
-                    ? "gray"
-                    : element.Status === "DueForGate"
-                    ? "#efb577"
-                    : "#34ad65";
+                        ? "gray"
+                        : element.Status === "DueForGate"
+                            ? "#efb577"
+                            : "#34ad65";
             case "GRN":
                 return element.Status === "DueForACK"
                     ? "gray"
                     : element.Status === "DueForASN"
-                    ? "gray"
-                    : element.Status === "DueForGate"
-                    ? "gray"
-                    : element.Status === "DueForGRN"
-                    ? "#efb577"
-                    : "#34ad65";
+                        ? "gray"
+                        : element.Status === "DueForGate"
+                            ? "gray"
+                            : element.Status === "DueForGRN"
+                                ? "#efb577"
+                                : "#34ad65";
             default:
                 return "";
         }
@@ -796,26 +834,26 @@ export class OrderFulFilmentCenterComponent implements OnInit {
                 return element.Status === "DueForACK"
                     ? "white-timeline"
                     : element.Status === "DueForASN"
-                    ? "orange-timeline"
-                    : "green-timeline";
+                        ? "orange-timeline"
+                        : "green-timeline";
             case "Gate":
                 return element.Status === "DueForACK"
                     ? "white-timeline"
                     : element.Status === "DueForASN"
-                    ? "white-timeline"
-                    : element.Status === "DueForGate"
-                    ? "orange-timeline"
-                    : "green-timeline";
+                        ? "white-timeline"
+                        : element.Status === "DueForGate"
+                            ? "orange-timeline"
+                            : "green-timeline";
             case "GRN":
                 return element.Status === "DueForACK"
                     ? "white-timeline"
                     : element.Status === "DueForASN"
-                    ? "white-timeline"
-                    : element.Status === "DueForGate"
-                    ? "white-timeline"
-                    : element.Status === "DueForGRN"
-                    ? "orange-timeline"
-                    : "green-timeline";
+                        ? "white-timeline"
+                        : element.Status === "DueForGate"
+                            ? "white-timeline"
+                            : element.Status === "DueForGRN"
+                                ? "orange-timeline"
+                                : "green-timeline";
             default:
                 return "";
         }
@@ -827,26 +865,26 @@ export class OrderFulFilmentCenterComponent implements OnInit {
                 return element.Status === "DueForACK"
                     ? "white-timeline"
                     : element.Status === "DueForASN"
-                    ? "white-timeline"
-                    : "green-timeline";
+                        ? "white-timeline"
+                        : "green-timeline";
             case "Gate":
                 return element.Status === "DueForACK"
                     ? "white-timeline"
                     : element.Status === "DueForASN"
-                    ? "white-timeline"
-                    : element.Status === "DueForGate"
-                    ? "white-timeline"
-                    : "green-timeline";
+                        ? "white-timeline"
+                        : element.Status === "DueForGate"
+                            ? "white-timeline"
+                            : "green-timeline";
             case "GRN":
                 return element.Status === "DueForACK"
                     ? "white-timeline"
                     : element.Status === "DueForASN"
-                    ? "white-timeline"
-                    : element.Status === "DueForGate"
-                    ? "white-timeline"
-                    : element.Status === "DueForGRN"
-                    ? "white-timeline"
-                    : "green-timeline";
+                        ? "white-timeline"
+                        : element.Status === "DueForGate"
+                            ? "white-timeline"
+                            : element.Status === "DueForGRN"
+                                ? "white-timeline"
+                                : "green-timeline";
             default:
                 return "";
         }

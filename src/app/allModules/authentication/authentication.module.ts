@@ -11,7 +11,11 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { ForgetPasswordLinkDialogComponent } from './forget-password-link-dialog/forget-password-link-dialog.component';
 import { ChangePasswordDialogComponent } from './change-password-dialog/change-password-dialog.component';
+import { CookieService } from 'angular2-cookie/services/cookies.service';
+import { SoccDialogComponent } from './socc-dialog/socc-dialog.component'; 
 
+// import { PdfViewerModule } from 'ng2-pdf-viewer';
+// import { PdfViewerModule } from 'ng2-pdf-viewer';
 const authRoutes: Routes = [
     {
         path: 'login',
@@ -37,9 +41,11 @@ const authRoutes: Routes = [
         ChangePasswordComponent,
         ForgotPasswordComponent,
         ChangePasswordDialogComponent,
-        ForgetPasswordLinkDialogComponent
+        ForgetPasswordLinkDialogComponent,
+        SoccDialogComponent
     ],
     imports: [
+        // PdfViewerModule,
         MatButtonModule,
         MatCheckboxModule,
         MatFormFieldModule,
@@ -51,10 +57,15 @@ const authRoutes: Routes = [
         MatProgressSpinnerModule,
         RouterModule.forChild(authRoutes)
     ],
+    providers: [ 
+        CookieService 
+      ],
     entryComponents: [
         ChangePasswordDialogComponent,
-        ForgetPasswordLinkDialogComponent
-    ]
+        ForgetPasswordLinkDialogComponent,
+        SoccDialogComponent
+    ],
+    
 })
 export class AuthenticationModule {
 }

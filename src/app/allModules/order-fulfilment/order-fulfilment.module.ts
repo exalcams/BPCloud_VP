@@ -22,6 +22,7 @@ import { PoSchedulesComponent } from './po-schedules/po-schedules.component';
 import { ASNListComponent } from './asnlist/asnlist.component';
 import { GRReceiptsComponent } from './gr-receipts/gr-receipts.component';
 import { InvoiceListComponent } from './invoice-list/invoice-list.component';
+import { AsnlistPrintDialogComponent } from './asnlist-print-dialog/asnlist-print-dialog.component';
 
 const route: Routes = [
   {
@@ -51,7 +52,8 @@ const route: Routes = [
     PoSchedulesComponent,
     ASNListComponent,
     GRReceiptsComponent,
-    InvoiceListComponent],
+    InvoiceListComponent,
+    AsnlistPrintDialogComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(route),
@@ -104,6 +106,9 @@ const route: Routes = [
     FormsModule,
     ChartsModule,
     TranslateModule
+  ],
+  entryComponents: [
+    AsnlistPrintDialogComponent
   ]
 })
 export class OrderFulfilmentModule { }

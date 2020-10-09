@@ -393,7 +393,7 @@
     <div fxFlex fxLayout="column" fxLayoutGap="20px" class="Gap_class">
       <div fxFlex="row" fxLayoutAlign="space-between start" style="padding-right: 30px;">
         <span class="title"><strong>Add Vendors </strong></span>
-        <button mat-button class="select_button" (click)="select_dialog()">select</button>
+        <button mat-button class="select_button">select</button>
       </div>
 
       <div fxFlex>
@@ -553,7 +553,7 @@
       </div>
       <div fxFlex>
         <div style="overflow-x: auto;" class="table-responsive ">
-          <table class="table " mat-table [dataSource]="AttachedDataSource">
+          <!-- <table class="table " mat-table [dataSource]="AttachedDataSource">
             <ng-container matColumnDef="select">
               <th mat-header-cell *matHeaderCellDef style="width: 3%;">
 
@@ -584,7 +584,7 @@
             <tr mat-header-row style="height: 40px;" *matHeaderRowDef="displayedAttachedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedAttachedColumns;">
             </tr>
-          </table>
+          </table> -->
         </div>
 
       </div>

@@ -85,6 +85,7 @@ export class OrderFulfilmentDetails {
     ItemCount: number;
     ASNCount: number;
     GRNCount: number;
+    RETURNCount: number;
     QACount: number;
     SLCount: number;
     DocumentCount: number;
@@ -183,4 +184,12 @@ export class DeliverystatusDetails {
 //     Actual:string;
 //     Date:Date;
 // }
-
+export class RETURNDetails {
+    Date: Date;
+    Type: string;
+    Material: string;
+    Description: string;
+    Qty: number;
+    Reason: string;
+    DeliveryNote: string;
+}​​​​​

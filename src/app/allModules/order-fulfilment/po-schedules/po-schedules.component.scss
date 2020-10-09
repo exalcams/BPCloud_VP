@@ -840,19 +840,20 @@
 
   .lighting_image {
     width: 12px;
-    height: 17.2px;
+    height: 17px;
     margin-top: 8px;
   }
-  .selectInput2 {
-    width: 100%;
-    height: 35px;
-    padding-left: 30px;
-    font-family: "Segoe UI";
-    font-size: 17px;
-    font-weight: 450;
-    border: 1px solid darkgrey;
-    border-radius: 4px;
-  }
+  // .selectInput2 {
+  //   width: 100%;
+  //   height: 35px;
+  //   overflow-x: auto;
+  //   padding-left: 30px;
+  //   font-family: "Segoe UI";
+  //   font-size: 17px;
+  //   font-weight: 450;
+  //   border: 1px solid darkgrey;
+  //   border-radius: 4px;
+  // }
   select {
     background: url("/assets/images/arrowhead.png") no-repeat right;
     -webkit-appearance: none;

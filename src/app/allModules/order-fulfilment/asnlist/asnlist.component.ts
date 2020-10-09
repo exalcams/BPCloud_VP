@@ -1,18 +1,24 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
-import { MatTableDataSource, MatSnackBar, MatDialog, MatPaginator, MatSort } from '@angular/material';
+import { MatTableDataSource, MatSnackBar, MatDialog, MatPaginator, MatSort, MatDialogConfig } from '@angular/material';
 import { FuseConfigService } from '@fuse/services/config.service';
-import { ASNListView } from 'app/models/ASN';
+import { ASNListView, BPCASNHeader, BPCASNItem, BPCASNPack, BPCASNView, BPCInvoiceAttachment, DocumentCenter } from 'app/models/ASN';
 import { ASNService } from 'app/services/asn.service';
 import { AuthenticationDetails } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { fuseAnimations } from '@fuse/animations';
 import { ExcelService } from 'app/services/excel.service';
-import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, AbstractControl, ValidationErrors, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { BPCPayAccountStatement } from 'app/models/Payment.model';
+import { BPCOFHeader, BPCOFItem, BPCOFSubconView } from 'app/models/OrderFulFilment';
+import { AttachmentDetails } from 'app/models/task';
+import { POService } from 'app/services/po.service';
+import { SubconService } from 'app/services/subcon.service';
+import { BehaviorSubject } from 'rxjs';
+import { AsnlistPrintDialogComponent } from '../asnlist-print-dialog/asnlist-print-dialog.component';
 
 @Component({
   selector: 'app-asnlist',
@@ -26,14 +32,21 @@ export class ASNListComponent implements OnInit {
   currentUserID: Guid;
   currentUserName: string;
   currentUserRole: string;
+  SelectedDocNumber: string;
+  SelectedASNHeader: BPCASNHeader;
   MenuItems: string[];
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
   BGClassName: any;
   fuseConfig: any;
+  AllASNHeaders: BPCASNHeader[] = [];
+  SelectedASNView: BPCASNView;
   AllASNList: ASNListView[] = [];
-  displayColumn: string[] = ['ASNNumber', 'ASNDate', 'DocNumber', 'AWBNumber', 'VessleNumber', 'Material',
-    'MaterialText', 'ASNQty', 'Status', 'Action'];
+  ASNPackFormGroup: FormGroup;
+  SelectedASNNumber: string;
+  ASNPackFormArray: FormArray = this._formBuilder.array([]);
+  displayColumn: string[] = ['ASNNumber', 'ASNDate', 'DocNumber', 'AWBNumber', 'VessleNumber', 'DepartureDate',
+    'ArrivalDate', 'TurnaroundTime', 'Status', 'Action'];
   TableDetailsDataSource: MatTableDataSource<ASNListView>;
   @ViewChild(MatPaginator) tablePaginator: MatPaginator;
   @ViewChild(MatSort) tableSort: MatSort;
@@ -45,15 +58,38 @@ export class ASNListComponent implements OnInit {
   isDateError: boolean;
   DefaultFromDate: Date;
   DefaultToDate: Date;
+  i: number;
+  PO: BPCOFHeader;
+  POItems: BPCOFItem[] = [];
+  ASNFormGroup: FormGroup;
+  ASNItemFormGroup: FormGroup;
+  SubconViews: BPCOFSubconView[] = [];
+  maxDate: Date;
+  InvoiceDetailsFormGroup: FormGroup;
+  ASNPackDataSource = new BehaviorSubject<AbstractControl[]>([]);
+  ASNItemFormArray: FormArray = this._formBuilder.array([]);
+  ASNItemDataSource = new BehaviorSubject<AbstractControl[]>([])
+  AllDocumentCenters: DocumentCenter[] = [];
+  ArrivalDateInterval: number;
+  invAttach: BPCInvoiceAttachment;
+  IsInvoiceDetailsFormGroupEnabled: boolean;
+  DocumentCenterDataSource: MatTableDataSource<DocumentCenter>;
+  newAllASNList: any;
+  newAllASNList1: any;
   constructor(
     private _fuseConfigService: FuseConfigService,
     private formBuilder: FormBuilder,
     private _asnService: ASNService,
+    private _ASNService: ASNService,
     private _excelService: ExcelService,
     private _router: Router,
+    private _route: ActivatedRoute,
     private _datePipe: DatePipe,
     public snackBar: MatSnackBar,
     private dialog: MatDialog,
+    private _subConService: SubconService,
+    private _POService: POService,
+    private _formBuilder: FormBuilder
   ) {
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.authenticationDetails = new AuthenticationDetails();
@@ -63,6 +99,8 @@ export class ASNListComponent implements OnInit {
     this.DefaultFromDate = new Date();
     this.DefaultFromDate.setDate(this.DefaultFromDate.getDate() - 30);
     this.DefaultToDate = new Date();
+    this.SelectedASNHeader = new BPCASNHeader();
+
   }
 
   ngOnInit(): void {
@@ -84,10 +122,478 @@ export class ASNListComponent implements OnInit {
     } else {
       this._router.navigate(['/auth/login']);
     }
+    this._route.queryParams.subscribe(params => {
+      this.SelectedDocNumber = params['id'];
+    });
     this.InitializeSearchForm();
     // this.GetAllASNListByPartnerID();
     this.SearchClicked();
+
+    this.GetASNBasedOnCondition();
   }
+  Pdfdownload(no: any) {
+    this.IsProgressBarVisibile = true;
+    // this.SelectedASNHeader.ASNNumber=""
+    // this.SelectedASNHeader.ASNNumber="no"
+    this._ASNService.CreateASNPdf(no).subscribe(
+      // this._ASNService.CreateASNPdf(this.SelectedASNHeader.ASNNumber).subscribe(
+      data => {
+        if (data) {
+          this.IsProgressBarVisibile = false;
+          const fileType = 'application/pdf';
+          const blob = new Blob([data], { type: fileType });
+          const currentDateTime = this._datePipe.transform(new Date(), 'ddMMyyyyHHmmss');
+          const FileName = this.SelectedASNHeader.ASNNumber + '_' + currentDateTime + '.pdf';
+          this.OpenASNPrintDialog(FileName, blob);
+          // FileSaver.saveAs(blob, this.SelectedASNHeader.ASNNumber + '_' + currentDateTime + '.pdf');
+        } else {
+          this.IsProgressBarVisibile = false;
+          this.ResetControl();
+          this.GetASNBasedOnCondition();
+        }
+      },
+      error => {
+        console.error(error);
+        this.IsProgressBarVisibile = false;
+        this.ResetControl();
+        this.GetASNBasedOnCondition();
+      }
+    );
+
+  }
+  GetASNBasedOnCondition(): void {
+    if (this.SelectedDocNumber) {
+      this.GetASNByDocAndPartnerID();
+      this.GetPOByDocAndPartnerID(this.SelectedDocNumber);
+      // this.GetPOItemsByDocAndPartnerID();
+      this.GetArrivalDateIntervalByPOAndPartnerID();
+    } else {
+      this.GetAllASNByPartnerID();
+    }
+  }
+  GetAllASNByPartnerID(): void {
+    this._ASNService.GetAllASNByPartnerID(this.currentUserName).subscribe(
+      (data) => {
+        this.AllASNHeaders = data as BPCASNHeader[];
+        if (this.AllASNHeaders && this.AllASNHeaders.length) {
+          this.LoadSelectedASN(this.AllASNHeaders[0]);
+        }
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+  help(po: string) {
+    this._router.navigate(["/support/supportticket"], {
+      queryParams: { id: po },
+    });
+
+
+  }
+  cancel(asnnumber: any) {
+    this.newAllASNList = this.AllASNList;
+    console.log(this.newAllASNList);
+    this.AllASNList.splice(asnnumber, 1);
+    this.TableDetailsDataSource = new MatTableDataSource(this.AllASNList);
+
+    // this.AllASNList.splice(asnnumber)
+  }
+  LoadSelectedASN(seletedASN: BPCASNHeader): void {
+    this.SelectedASNHeader = seletedASN;
+    this.SelectedASNView.ASNNumber = this.SelectedASNHeader.ASNNumber;
+    this.SelectedASNNumber = this.SelectedASNHeader.ASNNumber;
+    this.GetPOByDocAndPartnerID(this.SelectedASNHeader.DocNumber);
+    this.ClearASNItems();
+    this.GetASNItemsByASN();
+    this.GetASNPacksByASN();
+    this.GetDocumentCentersByASN();
+    this.GetInvoiceAttachmentByASN();
+    this.SetASNHeaderValues();
+    this.SetInvoiceDetailValues();
+    this.CheckForEnableInvoiceDetailsFormGroup();
+  }
+  CheckForEnableInvoiceDetailsFormGroup(): void {
+    if (this.SelectedASNHeader.IsSubmitted) {
+      this.DisableAllFormGroup();
+      const diff = Math.abs(this.maxDate.getTime() - new Date(this.SelectedASNHeader.ASNDate as string).getTime());
+      const diffDays = Math.ceil(diff / (1000 * 3600 * 24));
+      if (diffDays < 31) {
+        this.EnableInvoiceDetailsFormGroup();
+        this.IsInvoiceDetailsFormGroupEnabled = true;
+      } else {
+        this.DisableInvoiceDetailsFormGroup();
+        this.IsInvoiceDetailsFormGroupEnabled = false;
+      }
+    } else {
+      this.EnableAllFormGroup();
+    }
+    this.InvoiceDetailsFormGroup.get('InvoiceAmount').disable();
+  }
+  EnableAllFormGroup(): void {
+    this.ASNFormGroup.enable();
+    this.ASNItemFormGroup.enable();
+    this.ASNPackFormGroup.enable();
+    this.InvoiceDetailsFormGroup.enable();
+  }
+  DisableInvoiceDetailsFormGroup(): void {
+    this.InvoiceDetailsFormGroup.disable();
+  }
+  EnableInvoiceDetailsFormGroup(): void {
+    this.InvoiceDetailsFormGroup.enable();
+  }
+  DisableAllFormGroup(): void {
+    this.ASNFormGroup.disable();
+    this.ASNItemFormGroup.disable();
+    this.ASNPackFormGroup.disable();
+    this.InvoiceDetailsFormGroup.disable();
+  }
+  SetInvoiceDetailValues(): void {
+    this.InvoiceDetailsFormGroup.get('InvoiceNumber').patchValue(this.SelectedASNHeader.InvoiceNumber);
+    this.InvoiceDetailsFormGroup.get('InvoiceDate').patchValue(this.SelectedASNHeader.InvoiceDate);
+    this.InvoiceDetailsFormGroup.get('POBasicPrice').patchValue(this.SelectedASNHeader.POBasicPrice);
+    this.InvoiceDetailsFormGroup.get('TaxAmount').patchValue(this.SelectedASNHeader.TaxAmount);
+    this.InvoiceDetailsFormGroup.get('InvoiceAmount').patchValue(this.SelectedASNHeader.InvoiceAmount);
+    this.InvoiceDetailsFormGroup.get('InvoiceAmountUOM').patchValue(this.SelectedASNHeader.InvoiceAmountUOM);
+    this.InvoiceDetailsFormGroup.get('InvoiceAmount').disable();
+  }
+  SetASNHeaderValues(): void {
+    this.ASNFormGroup.get('TransportMode').patchValue(this.SelectedASNHeader.TransportMode);
+    this.ASNFormGroup.get('VessleNumber').patchValue(this.SelectedASNHeader.VessleNumber);
+    this.ASNFormGroup.get('AWBNumber').patchValue(this.SelectedASNHeader.AWBNumber);
+    this.ASNFormGroup.get('AWBDate').patchValue(this.SelectedASNHeader.AWBDate);
+    this.ASNFormGroup.get('CountryOfOrigin').patchValue(this.SelectedASNHeader.CountryOfOrigin);
+    this.ASNFormGroup.get('ShippingAgency').patchValue(this.SelectedASNHeader.ShippingAgency);
+    this.ASNFormGroup.get('NumberOfPacks').patchValue(this.SelectedASNHeader.NumberOfPacks);
+    this.ASNFormGroup.get('DepartureDate').patchValue(this.SelectedASNHeader.DepartureDate);
+    this.ASNFormGroup.get('ArrivalDate').patchValue(this.SelectedASNHeader.ArrivalDate);
+    this.ASNFormGroup.get('GrossWeight').patchValue(this.SelectedASNHeader.GrossWeight);
+    this.ASNFormGroup.get('GrossWeightUOM').patchValue(this.SelectedASNHeader.GrossWeightUOM);
+    this.ASNFormGroup.get('NetWeight').patchValue(this.SelectedASNHeader.NetWeight);
+    // this.ASNFormGroup.get('NetWeightUOM').patchValue(this.SelectedASNHeader.NetWeightUOM);
+    this.ASNFormGroup.get('VolumetricWeight').patchValue(this.SelectedASNHeader.VolumetricWeight);
+    this.ASNFormGroup.get('VolumetricWeightUOM').patchValue(this.SelectedASNHeader.VolumetricWeightUOM);
+    this.ASNFormGroup.get('BillOfLading').patchValue(this.SelectedASNHeader.BillOfLading);
+    this.ASNFormGroup.get('TransporterName').patchValue(this.SelectedASNHeader.TransporterName);
+    this.ASNFormGroup.get('AccessibleValue').patchValue(this.SelectedASNHeader.AccessibleValue);
+    this.ASNFormGroup.get('ContactPerson').patchValue(this.SelectedASNHeader.ContactPerson);
+    this.ASNFormGroup.get('ContactPersonNo').patchValue(this.SelectedASNHeader.ContactPersonNo);
+    this.ASNFormGroup.get('Field1').patchValue(this.SelectedASNHeader.Field1);
+    this.ASNFormGroup.get('Field2').patchValue(this.SelectedASNHeader.Field2);
+    this.ASNFormGroup.get('Field3').patchValue(this.SelectedASNHeader.Field3);
+    this.ASNFormGroup.get('Field4').patchValue(this.SelectedASNHeader.Field4);
+    this.ASNFormGroup.get('Field5').patchValue(this.SelectedASNHeader.Field5);
+    this.ASNFormGroup.get('Field6').patchValue(this.SelectedASNHeader.Field6);
+    this.ASNFormGroup.get('Field7').patchValue(this.SelectedASNHeader.Field7);
+    this.ASNFormGroup.get('Field8').patchValue(this.SelectedASNHeader.Field8);
+    this.ASNFormGroup.get('Field9').patchValue(this.SelectedASNHeader.Field9);
+    this.ASNFormGroup.get('Field10').patchValue(this.SelectedASNHeader.Field10);
+  }
+
+  GetInvoiceAttachmentByASN(): void {
+    this._ASNService.GetInvoiceAttachmentByASN(this.SelectedASNHeader.ASNNumber, this.SelectedASNHeader.InvDocReferenceNo).subscribe(
+      (data) => {
+        this.invAttach = data as BPCInvoiceAttachment;
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+  GetDocumentCentersByASN(): void {
+    this._ASNService.GetDocumentCentersByASN(this.SelectedASNHeader.ASNNumber).subscribe(
+      (data) => {
+        this.AllDocumentCenters = data as DocumentCenter[];
+        this.DocumentCenterDataSource = new MatTableDataSource(this.AllDocumentCenters);
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+  GetASNPacksByASN(): void {
+    this._ASNService.GetASNPacksByASN(this.SelectedASNHeader.ASNNumber).subscribe(
+      (data) => {
+        this.SelectedASNView.ASNPacks = data as BPCASNPack[];
+        this.ClearFormArray(this.ASNPackFormArray);
+        if (this.SelectedASNView.ASNPacks && this.SelectedASNView.ASNPacks.length) {
+          this.SelectedASNView.ASNPacks.forEach(x => {
+            this.InsertASNPacksFormGroup(x);
+          });
+        }
+        if (this.SelectedASNHeader.IsSubmitted) {
+          this.DisableASNPackFormGroup();
+        } else {
+          this.EnableASNPackFormGroup();
+        }
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+  EnableASNPackFormGroup(): void {
+    this.ASNPackFormGroup.enable();
+  }
+  DisableASNPackFormGroup(): void {
+    this.ASNPackFormGroup.disable();
+  }
+  InsertASNPacksFormGroup(pack: BPCASNPack): void {
+    const row = this._formBuilder.group({
+      PackageID: [pack.PackageID, Validators.required],
+      ReferenceNumber: [pack.ReferenceNumber, Validators.required],
+      Dimension: [pack.Dimension],
+      NetWeight: [pack.NetWeight, [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
+      NetWeightUOM: [pack.GrossWeightUOM],
+      GrossWeight: [pack.GrossWeight, [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
+      GrossWeightUOM: [pack.GrossWeightUOM],
+      VolumetricWeight: [pack.VolumetricWeight, [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]],
+      VolumetricWeightUOM: [pack.VolumetricWeightUOM],
+    }, {
+      validator: MustValid('NetWeight', 'GrossWeight')
+    });
+    this.ASNPackFormArray.push(row);
+    this.ASNPackDataSource.next(this.ASNPackFormArray.controls);
+    // return row;
+  }
+
+  GetASNItemsByASN(): void {
+    this._ASNService.GetASNItemsByASN(this.SelectedASNHeader.ASNNumber).subscribe(
+      (data) => {
+        this.SelectedASNView.ASNItems = data as BPCASNItem[];
+        this.ClearFormArray(this.ASNItemFormArray);
+        if (this.SelectedASNView.ASNItems && this.SelectedASNView.ASNItems.length) {
+          this.SelectedASNView.ASNItems.forEach(x => {
+            this.InsertASNItemsFormGroup(x);
+          });
+        }
+        if (this.SelectedASNHeader.IsSubmitted) {
+          this.DisableASNItemFormGroup();
+        } else {
+          this.EnableASNItemFormGroup();
+        }
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+  EnableASNItemFormGroup(): void {
+    this.ASNItemFormGroup.enable();
+  }
+  DisableASNItemFormGroup(): void {
+    this.ASNItemFormGroup.disable();
+  }
+  InsertASNItemsFormGroup(asnItem: BPCASNItem): void {
+    const row = this._formBuilder.group({
+      Item: [asnItem.Item],
+      Material: [asnItem.Material],
+      MaterialText: [asnItem.MaterialText],
+      DeliveryDate: [asnItem.DeliveryDate],
+      OrderedQty: [asnItem.OrderedQty],
+      GRQty: [asnItem.CompletedQty],
+      PipelineQty: [asnItem.TransitQty],
+      OpenQty: [asnItem.OpenQty],
+      ASNQty: [asnItem.ASNQty, [Validators.pattern('^([0-9]{0,10})([.][0-9]{1,3})?$')]],
+      UOM: [asnItem.UOM],
+      Batch: [asnItem.Batch],
+      ManufactureDate: [asnItem.ManufactureDate],
+      ExpiryDate: [asnItem.ExpiryDate],
+      PlantCode: [asnItem.PlantCode],
+      UnitPrice: [asnItem.UnitPrice],
+      Value: [asnItem.Value],
+      TaxAmount: [asnItem.TaxAmount],
+      TaxCode: [asnItem.TaxCode],
+    });
+    row.disable();
+    // row.get('ASNQty').enable();
+    row.get('Batch').enable();
+    row.get('ManufactureDate').enable();
+    row.get('ExpiryDate').enable();
+    this.ASNItemFormArray.push(row);
+    this.ASNItemDataSource.next(this.ASNItemFormArray.controls);
+    // return row;
+  }
+
+
+  ClearASNItems(): void {
+    this.ClearFormArray(this.ASNItemFormArray);
+    this.ASNItemDataSource.next(this.ASNItemFormArray.controls);
+  }
+  GetArrivalDateIntervalByPOAndPartnerID(): void {
+    this._ASNService.GetArrivalDateIntervalByPOAndPartnerID(this.SelectedDocNumber, this.currentUserName).subscribe(
+      (data) => {
+        this.ArrivalDateInterval = data as number;
+        if (this.ArrivalDateInterval && this.ArrivalDateInterval >= 0) {
+          let today = new Date();
+          today.setDate(today.getDate() + this.ArrivalDateInterval);
+          this.ASNFormGroup.get('ArrivalDate').patchValue(today);
+        }
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+  GetASNByDocAndPartnerID(): void {
+    this._ASNService.GetASNByDocAndPartnerID(this.SelectedDocNumber, this.currentUserName).subscribe(
+      (data) => {
+        this.AllASNHeaders = data as BPCASNHeader[];
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+  GetPOByDocAndPartnerID(selectedDocNumber: string): void {
+    this._POService.GetPOByDocAndPartnerID(selectedDocNumber, this.currentUserName).subscribe(
+      (data) => {
+        this.PO = data as BPCOFHeader;
+        if (this.SelectedDocNumber) {
+          this.InvoiceDetailsFormGroup.get('InvoiceAmountUOM').patchValue(this.PO.Currency);
+        }
+        if (this.PO && this.PO.DocType && this.PO.DocType.toLocaleLowerCase() === "subcon") {
+          this.GetSubconViewByDocAndPartnerID();
+        }
+        else if (this.SelectedDocNumber && !this.SelectedASNHeader.ASNNumber) {
+          this.GetPOItemsByDocAndPartnerID();
+        }
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+  GetPOItemsByDocAndPartnerID(): void {
+    this._POService.GetPOItemsByDocAndPartnerID(this.SelectedDocNumber, this.currentUserName).subscribe(
+      (data) => {
+        this.POItems = data as BPCOFItem[];
+        this.ClearFormArray(this.ASNItemFormArray);
+        if (this.POItems && this.POItems.length) {
+          this.SelectedASNHeader.Client = this.SelectedASNView.Client = this.POItems[0].Client;
+          this.SelectedASNHeader.Company = this.SelectedASNView.Company = this.POItems[0].Company;
+          this.SelectedASNHeader.Type = this.SelectedASNView.Type = this.POItems[0].Type;
+          this.SelectedASNHeader.PatnerID = this.SelectedASNView.PatnerID = this.POItems[0].PatnerID;
+          this.SelectedASNHeader.DocNumber = this.SelectedASNView.DocNumber = this.POItems[0].DocNumber;
+          this.POItems.forEach(poItem => {
+            if (poItem.OpenQty && poItem.OpenQty > 0) {
+              if (this.PO && this.PO.DocType && this.PO.DocType.toLocaleLowerCase() === "subcon") {
+                const sub = this.SubconViews.filter(x => x.Item === poItem.Item)[0];
+                if (sub) {
+                  const remainingQty = sub.OrderedQty - poItem.TransitQty;
+                  poItem.MaxAllowedQty = remainingQty;
+                }
+              } else {
+                poItem.MaxAllowedQty = poItem.OpenQty;
+              }
+            }
+            this.InsertPOItemsFormGroup(poItem);
+          });
+        }
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+
+  InsertPOItemsFormGroup(poItem: BPCOFItem): void {
+    const row = this._formBuilder.group({
+      Item: [poItem.Item],
+      Material: [poItem.Material],
+      MaterialText: [poItem.MaterialText],
+      DeliveryDate: [poItem.DeliveryDate],
+      OrderedQty: [poItem.OrderedQty],
+      GRQty: [poItem.CompletedQty],
+      PipelineQty: [poItem.TransitQty],
+      OpenQty: [poItem.OpenQty],
+      ASNQty: [poItem.MaxAllowedQty],
+      UOM: [poItem.UOM],
+      Batch: [''],
+      ManufactureDate: [''],
+      ExpiryDate: [''],
+      PlantCode: [poItem.PlantCode],
+      UnitPrice: [poItem.UnitPrice],
+      Value: [poItem.Value],
+      TaxAmount: [poItem.TaxAmount],
+      TaxCode: [poItem.TaxCode],
+    });
+    row.disable();
+    if (poItem.MaxAllowedQty && poItem.MaxAllowedQty > 0) {
+      row.get('ASNQty').setValidators([Validators.max(poItem.MaxAllowedQty), Validators.pattern('^([0-9]{0,10})([.][0-9]{1,3})?$')]);
+      row.get('ASNQty').updateValueAndValidity();
+      row.get('ASNQty').enable();
+    }
+    // if (poItem.OpenQty && poItem.OpenQty > 0) {
+    //     if (this.PO && this.PO.DocType && this.PO.DocType.toLocaleLowerCase() === "subcon") {
+    //         const sub = this.SubconViews.filter(x => x.Item === poItem.Item)[0];
+    //         if (sub) {
+    //             const remainingQty = sub.OrderedQty - poItem.TransitQty;
+    //             row.get('ASNQty').patchValue(remainingQty);
+    //             if (remainingQty > 0) {
+    //                 row.get('ASNQty').setValidators([Validators.required, Validators.max(remainingQty), Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]);
+    //                 row.get('ASNQty').updateValueAndValidity();
+    //                 row.get('ASNQty').enable();
+    //             }
+    //         }
+    //     } else {
+    //         row.get('ASNQty').setValidators([Validators.required, Validators.max(poItem.OpenQty), Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,3})?$')]);
+    //         row.get('ASNQty').updateValueAndValidity();
+    //         row.get('ASNQty').enable();
+    //     }
+    // }
+    row.get('Batch').enable();
+    row.get('ManufactureDate').enable();
+    row.get('ExpiryDate').enable();
+    this.ASNItemFormArray.push(row);
+    this.ASNItemDataSource.next(this.ASNItemFormArray.controls);
+    // return row;
+  }
+
+
+  ClearFormArray = (formArray: FormArray) => {
+    while (formArray.length !== 0) {
+      formArray.removeAt(0);
+    }
+  }
+
+  GetSubconViewByDocAndPartnerID(): void {
+    this._subConService.GetSubconViewByDocAndPartnerID(this.SelectedDocNumber, this.currentUserName).subscribe(
+      (data) => {
+        this.SubconViews = data as BPCOFSubconView[];
+        if (this.SelectedDocNumber && !this.SelectedASNHeader.ASNNumber) {
+          this.GetPOItemsByDocAndPartnerID();
+        }
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+
+  OpenASNPrintDialog(FileName: string, blob: Blob): void {
+    const attachmentDetails: AttachmentDetails = {
+      FileName: FileName,
+      blob: blob
+    };
+    const dialogConfig: MatDialogConfig = {
+      data: attachmentDetails,
+      panelClass: 'asn-print-dialog'
+    };
+    const dialogRef = this.dialog.open(AsnlistPrintDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(result => {
+      this.ResetControl();
+      this.GetASNBasedOnCondition();
+    }, (err) => {
+      this.ResetControl();
+      this.GetASNBasedOnCondition();
+    });
+  }
+
+  ASNnumber(asn: any) {
+    this._router.navigate(["/asn"], { queryParams: { id: asn } });
+  }
+
   InitializeSearchForm(): void {
     this.SearchFormGroup = this.formBuilder.group({
       ASNNumber: [''],
@@ -112,7 +618,10 @@ export class ASNListComponent implements OnInit {
   GetAllASNListByPartnerID(): void {
     this._asnService.GetAllASNListByPartnerID(this.currentUserName).subscribe(
       (data) => {
+        console.log("data" + data)
+
         this.AllASNList = data as ASNListView[];
+        console.log("asnlist" + this.AllASNList)
         this.TableDetailsDataSource = new MatTableDataSource(this.AllASNList);
         this.TableDetailsDataSource.paginator = this.tablePaginator;
         this.TableDetailsDataSource.sort = this.tableSort;
@@ -155,6 +664,9 @@ export class ASNListComponent implements OnInit {
         this._asnService.FilterASNListByPartnerID(this.currentUserName, ASNNumber, DocNumber, Material, Status, FromDate, ToDate).subscribe(
           (data) => {
             this.AllASNList = data as ASNListView[];
+            for (this.i = 0; this.i <= 2; this.i++) {
+              this.AllASNList[this.i].TurnaroundTime = ""
+            }
             this.TableDetailsDataSource = new MatTableDataSource(this.AllASNList);
             this.TableDetailsDataSource.paginator = this.tablePaginator;
             this.TableDetailsDataSource.sort = this.tableSort;
@@ -234,4 +746,23 @@ export class ASNListComponent implements OnInit {
   expandClicked(): void {
     this.isExpanded = !this.isExpanded;
   }
+}
+export function MustValid(NetWeight: string, GrossWeight: string): ValidationErrors | null {
+  return (formGroup: FormGroup) => {
+    const NetWeightcontrol = formGroup.get(`${NetWeight}`);
+    const GrossWeightcontrol = formGroup.get(`${GrossWeight}`);
+
+    if (GrossWeightcontrol.errors && !GrossWeightcontrol.errors.mustValid) {
+      // return if another validator has already found an error on the matchingControl
+      return;
+    }
+    const NetWeightVAL = + NetWeightcontrol.value;
+    const GrossWeightVAL = +GrossWeightcontrol.value;
+    if (GrossWeightVAL < NetWeightVAL) {
+      GrossWeightcontrol.setErrors({ mustValid: true });
+    } else {
+      GrossWeightcontrol.setErrors(null);
+    }
+  };
+
 }

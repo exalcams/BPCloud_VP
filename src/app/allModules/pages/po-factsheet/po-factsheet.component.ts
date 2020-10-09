@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatDialogConfig, MatDialog, MatSort } from '@angular/material';
-import { ASNDetails, ItemDetails, GRNDetails, QADetails, OrderFulfilmentDetails, Acknowledgement, SLDetails, DocumentDetails, FlipDetails } from 'app/models/Dashboard';
+import { ASNDetails, ItemDetails, GRNDetails, QADetails, OrderFulfilmentDetails, Acknowledgement, SLDetails, DocumentDetails, FlipDetails, RETURNDetails } from 'app/models/Dashboard';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DashboardService } from 'app/services/dashboard.service';
 import { FormGroup, FormBuilder, Validators, FormArray, AbstractControl } from '@angular/forms';
@@ -35,12 +35,14 @@ export class PoFactsheetComponent implements OnInit {
     public tab5: boolean;
     public tab6: boolean;
     public tab7: boolean;
+    public tab8: boolean;
     public tabCount: number;
 
     orderFulfilmentDetails: OrderFulfilmentDetails = new OrderFulfilmentDetails();
     items: ItemDetails[] = [];
     asn: ASNDetails[] = [];
     grn: GRNDetails[] = [];
+    return: RETURNDetails[] = [];
     qa: QADetails[] = [];
     sl: SLDetails[] = [];
     document: DocumentDetails[] = [];
@@ -48,14 +50,16 @@ export class PoFactsheetComponent implements OnInit {
     public itemsCount: number;
     public asnCount: number;
     public grnCount: number;
+    public returnCount: number;
     public qaCount: number;
     public slCount: number;
     public documentCount: number;
     public flipCount: number;
     ItemPlantDetails: BPCPlantMaster;
     itemDisplayedColumns: string[] = [
-        // 'Item',
-        'MaterialText',
+        'Item',
+        'Material',
+        'Description',
         'DalivaryDate',
         'Proposeddeliverydate',
         'OrderQty',
@@ -63,7 +67,7 @@ export class PoFactsheetComponent implements OnInit {
         'PipelineQty',
         'OpenQty',
         'UOM',
-        'PlantCode',
+        // 'PlantCode',
         'UnitPrice',
         'Value',
         'TaxAmount',
@@ -73,20 +77,33 @@ export class PoFactsheetComponent implements OnInit {
         'ASN',
         'Date',
         'Truck',
-        'Status'
+        'Status',
+        'QRCode',
+        'PrintASN'
     ];
     grnDisplayedColumns: string[] = [
         'Item',
-        'MaterialText',
+        'Material',
+        'Description',
         'GRNDate',
         'Qty',
-        'Status'
+        'DeliveryNote'
+    ];
+    returnDisplayedColumns: string[] = [
+        'Date',
+        'Type',
+        'Material',
+        'Description',
+        'Qty',
+        'Reason',
+        'DeliveryNote'
     ];
     qaDisplayedColumns: string[] = [
         'Item',
-        'MaterialText',
+        'Material',
+        'Description',
         'Date',
-        'LotQty',
+        // 'LotQty',
         'RejQty',
         'RejReason'
     ];
@@ -94,7 +111,15 @@ export class PoFactsheetComponent implements OnInit {
         'Item',
         'SlLine',
         'DeliveryDate',
-        'OrderedQty'
+        'OrderedQty',
+        'Material',
+        'Description',
+        'Proposeddeliverydate',
+        'OrderQty',
+        'GRQty',
+        'PipelineQty',
+        'OpenQty',
+        'UOM'
     ];
     documentDisplayedColumns: string[] = [
         'ReferenceNo',
@@ -112,6 +137,7 @@ export class PoFactsheetComponent implements OnInit {
     // itemDataSource: MatTableDataSource<ItemDetails>;
     asnDataSource: MatTableDataSource<ASNDetails>;
     grnDataSource: MatTableDataSource<GRNDetails>;
+    returnDataSource: MatTableDataSource<RETURNDetails>;
     qaDataSource: MatTableDataSource<QADetails>;
     slDataSource: MatTableDataSource<SLDetails>;
     documentDataSource: MatTableDataSource<DocumentDetails>;
@@ -120,6 +146,7 @@ export class PoFactsheetComponent implements OnInit {
     @ViewChild(MatPaginator) itemPaginator: MatPaginator;
     @ViewChild(MatPaginator) asnPaginator: MatPaginator;
     @ViewChild(MatPaginator) grnPaginator: MatPaginator;
+    @ViewChild(MatPaginator) returnPaginator: MatPaginator;
     @ViewChild(MatPaginator) qaPaginator: MatPaginator;
     @ViewChild(MatPaginator) slPaginator: MatPaginator;
     @ViewChild(MatPaginator) documentPaginator: MatPaginator;
@@ -128,6 +155,7 @@ export class PoFactsheetComponent implements OnInit {
     @ViewChild(MatSort) itemSort: MatSort;
     @ViewChild(MatSort) asnSort: MatSort;
     @ViewChild(MatSort) grnSort: MatSort;
+    @ViewChild(MatSort) returnSort: MatSort;
     @ViewChild(MatSort) qaSort: MatSort;
     @ViewChild(MatSort) slSort: MatSort;
     @ViewChild(MatSort) documentSort: MatSort;
@@ -155,6 +183,7 @@ export class PoFactsheetComponent implements OnInit {
         this.tab5 = false;
         this.tab6 = false;
         this.tab7 = false;
+        this.tab8 = false;
         this.ItemPlantDetails = new BPCPlantMaster();
     }
 
@@ -223,12 +252,14 @@ export class PoFactsheetComponent implements OnInit {
                     this.itemsCount = this.orderFulfilmentDetails.ItemCount;
                     this.asnCount = this.orderFulfilmentDetails.ASNCount;
                     this.grnCount = this.orderFulfilmentDetails.GRNCount;
+                    this.returnCount = this.orderFulfilmentDetails.RETURNCount;
                     this.qaCount = this.orderFulfilmentDetails.QACount;
                     this.slCount = this.orderFulfilmentDetails.SLCount;
                     this.documentCount = this.orderFulfilmentDetails.DocumentCount;
                     this.flipCount = this.orderFulfilmentDetails.FlipCount;
                     this.asnDataSource = new MatTableDataSource(this.asn);
                     this.grnDataSource = new MatTableDataSource(this.grn);
+                    this.returnDataSource = new MatTableDataSource(this.return);
                     this.qaDataSource = new MatTableDataSource(this.qa);
                     this.slDataSource = new MatTableDataSource(this.sl);
                     this.documentDataSource = new MatTableDataSource(this.document);
@@ -236,6 +267,7 @@ export class PoFactsheetComponent implements OnInit {
 
                     this.asnDataSource.paginator = this.asnPaginator;
                     this.grnDataSource.paginator = this.grnPaginator;
+                    this.returnDataSource.paginator = this.returnPaginator;
                     this.qaDataSource.paginator = this.qaPaginator;
                     this.slDataSource.paginator = this.slPaginator;
                     this.documentDataSource.paginator = this.documentPaginator;
@@ -243,6 +275,7 @@ export class PoFactsheetComponent implements OnInit {
 
                     this.asnDataSource.sort = this.asnSort;
                     this.grnDataSource.sort = this.grnSort;
+                    this.returnDataSource.sort = this.returnSort;
                     this.qaDataSource.sort = this.qaSort;
                     this.slDataSource.sort = this.slSort;
                     this.documentDataSource.sort = this.documentSort;
@@ -424,6 +457,7 @@ export class PoFactsheetComponent implements OnInit {
         this.tab5 = false;
         this.tab6 = false;
         this.tab7 = false;
+        this.tab8 = false;
         this.getItems();
         this.tabCount = 1;
         // this.ResetControl();
@@ -437,6 +471,7 @@ export class PoFactsheetComponent implements OnInit {
         this.tab5 = false;
         this.tab6 = false;
         this.tab7 = false;
+        this.tab8 = false;
         this.getSLs();
         this.tabCount = 2;
         // this.ResetControl();
@@ -450,6 +485,7 @@ export class PoFactsheetComponent implements OnInit {
         this.tab5 = false;
         this.tab6 = false;
         this.tab7 = false;
+        this.tab8 = false;
         this.getASNs();
         this.tabCount = 3;
         // this.ResetControl();
@@ -463,6 +499,7 @@ export class PoFactsheetComponent implements OnInit {
         this.tab5 = false;
         this.tab6 = false;
         this.tab7 = false;
+        this.tab8 = false;
         this.getGRNs();
         this.tabCount = 4;
         // this.ResetControl();
@@ -476,6 +513,7 @@ export class PoFactsheetComponent implements OnInit {
         this.tab5 = true;
         this.tab6 = false;
         this.tab7 = false;
+        this.tab8 = false;
         this.getQAs();
         this.tabCount = 5;
         // this.ResetControl();
@@ -489,6 +527,7 @@ export class PoFactsheetComponent implements OnInit {
         this.tab5 = false;
         this.tab6 = true;
         this.tab7 = false;
+        this.tab8 = false;
         this.getDocuments();
         this.tabCount = 6;
     }
@@ -501,9 +540,24 @@ export class PoFactsheetComponent implements OnInit {
         this.tab5 = false;
         this.tab6 = false;
         this.tab7 = true;
+        this.tab8 = false;
         this.getFlips();
         this.tabCount = 7;
     }
+
+    tabEightClicked(): void {
+        this.tab1 = false;
+        this.tab2 = false;
+        this.tab3 = false;
+        this.tab4 = false;
+        this.tab5 = false;
+        this.tab6 = false;
+        this.tab7 = false;
+        this.tab8 = true;
+        this.getReturn();
+        this.tabCount = 8;
+    }
+
 
     initializeACKFormGroup(): void {
         this.ackFormGroup = this.formBuilder.group({
@@ -620,6 +674,10 @@ export class PoFactsheetComponent implements OnInit {
         this.flipDataSource = new MatTableDataSource(this.flip);
     }
 
+    getReturn(): void {
+        this.returnDataSource = new MatTableDataSource(this.return);
+    }
+
     getStatusColor(statusFor: string): string {
         switch (statusFor) {
             case 'ASN':
@@ -649,6 +707,10 @@ export class PoFactsheetComponent implements OnInit {
             default:
                 return '';
         }
+    }
+
+    gotoorderfulfilment(): void {
+        this._router.navigate(['pages/home']);
     }
 
     getRestTimeline(statusFor: string): string {
