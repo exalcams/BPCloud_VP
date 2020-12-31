@@ -69,6 +69,9 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ChatModule } from '../chat/chat.module';
 // import { ChatModule } from '../chat';
 // import 'chart.piecelabel.js';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { ActionCenterComponent } from './action-center/action-center.component'; 
+// npm install apexcharts ng-apexcharts — save
 
 const routes = [
     {
@@ -78,6 +81,10 @@ const routes = [
     {
         path: "home",
         component: HomeComponent,
+    },
+    {
+        path: "actioncenter",
+        component: ActionCenterComponent,
     },
     {
         path: "polookup",
@@ -137,15 +144,13 @@ const routes = [
         MatToolbarModule,
         MatTooltipModule,
         MatTreeModule,
-
         NgxChartsModule,
         NgxDonutChartModule,
         NgxDropzoneModule,
         ChartsModule,
-
+        NgApexchartsModule,
         FuseSharedModule,
         FuseSidebarModule,
-
         FuseCountdownModule,
         FuseHighlightModule,
         FuseMaterialColorPickerModule,
@@ -176,6 +181,7 @@ const routes = [
         ImprovementComponent,
         TourComponent,
         DashboardComponent,
+        ActionCenterComponent,
     ],
     providers: [DecimalPipe],
     entryComponents: [TourComponent],

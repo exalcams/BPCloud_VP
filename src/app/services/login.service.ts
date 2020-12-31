@@ -10,7 +10,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class LoginService {
-
+  username: String;
   baseAddress: string;
   clientId: string;
 

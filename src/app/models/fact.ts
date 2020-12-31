@@ -49,7 +49,6 @@ export class BPCFactBank extends CommonClass {
     BankName: string;
 }
 export class BPCKRA extends CommonClass {
-    ID: number;
     Client: string;
     Company: string;
     Type: string;
@@ -84,6 +83,18 @@ export class BPCCertificate extends CommonClass {
     Validity: Date | string | null;
     Mandatory: string;
     Attachment: string;
+    AttachmentFile: File;
+}
+
+export class BPCCertificateAttachment extends CommonClass {
+
+    client: string;
+    company: string;
+    type: string;
+    patnerID: string;
+    CertificateType: string;
+    CertificateName: string;
+    file: File;
 }
 export class BPCFactView extends CommonClass {
     ID: number;
@@ -116,6 +127,12 @@ export class BPCFactView extends CommonClass {
     BPCFactBanks: BPCFactBank[];
     BPCKRAs: BPCKRA[];
     BPCAIACTs: BPCAIACT[];
+    BPCFactCerificate: BPCCertificate[];
+}
+export class FactViewSupport {
+    BPCFact: BPCFact;
+    BPCFactBanks: BPCFactBank[];
+    BPCFactCerificate: BPCCertificate[];
 }
 export class CustomerBarChartData {
     BarChartLabels: string[];
@@ -145,7 +162,7 @@ export class BPCFactXLSX {
 export class BPCFactBankXLSX {
     Partnerid: string;
     Accountnumber: string;
-    Accountname: string;
+    Accountname: string
     Bankid: string;
     Bankname: string;
 }

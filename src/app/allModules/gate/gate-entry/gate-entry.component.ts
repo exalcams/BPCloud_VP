@@ -14,6 +14,7 @@ export class GateEntryComponent implements OnInit {
   BGClassName: any;
   fuseConfig: any;
   tabledata: any[] = [];
+ 
   bool = true;
   COUNT = 0;
   displayedColumns = ['Item', 'MaterialText', 'DeliveryDate', 'OrderQty', 'GRQty', 'PipelineQty', 'OpenQty', 'UOM'];
@@ -78,17 +79,18 @@ export class GateEntryComponent implements OnInit {
         uom: 'kg'
       }
     ];
+    this
     console.log(this.tabledata);
     this.dataSource = new MatTableDataSource(this.tabledata);
   }
   SetUserPreference(): void {
     this._fuseConfigService.config
-        .subscribe((config) => {
-            this.fuseConfig = config;
-            this.BGClassName = config;
-        });
+      .subscribe((config) => {
+        this.fuseConfig = config;
+        this.BGClassName = config;
+      });
     // this._fuseConfigService.config = this.fuseConfig;
-}
+  }
   check(): any {
     if (this.bool) {
       this.bool = false;

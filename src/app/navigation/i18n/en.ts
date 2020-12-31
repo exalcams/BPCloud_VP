@@ -90,7 +90,7 @@ export const locale = {
             'content1ShowName': 'content1ShowName'
         },
         'ORDER_FULFILMENT_CENTER': {
-            'HEADER_TITLE': 'Order Fulfilment Center',
+            'HEADER_TITLE': 'Fulfilment Center',
             'ON_TIME_IN_FULL_OTIF': 'On Time In Full (OTIF)',
             'Available_Spaces': 'Available Spaces',
             'Exceptions': 'Exceptions',

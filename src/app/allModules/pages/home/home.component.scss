@@ -443,11 +443,48 @@
     background-color: red;
   }
   .underline6 {
-    height: 2.5px;
-    width: 263px;
-    margin-top: -6px;
-    margin-left: 37px;
-    background-color: red;
+    height: 0;
+    width: 288px;
+    margin-top: -3px;
+    border: solid 1px #efb577;
+    margin-left: 52px;
+  }
+  .cl_mat_card{
+    border-radius: 2px;
+    margin-left: 26px;
+    margin-right: 26px;
+    min-height: 160px;
+    // margin-top: 12px;
+    -webkit-backdrop-filter: blur(30px);
+    backdrop-filter: blur(30px);
+    box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.1);
+    background-color: var(--white);
+  }
+  .cl_1{
+    width: 20px;
+    height: 0px;
+    font-family: SegoeUI;
+    font-size: 18px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 0.69;
+    letter-spacing: 0.56px;
+    text-align: left;
+    color: #1d1d1d;
+  }
+  .cl_p1{
+    // width: 1580px;
+  // height: 157px;
+  // font-family: SegoeUI;
+  font-size: 15px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: 0.57px;
+  text-align: left;
+  color: #3e3e3e;
   }
   .avatar1 {
     height: 40px !important;
@@ -841,9 +878,9 @@
   //   }
   // }
   .coe_message {
-    font-weight: bold;
+    font-weight: 500;
     font-stretch: normal;
-    font-size: 160%;
+    font-size: 20px;
     font-style: normal;
     line-height: 20px;
     letter-spacing: 1.28px;
@@ -855,7 +892,7 @@ width:20%;
 } */
   .colon {
     font-family: inherit;
-    font-size: 52px;
+    font-size: 37px;
     font-stretch: normal;
     font-style: normal;
     line-height: 0.57;
@@ -863,25 +900,38 @@ width:20%;
     text-align: left;
     width: 30px;
     height: 82px;
-    color: #646464;
+    color: #646464;;
     margin-top: 25px;
   }
   .colon1 {
     font-family: inherit;
-    font-size: 52px;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 0.57;
-    letter-spacing: 1.92px;
+    font-size: 48px;
+    // font-stretch: normal;
+    // font-style: normal;
+    // line-height: 0.57;
+    // letter-spacing: 1.92px;
     position: absolute;
-    bottom: 0px;
-    right: 20%;
+    bottom: 26px;
+    right: 62%;
     cursor: alias;
-  }
+    }
   .man_image {
     height: 114px;
   }
-
+  @media screen and (min-width: 950px) and (max-width: 100px) {
+    .colon1 {
+      font-family: inherit;
+      font-size: 48px;
+      // font-stretch: normal;
+      // font-style: normal;
+      // line-height: 0.57;
+      // letter-spacing: 1.92px;
+      position: absolute;
+      bottom: 26px;
+      right: 62%;
+      cursor: alias;
+      }
+  }
   @media screen and (min-width: 200px) and (max-width: 500px) {
     .coe_message {
       font-weight: bold;
@@ -925,7 +975,8 @@ width:20%;
   }
   .cl_ceo {
     margin-right: 13px;
-    font-size: 9px;
+    font-size: 15px;
+    color: #f04747;
   }
   .overall {
     font-size: 14px;
@@ -1000,6 +1051,17 @@ width:20%;
     margin-top: 28px;
     font-size: 18px;
     font-weight: 500;
+    width: 535px;
+    height: 31px;
+    /* font-family: SegoeUI; */
+    font-size: 19px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 0.6;
+    letter-spacing: 0.64px;
+    text-align: left;
+    color: #3e3e3e;
   }
   .divider_underline {
     margin-top: -8px;

@@ -1,4 +1,5 @@
 import { CommonClass } from './common';
+import { BPCPIHeader } from './customer';
 
 export class PO {
     PO: number;
@@ -34,14 +35,26 @@ export class ASNDetails {
 }
 export class GRNDetails {
     Item: string;
-    MaterialText: string;
+    Material: string;
+    Description:string;
     GRNDate: Date;
     Qty: number;
-    Status: string;
+    DeliveryNote: string;
 }
+export class RETURNDetails {
+    Date:Date;
+    Type:string;
+    Material:string;
+    Description:string;
+    Qty:number;
+    Reason:string;
+    DeliveryNote:string;
+}
+
 export class QADetails {
     Item: string;
-    MaterialText: string;
+    Material: string;
+    Description:string;
     Date: Date;
     LotQty: number;
     RejQty: number;
@@ -50,12 +63,17 @@ export class QADetails {
 
 export class SLDetails {
     Item: string;
-    DocNumber: string;
     SlLine: string;
     DeliveryDate: Date;
     OrderedQty: number;
-    AckStatus: string;
-    AckDeliveryDate: Date;
+    Material:string;
+    Description:string;
+    Proposeddeliverydate:Date;
+    OrderQty:number;
+    GRQty:number;
+    PipelineQty:number;
+    OpenQty:number;
+    UOM:string;
 }
 
 export class DocumentDetails extends CommonClass {
@@ -85,7 +103,6 @@ export class OrderFulfilmentDetails {
     ItemCount: number;
     ASNCount: number;
     GRNCount: number;
-    RETURNCount: number;
     QACount: number;
     SLCount: number;
     DocumentCount: number;
@@ -93,10 +110,13 @@ export class OrderFulfilmentDetails {
     aSNDetails: ASNDetails[];
     itemDetails: ItemDetails[];
     gRNDetails: GRNDetails[];
+    ReturnDetails:RETURNDetails[];
     qADetails: QADetails[];
+    BPCPIHeader:BPCPIHeader[]
     slDetails: SLDetails[];
     documentDetails: DocumentDetails[];
     flipDetails: FlipDetails[];
+    ReturnCount: number;
     constructor() {
         // super();
         this.itemDetails = [];
@@ -184,12 +204,4 @@ export class DeliverystatusDetails {
 //     Actual:string;
 //     Date:Date;
 // }
-export class RETURNDetails {
-    Date: Date;
-    Type: string;
-    Material: string;
-    Description: string;
-    Qty: number;
-    Reason: string;
-    DeliveryNote: string;
-}​​​​​
+

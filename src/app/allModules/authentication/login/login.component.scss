@@ -261,10 +261,17 @@ login {
         vertical-align: initial;
         animation: 1s blink linear infinite;
     }
-    .ScrollingText{
+    .ScrollingText {
         margin-top: 48px;
         position: absolute;
-        margin-left: -80px;
+        margin-left: -63px;
+        font-size: 45px !important;
+    }
+    .ExalcaLogo {
+        margin-top: 8px;
+        position: absolute;
+        width: 90px;
+        margin-left: 12px;
     }
     @keyframes blink {
         0%,

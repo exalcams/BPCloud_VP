@@ -9,6 +9,10 @@ export class BPCInvoice extends CommonClass {
     FiscalYear: string;
     InvoiceNo: string;
     InvoiceDate: Date | string | null;
+    PostingDate: Date | string | null;
+    ASN:string ;
+    
+    ASNDATE: Date | string | null;
     InvoiceAmount: number;
     PoReference: string;
     PaidAmount: number;
@@ -109,6 +113,7 @@ export class BPCReportOV extends CommonClass {
     Type: string;
     PatnerID: string;
     Material: string;
+    GRR:string ;
     MaterialText: string;
     InputQty: number;
     AccQty: number;
@@ -185,7 +190,12 @@ export class BPCReportGRR extends CommonClass {
     Type: String;
     PatnerID: String;
     Material: String;
+    GRGIDoc:string;
+    GRIDate:Date;
+    Item:string;
+    Description:string;
     MaterialText: String;
+    GRGIQty:number ;
     OrderQty: Number;
     ReceivedQty: Number;
     RejectedPPM: Number;

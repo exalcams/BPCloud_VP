@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
-import { Router } from '@angular/router';
 import { FuseConfigService } from '@fuse/services/config.service';
-
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-po-schedules',
   templateUrl: './po-schedules.component.html',
@@ -15,15 +14,15 @@ export class PoSchedulesComponent implements OnInit {
   DisplayedColumn: string[] = ['PO', 'Item', 'DelDate', 'Material', 'MaterialText', 'OpenQty', 'Action'];
   PoDataSource: MatTableDataSource<any>;
   selectedDay: any;
- 
-  constructor( private _fuseConfigService: FuseConfigService,   private _router: Router) { }
+
+  constructor(private _fuseConfigService: FuseConfigService, private _router: Router) { }
 
   ngOnInit(): void {
     this.SetUserPreference();
     this.GetPOSchduleDetails();
 
   }
-  
+
   GetPOSchduleDetails(): void {
     this.poschedules = [
 
@@ -38,29 +37,33 @@ export class PoSchedulesComponent implements OnInit {
   }
   SetUserPreference(): void {
     this._fuseConfigService.config
-        .subscribe((config) => {
-            this.fuseConfig = config;
-            this.BGClassName = config;
-        });
+      .subscribe((config) => {
+        this.fuseConfig = config;
+        this.BGClassName = config;
+      });
     // this._fuseConfigService.config = this.fuseConfig;
-}
-ASN(po: string) {
-  this._router.navigate(["/asn"], { queryParams: { id: po } });
-  
-}
-help(po: string){
-  this._router.navigate(["/support/supportticket"], {
-    queryParams: { id: po },});
-  
- 
-}
-// selectChangeHandler(event: any){
-//   this.selectedDay = event.target.value;
-// if(this.selectedDay=="Create ASN")
-// {
-  
-// }
-// }
+  }
+  ASN(po: string) {
+    this._router.navigate(["/asn"], { queryParams: { id: po } });
+
+  }
+  acknowledgementClicked(po: string): void {
+    this._router.navigate(["/pages/polookup"], { queryParams: { id: po } });
+  }
+  help(po: string) {
+    this._router.navigate(["/support/supportticket"], {
+      queryParams: { id: po, navigator_page: "po-schedules" },
+    });
+
+
+  }
+  // selectChangeHandler(event: any){
+  //   this.selectedDay = event.target.value;
+  // if(this.selectedDay=="Create ASN")
+  // {
+
+  // }
+  // }
 }
 
 export class PoSchedule {

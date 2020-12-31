@@ -266,10 +266,10 @@ export class ASNListView {
     PatnerID: string;
     ASNNumber: string;
     ASNDate: Date | string | null;
-    ArrivalDate: Date | string | null;
-    DepartureDate: Date | string | null;
+    ArrivalDate:Date | string | null;
+    DepartureDate:Date | string | null;
     TurnaroundTime: string;
-    TransportMode: string;
+    TransportMode:string ;
     DocNumber: string;
     VessleNumber: string;
     AWBNumber: string;

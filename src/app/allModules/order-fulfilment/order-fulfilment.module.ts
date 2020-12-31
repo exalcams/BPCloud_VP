@@ -22,8 +22,9 @@ import { PoSchedulesComponent } from './po-schedules/po-schedules.component';
 import { ASNListComponent } from './asnlist/asnlist.component';
 import { GRReceiptsComponent } from './gr-receipts/gr-receipts.component';
 import { InvoiceListComponent } from './invoice-list/invoice-list.component';
-import { AsnlistPrintDialogComponent } from './asnlist-print-dialog/asnlist-print-dialog.component';
-
+import { AsnlistPrintDialogComponent } from './asnlist/asnlist-print-dialogue/asnlist-print-dialog/asnlist-print-dialog.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { ChatModule } from '../chat/chat.module';
 const route: Routes = [
   {
     path: "orderfulfilmentCenter",
@@ -52,8 +53,8 @@ const route: Routes = [
     PoSchedulesComponent,
     ASNListComponent,
     GRReceiptsComponent,
-    InvoiceListComponent,
-    AsnlistPrintDialogComponent],
+    InvoiceListComponent ,
+    AsnlistPrintDialogComponent ],
   imports: [
     CommonModule,
     RouterModule.forChild(route),
@@ -105,7 +106,10 @@ const route: Routes = [
 
     FormsModule,
     ChartsModule,
-    TranslateModule
+    TranslateModule,
+
+    NgApexchartsModule,
+    ChatModule
   ],
   entryComponents: [
     AsnlistPrintDialogComponent

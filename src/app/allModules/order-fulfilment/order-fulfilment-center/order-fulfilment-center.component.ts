@@ -21,11 +21,30 @@ import {
     AppUsage,
     UserPreference,
 } from "app/models/master";
+import {
+    ApexAxisChartSeries,
+    ApexChart,
+    ChartComponent,
+    ApexDataLabels,
+    ApexPlotOptions,
+    ApexYAxis,
+    ApexLegend,
+    ApexStroke,
+    ApexXAxis,
+    ApexFill,
+    ApexTooltip,
+    ApexGrid,
+    ApexTitleSubtitle,
+    ApexMarkers,
+    ApexResponsive,
+    ApexNonAxisChartSeries,
+    ApexOptions
+} from "ng-apexcharts";
 import { NotificationSnackBarComponent } from "app/notifications/notification-snack-bar/notification-snack-bar.component";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Guid } from "guid-typescript";
-import { ChartType } from "chart.js";
+import { ChartType, Chart } from "chart.js";
 import { SnackBarStatus } from "app/notifications/notification-snack-bar/notification-snackbar-status-enum";
 import {
     OfStatus,
@@ -45,6 +64,28 @@ import { BPCInvoiceAttachment } from "app/models/ASN";
 import { MasterService } from "app/services/master.service";
 import * as FileSaver from "file-saver";
 import { FuseConfigService } from "@fuse/services/config.service";
+import { BPCKRA } from 'app/models/fact';
+import { FactService } from 'app/services/fact.service';
+export interface ChartOptions {
+    series: ApexAxisChartSeries;
+    guageseries: ApexNonAxisChartSeries;
+    chart: ApexChart;
+    dataLabels: ApexDataLabels;
+    labels: string[];
+    plotOptions: ApexPlotOptions;
+    yaxis: ApexYAxis;
+    xaxis: ApexXAxis;
+    fill: ApexFill;
+    title: ApexTitleSubtitle;
+    grid: ApexGrid;
+    tooltip: ApexTooltip;
+    stroke: ApexStroke;
+    legend: ApexLegend;
+    markers: ApexMarkers;
+    colors: string[];
+    responsive: ApexResponsive[];
+    options: ApexOptions;
+}
 @Component({
     selector: "app-order-fulfilment-center",
     templateUrl: "./order-fulfilment-center.component.html",
@@ -53,6 +94,11 @@ import { FuseConfigService } from "@fuse/services/config.service";
     animations: fuseAnimations,
 })
 export class OrderFulFilmentCenterComponent implements OnInit {
+    // @ViewChild("chart") chart: ChartComponent;
+    public BarchartOptions: Partial<ChartOptions>;
+    statusvalue = '';
+    KRAData: BPCKRA[] = [];
+    TableFooterShow = false;
     canvas: any;
     ctx: any;
     cx: any;
@@ -239,7 +285,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     };
     @ViewChild("barCanvas") barCanvas: ElementRef;
     // public barChartLabels: any[] = ['17/02/20', '18/02/20', '19/02/20', '20/02/20', '21/02/20'];
-    barChartLabels: any[] = [];
+    // barChartLabels: any[] = [];
     date1 = new Date();
     date2 = new Date();
     date3 = new Date();
@@ -248,14 +294,27 @@ export class OrderFulFilmentCenterComponent implements OnInit {
 
     public barChartType: ChartType = "bar";
     public barChartLegend = true;
-    // public barChartData: any[] = [
-    //     { data: [45, 70, 65, 20, 80], label: 'Actual' },
-    //     { data: [87, 50, 40, 71, 56], label: 'Planned' }
+    // public barChartLabels: any[] = [];
+    public barChartLabels = [];
+
+    // barChartData: any[] = [
+    //     { data: [65, 59, 80, 81, 56, 55, 40], label: "Actual" },
+    //     { data: [28, 48, 40, 19, 86, 27, 90], label: "Planned" },
     // ];
-    barChartData: any[] = [
-        { data: [], label: "Actual" },
-        { data: [], label: "Planned" },
+    // [
+    //     {
+    //       name: "Net Profit",
+    //       data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
+    //     },
+    //     {
+    //       name: "Revenue",
+    //       data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
+    //     }
+    public barChartData: any[] = [
+        { data: [], name: "Actual" },
+        { data: [], name: "Planned" },
     ];
+
     public barColors: any[] = [
         { backgroundColor: "#40a8e2" },
         { backgroundColor: "#fb863a" },
@@ -268,6 +327,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         public snackBar: MatSnackBar,
         public _dashboardService: DashboardService,
         private _masterService: MasterService,
+        private _factService: FactService,
         private datePipe: DatePipe,
         private dialog: MatDialog
     ) {
@@ -286,71 +346,71 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         const dat3 = this.datePipe.transform(this.date3, "dd/MM/yyyy");
         const dat4 = this.datePipe.transform(this.date4, "dd/MM/yyyy");
         const dat5 = this.datePipe.transform(this.date5, "dd/MM/yyyy");
-        this.barChartLabels = [dat1, dat2, dat3, dat4, dat5];
-        this.Fulfilments = [
-            {
-                name: "Open",
-                value: 40,
-                label: "40%",
-            },
-            {
-                name: "Scheduled",
-                value: 20,
-                label: "20%",
-            },
-            {
-                name: "In Progress",
-                value: 30,
-                label: "30%",
-            },
-            {
-                name: "Pending",
-                value: 10,
-                label: "10%",
-            },
-        ];
-        this.DeliveryStatus = [
-            {
-                name: "17/02/20",
-                series: [
-                    {
-                        name: "Planned",
-                        value: 88,
-                    },
-                    {
-                        name: "Actual",
-                        value: 70,
-                    },
-                ],
-            },
+        // this.barChartLabels = [dat1, dat2, dat3, dat4, dat5];
+        // this.Fulfilments = [
+        //     {
+        //         name: "Open",
+        //         value: 40,
+        //         label: "40%",
+        //     },
+        //     {
+        //         name: "Scheduled",
+        //         value: 20,
+        //         label: "20%",
+        //     },
+        //     {
+        //         name: "In Progress",
+        //         value: 30,
+        //         label: "30%",
+        //     },
+        //     {
+        //         name: "Pending",
+        //         value: 10,
+        //         label: "10%",
+        //     },
+        // ];
+        // this.DeliveryStatus = [
+        //     {
+        //         name: "17/02/20",
+        //         series: [
+        //             {
+        //                 name: "Planned",
+        //                 value: 88,
+        //             },
+        //             {
+        //                 name: "Actual",
+        //                 value: 70,
+        //             },
+        //         ],
+        //     },
 
-            {
-                name: "18/02/20",
-                series: [
-                    {
-                        name: "Planned",
-                        value: 60,
-                    },
-                    {
-                        name: "Actual",
-                        value: 88,
-                    },
-                ],
-            },
-            {
-                name: "19/02/20",
-                series: [
-                    {
-                        name: "Planned",
-                        value: 40,
-                    },
-                    {
-                        name: "Actual",
-                        value: 88,
-                    },
-                ],
-            },
-        ];
+        //     {
+        //         name: "18/02/20",
+        //         series: [
+        //             {
+        //                 name: "Planned",
+        //                 value: 60,
+        //             },
+        //             {
+        //                 name: "Actual",
+        //                 value: 88,
+        //             },
+        //         ],
+        //     },
+        //     {
+        //         name: "19/02/20",
+        //         series: [
+        //             {
+        //                 name: "Planned",
+        //                 value: 40,
+        //             },
+        //             {
+        //                 name: "Actual",
+        //                 value: 88,
+        //             },
+        //         ],
+        //     },
+        // ];
     }
 
     ngOnInit(): void {
@@ -385,7 +445,23 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         this.GetOfDetails();
         this.GetOfGraphDetailsByPartnerID();
         this.GetOfStatusByPartnerID();
+        this.GetKRAByPartnerID();
         this.SetTextInsideDountChart();
+        // this._factService.GetKRAsByPartnerID("Visu").subscribe(
+        //     (data) => {
+        //         this.KRAData = <BPCKRA[]>data;
+        //         if (this.KRAData.length > 0) {
+        //             this._factService.CreateKRAs(this.KRAData, "100744").subscribe(
+        //                 (data2) => {
+        //                     console.log(data2);
+        //                 },
+        //                 (err) => {
+        //                     console.log("CreateKRAs", err);
+        //                 }
+        //             );
+        //         }
+        //     }
+        // );
         // this.GetOfAttachmentsByPartnerID();
     }
 
@@ -425,6 +501,98 @@ export class OrderFulFilmentCenterComponent implements OnInit {
             }
         );
     }
+    GetKRAByPartnerID(): void {
+        this.isProgressBarVisibile = true;
+        this._factService.GetKRAsByPartnerID(this.authenticationDetails.UserName).subscribe(
+            (data) => {
+                this.KRAData = <BPCKRA[]>data;
+                console.log(this.KRAData);
+                let previous = "";
+                this.KRAData.forEach(KRA => {
+                    // console.log(KRA.KRAText.slice(2, 8));
+                    if (previous !== KRA.KRAText.slice(0, 1) && KRA.KRAText.slice(2, 8) === "Actual") {
+                        this.barChartLabels.push(this.datePipe.transform(KRA.EvalDate, "dd/MM/yyyy"));
+                        this.barChartData[0].data.push(KRA.KRAValue);
+                        previous = KRA.KRAText.slice(0, 1);
+                        console.log("IF", KRA.KRAText);
+                    }
+                    else if (KRA.KRAText.slice(2, 8) === "Planed") {
+                        // console.log("Else", previous);
+                        this.barChartData[1].data.push(KRA.KRAValue);
+                        console.log("ELse", KRA.KRAText);
+                    }
+
+                });
+                console.log("barChartData", this.barChartData);
+                console.log("barChartLabels", this.barChartLabels);
+                this.LoadBarChart();
+
+            },
+            (err) => {
+                this.isProgressBarVisibile = false;
+            }
+        );
+    }
+    LoadBarChart(): void {
+        this.BarchartOptions = {
+            series: this.barChartData,
+            chart: {
+                type: "bar",
+                height: 150,
+                animations: {
+                    enabled: false,
+                },
+                redrawOnParentResize: true,
+                
+            },
+            colors: ['#40a8e2', '#fb863a'],
+
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    rangeBarOverlap: true,
+                    columnWidth: "45%",
+                    endingShape: "flat"
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            legend: {
+                position: 'top',
+                horizontalAlign: 'right',
+            },
+            stroke: {
+                show: true,
+                width: 2,
+                colors: ["transparent"]
+            },
+            xaxis: {
+                categories: this.barChartLabels
+            },
+            yaxis: {
+                title: {
+                }
+            },
+            fill: {
+                opacity: 1
+            },
+            tooltip: {
+                enabled: true,
+                // y: {
+                //     formatter: function (val) {
+                //         return  val;
+                //     }
+                // }
+            }
+        };
+        this.isProgressBarVisibile = false;
+    }
+    ResetClicked(): void {
+        this.GetOfDetails();
+        this.initialiseOfDetailsFormGroup();
+        this.TableFooterShow = false;
+    }
     SetTextInsideDountChart(): any {
 
 
@@ -451,8 +619,15 @@ export class OrderFulFilmentCenterComponent implements OnInit {
                     this.ofDetailsDataSource = new MatTableDataSource(
                         this.ofDetails
                     );
+                    if (this.ofDetails.length === 0) {
+                        this.TableFooterShow = true;
+                    }
+                    else {
+                        this.TableFooterShow = false;
+                    }
                     this.ofDetailsDataSource.paginator = this.ofDetailsPaginator;
                     this.ofDetailsDataSource.sort = this.ofDetailsSort;
+                    this.statusvalue = ofOption.DocType;
                 }
                 this.isProgressBarVisibile = false;
             },
@@ -468,9 +643,9 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         this.clearOfDetailsFormGroup();
     }
 
-    ResetClicked(): void {
-        this.GetOfDetails();
-    }
+    // ResetClicked(): void {
+    //     this.GetOfDetails();
+    // }
 
     GetOfStatusByPartnerID(): void {
         this.isProgressBarVisibile = true;
@@ -478,12 +653,40 @@ export class OrderFulFilmentCenterComponent implements OnInit {
             (data) => {
                 if (data) {
                     this.fulfilmentStatus = <FulfilmentStatus>data;
+                    let OpenDetails;
+                    let ScheduledDetails;
+                    let InProgressDetails;
+                    let PendingDetails;
                     if (this.fulfilmentStatus) {
+                        if (this.fulfilmentStatus.OpenDetails.Value !== null) {
+                            OpenDetails = this.fulfilmentStatus.OpenDetails.Value;
+                        }
+                        else {
+                            OpenDetails = 0;
+                        }
+                        if (this.fulfilmentStatus.ScheduledDetails.Value !== null) {
+                            ScheduledDetails = this.fulfilmentStatus.ScheduledDetails.Value;
+                        }
+                        else {
+                            ScheduledDetails = 0;
+                        }
+                        if (this.fulfilmentStatus.InProgressDetails.Value !== null) {
+                            InProgressDetails = this.fulfilmentStatus.InProgressDetails.Value;
+                        }
+                        else {
+                            InProgressDetails = 0;
+                        }
+                        if (this.fulfilmentStatus.PendingDetails.Value !== null) {
+                            PendingDetails = this.fulfilmentStatus.PendingDetails.Value;
+                        }
+                        else {
+                            PendingDetails = 0;
+                        }
                         this.doughnutChartData = [
-                            this.fulfilmentStatus.OpenDetails.Value,
-                            this.fulfilmentStatus.ScheduledDetails.Value,
-                            this.fulfilmentStatus.InProgressDetails.Value,
-                            this.fulfilmentStatus.PendingDetails.Value,
+                            OpenDetails,
+                            ScheduledDetails,
+                            InProgressDetails,
+                            PendingDetails,
                         ];
                     }
                 }
@@ -618,10 +821,12 @@ export class OrderFulFilmentCenterComponent implements OnInit {
                 this.ofOption.DocType = this.ofDetailsFormGroup.get(
                     "DocType"
                 ).value;
+
                 this.ofOption.PartnerID = this.partnerID;
                 this.GetOfsByOption(this.ofOption);
             }
         }
+        // this.initialiseOfDetailsFormGroup();
     }
 
     doughnutChartClicked(e: any): void {
@@ -649,18 +854,23 @@ export class OrderFulFilmentCenterComponent implements OnInit {
             this.ofDetailsDataSource = null;
             this.ofOption = new OfOption();
             this.ofOption.Status = "DueForACK";
+            this.statusvalue = "DueForACK";
             this.ofOption.PartnerID = this.partnerID;
             this.GetOfsByOption(this.ofOption);
         } else if (label === "Due for ASN") {
             this.ofDetailsDataSource = null;
             this.ofOption = new OfOption();
             this.ofOption.Status = "DueForASN";
+            this.statusvalue = "DueForASN";
+
             this.ofOption.PartnerID = this.partnerID;
             this.GetOfsByOption(this.ofOption);
         } else if (label === "Due for Gate") {
             this.ofDetailsDataSource = null;
             this.ofOption = new OfOption();
             this.ofOption.Status = "DueForGate";
+            this.statusvalue = "DueForGate";
+
             this.ofOption.PartnerID = this.partnerID;
             this.GetOfsByOption(this.ofOption);
         } else if (label === "Due for GRN") {

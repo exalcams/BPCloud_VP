@@ -84,7 +84,10 @@
     left: 0px !important;
     top: 150px !important;
 }
-
+.apexcharts-menu-icon {
+    position: relative;
+    visibility: hidden !important;
+  }
 .theme-toolBar {
     background-color: red !important;
 }

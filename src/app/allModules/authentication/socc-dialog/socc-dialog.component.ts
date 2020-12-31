@@ -30,9 +30,9 @@ export class SoccDialogComponent implements OnInit {
     };
   }
   getWidth(): string {
-    return this.screenWidth + "px";
+    return this.screenWidth - 50 + "px";
   }
   getHeight(): string {
-    return this.screenHeight + "px";
+    return this.screenHeight - 60 + "px";
   }
 }

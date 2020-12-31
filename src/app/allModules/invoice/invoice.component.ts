@@ -34,12 +34,12 @@ export class InvoiceComponent implements OnInit {
   InvoiceDisplayedColumns: string[] = [
     'InvoiceNo',
     'InvoiceDate',
-    'PoReference',
+    'PostingDate',
     'InvoiceAmount',
-    'PaidAmount',
-    'DateofPayment',
-    'Status',
-    'AttID'
+    'Currency',
+    'ASN',
+    'ASNDate',
+   
   ];
   AllInvoices: BPCInvoice[];
   InvoiceDataSource: MatTableDataSource<BPCInvoice>;
@@ -83,11 +83,11 @@ export class InvoiceComponent implements OnInit {
       this.currentUserName = this.authenticationDetails.UserName;
       this.currentUserRole = this.authenticationDetails.UserRole;
       this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
-      if (this.MenuItems.indexOf('Dashboard') < 0) {
-        this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
-        );
-        this._router.navigate(['/auth/login']);
-      }
+      // if (this.MenuItems.indexOf('Dashboard') < 0) {
+      //   this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
+      //   );
+      //   this._router.navigate(['/auth/login']);
+      // }
 
     } else {
       this._router.navigate(['/auth/login']);

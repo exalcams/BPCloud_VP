@@ -16,7 +16,6 @@
   .center {
     // padding: 5px !important;
     background-color: white;
-    
   }
   .outer {
     border-bottom: 1px solid rgba(255, 85, 0, 0.1);
@@ -163,7 +162,7 @@
 
     .mat-sort-header-container {
       display: flex;
-      justify-content: flex-start;
+      justify-content: center;
     }
   }
 
@@ -212,13 +211,23 @@
     // border-bottom: 2px solid #ffd15c;
     width: 106px;
     height: 2px;
-    
+  }
+  .orangeBorderBottom2 {
+    // border-bottom: 2px solid #ffd15c;
+    width: 82px;
+    height: 2px;
+    margin-top: 17px;
+  }
+  .orangeBorderBottom3 {
+    // border-bottom: 2px solid #ffd15c;
+    width: 106px;
+    height: 2px;
+    margin-top: 17px;
   }
   .orangeBorderBottom1 {
     // border-bottom: 2px solid #ffd15c;
     width: 152px;
     height: 2px;
-    
   }
   .rightCard {
     min-height: 300px !important;
@@ -521,4 +530,19 @@
   // .mat-select-arrow{
   //   color: white;
   // }
+  .example-spacer {
+    flex: 1 1 auto;
+  }
+  .mat-toolbar {
+    background: #f5f5f500;
+    color: rgba(0, 0, 0, 0.87);
+    font-size: 13px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    border: 1px solid #e3dbdb;
+    border-top: none;
+    height: 50px !important;
+  }
+  .barchart{
+    width: 100% !important;
+  }
 }

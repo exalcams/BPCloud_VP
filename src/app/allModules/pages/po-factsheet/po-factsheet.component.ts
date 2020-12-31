@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatDialogConfig, MatDialog, MatSort } from '@angular/material';
-import { ASNDetails, ItemDetails, GRNDetails, QADetails, OrderFulfilmentDetails, Acknowledgement, SLDetails, DocumentDetails, FlipDetails, RETURNDetails } from 'app/models/Dashboard';
+import { ASNDetails, ItemDetails, GRNDetails, QADetails, OrderFulfilmentDetails, Acknowledgement, SLDetails, DocumentDetails, FlipDetails } from 'app/models/Dashboard';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DashboardService } from 'app/services/dashboard.service';
 import { FormGroup, FormBuilder, Validators, FormArray, AbstractControl } from '@angular/forms';
@@ -11,7 +11,11 @@ import { fuseAnimations } from '@fuse/animations';
 import { Guid } from 'guid-typescript';
 import { AuthenticationDetails, AppUsage } from 'app/models/master';
 import { MasterService } from 'app/services/master.service';
-import { BPCPlantMaster } from 'app/models/OrderFulFilment';
+import { BPCOFHeader, BPCPlantMaster, OfAttachmentData } from 'app/models/OrderFulFilment';
+import { BPCPIHeader } from 'app/models/customer';
+import { CustomerService } from 'app/services/customer.service';
+import { BPCInvoiceAttachment } from 'app/models/ASN';
+import { AttachmentViewDialogComponent } from 'app/notifications/attachment-view-dialog/attachment-view-dialog.component';
 @Component({
     selector: 'app-po-factsheet',
     templateUrl: './po-factsheet.component.html',
@@ -27,6 +31,8 @@ export class PoFactsheetComponent implements OnInit {
     currentUserRole: string;
     partnerID: string;
     isProgressBarVisibile: boolean;
+  
+    yesterday=new Date()
 
     public tab1: boolean;
     public tab2: boolean;
@@ -42,9 +48,10 @@ export class PoFactsheetComponent implements OnInit {
     items: ItemDetails[] = [];
     asn: ASNDetails[] = [];
     grn: GRNDetails[] = [];
-    return: RETURNDetails[] = [];
+    return: BPCPIHeader[] = [];
     qa: QADetails[] = [];
     sl: SLDetails[] = [];
+    element: BPCOFHeader;
     document: DocumentDetails[] = [];
     flip: FlipDetails[] = [];
     public itemsCount: number;
@@ -137,7 +144,7 @@ export class PoFactsheetComponent implements OnInit {
     // itemDataSource: MatTableDataSource<ItemDetails>;
     asnDataSource: MatTableDataSource<ASNDetails>;
     grnDataSource: MatTableDataSource<GRNDetails>;
-    returnDataSource: MatTableDataSource<RETURNDetails>;
+    returnDataSource: MatTableDataSource<BPCPIHeader>;
     qaDataSource: MatTableDataSource<QADetails>;
     slDataSource: MatTableDataSource<SLDetails>;
     documentDataSource: MatTableDataSource<DocumentDetails>;
@@ -166,10 +173,13 @@ export class PoFactsheetComponent implements OnInit {
     ackFormGroup: FormGroup;
     acknowledgement: Acknowledgement = new Acknowledgement();
     poItemFormArray: FormArray = this.formBuilder.array([]);
+    ret: BPCPIHeader[];
+    ofAttachments: BPCInvoiceAttachment[];
 
     constructor(
         private route: ActivatedRoute,
         public _dashboardService: DashboardService,
+        public _customerService: CustomerService,
         private _masterService: MasterService,
         private _router: Router,
         private formBuilder: FormBuilder,
@@ -247,12 +257,13 @@ export class PoFactsheetComponent implements OnInit {
                     this.grn = this.orderFulfilmentDetails.gRNDetails;
                     this.qa = this.orderFulfilmentDetails.qADetails;
                     this.sl = this.orderFulfilmentDetails.slDetails;
+                    this.return = this.orderFulfilmentDetails.BPCPIHeader;
                     this.document = this.orderFulfilmentDetails.documentDetails;
                     this.flip = this.orderFulfilmentDetails.flipDetails;
                     this.itemsCount = this.orderFulfilmentDetails.ItemCount;
                     this.asnCount = this.orderFulfilmentDetails.ASNCount;
                     this.grnCount = this.orderFulfilmentDetails.GRNCount;
-                    this.returnCount = this.orderFulfilmentDetails.RETURNCount;
+                    this.returnCount = this.orderFulfilmentDetails.ReturnCount;
                     this.qaCount = this.orderFulfilmentDetails.QACount;
                     this.slCount = this.orderFulfilmentDetails.SLCount;
                     this.documentCount = this.orderFulfilmentDetails.DocumentCount;
@@ -301,6 +312,71 @@ export class PoFactsheetComponent implements OnInit {
                 console.error(err);
             }
         );
+    }
+    viewOfAttachmentClicked(data: DocumentDetails): void {
+        // const attachments = this.ofAttachments.filter(x => x.AttachmentID.toString() === element.RefDoc);
+        this.GetOfAttachmentsByPartnerIDAndDocNumber(data);
+    }
+    GetOfAttachmentsByPartnerIDAndDocNumber(Document: DocumentDetails): void {
+        this._dashboardService.GetBPCOFHeader(this.authenticationDetails.UserName, Document.ReferenceNo).subscribe(
+            (header) => {
+                this.element = header as BPCOFHeader;
+                console.log("BPCOFHeader", this.element);
+                this.isProgressBarVisibile = true;
+                this._dashboardService
+                    .GetOfAttachmentsByPartnerIDAndDocNumber(
+                        this.authenticationDetails.UserName,
+                        this.element.DocNumber
+                    )
+                    .subscribe(
+                        (data) => {
+                            if (data) {
+                                let attachments = data as BPCInvoiceAttachment[];
+                                console.log("attachments", attachments);
+                                for (let i = 0; i < attachments.length; i++) {
+                                    if (attachments[i].AttachmentName !== Document.AttachmentName) {
+                                        attachments.splice(i, 1);
+                                    }
+                                }
+                                this.ofAttachments = attachments;
+                                console.log(this.ofAttachments);
+                                const ofAttachmentData = new OfAttachmentData();
+                                ofAttachmentData.Client = this.element.Client;
+                                ofAttachmentData.Company = this.element.Company;
+                                ofAttachmentData.Type = this.element.Type;
+                                ofAttachmentData.PatnerID = this.element.PatnerID;
+                                ofAttachmentData.DocNumber = this.element.DocNumber;
+                                ofAttachmentData.OfAttachments = this.ofAttachments;
+                                this.openAttachmentViewDialog(ofAttachmentData);
+                            }
+                            this.isProgressBarVisibile = false;
+                        },
+                        (err) => {
+                            console.error(err);
+                            this.isProgressBarVisibile = false;
+                        }
+                    );
+            },
+            (err) => {
+                console.log(err);
+            }
+        );
+
+    }
+    openAttachmentViewDialog(ofAttachmentData: OfAttachmentData): void {
+        const dialogConfig: MatDialogConfig = {
+            data: ofAttachmentData,
+            panelClass: "attachment-view-dialog",
+        };
+        const dialogRef = this.dialog.open(
+            AttachmentViewDialogComponent,
+            dialogConfig
+        );
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                // this.GetOfDetails();
+            }
+        });
     }
     GetOfItemsByPartnerIDAndDocNumber(): void {
         this.isProgressBarVisibile = true;
@@ -359,6 +435,28 @@ export class PoFactsheetComponent implements OnInit {
         );
     }
 
+    GetAllReturns(): void {
+        this.isProgressBarVisibile = true;
+        this._customerService.GetAllReturns().subscribe(
+            data => {
+                if (data) {
+                    // this.returnCount=data.length;
+                    this.return = <BPCPIHeader[]>data;
+                    this.returnDataSource = new MatTableDataSource(this.return);
+                    this.returnDataSource.paginator = this.returnPaginator;
+                    this.returnDataSource.sort = this.returnSort;
+                    console.log(data);
+                    console.log("helo");
+                }
+                this.isProgressBarVisibile = false;
+            },
+            err => {
+                console.error(err);
+                this.isProgressBarVisibile = false;
+            }
+        );
+    }
+
     GetOfQMsByPartnerIDAndDocNumber(): void {
         this.isProgressBarVisibile = true;
         this._dashboardService.GetOfQMsByPartnerIDAndDocNumber(this.partnerID, this.PO).subscribe(
@@ -383,6 +481,7 @@ export class PoFactsheetComponent implements OnInit {
         this._dashboardService.GetOfSLsByPartnerIDAndDocNumber(this.partnerID, this.PO).subscribe(
             data => {
                 if (data) {
+                    console.log("sl" + data);
                     this.sl = <SLDetails[]>data;
                     this.slDataSource = new MatTableDataSource(this.sl);
                     this.slDataSource.paginator = this.slPaginator;
@@ -710,7 +809,7 @@ export class PoFactsheetComponent implements OnInit {
     }
 
     gotoorderfulfilment(): void {
-        this._router.navigate(['pages/home']);
+        this._router.navigate(['/orderfulfilment/orderfulfilmentCenter']);
     }
 
     getRestTimeline(statusFor: string): string {

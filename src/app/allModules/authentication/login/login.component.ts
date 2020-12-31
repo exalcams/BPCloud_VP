@@ -27,6 +27,7 @@ import { ForgetPasswordLinkDialogComponent } from "../forget-password-link-dialo
 import { Guid } from "guid-typescript";
 import { SoccDialogComponent } from '../socc-dialog/socc-dialog.component';
 import { CookieService } from 'angular2-cookie/services/cookies.service';
+import { LoginService } from 'app/services/login.service';
 
 @Component({
     selector: "login",
@@ -70,13 +71,13 @@ export class LoginComponent implements OnInit {
     fuseConfig: any;
     Username = "";
     messages = [
-        "Partner Collabarate",
-        "Order fulfilment.",
-        "Payment Tracking.",
-        "Shipment Tracking.",
-        "Document Collection.",
-        "Digital Signature.",
-        "Payment Gateway.",
+        "Partner Collabaration",
+        "Order fulfilment",
+        "Payment Tracking",
+        "Shipment Tracking",
+        "Document Collection",
+        "Digital Signature",
+        "Payment Gateway",
         "RFQ process",
     ];
     currentMessage = 0;
@@ -131,7 +132,7 @@ export class LoginComponent implements OnInit {
             userName: ["", Validators.required],
             password: ["", Validators.required],
         });
-
+       
         if (undefined !== this._cookieService.get("key")) {
             this.Username = this._cookieService.get("key");
         }
@@ -408,7 +409,18 @@ export class LoginComponent implements OnInit {
                 url: "/pages/dashboard",
             });
         }
-
+        if (this.menuItems.indexOf("Action Center") >= 0) {
+            this.children.push({
+                id: "Action Center",
+                title: "Action Center",
+                translate: "Action Center",
+                type: "item",
+                icon: "receipt",
+                // isSvgIcon: true,
+                // icon: 'dashboard',
+                url: "/pages/actioncenter",
+            });
+        }
         this.GetVendorMenus();
         this.GetCustomerMenus();
         this.GetBuyerMenus();
@@ -484,13 +496,13 @@ export class LoginComponent implements OnInit {
             });
         }
 
-        this.orderFulfilmentSubChildren.push({
-            id: "poschedules",
-            title: "PO Schedules",
-            translate: "NAV.VENDOR.FULFILMENT_CENTER",
-            type: "item",
-            url: "/orderfulfilment/poschedules",
-        });
+        // this.orderFulfilmentSubChildren.push({
+        //     id: "poschedules",
+        //     title: "PO Schedules",
+        //     translate: "NAV.VENDOR.FULFILMENT_CENTER",
+        //     type: "item",
+        //     url: "/orderfulfilment/poschedules",
+        // });
 
         if (this.menuItems.indexOf("ASN") >= 0) {
             this.orderFulfilmentSubChildren.push({
@@ -633,7 +645,7 @@ export class LoginComponent implements OnInit {
                 title: "Inspection Plan",
                 translate: "NAV.VENDOR.INSPECTION_PLAN",
                 type: "item",
-                url: "/reports/inspectionPlan",
+                url: "/quality/inspectionPlan",
             });
         }
         if (this.menuItems.indexOf("VendorRating") >= 0) {
@@ -1270,7 +1282,7 @@ export class LoginComponent implements OnInit {
                 this.currentMessage++;
                 setTimeout(() => {
                     this.deleteMessage(part);
-                }, 500);
+                }, 4000);
                 clearInterval(int1);
             } else {
                 part += currentStr[currentLetter++];
@@ -1294,7 +1306,7 @@ export class LoginComponent implements OnInit {
                 // mHTML.innerHTML = str;
                 this.currentText = str;
             }
-        }, 50);
+        }, 150);
     }
 
     openDialog(): void {
