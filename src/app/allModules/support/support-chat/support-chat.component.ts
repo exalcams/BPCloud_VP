@@ -130,8 +130,18 @@ export class SupportChatComponent implements OnInit {
     this._supportDeskService.GetSupportDetailsByPartnerAndSupportID(this.SupportID, this.PartnerID).subscribe(
       data => {
         if (data) {
+
           this.SupportDetails = data as SupportDetails;
+
           this.SupportHeader = this.SupportDetails.supportHeader;
+          if (this.SupportHeader.ReasonCode === "1236" && this.SupportHeader.Status === "Closed") {
+            console.log("Success",this.SupportHeader.PatnerID);
+            this._FactService.UpdateFactSupportDataToMasterData(this.SupportHeader.PatnerID).subscribe(
+              (msg) => {
+                console.log("Success", msg);
+              }
+            );
+          }
           this.Status = this.SupportHeader.Status;
           this.SupportLogs = this.SupportDetails.supportLogs;
           this.SupportAttachments = this.SupportDetails.supportAttachments;
@@ -282,12 +292,15 @@ export class SupportChatComponent implements OnInit {
   UpdateSupportLog(): void {
     this.IsProgressBarVisibile = true;
     this.GetSupportLogValues();
+    console.log("SelectedSupportLogView", this.SelectedSupportLogView);
     this._supportDeskService.UpdateSupportLog(this.SelectedSupportLogView).subscribe(
       (data) => {
         this.SelectedSupportLog = (data as SupportLog);
+        console.log("SelectedSupportLog", this.SelectedSupportLog);
         if (this.fileToUploadList && this.fileToUploadList.length) {
           this.AddSupportLogAttachment();
-        } else {
+        }
+        else {
           this.ResetControl();
           this.notificationSnackBarComponent.openSnackBar(`Support Log updated successfully`, SnackBarStatus.success);
           this.IsProgressBarVisibile = false;

@@ -42,6 +42,7 @@ export class SupportTicketComponent implements OnInit {
   dateOfCreation: Date;
   docRefNo: string;
   notificationSnackBarComponent: NotificationSnackBarComponent;
+  navigator_page: any;
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _router: Router,
@@ -82,7 +83,10 @@ export class SupportTicketComponent implements OnInit {
 
     this._activatedRoute.queryParams.subscribe(params => {
       this.docRefNo = params['id'];
+      this.navigator_page=params["navigator_page"]
+
     });
+    console.log( this.navigator_page)
     if (!this.docRefNo) {
       this.docRefNo = '';
     }
@@ -90,6 +94,15 @@ export class SupportTicketComponent implements OnInit {
     this.GetSupportMasters();
     this.GetUsers();
     this.GetFactByPartnerID();
+  }
+  backbutton(){
+    if(this.navigator_page=="po-schedules")
+    {
+      
+    this._router.navigate(['/orderfulfilment/poschedules'])}
+    else if(this.navigator_page=="asnlist"){
+this._router.navigate(['/orderfulfilment/asnlist'])
+    }
   }
   CreateAppUsage(): void {
     const appUsage: AppUsage = new AppUsage();
@@ -334,6 +347,7 @@ export class SupportTicketComponent implements OnInit {
       }
     });
   }
-
+ 
 
 }
+

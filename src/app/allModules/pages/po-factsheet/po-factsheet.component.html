@@ -11,28 +11,25 @@
     </div>
     <!-- Top Header -->
     <div fxLayout="row" style="margin-top: 20px !important;margin-top: 10px !important;">
-      <div fxFlex="50" class="p-8">
-        <div fxFlex="45" class="mx-8 mb-8 mt-0">
-          <div fxLayout="row" class="py-4" fxLayoutAlign="start" fxLayoutGap="5px">
-            <div fxFlex style="text-align: right;">PO No : </div>
-            <div fxFlex style="text-align: left;"> <strong
-                style=" line-height: 20px;">{{orderFulfilmentDetails.PONumber}}</strong></div>
+      <div fxFlex="50" class="p-8" style="margin-left:20px">
+        <div fxFlex="45" class="mx-8 mb-8 mt-0" fxLayout="column" fxLayoutAlign="space-evenly stretch" >
+          <div fxLayout="row" class="py-4" fxLayoutAlign="start center"  fxLayoutGap="20px">
+            <div>PO No : </div>
+            <div> <strong style=" line-height: 20px;">{{orderFulfilmentDetails.PONumber}}</strong></div>
           </div>
-          <div fxLayout="row" class="py-4" fxLayoutAlign="start" fxLayoutGap="5px">
-            <div fxFlex style="text-align: right;">PO Date : </div>
-            <div fxFlex style="text-align: left;"> <strong
+          <div fxLayout="row" class="py-4" fxLayoutAlign="start center" fxLayoutGap="10px">
+            <div >PO Date : </div>
+            <div > <strong
                 style=" line-height: 20px;">{{orderFulfilmentDetails.PODate  | date :'dd/MM/yyyy'}}</strong>
             </div>
           </div>
-          <div fxLayout="row" class="py-4" fxLayoutAlign="start" fxLayoutGap="5px">
-            <div fxFlex style="text-align: right;">Version : </div>
-            <div fxFlex style="text-align: left;"> <strong
-                style=" line-height: 20px;">{{orderFulfilmentDetails.Version}}</strong></div>
+          <div fxLayout="row" class="py-4" fxLayoutAlign="start center" fxLayoutGap="10px">
+            <div  >Version : </div>
+            <div > <strong style=" line-height: 20px;">{{orderFulfilmentDetails.Version}}</strong></div>
           </div>
-          <div fxLayout="row" class="py-4" fxLayoutAlign="start" fxLayoutGap="5px">
-            <div fxFlex style="text-align: right;">Currency : </div>
-            <div fxFlex style="text-align: left;"> <strong
-                style=" line-height: 20px;">{{orderFulfilmentDetails.Currency}}</strong></div>
+          <div fxLayout="row" class="py-4" fxLayoutGap="10px" fxLayoutAlign="start center">
+            <div >Currency : </div>
+            <div > <strong style=" line-height: 20px;">{{orderFulfilmentDetails.Currency}}</strong></div>
           </div>
         </div>
         <!-- <div fxFlex="10">
@@ -41,8 +38,7 @@
         <div class="divider"></div>
         <div fxFlex="45" class="mx-8 mb-8 mt-0" *ngIf="ItemPlantDetails?.PlantText">
           <div fxLayout="row" class="py-4" fxLayoutAlign="start" fxLayoutGap="5px">
-            <div fxFlex style="text-align: left;"> <strong
-                style=" line-height: 20px;">Delivery address</strong></div>
+            <div fxFlex style="text-align: left;"> <strong style=" line-height: 20px;">Delivery address</strong></div>
           </div>
           <div fxLayout="row" class="py-4" fxLayoutAlign="start" fxLayoutGap="5px">
             <div fxFlex style="text-align: left;"> <span
@@ -54,8 +50,8 @@
             </div>
           </div>
           <div fxLayout="row" class="py-4" fxLayoutAlign="start" fxLayoutGap="5px">
-            <div fxFlex style="text-align: left;"> <span
-                style=" line-height: 20px;">{{ItemPlantDetails.City + ' , '}} {{ItemPlantDetails.State}}</span></div>
+            <div fxFlex style="text-align: left;"> <span style=" line-height: 20px;">{{ItemPlantDetails.City + ' , '}}
+                {{ItemPlantDetails.State}}</span></div>
           </div>
           <div fxLayout="row" class="py-4" fxLayoutAlign="start" fxLayoutGap="5px">
             <div fxFlex style="text-align: left;"> <span
@@ -67,14 +63,16 @@
       <div class="divider"></div>
       <div fxFlex="50" style="margin-top: 10px;">
         <div fxLayout style="margin-left: 550px !important;">
-          <button style="border-radius: 50%;width:50px;height:50px;background-color:orange;margin-top: -15px;margin-bottom: 8px;" (click)="gotoorderfulfilment()">
+          <button
+            style="border-radius: 50%;width:50px;height:50px;background-color:orange;margin-top: -15px;margin-bottom: 8px;"
+            (click)="gotoorderfulfilment()">
             <mat-icon style="color: white;">arrow_back</mat-icon>
           </button>
         </div>
         <div fxLayout style="margin-left: -12px !important;width: 130% !important;">
           <div fxFlex="25" style="margin-left: 15px;;" fxLayout>ACK</div>
           <div fxFlex="25" fxLayout>ASN</div>
-          <div fxFlex="25" fxLayout>Gate</div>
+          <div fxFlex="25" fxLayout>GATE</div>
           <div fxFlex="25" style="margin-right: 7% !important;" fxLayout>GRN</div>
         </div>
         <div fxLayout class="mt-4 mr-40 ml-8" style="width: 115% !important;">
@@ -261,18 +259,18 @@
             <td mat-cell *matCellDef="let element">{{element.Item}}</td>
           </ng-container> -->
                 <ng-container matColumnDef="Item">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Item </th>
-              <td mat-cell style="text-align: left" *matCellDef="let element;let odd=odd;let index=index"
-                [formGroupName]="index" class="tableLeftBorder pl-0">
-                <div fxLayout>
-                  <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
-                  <div fxFlex class="pl-4">
-                    <input matInput formControlName="Item">
-                    
-                  </div>
-                </div>
-              </td>
-            </ng-container>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Item </th>
+                  <td mat-cell style="text-align: left" *matCellDef="let element;let odd=odd;let index=index"
+                    [formGroupName]="index" class="tableLeftBorder pl-0">
+                    <div fxLayout>
+                      <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
+                      <div fxFlex class="pl-4">
+                        <input matInput formControlName="Item">
+
+                      </div>
+                    </div>
+                  </td>
+                </ng-container>
 
                 <ng-container matColumnDef="Material">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Material</th>
@@ -317,18 +315,20 @@
                 </ng-container>
 
                 <ng-container matColumnDef="Proposeddeliverydate">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Proposed delivery
-                    date</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Proposed Delivery
+                    Date</th>
                   <td mat-cell style="text-align: left" *matCellDef="let element; let index = index"
                     [formGroupName]="index">
                     <!-- <input matInput formControlName="Proposeddeliverydate"> -->
                     <mat-form-field style="width: 65%;">
-                      <input matInput [matDatepicker]="picker" formControlName="Proposeddeliverydate" required>
+                      <input matInput  [matDatepicker]="picker" formControlName="Proposeddeliverydate"  [min]="yesterday"   required>
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker color="primary"></mat-datepicker>
                       <!-- <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle> -->
-                      <mat-datepicker-toggle matSuffix [for]="picker">
-                        <img matDatepickerToggleIcon class="calendarImg" src="assets/images/calendar.png">
-                      </mat-datepicker-toggle>
-                      <mat-datepicker #picker></mat-datepicker>
+                      <!-- <mat-datepicker-toggle matSuffix [for]="picker"> -->
+                        <!-- <img matDatepickerToggleIcon class="calendarImg" src="assets/images/calendar.png"> -->
+                      <!-- </mat-datepicker-toggle> -->
+                      <!-- <mat-datepicker #picker></mat-datepicker> -->
                       <span class="pl-4 errorClass" *ngIf="ackFormGroup.get('POItems').controls[index].get('Proposeddeliverydate').touched &&
                 ackFormGroup.get('POItems').controls[index].get('Proposeddeliverydate').hasError('required')">
                         *
@@ -402,10 +402,10 @@
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Plant</th>
                   <td mat-cell style="text-align: left" *matCellDef="let element; let index = index"
                     [formGroupName]="index"> -->
-                    <!-- <input matInput formControlName="UOM"> -->
-                    <!-- {{ackFormGroup.get('POItems')?.controls[index]?.get('PlantCode')?.value}} -->
-                    <!-- {{element.UOM}} -->
-                  <!-- </td>
+                <!-- <input matInput formControlName="UOM"> -->
+                <!-- {{ackFormGroup.get('POItems')?.controls[index]?.get('PlantCode')?.value}} -->
+                <!-- {{element.UOM}} -->
+                <!-- </td>
                 </ng-container> -->
 
                 <ng-container matColumnDef="UnitPrice">
@@ -502,7 +502,8 @@
             </ng-container>
 
             <ng-container matColumnDef="Proposeddeliverydate">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: right">Proposed delivery date</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: right">Proposed delivery date
+              </th>
               <td mat-cell style="text-align: right" *matCellDef="let element"> {{element.Proposeddeliverydate}} </td>
             </ng-container>
 
@@ -643,7 +644,7 @@
       <!-- Return -->
       <div class="content" fxLayout="column" *ngIf="tab8">
         <div class="p-12  mt-24">
-          <table style="width: 50% !important;" class="table" mat-table [dataSource]="ReturnDataSource" matSort>
+          <table style="width: 50% !important;" class="table" mat-table [dataSource]="returnDataSource" matSort>
 
             <ng-container matColumnDef="Date">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
@@ -782,7 +783,7 @@
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="documentDisplayedColumns;sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: documentDisplayedColumns;let even=even" style=" cursor: pointer;">
+            <tr mat-row *matRowDef="let row; columns: documentDisplayedColumns;let even=even" (click)="viewOfAttachmentClicked(row)" style=" cursor: pointer;">
             </tr>
           </table>
         </div>

@@ -2,8 +2,12 @@
   <div class="center">
     <div class="outer" fxLayout>
       <div class="bg"></div>
-      <div>
-        <h3 style="margin: 0px;padding-left: 10px;"><b>Fact details</b></h3>
+      <div fxLayout="row" fxLayoutAlign="start none">
+        <button mat-mini-fab style="background-color: orange;" class="fabBtn" *ngIf="renderdata == 1"
+          [routerLink]="['/pages/actioncenter']">
+          <mat-icon style="color: white;font-size: 21px !important;margin-top: 4px;">arrow_back</mat-icon>
+        </button>
+        <h3 style="margin: 0px;padding-left: 10px;"><b>Master details</b></h3>
       </div>
       <div fxFlex align="end">
         <span><img src="assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
@@ -13,6 +17,8 @@
       <div fxFlex class="side-bar">
         <div class="sidenav-content" fxFlex fxLayout="column">
           <mat-card fxFlex fxLayout="column" class="mb-32">
+            <!-- <mat-horizontal-stepper [linear]="isLinear" #stepper>
+              <mat-step *ngFor="let stepFormGroup of stepFormGroups; let i = index " [stepControl]="stepFormGroups"> -->
             <form autocomplete="off" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" name="form" novalidate
               [formGroup]="FactFormGroup">
               <div fxLayout>
@@ -21,7 +27,8 @@
                     <div fxFlex="100">
                       <div class="SectionTitle mb-8">
                         <strong>Basic Details</strong>
-                        <div [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="borderbottom"></div>
+                        <div [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="borderbottom">
+                        </div>
                       </div>
 
                     </div>
@@ -71,7 +78,8 @@
                     <div fxFlex="100">
                       <div class="SectionTitle mb-8">
                         <strong>Contact Person Info.</strong>
-                        <div [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="borderbottom"></div>
+                        <div [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="borderbottom">
+                        </div>
                       </div>
 
                     </div>
@@ -144,7 +152,8 @@
                     <div fxFlex="100">
                       <div class="SectionTitle mb-8">
                         <strong>Address</strong>
-                        <div [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="borderbottom"></div>
+                        <div [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="borderbottom">
+                        </div>
                       </div>
                     </div>
                     <div fxFlex="50">
@@ -223,7 +232,6 @@
                   <strong>Contact Person Table</strong>
                   <div [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="borderbottom"></div>
                 </div>
-
               </div>
               <div class="mt-8">
                 <!-- <form autocomplete="off" fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto" name="form" novalidate
@@ -334,11 +342,16 @@
               </div>
             </div>
 
-            <div fxFlex fxLayout="column" class="mt-24" *ngIf="BanksByPartnerID?.length">
-              <div style="margin-left: 7px">
+            <div fxFlex fxLayout="column" class="mt-24">
+              <div style="margin-left: 7px" fxLayout="row" fxLayoutAlign="space-between center">
                 <div class="SectionTitle">
                   <strong>Bank Table</strong>
                   <div [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="borderbottom"></div>
+                </div>
+                <div *ngIf="!change">
+                  <button (click)="AddInitialBankTable()" [disabled]="Bankrender" [ngStyle]="getOpacityBankAdd()">
+                    <img src="./assets/images/AddBtn.png" class="AddImg">
+                  </button>
                 </div>
               </div>
               <div class="mt-8">
@@ -399,68 +412,137 @@
               </div>
               <div style="margin-left: 8px;margin-top: 10px;">
                 <div style="overflow-x:auto;">
-                  <table *ngIf="BanksByPartnerID?.length" class="table" mat-table [dataSource]="bankDetailsDataSource"
-                    matSort>
+                  <form autocomplete="off" fxLayout="column" name="form" novalidate [formGroup]="bankDetailsFormGroup">
+                    <table *ngIf="BanksByPartnerID?.length" class="table" mat-table [dataSource]="bankDetailsDataSource"
+                      matSort id="BankTable">
 
-                    <ng-container matColumnDef="AccountName">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"
-                        [ngClass]="BGClassName?.layout?.toolbar?.background"> Account Name </th>
-                      <td mat-cell *matCellDef="let element" class="tableLeftBorder" style="width: 10%;">
-                        {{element.AccountName}} </td>
-                    </ng-container>
+                      <ng-container matColumnDef="AccountName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"
+                          [ngClass]="BGClassName?.layout?.toolbar?.background"> Account Name </th>
+                        <td mat-cell *matCellDef="let element;let i = index " class="tableLeftBorder"
+                          style="width: 10%;">
+                          <span *ngIf="i < Bankcount-Bankadd">
+                            <input type="text" [disabled]="change" class="Input" value="{{element.AccountName}}"
+                              name="AccountName" #input (change)="changeBankData(input.value,i,input.name)">
+                          </span>
+                          <!-- <mat-form-field class="pl-20 pr-16 underline" style="width: 100%;" *ngIf="!render"> -->
+                          <span *ngIf="i==Bankcount-Bankadd">
+                            <input matInput type="text" placeholder="AccountName" formControlName="AccountName"
+                              (keyup.enter)="keytab('AccountNumber')" (mouseenter)="AddBankToTable()">
+                            <mat-error
+                              *ngIf="bankDetailsFormGroup.get('AccountName').touched && bankDetailsFormGroup.get('AccountName').hasError('required')">
+                              AccountName is required
+                            </mat-error>
+                          </span>
+                          <!-- </mat-form-field> -->
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="AccountNumber">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"
+                          [ngClass]="BGClassName?.layout?.toolbar?.background"> Account Number </th>
+                        <td mat-cell *matCellDef="let element;let i = index" style="width: 15%;">
+                          <!-- <span *ngIf="i <= Bankcount ">{{element.AccountNumber}} </span> -->
+                          <span *ngIf="i < Bankcount-Bankadd">
+                            <input type="text" [disabled]="change" class="Input" value="{{element.AccountNumber}}"
+                              name="AccountNumber" #input (change)="changeBankData(input.value,i,input.name)">
+                          </span>
+                          <span *ngIf="i==Bankcount-Bankadd">
+                            <input matInput type="text" placeholder="Acc No" formControlName="AccountNumber"
+                              (keyup.enter)="keytab('accHolderName')" (mouseenter)="AddBankToTable()">
+                            <mat-error
+                              *ngIf="bankDetailsFormGroup.get('AccountNumber').touched && bankDetailsFormGroup.get('AccountNumber').hasError('required')">
+                              Account No is required
+                            </mat-error>
+                          </span></td>
+                      </ng-container>
 
-
-                    <ng-container matColumnDef="AccountNumber">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"
-                        [ngClass]="BGClassName?.layout?.toolbar?.background"> Account Number </th>
-                      <td mat-cell *matCellDef="let element" style="width: 15%;">
-                        {{element.AccountNumber}} </td>
-                    </ng-container>
-
-                    <!-- <ng-container matColumnDef="Name">
+                      <!-- <ng-container matColumnDef="Name">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Acc Holders name </th>
                       <td mat-cell *matCellDef="let element" style="width: 20%;"> {{element.Name}} </td>
                     </ng-container> -->
 
 
-                    <ng-container matColumnDef="BankName">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"
-                        [ngClass]="BGClassName?.layout?.toolbar?.background"> Bank Name </th>
-                      <td mat-cell *matCellDef="let element" style="width: 15%;"> {{element.BankName}} </td>
-                    </ng-container>
+                      <ng-container matColumnDef="BankName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"
+                          [ngClass]="BGClassName?.layout?.toolbar?.background"> Bank Name </th>
+                        <td mat-cell *matCellDef="let element;let i = index" style="width: 15%;">
+                          <!-- <span *ngIf="i <= Bankcount ">{{element.BankName}} </span> -->
+                          <span *ngIf="i < Bankcount-Bankadd">
+                            <input type="text" [disabled]="change" class="Input" value="{{element.BankName}}"
+                              name="BankName" #input (change)="changeBankData(input.value,i,input.name)">
+                          </span>
+                          <span *ngIf="i==Bankcount-Bankadd">
+                            <span>{{bankIndex}}</span>
+                            <input matInput type="text" placeholder="Bank Name" formControlName="BankName"
+                              (mouseenter)="AddBankToTable()">
+                            <mat-error
+                              *ngIf="bankDetailsFormGroup.get('BankName').touched && bankDetailsFormGroup.get('BankName').hasError('required')">
+                              Bank Name is required
+                            </mat-error>
+                          </span></td>
+                      </ng-container>
 
 
-                    <!-- <ng-container matColumnDef="City">
+                      <!-- <ng-container matColumnDef="City">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> City </th>
                       <td mat-cell *matCellDef="let element" style="width: 10%;"> {{element.City}} </td>
                     </ng-container> -->
 
-                    <ng-container matColumnDef="BankID">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"
-                        [ngClass]="BGClassName?.layout?.toolbar?.background"> Bank ID </th>
-                      <td mat-cell *matCellDef="let element" style="width: 15%;"> {{element.BankID}} </td>
-                    </ng-container>
+                      <ng-container matColumnDef="BankID">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"
+                          [ngClass]="BGClassName?.layout?.toolbar?.background"> Bank ID </th>
+                        <td mat-cell *matCellDef="let element;let i = index" style="width: 15%;">
+                          <!-- <span *ngIf="i <= Bankcount ">{{element.BankID}} </span> -->
+                          <span *ngIf="i < Bankcount-Bankadd">
+                            <input type="text" [disabled]="change" class="Input" name="BankID"
+                              value="{{element.BankID}}" #input (change)="changeBankData(input.value,i,input.name)">
+                          </span>
+                          <span *ngIf="i==Bankcount-Bankadd">
+                            <input matInput type="text" placeholder="BankID" formControlName="BankID"
+                              (keydown.enter)="BankEnterKeyDown()" (mouseenter)="AddBankToTable()">
+                            <mat-error
+                              *ngIf="bankDetailsFormGroup.get('BankID').touched && bankDetailsFormGroup.get('BankID').hasError('required')">
+                              BankID is required
+                            </mat-error>
+                          </span></td>
+                      </ng-container>
 
-
-                    <!-- <ng-container matColumnDef="Attachment">
+                      <ng-container matColumnDef="Action">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 5%;"
+                          [ngClass]="BGClassName?.layout?.toolbar?.background">Actions</th>
+                        <td mat-cell *matCellDef="let element;let i = index" style="width: 5%;">
+                          <!-- <button mat-button>Edit</button> -->
+                          <button (click)="clearBankTable(i)">
+                            <img src="./assets/images/delete.png" class="deleteImg">
+                          </button>
+                        </td>
+                      </ng-container>
+                      <!-- <ng-container matColumnDef="Attachment">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> Attachment </th>
                       <td mat-cell *matCellDef="let element" style="width: 10%;">
                         <mat-icon *ngIf="element.AttachmentName">attach_file</mat-icon>
                       </td>
-                    </ng-container> -->
+                      </ng-container> -->
 
-                    <!-- <ng-container matColumnDef="Action">
+                      <!-- <ng-container matColumnDef="Action">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header> </th>
                       <td mat-cell *matCellDef="let element" style="text-align: center;">
                         <img class="removeIcon" src="assets/images/remove-button.png"
                           (click)="RemoveBankFromTable(element)">
                       </td>
-                    </ng-container> -->
+                      </ng-container> -->
 
-                    <tr mat-header-row *matHeaderRowDef="bankDetailsDisplayedColumns;sticky: true"></tr>
-                    <tr mat-row *matRowDef="let row; columns: bankDetailsDisplayedColumns;">
-                    </tr>
-                  </table>
+                      <tr mat-header-row *matHeaderRowDef="bankDetailsDisplayedColumns;sticky: true"></tr>
+                      <tr mat-row *matRowDef="let row; columns: bankDetailsDisplayedColumns;"
+                        (click)="DeleteBankTableRow(row)">
+                      </tr>
+                    </table>
+                    <mat-toolbar *ngIf="BanksByPartnerID?.length === 0">
+                      <span class="example-spacer"></span>
+                      <span>No Records Found</span>
+                      <span class="example-spacer"></span>
+                    </mat-toolbar>
+                  </form>
                 </div>
                 <!-- <div flex *ngIf="BanksByPartnerID?.length">
                   <mat-paginator [pageSizeOptions]="[10, 20, 30, 50, 75, 100]" showFirstLastButtons>
@@ -469,6 +551,7 @@
                 <!-- </div> -->
               </div>
             </div>
+            <!-- /////////Activity Table////// -->
             <div fxFlex fxLayout="column" class="mt-24" *ngIf="AIACTsByPartnerID?.length">
               <!-- <div style="margin-left: 7px">
                 <div class="SectionTitle">
@@ -564,10 +647,19 @@
               </div>
             </div>
 
-            <div fxFlex fxLayout="column" class="mt-24" *ngIf="CertificatesByPartnerID?.length">
-              <div style="margin-left: 7px">
+            <!-- ////////Certificate Table////////// -->
+            <div fxFlex fxLayout="column" class="mt-24">
+              <div style="margin-left: 7px" fxLayout="row" fxLayoutAlign="space-between center">
                 <div class="SectionTitle">
                   <strong>Certificate Table</strong>
+                  <div [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="borderbottom"></div>
+                </div>
+                <!-- [ngStyle]="getOpacityCertificateAdd()" -->
+                <div *ngIf="!change">
+                  <button (click)="AddInitialCertiticateTable()" [disabled]="Certificaterender">
+                    <img src="./assets/images/AddBtn.png" class="AddImg">
+                  </button>
+
                 </div>
               </div>
               <div class="mt-8">
@@ -624,75 +716,161 @@
                   </div>
                 </form> -->
               </div>
-              <div style="margin-left: 8px;margin-top: 10px;">
-                <table *ngIf="CertificatesByPartnerID?.length" class="table" mat-table
-                  [dataSource]="CertificateDataSource" matSort>
+              <form autocomplete="off" fxLayout="column" name="form" novalidate [formGroup]="CertificateFormGroup">
 
-                  <ng-container matColumnDef="CertificateType">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;"
-                      [ngClass]="BGClassName?.layout?.toolbar?.background"> Certificate Type </th>
-                    <td mat-cell *matCellDef="let element" style="width: 25%;" class="tableLeftBorder">
-                      {{element.CertificateType}} </td>
-                  </ng-container>
+                <div style="margin-left: 8px;margin-top: 10px;">
 
-                  <ng-container matColumnDef="CertificateName">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;"
-                      [ngClass]="BGClassName?.layout?.toolbar?.background"> Certificate Name </th>
-                    <td mat-cell *matCellDef="let element" style="width: 25%;"> {{element.CertificateName}} </td>
-                  </ng-container>
+                  <table *ngIf="CertificatesByPartnerID?.length" class="table" mat-table
+                    [dataSource]="CertificateDataSource" matSort id="certificateTable">
 
-                  <ng-container matColumnDef="Validity">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"
-                      [ngClass]="BGClassName?.layout?.toolbar?.background"> Validity </th>
-                    <td mat-cell *matCellDef="let element" style="width: 20%;">
-                      {{element.Validity | date :'dd/MM/yyyy'}} </td>
-                  </ng-container>
+                    <ng-container matColumnDef="CertificateType">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;"
+                        [ngClass]="BGClassName?.layout?.toolbar?.background"> Certificate Type </th>
+                      <td mat-cell *matCellDef="let element;let i = index" style="width: 25%;" class="tableLeftBorder">
+                        <!-- <span *ngIf="i <= Certificatecount">{{element.CertificateType}}</span> -->
+                        <span *ngIf=" i <Certificatecount-Certificateadd ">
+                          <input type="text" [disabled]="change" class="Input" value="{{element.CertificateType}}"
+                            name="CertificateType" #input (change)="changeCertificateData(input.value,i,input.name)">
+                        </span>
+                        <span *ngIf="i== Certificatecount-Certificateadd">
+                          <input matInput type="text" placeholder="CertificateType" formControlName="CertificateType"
+                            (mouseenter)="AddCertificateToTable()">
+                          <mat-error
+                            *ngIf="CertificateFormGroup.get('CertificateType').touched && CertificateFormGroup.get('CertificateType').hasError('required')">
+                            CertificateType is required
+                          </mat-error>
+                        </span>
+                      </td>
+                    </ng-container>
 
-                  <ng-container matColumnDef="Attachment">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;"
-                      [ngClass]="BGClassName?.layout?.toolbar?.background"> Attachment </th>
-                    <td mat-cell *matCellDef="let element" style="width: 25%;">
-                      <span class="linkClass">{{element.Attachment}}
-                      </span>
-                    </td>
-                  </ng-container>
+                    <ng-container matColumnDef="CertificateName">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;"
+                        [ngClass]="BGClassName?.layout?.toolbar?.background"> Certificate Name </th>
+                      <td mat-cell *matCellDef="let element;let i = index" style="width: 25%;" class="tableLeftBorder">
+                        <!-- <span *ngIf="i <= Certificatecount">{{element.CertificateName}}</span> -->
+                        <span *ngIf=" i <Certificatecount-Certificateadd ">
+                          <input type="text" [disabled]="change" class="Input" value="{{element.CertificateName}}"
+                            name="CertificateName" #input (change)="changeCertificateData(input.value,i,input.name)">
+                        </span>
+                        <span *ngIf="i== Certificatecount-Certificateadd">
+                          <input matInput type="text" placeholder="CertificateName" formControlName="CertificateName"
+                            (mouseenter)="AddCertificateToTable()">
+                          <mat-error
+                            *ngIf="CertificateFormGroup.get('CertificateName').touched && CertificateFormGroup.get('CertificateName').hasError('required')">
+                            CertificateName is required
+                          </mat-error>
+                        </span>
+                      </td>
+                    </ng-container>
 
-                  <!-- <ng-container matColumnDef="Action">
+                    <ng-container matColumnDef="Validity">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"
+                        [ngClass]="BGClassName?.layout?.toolbar?.background"> Validity </th>
+
+                      <td mat-cell *matCellDef="let element;let i = index" style="width: 25%;" class="tableLeftBorder">
+                        <!-- <span *ngIf="i <= Certificatecount">{{element.Validity | date :'dd/MM/yyyy'}}</span> -->
+                        <span *ngIf=" i <Certificatecount-Certificateadd ">
+                          <input type="text" [disabled]="change" class="Input"
+                            value="{{element.Validity | date :'dd/MM/yyyy'}}" placeholder="Validity" #input
+                            name="Validity" (change)="changeCertificateData(input.value,i,input.name)">
+                        </span>
+                        <span *ngIf="i== Certificatecount-Certificateadd">
+                          <mat-datepicker #picker>
+                          </mat-datepicker>
+                          <div fxLayout="row" fxLayoutAlign="space-between center">
+                            <input type="text" [matDatepicker]="picker" placeholder="Validity"
+                              formControlName="Validity" (mouseenter)="AddCertificateToTable()">
+                            <img src="assets/images/calendar.png" width="15px" height="15px" (click)="picker.open()">
+                          </div>
+                          <mat-error
+                            *ngIf="CertificateFormGroup.get('Validity').touched && CertificateFormGroup.get('Validity').hasError('required')">
+                            Validity is required
+                          </mat-error>
+                        </span>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Attachment">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;"
+                        [ngClass]="BGClassName?.layout?.toolbar?.background"> Attachment </th>
+
+                      <td mat-cell *matCellDef="let element;let i = index" style="width: 25%;" class="tableLeftBorder">
+                        <!-- <span *ngIf="i <= Certificatecount" class="linkClass">{{element.Attachment }}</span> -->
+                        <div fxLayout="row" fxLayoutAlign="space-between center">
+                          <span *ngIf=" i <Certificatecount-Certificateadd" (click)="ViewAttachmentClicked(element)">
+                            <button><input type="text" [disabled]="true" class="InputAttachment" value="{{element.Attachment}}"
+                              name="Attachment" #input></button>
+                          </span>
+                          <span *ngIf="i== Certificatecount-Certificateadd || !change">
+                            <input hidden type="file" #fileInput
+                              (change)="Certificateadd === 1?handleFileInputCertificate($event):changeCertificateData($event,i,'Attachment')"
+                              accept="image/x-png,image/gif,image/jpeg,image/jpg,application/pdf" />
+                            <!-- <input type="file" placeholder="Attachment" formControlName="Attachment"
+                            (change)="AddCertificateToTable()"> -->
+                            <mat-error *ngIf="!element.Attachment && fileStatus">
+                              Attachment is required
+                            </mat-error>
+                            <div fxLayout="row">
+                              <span *ngIf="!element.Attachment">
+                                {{element.Attachment}}
+                              </span>
+                              <span fxLayoutAlign="end center" class="attachClass" (click)="fileInput.click()">
+                                Add Attachment
+                              </span>
+                            </div>
+                          </span>
+                        </div>
+                      </td>
+                    </ng-container>
+
+                    <!-- <ng-container matColumnDef="Action">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 5%;"> </th>
                     <td mat-cell *matCellDef="let element" style="width: 5%;text-align: center;">
                       <img class="removeIcon" src="assets/images/remove-button.png"
                         (click)="RemoveAIACTFromTable(element)">
                     </td>
-                  </ng-container> -->
-
-                  <tr mat-header-row *matHeaderRowDef="CertificateDisplayedColumns;sticky: true"></tr>
-                  <tr mat-row *matRowDef="let row; columns: CertificateDisplayedColumns;">
-                  </tr>
-                </table>
-                <!-- <div flex *ngIf="AIACTsByPartnerID?.length">
+                    </ng-container> -->
+                    <ng-container matColumnDef="Action">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 5%;"
+                        [ngClass]="BGClassName?.layout?.toolbar?.background">Actions</th>
+                      <td mat-cell *matCellDef="let element;let i = index" style="width: 5%;">
+                        <!-- <button mat-button>Edit</button> -->
+                        <button (click)="clearCertificateTable(i)">
+                          <img src="./assets/images/delete.png" class="deleteImg">
+                        </button>
+                      </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="CertificateDisplayedColumns;sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: CertificateDisplayedColumns;"
+                      (click)="DeleteCertificateTableRow(row)">
+                    </tr>
+                  </table>
+                  <mat-toolbar *ngIf="CertificatesByPartnerID?.length === 0">
+                    <span class="example-spacer"></span>
+                    <span>No Records Found</span>
+                    <span class="example-spacer"></span>
+                  </mat-toolbar>
+                  <!-- <div flex *ngIf="AIACTsByPartnerID?.length">
                   <mat-paginator [pageSizeOptions]="[10, 20, 30, 50, 75, 100]" showFirstLastButtons>
                   </mat-paginator>
                 </div> -->
-              </div>
+                </div>
+              </form>
             </div>
           </mat-card>
         </div>
       </div>
     </div>
     <div fxLayout id="footerCard">
-      <div fxLayout fxFlex class="my-8 px-24" fxLayoutAlign="end" >
-        <!-- <button (click)="SaveClicked()" class="SaveAsDraftBtn mr-8" mat-stroked-button>
-          Save as Draft</button> -->
-          <button (click)="AddClicked()" [ngClass]="BGClassName?.layout?.navbar?.primaryBackground" class="AddBtn"
-          mat-raised-button>
-          Add</button>
-        <button (click)="ChangeClicked()" [ngClass]="BGClassName?.layout?.navbar?.primaryBackground" class="ChangeBtn"
+      <div fxLayout fxFlex class="my-8 px-24" fxLayoutAlign="end">
+        <button (click)="Change()" [ngClass]="BGClassName?.layout?.navbar?.primaryBackground" class="ChangeBtn"
           mat-raised-button>
           Change</button>
-        <button (click)="SaveClicked()" [ngClass]="BGClassName?.layout?.navbar?.primaryBackground" class="SaveBtn"
-          mat-raised-button>
+
+        <button *ngIf="!change" (click)="SaveClicked()"
+          [ngStyle]="{'cursor': change ==true ? 'not-allowed !important' : 'pointer !important' }"
+          [ngClass]="BGClassName?.layout?.navbar?.primaryBackground" class="SaveBtn" mat-raised-button>
           Save</button>
-        
       </div>
     </div>
     <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">

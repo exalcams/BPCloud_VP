@@ -74,11 +74,10 @@
   <mat-dialog-actions class="m-0 p-8">
     <div fxLayout fxLayoutAlign="space-between center" style="width: 100%;">
       <div fxFlex>
-        <button mat-button type="button" (click)="closeClicked('')" style="margin-right: 10px;">Close</button>
-      </div>
+        <button mat-stroked-button class="btnBg" (click)="uploadAttachmentClicked()"
+          style="margin-left: 15px;">Save</button> </div>
       <div fxFlex align="end">
-        <button mat-stroked-button class="btnBg" (click)="uploadAttachmentClicked()">Save</button>
-      </div>
+        <button mat-stroked-button type="button" (click)="closeClicked('')" class="btclose">Close</button> </div>
     </div>
   </mat-dialog-actions>
   <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">

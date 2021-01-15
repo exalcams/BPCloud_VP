@@ -5,9 +5,9 @@
 export const environment = {
     production: false,
     hmr: false,
-    baseAddress: 'http://localhost:7010/',
-    // baseAddress: 'http://rd.exalca.com:7010/',
-    // baseAddress: 'http://localhost:60789/',
+    // baseAddress: 'http://localhost:7010/',
+    baseAddress: 'http://192.168.0.28:7010/',
+    // baseAddress: 'http://localhost:60789/', 
     clientId: 'ngAuthApp'
 };
 

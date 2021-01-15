@@ -1,24 +1,30 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatSnackBar, MatDialog, MatPaginator, MatSort, MatDialogConfig } from '@angular/material';
 import { FuseConfigService } from '@fuse/services/config.service';
-import { ASNListView, BPCASNHeader, BPCASNItem, BPCASNPack, BPCASNView, BPCInvoiceAttachment, DocumentCenter } from 'app/models/ASN';
+import { ASNListView, BPCASNItem, BPCASNPack, BPCASNView, BPCInvoiceAttachment, DocumentCenter } from 'app/models/ASN';
 import { ASNService } from 'app/services/asn.service';
 import { AuthenticationDetails } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { fuseAnimations } from '@fuse/animations';
 import { ExcelService } from 'app/services/excel.service';
-import { FormGroup, FormBuilder, FormArray, AbstractControl, ValidationErrors, Validators } from '@angular/forms';
-import { DatePipe } from '@angular/common';
+import { FormGroup, FormBuilder, FormArray, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { DatePipe, SlicePipe } from '@angular/common';
 import { BPCPayAccountStatement } from 'app/models/Payment.model';
-import { BPCOFHeader, BPCOFItem, BPCOFSubconView } from 'app/models/OrderFulFilment';
+import { AsnFieldMasterComponent } from 'app/allModules/configurationn/asn-field-master/asn-field-master.component';
+import { BPCASNHeader } from 'app/models/ASN';
 import { AttachmentDetails } from 'app/models/task';
+import { AsnlistPrintDialogComponent } from './asnlist-print-dialogue/asnlist-print-dialog/asnlist-print-dialog.component';
+import { ActivatedRoute } from '@angular/router';
 import { POService } from 'app/services/po.service';
+import { BPCOFHeader, BPCOFItem, BPCOFSubconView } from 'app/models/OrderFulFilment';
 import { SubconService } from 'app/services/subcon.service';
 import { BehaviorSubject } from 'rxjs';
-import { AsnlistPrintDialogComponent } from '../asnlist-print-dialog/asnlist-print-dialog.component';
+import { NumberFormat } from 'xlsx/types';
+import { slice } from 'lodash';
+import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 
 @Component({
   selector: 'app-asnlist',
@@ -76,6 +82,17 @@ export class ASNListComponent implements OnInit {
   DocumentCenterDataSource: MatTableDataSource<DocumentCenter>;
   newAllASNList: any;
   newAllASNList1: any;
+  searchText: "";
+  searchedList: any;
+  ASN_value: any = [];
+
+  filter_asn: string;
+  count: any;
+  num: any;
+  num_array: any = [];
+  j: number;
+  k: any;
+  num_present: number;
   constructor(
     private _fuseConfigService: FuseConfigService,
     private formBuilder: FormBuilder,
@@ -130,8 +147,43 @@ export class ASNListComponent implements OnInit {
     this.SearchClicked();
 
     this.GetASNBasedOnCondition();
+
+
+    console.log("predicate" + this.TableDetailsDataSource)
   }
-  Pdfdownload(no: any) {
+
+  // applyFilter(filterValue: string) {
+
+  //   filterValue = filterValue.trim(); // Remove whitespace
+
+  //   filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+  //   console.log(filterValue)
+  //   this.num_present = 0;
+  //   this.count = slice(filterValue)
+
+  //   for (this.i = 0; this.i < this.AllASNList.length; this.i++) {
+  //     this.num = this.AllASNList[this.i].ASNNumber
+  //     this.num_array = "";
+  //     this.num_present = 0;
+  //     this.num_array = slice(this.num)
+  //     for (this.j = 0; this.j < this.num_array.length; this.j++) {
+  //       for (this.k = 0; this.k < this.count.length; this.k++) {
+  //         if (this.num_array[this.j] == this.count[this.k]) {
+  //           this.num_present = +1
+  //         }
+  //       }
+
+  //     }
+  //     if (this.num_present!) {
+  //       this.filter_asn = this.ASN_value.filter = filterValue;
+  //       this.TableDetailsDataSource.filter = this.filter_asn;
+  //     }
+
+  //   }
+
+
+  // }
+  Pdfdownload(no: any): void {
     this.IsProgressBarVisibile = true;
     // this.SelectedASNHeader.ASNNumber=""
     // this.SelectedASNHeader.ASNNumber="no"
@@ -184,20 +236,40 @@ export class ASNListComponent implements OnInit {
       }
     );
   }
-  help(po: string) {
+  help(po: string): void {
     this._router.navigate(["/support/supportticket"], {
-      queryParams: { id: po },
+      queryParams: { id: po, navigator_page: "asnlist" },
     });
 
 
   }
-  cancel(asnnumber: any) {
+  cancel(asnnumber: any): void {
     this.newAllASNList = this.AllASNList;
     console.log(this.newAllASNList);
+    const Actiontype = 'Cancel';
+    const Catagory = 'ASN';
+    this.OpenConfirmationDialog(Actiontype, Catagory);
     this.AllASNList.splice(asnnumber, 1);
     this.TableDetailsDataSource = new MatTableDataSource(this.AllASNList);
 
     // this.AllASNList.splice(asnnumber)
+  }
+  OpenConfirmationDialog(Actiontype: string, Catagory: string): void {
+    const dialogConfig: MatDialogConfig = {
+      data: {
+        Actiontype: Actiontype,
+        Catagory: Catagory
+      },
+      panelClass: 'confirmation-dialog'
+    };
+    const dialogRef = this.dialog.open(NotificationDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      result => {
+        if (result) {
+          if (Actiontype === 'Cancel') {
+          }
+        }
+      });
   }
   LoadSelectedASN(seletedASN: BPCASNHeader): void {
     this.SelectedASNHeader = seletedASN;
@@ -663,11 +735,14 @@ export class ASNListComponent implements OnInit {
         this.IsProgressBarVisibile = true;
         this._asnService.FilterASNListByPartnerID(this.currentUserName, ASNNumber, DocNumber, Material, Status, FromDate, ToDate).subscribe(
           (data) => {
+
             this.AllASNList = data as ASNListView[];
-            for (this.i = 0; this.i <= 2; this.i++) {
-              this.AllASNList[this.i].TurnaroundTime = ""
+            // this.ASN_value[0]=this.AllASNList[0].ASNNumber
+            for (this.i = 0; this.i < this.AllASNList.length; this.i++) {
+              this.ASN_value[this.i] = this.AllASNList[this.i].ASNNumber
             }
             this.TableDetailsDataSource = new MatTableDataSource(this.AllASNList);
+            console.log(this.TableDetailsDataSource.data);
             this.TableDetailsDataSource.paginator = this.tablePaginator;
             this.TableDetailsDataSource.sort = this.tableSort;
             this.IsProgressBarVisibile = false;
@@ -682,6 +757,43 @@ export class ASNListComponent implements OnInit {
       this.ShowValidationErrors(this.SearchFormGroup);
     }
   }
+  // SearchClicked(): void {
+  //   if (this.SearchFormGroup.valid) {
+  //     if (!this.isDateError) {
+  //       const FrDate = this.SearchFormGroup.get('ASNFromDate').value;
+  //       let FromDate = '';
+  //       if (FrDate) {
+  //         FromDate = this._datePipe.transform(FrDate, 'yyyy-MM-dd');
+  //       }
+  //       const TDate = this.SearchFormGroup.get('ASNToDate').value;
+  //       let ToDate = '';
+  //       if (TDate) {
+  //         ToDate = this._datePipe.transform(TDate, 'yyyy-MM-dd');
+  //       }
+  //       const ASNNumber = this.SearchFormGroup.get('ASNNumber').value;
+  //       const DocNumber = this.SearchFormGroup.get('DocNumber').value;
+  //       const Material = this.SearchFormGroup.get('Material').value;
+  //       const Status = this.SearchFormGroup.get('Status').value;
+  //       this.IsProgressBarVisibile = true;
+  //       this._asnService.FilterASNListByPartnerID(this.currentUserName, ASNNumber, DocNumber, Material, Status, FromDate, ToDate).subscribe(
+
+  //         (data) => {
+  //           this.AllASNList = data as ASNListView[];
+  //           this.TableDetailsDataSource = new MatTableDataSource(this.AllASNList);
+  //           this.TableDetailsDataSource.paginator = this.tablePaginator;
+  //           this.TableDetailsDataSource.sort = this.tableSort;
+  //           this.IsProgressBarVisibile = false;
+  //         },
+  //         (err) => {
+  //           console.error(err);
+  //           this.IsProgressBarVisibile = false;
+  //         }
+  //       );
+  //     }
+  //   } else {
+  //     this.ShowValidationErrors(this.SearchFormGroup);
+  //   }
+  // }
   ShowValidationErrors(formGroup: FormGroup): void {
     Object.keys(formGroup.controls).forEach(key => {
       if (!formGroup.get(key).valid) {

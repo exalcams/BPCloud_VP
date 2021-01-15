@@ -7,9 +7,9 @@ import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import {
   PO, OrderFulfilmentDetails, Acknowledgement, OfOption, DashboardGraphStatus,
-  FulfilmentStatus, ItemDetails, ASNDetails, GRNDetails, QADetails, SLDetails, DocumentDetails, FlipDetails
+  FulfilmentStatus, ItemDetails, ASNDetails, GRNDetails, RETURNDetails, QADetails, SLDetails, DocumentDetails, FlipDetails
 } from 'app/models/Dashboard';
-import { SODetails } from 'app/models/customer';
+import { BPCPIHeader, SODetails } from 'app/models/customer';
 import { BPCKRA, CustomerBarChartData } from 'app/models/fact';
 import { BPCOFHeader, BPCOFAIACT, BPCPlantMaster } from 'app/models/OrderFulFilment';
 import { BPCInvoiceAttachment } from 'app/models/ASN';
@@ -161,7 +161,10 @@ export class DashboardService {
     return this._httpClient.get<BPCOFAIACT[]>(`${this.baseAddress}poapi/Dashboard/GetActionsByPartnerID?PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));
   }
-
+  GetBPCOFHeader(PartnerID: string, refNo: string): Observable<BPCOFHeader | string> {
+    return this._httpClient.get<BPCOFHeader>(`${this.baseAddress}poapi/Dashboard/GetBPCOFHeader?PartnerID=${PartnerID}&ReferenceNo=${refNo}`)
+      .pipe(catchError(this.errorHandler));
+  }
   GetNotificationsByPartnerID(PartnerID: string): Observable<BPCOFAIACT[] | string> {
     return this._httpClient.get<BPCOFAIACT[]>(`${this.baseAddress}poapi/Dashboard/GetNotificationsByPartnerID?PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));

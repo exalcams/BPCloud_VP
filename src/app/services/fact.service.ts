@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpEvent, HttpResponse } f
 import { AuthService } from './auth.service';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { BPCFactContactPerson, BPCFactBank, BPCKRA, BPCAIACT, BPCFactView, BPCFact, BPCCertificate, BPCFactXLSX, BPCFactBankXLSX } from 'app/models/fact';
+import { BPCFactContactPerson, BPCFactBank, BPCKRA, BPCAIACT, BPCFactView, BPCFact, BPCCertificate, BPCFactXLSX, BPCFactBankXLSX, FactViewSupport, BPCCertificateAttachment } from 'app/models/fact';
 import { AnimationKeyframesSequenceMetadata } from '@angular/animations';
 // import { BPCFactContactPerson, BPCFactBank, BPCKRA, BPCAIACT, BPCFactView, BPCFact, BPCFactBankXLSX, BPCFactXLSX } from 'app/models/fact';
 
@@ -65,7 +65,27 @@ export class FactService {
       })
       .pipe(catchError(this.errorHandler));
   }
-
+  UpdateFactSupport(Fact: FactViewSupport): Observable<any> {
+    console.log("DATA SERVICE", Fact);
+    return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/UpdateFactSupport`,
+      Fact,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+  UpdateFactSupportDataToMasterData(partnerId: string): Observable<any> {
+    console.log("this.UpdateFactSupportDataToMasterData Api", this.UpdateFactSupportDataToMasterData);
+    return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/UpdateFactSupportDataToMasterData?partnerId=${partnerId}`,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
   DeleteFact(Fact: BPCFact): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/DeleteFact`,
       Fact,
@@ -91,7 +111,17 @@ export class FactService {
     return this._httpClient.get<BPCKRA[]>(`${this.baseAddress}factapi/Fact/GetKRAsByPartnerID?PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));
   }
-
+  CreateKRAs(KRAs: BPCKRA[], PartnerID: string): Observable<BPCKRA[] | string> {
+    console.log("KRA Data sent to api:", KRAs);
+    return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/CreateKRAs?PartnerId=${PartnerID}`,
+    KRAs,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
   GetAIACTsByPartnerID(PartnerID: string): Observable<BPCAIACT[] | string> {
     return this._httpClient.get<BPCAIACT[]>(`${this.baseAddress}factapi/Fact/GetAIACTsByPartnerID?PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));
@@ -149,6 +179,68 @@ export class FactService {
   CreateFactBanks(Banks: BPCFactBankXLSX[]): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/CreateBanks`,
       Banks,
+      // {
+      //   headers: new HttpHeaders({
+      //     'Content-Type': 'application/json'
+      //   })
+      // }
+    ).pipe(catchError(this.errorHandler));
+  }
+  CreateFactBanksSupport(Banks: BPCFactBank): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/CreateSupportBank`,
+      Banks,
+      // {
+      //   headers: new HttpHeaders({
+      //     'Content-Type': 'application/json'
+      //   })
+      // }
+    ).pipe(catchError(this.errorHandler));
+  }
+  CreateFactCertificateSupport(Cer: BPCCertificate): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/CreateCertificateSupport`,
+      Cer,
+      // {
+      //   headers: new HttpHeaders({
+      //     'Content-Type': 'application/json'
+      //   })
+      // }
+    ).pipe(catchError(this.errorHandler));
+  }
+  DeleteFactBank(Banks: BPCFactBank): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/DeleteBank`,
+      Banks,
+      // {
+      //   headers: new HttpHeaders({
+      //     'Content-Type': 'application/json'
+      //   })
+      // }
+    ).pipe(catchError(this.errorHandler));
+  }
+  UploadOfAttachment(selectedFile: BPCCertificateAttachment): Observable<any> {
+    let formData = new FormData();
+    if (selectedFile) {
+      formData.append(selectedFile.file.name, selectedFile.file, selectedFile.file.name);
+    }
+    formData.append('PartnerID', selectedFile.patnerID);
+    formData.append('CertificateName', selectedFile.CertificateName);
+    formData.append('CertificateType', selectedFile.CertificateType);
+    return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/UploadOfCertificateAttachment`,
+      formData,
+    ).pipe(catchError(this.errorHandler));
+
+  }
+  DownloadOfAttachment(PartnerID: string, certificateName: string, certificateType: string): Observable<Blob | string> {
+    return this._httpClient.get(`${this.baseAddress}factapi/Fact/DownloadOfAttachment?PartnerID=${PartnerID}&certificateName=${certificateName}
+    &certificateType=${certificateType}`,
+      {
+        responseType: 'blob',
+        headers: new HttpHeaders().append('Content-Type', 'application/json')
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+  DeleteFactCertificate(cer: BPCCertificate): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/DeleteCertificate`,
+      cer,
       // {
       //   headers: new HttpHeaders({
       //     'Content-Type': 'application/json'

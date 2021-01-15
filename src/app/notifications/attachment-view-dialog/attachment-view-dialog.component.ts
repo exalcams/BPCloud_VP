@@ -18,6 +18,7 @@ import { SupportDeskService } from 'app/services/support-desk.service';
 import { MasterService } from 'app/services/master.service';
 import { Router } from '@angular/router';
 
+
 @Component({
   selector: 'attachment-view-dialog',
   templateUrl: './attachment-view-dialog.component.html',
@@ -306,8 +307,11 @@ export class AttachmentViewDialogComponent implements OnInit {
   }
 
   uploadAttachmentClicked(): void {
-    if (this.invoiceAttachment) {
+        if (this.invoiceAttachment) {
       this.UploadOfAttachment();
+    }
+    else{
+      this.notificationSnackBarComponent.openSnackBar(`Add file to save`, SnackBarStatus.danger);
     }
   }
 

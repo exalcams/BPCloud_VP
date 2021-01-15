@@ -16,6 +16,11 @@ export class BPCPIHeader extends CommonClass {
     GrossAmount: number | null;
     NetAmount: number | null;
     UOM: string;
+    Material:string;
+    Description:string;
+    Qty:number;
+    Reason:string;
+    DeliveryNote:string;
 }
 
 export class BPCPIItem extends CommonClass {

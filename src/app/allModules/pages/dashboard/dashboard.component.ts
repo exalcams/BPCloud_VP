@@ -1,120 +1,735 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthenticationDetails, AppUsage } from 'app/models/master';
-import { Guid } from 'guid-typescript';
-import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
-import { SelectionModel } from '@angular/cdk/collections';
-import { BPCFact } from 'app/models/fact';
-import { BPCOFAIACT } from 'app/models/OrderFulFilment';
-import { FactService } from 'app/services/fact.service';
-import { MasterService } from 'app/services/master.service';
-import { DashboardService } from 'app/services/dashboard.service';
-import { Router } from '@angular/router';
-import { MatSnackBar, MatDialog, MatDialogConfig } from '@angular/material';
-import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
-import { TourComponent } from '../tour/tour.component';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { AuthenticationDetails, AppUsage } from "app/models/master";
+import { NotificationSnackBarComponent } from "app/notifications/notification-snack-bar/notification-snack-bar.component";
+import { MatSnackBar, MatDialog, MatDialogConfig } from "@angular/material";
+import { SelectionModel } from "@angular/cdk/collections";
+import { FactService } from "app/services/fact.service";
+import { Router } from "@angular/router";
+import { NotificationDialogComponent } from "app/notifications/notification-dialog/notification-dialog.component";
+import { SnackBarStatus } from "app/notifications/notification-snack-bar/notification-snackbar-status-enum";
+import { Guid } from "guid-typescript";
+import { BPCFact } from "app/models/fact";
+import { DashboardService } from "app/services/dashboard.service";
+import { BPCOFAIACT } from "app/models/OrderFulFilment";
+import { MasterService } from "app/services/master.service";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
+import { TourComponent } from "../tour/tour.component";
+import { Chart, ChartType } from "chart.js";
+import { POService } from 'app/services/po.service';
+import { Validators } from '@angular/forms';
+import { BPCCEOMessage, BPCSCOCMessage } from 'app/models/Message.model';
 import { FuseConfigService } from '@fuse/services/config.service';
-import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
-
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import {
+    ApexAxisChartSeries,
+    ApexChart,
+    ChartComponent,
+    ApexDataLabels,
+    ApexPlotOptions,
+    ApexYAxis,
+    ApexLegend,
+    ApexStroke,
+    ApexXAxis,
+    ApexFill,
+    ApexTooltip,
+    ApexGrid,
+    ApexTitleSubtitle,
+    ApexMarkers,
+    ApexResponsive,
+    ApexNonAxisChartSeries,
+    ApexOptions
+} from "ng-apexcharts";
+export interface ChartOptions {
+    series: ApexAxisChartSeries;
+    guageseries: ApexNonAxisChartSeries;
+    chart: ApexChart;
+    dataLabels: ApexDataLabels;
+    labels: string[];
+    plotOptions: ApexPlotOptions;
+    yaxis: ApexYAxis;
+    xaxis: ApexXAxis;
+    fill: ApexFill;
+    title: ApexTitleSubtitle;
+    grid: ApexGrid;
+    tooltip: ApexTooltip;
+    stroke: ApexStroke;
+    legend: ApexLegend;
+    markers: ApexMarkers;
+    colors: string[];
+    responsive: ApexResponsive[];
+    options: ApexOptions;
+}
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
+    public theme = 'blue';
+    menuItems: string[] = [];
+    authenticationDetails: AuthenticationDetails;
+    IsProgressBarVisibile: boolean;
+    selectedCEOMessage: BPCCEOMessage;
+    selectedSCOCMessage: BPCSCOCMessage;
+    i: any;
+    a: any = 1;
+    b: any = "#1f76d3";
+    Index = [];
+    array1: any = [];
+    BarChartRender: boolean;
+    BarChartcolor: any[] = ['#60c0ea', '#485865', '#9bc4ca', '#71a8ef'];
+    TempBarChartcolor: any[] = ['#60c0ea', '#485865', '#9bc4ca', '#71a8ef'];
+    BarchartColumnWidth: any = "60%";
+    TempBarchartColumnWidth: any = "60%";
     fuseConfig: any;
     BGClassName: any;
-    menuItems: string[];
-    authenticationDetails: AuthenticationDetails;
-    currentUserID: Guid;
-    currentUserName: string;
-    currentUserRole = "";
-    currentDisplayName: string;
-    notificationSnackBarComponent: NotificationSnackBarComponent;
-    isProgressBarVisibile: boolean;
-    searchText = "";
-    selectedPartnerID: string;
-    selection = new SelectionModel<any>(true, []);
-    todayDate: any;
-    selectedFact: BPCFact;
-    selectedAIACT: BPCOFAIACT;
-    facts: BPCFact[] = [];
-    actions: BPCOFAIACT[] = [];
-    notifications: BPCOFAIACT[] = [];
-    notificationCount: number;
-    aIACTs: BPCOFAIACT[] = [];
-    aIACTsView: BPCOFAIACT[] = [];
-    SetIntervalID: any;
-    fileToUpload1: File;
-    fileToUpload2: File;
-    fileToUploadList: File[] = [];
-    AttachmentData1: SafeUrl;
-    AttachmentData2: SafeUrl;
-    constructor(
-        private _fuseConfigService: FuseConfigService,
+    BarChartData: any[] = [{
+        name: "Deliveries",
+        data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
+    },
+    {
+        name: "Bounces",
+        data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
+    },
+    {
+        name: "Supressions",
+        data: [35, 41, 36, 26, 45, 48, 52, 53, 41]
+    },
+    {
+        name: "Posts via Route",
+        data: [15, 45, 34, 36, 45, 68, 72, 13, 90]
+    }];
+    TempBarChartData: any[] = [{
+        name: "Deliveries",
+        data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
+    },
+    {
+        name: "Bounces",
+        data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
+    },
+    {
+        name: "Supressions",
+        data: [35, 41, 36, 26, 45, 48, 52, 53, 41]
+    },
+    {
+        name: "Posts via Route",
+        data: [15, 45, 34, 36, 45, 68, 72, 13, 90]
+    }];
+    @ViewChild("chart") chart: ChartComponent;
+    public BarchartOptions: Partial<ChartOptions>;
 
-        private _factService: FactService,
-        private _masterService: MasterService,
-        private _dashboardService: DashboardService,
-        private _router: Router,
-        public snackBar: MatSnackBar,
+    public LineChartChartOptions1: Partial<ChartOptions>;
+    public LineChartChartOptions2: Partial<ChartOptions>;
+
+    public GuagechartOptionsOS: Partial<ChartOptions>;
+    public GuagechartOptionsQI: Partial<ChartOptions>;
+    public GuagechartOptionsOTIF: Partial<ChartOptions>;
+    public GuagechartOptionsPV: Partial<ChartOptions>;
+    public GuagechartOptionsRES: Partial<ChartOptions>;
+
+    constructor(
         private dialog: MatDialog,
-        private sanitizer: DomSanitizer,
-    ) {
-        this.selectedFact = new BPCFact();
-        this.selectedAIACT = new BPCOFAIACT();
+        private _POService: POService,
+        private _router: Router,
+        private _fuseConfigService: FuseConfigService) {
+        this.IsProgressBarVisibile = false;
         this.authenticationDetails = new AuthenticationDetails();
-        this.notificationSnackBarComponent = new NotificationSnackBarComponent(
-            this.snackBar
-        );
-        this.isProgressBarVisibile = false;
-        this.todayDate = new Date().getDate();
+        this.selectedCEOMessage = new BPCCEOMessage();
+        this.selectedSCOCMessage = new BPCSCOCMessage();
     }
 
     ngOnInit(): void {
         this.SetUserPreference();
+        const retrievedObject = localStorage.getItem('authorizationData');
+        // if (retrievedObject) {
+        //     this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+        //     this.menuItems = this.authenticationDetails.MenuItemNames.split(',');
+        //     // if (this.menuItems.indexOf('User') < 0) {
+        //     //   this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
+        //     //   this._router.navigate(['/auth/login']);
+        //     // }
+        //     if (!this.authenticationDetails.TourStatus) {
+        //         this.openTourScreenDialog();
+        //     }
+        // this.LoadBotChat();
+        // this.GetCEOMessage();
+        // this.GetSCOCMessage();
+        // this.LoadCharts();
+        this.LoadlineChart1();
+        this.LoadlineChart2();
+        this.LoadGaugaeChats();
+        this.LoadBarChart();
+        this.BarChartRender = true;
+        // } else {
+        //     this._router.navigate(['/auth/login']);
+        // }
+    }
+    LoadGaugaeChats(): void {
+        this.LoadGuagechartOptionsOSChart();
+        this.LoadGuagechartOptionsQIChart();
+        this.LoadGuagechartOptionsOTIFChart();
+        this.LoadGuagechartOptionsPVChart();
+        this.LoadGuagechartOptionsRESChart();
+    }
+    LoadGuagechartOptionsQIChart(): void {
+        this.GuagechartOptionsQI = {
+            guageseries: [90],
+            chart: {
+                height: 197,
+                type: "radialBar",
+                offsetX: -13
+            },
+            plotOptions: {
+                radialBar: {
+                    startAngle: -155,
+                    endAngle: 155,
+                    hollow: {
+                        size: "60%"
+                    },
+                    dataLabels: {
+                        value: {
+                            offsetY: -14,
+                            fontSize: "15px",
+                            fontWeight: 'bold',
+                            color: undefined,
+                            formatter: function (val) {
+                                return val + "%";
+                            }
+                        }
+                    }
+                }
+            },
+            fill: {
 
-        const retrievedObject = localStorage.getItem("authorizationData");
-        this.authenticationDetails = JSON.parse(
-            retrievedObject
-        ) as AuthenticationDetails;
-        if (retrievedObject) {
-            this.authenticationDetails = JSON.parse(
-                retrievedObject
-            ) as AuthenticationDetails;
-            this.currentUserID = this.authenticationDetails.UserID;
-            this.currentUserName = this.authenticationDetails.UserName;
-            this.currentUserRole = this.authenticationDetails.UserRole;
-            this.currentDisplayName = this.authenticationDetails.DisplayName;
-            this.menuItems = this.authenticationDetails.MenuItemNames.split(
-                ","
-            );
-            if (this.menuItems.indexOf("Dashboard") < 0) {
-                this.notificationSnackBarComponent.openSnackBar(
-                    "You do not have permission to visit this page",
-                    SnackBarStatus.danger
-                );
-                this._router.navigate(["/auth/login"]);
+                type: "gradient",
+                gradient: {
+                    shade: "dark",
+                    shadeIntensity: 0.15,
+                    inverseColors: false,
+                    opacityFrom: 1,
+                    opacityTo: 1,
+                    stops: [0, 50, 65, 91]
+                }
+            },
+            stroke: {
+                dashArray: 2
+            },
+            labels: [""],
+            responsive: [
+                {
+                    breakpoint: 1100,
+                    options: {
+                        chart: {
+                            height: 185,
+                            offsetX: -8
+                        }
+                    }
+                }
+            ]
+        };
+    }
+    LoadGuagechartOptionsOTIFChart(): void {
+        this.GuagechartOptionsOTIF = {
+            guageseries: [90],
+            chart: {
+                height: 197,
+                type: "radialBar",
+                offsetX: -13
+            },
+            plotOptions: {
+                radialBar: {
+                    startAngle: -155,
+                    endAngle: 155,
+                    hollow: {
+                        size: "60%"
+                    },
+                    dataLabels: {
+                        name: {
+                            fontSize: "10px",
+                            color: "#f04747",
+                            offsetY: 10
+                        },
+                        value: {
+                            offsetY: -20,
+                            fontSize: "15px",
+                            fontWeight: 'bold',
+                            color: undefined,
+                            formatter: function (val) {
+                                return val + "%";
+                            }
+                        }
+                    }
+                }
+            },
+            fill: {
+
+                type: "gradient",
+                gradient: {
+                    shade: "dark",
+                    shadeIntensity: 0.15,
+                    inverseColors: false,
+                    opacityFrom: 1,
+                    opacityTo: 1,
+                    stops: [0, 50, 65, 91]
+                }
+            },
+            stroke: {
+                dashArray: 2
+            },
+            labels: ["Efficiency"],
+            responsive: [
+                {
+                    breakpoint: 1100,
+                    options: {
+                        chart: {
+                            height: 185
+                        }
+                    }
+                }
+            ]
+        };
+    }
+    LoadGuagechartOptionsPVChart(): void {
+        this.GuagechartOptionsPV = {
+            guageseries: [90],
+            chart: {
+                height: 197,
+                type: "radialBar",
+                offsetX: -13
+            },
+            plotOptions: {
+                radialBar: {
+                    startAngle: -155,
+                    endAngle: 155,
+                    hollow: {
+                        size: "60%"
+                    },
+                    dataLabels: {
+                        value: {
+                            offsetY: -14,
+                            fontSize: "15px",
+                            fontWeight: 'bold',
+                            color: undefined,
+                            formatter: function (val) {
+                                return val + "%";
+                            }
+                        }
+                    }
+                }
+            },
+            fill: {
+
+                type: "gradient",
+                gradient: {
+                    shade: "dark",
+                    shadeIntensity: 0.15,
+                    inverseColors: false,
+                    opacityFrom: 1,
+                    opacityTo: 1,
+                    stops: [0, 50, 65, 91]
+                }
+            },
+            stroke: {
+                dashArray: 2
+            },
+            labels: [""],
+            responsive: [
+                {
+                    breakpoint: 1100,
+                    options: {
+                        chart: {
+                            height: 185
+                        }
+                    }
+                }
+            ]
+        };
+    }
+    LoadGuagechartOptionsRESChart(): void {
+        this.GuagechartOptionsRES = {
+            guageseries: [90],
+            chart: {
+                height: 197,
+                type: "radialBar",
+                offsetX: -13
+            },
+            plotOptions: {
+                radialBar: {
+                    startAngle: -155,
+                    endAngle: 155,
+                    hollow: {
+                        size: "60%"
+                    },
+                    dataLabels: {
+                        value: {
+                            offsetY: -14,
+                            fontSize: "15px",
+                            fontWeight: 'bold',
+                            color: undefined,
+                            formatter: function (val) {
+                                return val + "%";
+                            }
+                        }
+                    }
+                }
+            },
+            fill: {
+
+                type: "gradient",
+                gradient: {
+                    shade: "dark",
+                    shadeIntensity: 0.15,
+                    inverseColors: false,
+                    opacityFrom: 1,
+                    opacityTo: 1,
+                    stops: [0, 50, 65, 91]
+                }
+            },
+            stroke: {
+                dashArray: 2
+            },
+            labels: [""],
+            responsive: [
+                {
+                    breakpoint: 1100,
+                    options: {
+                        chart: {
+                            height: 185
+                        }
+                    }
+                }
+            ]
+        };
+    }
+    LoadGuagechartOptionsOSChart(): void {
+
+        this.GuagechartOptionsOS = {
+            guageseries: [90],
+            chart: {
+                height: 197,
+                type: "radialBar",
+                offsetX: -13
+            },
+            plotOptions: {
+                radialBar: {
+                    startAngle: -155,
+                    endAngle: 155,
+                    hollow: {
+                        size: "60%"
+                    },
+                    dataLabels: {
+                        value: {
+                            offsetY: -14,
+                            fontSize: "15px",
+                            fontWeight: 'bold',
+                            color: undefined,
+                            formatter: function (val) {
+                                return val + "%";
+                            }
+                        }
+                    }
+                }
+            },
+            fill: {
+
+                type: "gradient",
+                gradient: {
+                    shade: "dark",
+                    shadeIntensity: 0.15,
+                    inverseColors: false,
+                    opacityFrom: 1,
+                    opacityTo: 1,
+                    stops: [0, 50, 65, 91]
+                }
+            },
+            labels: [""],
+            responsive: [
+                {
+                    breakpoint: 1100,
+                    options: {
+                        chart: {
+                            height: 185
+                        }
+                    }
+                }
+            ]
+
+        };
+    }
+    LoadBarChart(): void {
+        this.BarchartOptions = {
+            series: this.BarChartData,
+            chart: {
+                type: "bar",
+                height: 400,
+                redrawOnParentResize: true,
+                width: '100%'
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: this.BarchartColumnWidth,
+                    endingShape: "flat"
+                }
+            },
+            responsive: [
+                {
+                    breakpoint: 1100,
+                    options: {
+                        plotOptions: {
+                            bar: {
+                                horizontal: false,
+                                columnWidth: 30
+                            },
+                            stroke: {
+                                show: true,
+                                width: 10,
+                                colors: ["transparent"]
+                            },
+                        },
+                        legend: {
+                            position: "bottom"
+                        }
+                    }
+                }
+            ],
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                show: true,
+                width: 7,
+                colors: ["transparent"]
+            },
+            xaxis: {
+                categories: [
+                    "Feb",
+                    "Mar",
+                    "Apr",
+                    "May",
+                    "Jun",
+                    "Jul",
+                    "Aug",
+                    "Sep",
+                    "Oct"
+                ]
+            },
+            grid: {
+                show: true,
+                borderColor: '#F2F0F0',
+                strokeDashArray: 0,
+                position: 'back',
+                xaxis: {
+                    lines: {
+                        show: true,
+
+                    }
+                },
+                yaxis: {
+                    lines: {
+                        show: true
+                    }
+                }
+            },
+
+            fill: {
+                opacity: 1,
+                colors: this.BarChartcolor
+            },
+            legend: {
+                show: false,
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return "$ " + val + " thousands";
+                    }
+                }
             }
-            this.CreateAppUsage();
-            this.GetDashboardCard1();
-            this.GetDashboardCard2();
-            this.GetFactByPartnerIDAndType();
-            this.GetActionsByPartnerID();
-            this.GetNotificationsByPartnerID();
-            // this.SetIntervalID = setInterval(() => {
-            //   this.GetNotificationsByPartnerID();
-            // }, 10000);
-            // this.openTourScreenDialog();
-
-            //   if (!this.authenticationDetails.TourStatus) {
-            //       this.openTourScreenDialog();
-            //   }
-        } else {
-            this._router.navigate(["/auth/login"]);
+        };
+    }
+    FilterBarchart(value): void {
+        let colorIndex = 0;
+        if (value === "All") {
+            this.BarChartData = [];
+            this.BarChartcolor = [];
+            for (let i = 0; i < this.TempBarChartData.length; i++) {
+                this.BarChartData.push(this.TempBarChartData[i]);
+                this.BarChartcolor.push(this.TempBarChartcolor[i]);
+            }
+            console.log("After", this.BarChartData);
+            this.BarchartColumnWidth = this.TempBarchartColumnWidth;
+            this.LoadBarChart();
+        }
+        else {
+            if (this.Index.length >= 1) {
+                this.BarChartData = [];
+                this.BarChartcolor = [];
+                for (let i = 0; i < this.TempBarChartData.length; i++) {
+                    this.BarChartData.push(this.TempBarChartData[i]);
+                    this.BarChartcolor.push(this.TempBarChartcolor[i]);
+                }
+            }
+            this.Index = [];
+            for (let i = 0; i < this.BarChartData.length; i++) {
+                if (this.BarChartData[i].name !== value) {
+                    this.Index.push(i);
+                }
+                else {
+                    colorIndex = i;
+                }
+            }
+            const len = this.Index.length - 1;
+            for (let i = len; i >= 0; i--) {
+                console.log(this.Index[i], "Index", i);
+                this.BarChartData.splice(this.Index[i], 1);
+                this.BarChartcolor.splice(this.Index[i], 1);
+                // this.BarChartcolor.splice(this.Index[i], i);
+            }
+            this.BarchartColumnWidth = "30%";
+            this.LoadBarChart();
         }
     }
+    LoadlineChart1(): void {
+        this.LineChartChartOptions1 = {
+            series: [
+                {
+                    name: "High - 2013",
+                    data: [28, 29, 33, 36, 32, 32, 33]
+                },
+                {
+                    name: "Low - 2013",
+                    data: [25, 26, 30, 33, 29, 29, 30]
+                },
+                {
+                    name: "Low - 2015",
+                    data: [22, 23, 27, 28, 26, 26, 27]
+                }
+            ],
+            chart: {
+                height: 200,
+                type: "line",
 
+                toolbar: {
+                    show: false
+                }
+            },
+            colors: ["#566f85", "#60c0ea", "#9bc4ca"],
+
+            stroke: {
+                curve: "smooth"
+            },
+            legend: {
+                show: false,
+            },
+            markers: {
+                size: 5,
+                colors: ['#FFFDFD', '#FFFDFD', '#FFFDFD'],
+                strokeColors: ['#566f85', '#60c0ea', '#9bc4ca']
+            },
+            xaxis: {
+                categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+
+            },
+            yaxis: {
+                title: {
+                    text: "Temperature"
+                },
+                min: 5,
+                max: 40
+            },
+
+        };
+    }
+    LoadlineChart2(): void {
+        this.LineChartChartOptions2 = {
+            series: [
+                {
+                    name: "High - 2013",
+                    data: [28, 29, 33, 36, 32]
+                }
+            ],
+            chart: {
+                height: 200,
+                type: "line",
+
+                toolbar: {
+                    show: false
+                }
+            },
+            colors: ["#566f85"],
+
+            stroke: {
+                curve: "straight"
+            },
+            markers: {
+                size: 5,
+                discrete: [{
+                    seriesIndex: 0,
+                    dataPointIndex: 0,
+                    fillColor: '#fb863a',
+                    strokeColor: '#fb863a',
+                    size: 5
+                }, {
+                    seriesIndex: 0,
+                    dataPointIndex: 1,
+                    fillColor: '#40a8e2',
+                    strokeColor: '#40a8e2',
+                    size: 5
+                },
+                {
+                    seriesIndex: 0,
+                    dataPointIndex: 2,
+                    fillColor: '#485865',
+                    strokeColor: '#485865',
+                    size: 5
+                }, {
+                    seriesIndex: 0,
+                    dataPointIndex: 3,
+                    fillColor: '#40ed9a',
+                    strokeColor: '#40ed9a',
+                    size: 5
+                },
+                {
+                    seriesIndex: 0,
+                    dataPointIndex: 4,
+                    fillColor: '#ffd15c',
+                    strokeColor: '#ffd15c',
+                    size: 5
+                }]
+            },
+            xaxis: {
+                categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+            },
+            yaxis: {
+                title: {
+                    text: "Temperature"
+                },
+                min: 5,
+                max: 40
+            },
+        };
+    }
+    mouseEnter(): void {
+        if (this.BarChartRender) {
+            this.LoadBarChart();
+            this.LoadGaugaeChats();
+            this.BarChartRender = false;
+        }
+    }
+    // mouseOut():void{
+    //     if (!this.BarChartRender) {
+    //         this.LoadBarChart();
+    //         this.LoadGaugaeChats();
+    //         this.BarChartRender = !false;
+    //     }
+    // }
+    getBarChartWidth(): any {
+        const barchart = document.getElementById("barchart");
+        const width = barchart.offsetWidth;
+        console.log("width", width, width.toString());
+        return width.toString();
+    }
     openTourScreenDialog(): void {
         const dialogConfig = new MatDialogConfig();
 
@@ -123,389 +738,238 @@ export class DashboardComponent implements OnInit {
         this.dialog.open(TourComponent, dialogConfig);
     }
 
-    CreateAppUsage(): void {
-        const appUsage: AppUsage = new AppUsage();
-        appUsage.UserID = this.currentUserID;
-        appUsage.AppName = "Dashboard";
-        appUsage.UsageCount = 1;
-        appUsage.CreatedBy = this.currentUserName;
-        appUsage.ModifiedBy = this.currentUserName;
-        this._masterService.CreateAppUsage(appUsage).subscribe(
-            () => { },
-            (err) => {
-                console.error(err);
-            }
-        );
-    }
-    GetDashboardCard1(): void {
-        this._factService.GetDashboardCard1().subscribe(
-            res => {
-                if (res) {
-                    const blob = res.image;
-                    console.log(res.filename);
-                    if (blob && res.filename && res.type) {
-                        this.fileToUpload1 = new File([blob], res.filename, { type: res.type, lastModified: Date.now() });
-                    }
-                    const fileURL = URL.createObjectURL(blob);
-                    this.AttachmentData1 = fileURL;
-                    // this.AttachmentData1 = this.sanitizer.bypassSecurityTrustResourceUrl(fileURL);
-                }
-                this.isProgressBarVisibile = false;
-            },
-            error => {
-                console.error(error);
-                this.isProgressBarVisibile = false;
-            }
-        );
-    }
-    GetDashboardCard2(): void {
-        this._factService.GetDashboardCard2().subscribe(
-            res => {
-                if (res) {
-                    const blob = res.image;
-                    console.log(res.filename);
-                    if (blob && res.filename && res.type) {
-                        this.fileToUpload2 = new File([blob], res.filename, { type: res.type, lastModified: Date.now() });
-                    }
-                    const fileURL = URL.createObjectURL(blob);
-                    this.AttachmentData2 = fileURL;
-                    // this.AttachmentData2 = this.sanitizer.bypassSecurityTrustResourceUrl(fileURL);
-                }
-                this.isProgressBarVisibile = false;
-            },
-            error => {
-                console.error(error);
-                this.isProgressBarVisibile = false;
-            }
-        );
-    }
-    getCard1URL(): any {
-        if (this.AttachmentData1) {
-            return this.sanitizer.bypassSecurityTrustStyle(`url(${this.AttachmentData1})`);
-        }
-        return 'url("assets/images/StaySafe.png")';
-    }
-    getCard2URL(): any {
-        if (this.AttachmentData2) {
-            return this.sanitizer.bypassSecurityTrustStyle(`url(${this.AttachmentData2})`);
-        }
-        return 'url("assets/images/SafetyFirst.png")';
-    }
-    GetFactByPartnerIDAndType(): void {
-        this._factService
-            .GetFactByPartnerIDAndType(this.currentUserName, "V")
-            .subscribe(
-                (data) => {
-                    const fact = data as BPCFact;
-                    this.loadSelectedFact(fact);
-                },
-                (err) => {
-                    console.error(err);
-                }
-            );
-    }
-
-    GetAIACTsByPartnerID(PartnerID: any): void {
-        this.isProgressBarVisibile = true;
-        this._dashboardService.GetAIACTsByPartnerID(PartnerID).subscribe(
+    GetCEOMessage(): void {
+        this.IsProgressBarVisibile = true;
+        this._POService.GetCEOMessage().subscribe(
             (data) => {
-                this.isProgressBarVisibile = false;
-                this.aIACTs = data as BPCOFAIACT[];
-                this.aIACTs.forEach((x) => {
-                    if (x.Type === "Action") {
-                        this.actions.push(x);
-                    } else {
-                        this.notifications.push(x);
-                    }
-                });
-            },
-            (err) => {
-                console.error(err);
-                this.isProgressBarVisibile = false;
-                // this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-            }
-        );
-    }
-
-    GetActionsByPartnerID(): void {
-        this.isProgressBarVisibile = true;
-        this._dashboardService
-            .GetActionsByPartnerID(this.authenticationDetails.UserName)
-            .subscribe(
-                (data) => {
-                    if (data) {
-                        this.actions = data as BPCOFAIACT[];
-                    }
-                    this.isProgressBarVisibile = false;
-                },
-                (err) => {
-                    console.error(err);
-                    this.isProgressBarVisibile = false;
+                this.IsProgressBarVisibile = false;
+                this.selectedCEOMessage = data as BPCCEOMessage;
+                if (!this.selectedCEOMessage) {
+                    this.selectedCEOMessage = new BPCCEOMessage();
                 }
-            );
+            },
+            (err) => {
+                console.error(err);
+                this.IsProgressBarVisibile = false;
+            }
+        );
     }
 
-    GetNotificationsByPartnerID(): void {
-        this._dashboardService
-            .GetNotificationsByPartnerID(this.authenticationDetails.UserName)
-            .subscribe(
-                (data) => {
-                    if (data) {
-                        this.notifications = data as BPCOFAIACT[];
-                        this.notificationCount = this.notifications.length;
-                    }
-                },
-                (err) => {
-                    console.error(err);
+    GetSCOCMessage(): void {
+        this.IsProgressBarVisibile = true;
+        this._POService.GetSCOCMessage().subscribe(
+            (data) => {
+                this.IsProgressBarVisibile = false;
+                this.selectedSCOCMessage = data as BPCSCOCMessage;
+                if (!this.selectedSCOCMessage) {
+                    this.selectedSCOCMessage = new BPCSCOCMessage();
                 }
-            );
-    }
-
-    UpdateNotification(selectedNotification: BPCOFAIACT): void {
-        if (selectedNotification) {
-            selectedNotification.HasSeen = true;
-            this._dashboardService
-                .UpdateNotification(selectedNotification)
-                .subscribe(
-                    () => {
-                        this.GetNotificationsByPartnerID();
-                    },
-                    (err) => {
-                        console.error(err);
-                    }
-                );
-        }
-    }
-
-    AcceptAIACT(): void {
-        this.selectedAIACT.ModifiedBy = this.authenticationDetails.UserID.toString();
-        this.selectedAIACT.Status = "Accepted";
-        this.selectedAIACT.ActionText = "View";
-        this.isProgressBarVisibile = true;
-        this._dashboardService.AcceptAIACT(this.selectedAIACT).subscribe(
-            () => {
-                this.notificationSnackBarComponent.openSnackBar(
-                    "PO Accepted successfully",
-                    SnackBarStatus.success
-                );
-                this.isProgressBarVisibile = false;
             },
             (err) => {
                 console.error(err);
-                this.notificationSnackBarComponent.openSnackBar(
-                    err instanceof Object ? "Something went wrong" : err,
-                    SnackBarStatus.danger
-                );
-                this.isProgressBarVisibile = false;
+                this.IsProgressBarVisibile = false;
             }
         );
     }
 
-    RejectAIACT(): void {
-        this.selectedAIACT.ModifiedBy = this.authenticationDetails.UserID.toString();
-        this.selectedAIACT.Status = "Rejected";
-        this.selectedAIACT.ActionText = "View";
-        this.isProgressBarVisibile = true;
-        this._dashboardService.RejectAIACT(this.selectedAIACT).subscribe(
-            () => {
-                this.notificationSnackBarComponent.openSnackBar(
-                    "PO Rejected successfully",
-                    SnackBarStatus.success
-                );
-                this.isProgressBarVisibile = false;
-            },
-            (err) => {
-                console.error(err);
-                this.notificationSnackBarComponent.openSnackBar(
-                    err instanceof Object ? "Something went wrong" : err,
-                    SnackBarStatus.danger
-                );
-                this.isProgressBarVisibile = false;
-            }
-        );
-    }
+    // LoadCharts(): void {
+    //     for (this.i = 0; this.i <= 100; this.i++) {
+    //         this.array1[this.i] = this.a;
+    //     }
 
-    AcceptAIACTs(): void {
-        this.aIACTs.forEach((x) => {
-            if (x.Status === "Open") {
-                x.ModifiedBy = this.authenticationDetails.UserID.toString();
-                x.Status = "Accepted";
-                x.ActionText = "View";
-                this.aIACTsView.push(x);
-            }
-        });
-        this.isProgressBarVisibile = true;
-        this._dashboardService.AcceptAIACTs(this.aIACTsView).subscribe(
-            () => {
-                this.notificationSnackBarComponent.openSnackBar(
-                    "POs Accepted successfully",
-                    SnackBarStatus.success
-                );
-                this.isProgressBarVisibile = false;
-            },
-            (err) => {
-                console.error(err);
-                this.notificationSnackBarComponent.openSnackBar(
-                    err instanceof Object ? "Something went wrong" : err,
-                    SnackBarStatus.danger
-                );
-                this.isProgressBarVisibile = false;
-            }
-        );
-    }
+    //     for (this.i = 0; this.i <= 75; this.i++) {
+    //         this.color_75[this.i] = this.b;
+    //     }
+    //     for (this.i = 0; this.i <= 90; this.i++) {
+    //         this.color_90[this.i] = this.b;
+    //     }
+    //     new Chart("doughnut1", {
+    //         type: "doughnut",
+    //         options: {
+    //             responsive: true,
+    //             maintainAspectRatio: false,
+    //             cutoutPercentage: 70,
 
-    loadSelectedFact(selectedBPCFact: BPCFact): void {
-        if (selectedBPCFact) {
-            this.selectedFact = selectedBPCFact;
-            this.selectedPartnerID = selectedBPCFact.PatnerID;
-        }
-    }
+    //             title: {
+    //                 display: false,
+    //                 text: "Doughnut chart",
+    //             },
 
-    openConfirmationDialog(Actiontype: string, Catagory: string): void {
-        const dialogConfig: MatDialogConfig = {
-            data: {
-                Actiontype: Actiontype,
-                Catagory: Catagory,
-            },
-            panelClass: "confirmation-dialog",
-        };
-        const dialogRef = this.dialog.open(
-            NotificationDialogComponent,
-            dialogConfig
-        );
-        dialogRef.afterClosed().subscribe((result) => {
-            if (result) {
-                if (Actiontype === "Accept") {
-                    this.AcceptAIACT();
-                } else if (Actiontype === "Reject") {
-                    this.RejectAIACT();
-                } else if (Actiontype === "Accept All") {
-                    this.AcceptAIACTs();
-                }
-            }
-        });
-    }
+    //             legend: {
+    //                 display: false,
+    //                 position: "top",
+    //             },
+    //             plugins: {
+    //                 labels: false,
+    //             },
+    //             animation: {
+    //                 animateScale: true,
+    //                 animateRotate: true,
+    //             },
+    //         },
+    //         data: {
+    //             datasets: [
+    //                 {
+    //                     data: this.array1,
+    //                     backgroundColor: this.color_75,
 
-    actionTextButtonClicked(aIACTByPartnerID: BPCOFAIACT): void {
-        if (aIACTByPartnerID) {
-            if (aIACTByPartnerID.ActionText.toLowerCase() === "accept") {
-                this.selectedAIACT = aIACTByPartnerID;
-                const Actiontype = "Accept";
-                const Catagory = "PO";
-                this.openConfirmationDialog(Actiontype, Catagory);
-            } else if (aIACTByPartnerID.ActionText.toLowerCase() === "reject") {
-                this.selectedAIACT = aIACTByPartnerID;
-                const Actiontype = "Reject";
-                const Catagory = "PO";
-                this.openConfirmationDialog(Actiontype, Catagory);
-            } else if (aIACTByPartnerID.ActionText.toLowerCase() === "view") {
-                this._router.navigate(["/pages/polookup"], {
-                    queryParams: { id: aIACTByPartnerID.DocNumber },
-                });
-            } else if (aIACTByPartnerID.ActionText.toLowerCase() === "ack") {
-                this._router.navigate(["/pages/polookup"], {
-                    queryParams: { id: aIACTByPartnerID.DocNumber },
-                });
-            } else if (aIACTByPartnerID.ActionText.toLowerCase() === "asn") {
-                this._router.navigate(["/asn"], {
-                    queryParams: { id: aIACTByPartnerID.DocNumber },
-                });
-            } else if (aIACTByPartnerID.ActionText.toLowerCase() === "grn") {
-                this._router.navigate(["/pages/polookup"], {
-                    queryParams: { id: aIACTByPartnerID.DocNumber },
-                });
-            } else if (aIACTByPartnerID.ActionText.toLowerCase() === "gate") {
-                this._router.navigate(["/pages/polookup"], {
-                    queryParams: { id: aIACTByPartnerID.DocNumber },
-                });
-            }
-        } else {
-        }
-    }
+    //                     label: "dataset1",
+    //                 },
+    //             ],
+    //         },
+    //     });
+    //     new Chart("doughnut2", {
+    //         type: "doughnut",
+    //         options: {
+    //             responsive: true,
+    //             maintainAspectRatio: false,
+    //             cutoutPercentage: 70,
 
-    noButtonClicked(): void { }
+    //             title: {
+    //                 display: false,
+    //                 text: "Doughnut chart",
+    //             },
 
-    setActionToOpenConfirmation(actiontype: string): void {
-        if (this.selectedFact.PatnerID) {
-            const Actiontype = actiontype;
-            const Catagory = "Vendor";
-            this.openConfirmationDialog(Actiontype, Catagory);
-        }
-    }
+    //             legend: {
+    //                 display: false,
+    //                 position: "top",
+    //             },
+    //             plugins: {
+    //                 labels: false,
+    //             },
+    //             animation: {
+    //                 animateScale: true,
+    //                 animateRotate: true,
+    //             },
+    //         },
+    //         data: {
+    //             datasets: [
+    //                 {
+    //                     data: this.array1,
+    //                     backgroundColor: this.color_90,
+    //                     label: "dataset1",
+    //                 },
+    //             ],
+    //         },
+    //     });
+    //     new Chart("doughnut3", {
+    //         type: "doughnut",
+    //         options: {
+    //             responsive: true,
+    //             maintainAspectRatio: false,
+    //             cutoutPercentage: 70,
 
-    numberOnly(event): boolean {
-        const charCode = event.which ? event.which : event.keyCode;
-        if (
-            charCode === 8 ||
-            charCode === 9 ||
-            charCode === 13 ||
-            charCode === 46 ||
-            charCode === 37 ||
-            charCode === 39 ||
-            charCode === 123 ||
-            charCode === 190
-        ) {
-            return true;
-        } else if (charCode < 48 || charCode > 57) {
-            return false;
-        }
-        return true;
-    }
+    //             title: {
+    //                 display: false,
+    //                 text: "Doughnut chart",
+    //             },
 
-    onFactSheetButtonClicked(): void {
-        this._router.navigate(["/fact"]);
-    }
+    //             legend: {
+    //                 display: false,
+    //                 position: "top",
+    //             },
+    //             plugins: {
+    //                 labels: false,
+    //             },
+    //             animation: {
+    //                 animateScale: true,
+    //                 animateRotate: true,
+    //             },
+    //         },
+    //         data: {
+    //             datasets: [
+    //                 {
+    //                     data: this.array1,
+    //                     backgroundColor: this.color_90,
+    //                     label: "dataset1",
+    //                 },
+    //             ],
+    //         },
+    //     });
+    //     new Chart("doughnut4", {
+    //         type: "doughnut",
+    //         options: {
+    //             responsive: true,
+    //             maintainAspectRatio: false,
+    //             cutoutPercentage: 70,
 
-    onAcceptAllButtonClicked(): void {
-        if (this.aIACTs && this.aIACTs.length > 0) {
-            const Actiontype = "Accept All";
-            const Catagory = "PO";
-            this.openConfirmationDialog(Actiontype, Catagory);
-        }
-    }
+    //             title: {
+    //                 display: false,
+    //                 text: "Doughnut chart",
+    //             },
 
-    onClearAllButtonClicked(): void { }
+    //             legend: {
+    //                 display: false,
+    //                 position: "top",
+    //             },
+    //             plugins: {
+    //                 labels: false,
+    //             },
+    //             animation: {
+    //                 animateScale: true,
+    //                 animateRotate: true,
+    //             },
+    //         },
+    //         data: {
+    //             datasets: [
+    //                 {
+    //                     data: this.array1,
+    //                     backgroundColor: this.color_75,
 
-    getTodayDate(): any {
-        const today = new Date();
-        return today.getDate().toString();
-    }
+    //                     label: "dataset1",
+    //                 },
+    //             ],
+    //         },
+    //     });
 
-    typeSelected(event): void {
-        if (event.value) {
-            this.selectedFact.Type = event.value;
-        }
-    }
+    //     new Chart("doughnut5", {
+    //         type: "doughnut",
+    //         options: {
+    //             responsive: true,
+    //             maintainAspectRatio: false,
+    //             cutoutPercentage: 60,
 
-    getActionData(element: BPCOFAIACT, actionDataFor: string): string {
-        switch (actionDataFor) {
-            case "actionFirstData":
-                return element.Status === "DueForACK"
-                    ? "acknowledge"
-                    : element.Status === "DueForASN"
-                        ? "ASN"
-                        : element.Status === "DueForGate"
-                            ? "GRN"
-                            : element.Status === "DueForGRN"
-                                ? "Gate"
-                                : element.Status === "Accepted"
-                                    ? "Accept"
-                                    : element.Status === "Rejected"
-                                        ? "Reject"
-                                        : "";
-            case "actionSecondData":
-                return element.Status === "DueForACK"
-                    ? "waiting for Acknowledgement "
-                    : element.Status === "DueForASN"
-                        ? "waiting for ASN"
-                        : element.Status === "DueForGate"
-                            ? "waiting for Gate"
-                            : element.Status === "DueForGRN"
-                                ? "waiting for GRN"
-                                : "";
-            default:
-                return "";
-        }
+    //             title: {
+    //                 display: false,
+    //                 text: "Doughnut chart",
+    //             },
+
+    //             legend: {
+    //                 display: false,
+    //                 position: "top",
+    //             },
+    //             animation: {
+    //                 animateScale: true,
+    //                 animateRotate: true,
+    //             },
+    //         },
+    //         data: {
+    //             datasets: [
+    //                 {
+    //                     data: [69, 31],
+    //                     backgroundColor: ["#1f76d3", "#ebebed"],
+    //                     label: "dataset1",
+    //                 },
+    //             ],
+    //         },
+    //     });
+    // }
+
+    LoadBotChat(): void {
+        // (function (d, m) {
+        //     var kommunicateSettings = { "appId": "10fd8a0b153726753ff1ad51af63846ce", "popupWidget": true, "automaticChatOpenOnNavigation": true };
+        //     var s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
+        //     s.src = "https://api.kommunicate.io/v2/kommunicate.app";
+        //     var h = document.getElementsByTagName("head")[0]; h.appendChild(s);
+        //     (window as any).kommunicate = m; m._globals = kommunicateSettings;
+        // })(document, (window as any).kommunicate || {});
+        // (function (d, m) {
+        //   var kommunicateSettings = { "appId": "10fd8a0b153726753ff1ad51af63846ce", "popupWidget": true, "automaticChatOpenOnNavigation": true };
+        //   var s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
+        //   s.src = "https://api.kommunicate.io/v2/kommunicate.app";
+        //   var h = document.getElementsByTagName("head")[0]; h.appendChild(s);
+        //   (window as any).kommunicate = m; m._globals = kommunicateSettings;
+        // })(document, (window as any).kommunicate || {});
     }
     SetUserPreference(): void {
         this._fuseConfigService.config

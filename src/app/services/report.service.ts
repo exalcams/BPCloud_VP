@@ -156,12 +156,24 @@ export class ReportService {
       .pipe(catchError(this.errorHandler));
   }
 
-  // GRR
-  GetAllReportGRRByPartnerID(PartnerId: any): Observable<any> {
-    return this._httpClient.get<BPCReportGRR[]>(`${this.baseAddress}reportapi/Report/GetAllReportGRRByPartnerID?PartnerID=${PartnerId}`)
-      .pipe(catchError(this.errorHandler));
-  }
+  
+  // GetAllReportGRRByPartnerID(PartnerId: any): Observable<any> {
+    // return this._httpClient.get<BPCReportGRR[]>(`${this.baseAddress}reportapi/Report/GetAllReportGRRByPartnerID?PartnerID=${PartnerId}`)
+      // .pipe(catchError(this.errorHandler));
+  // }
 
+
+  // GRR 
+  GetAllGRR():Observable<any>{
+    return this._httpClient.get<BPCReportGRR[]>(`${this.baseAddress}poapi/PO/GetAllGRR`)
+    .pipe(catchError(this.errorHandler));
+  }
+  FilterGRRListByPartnerID(PartnerID: string, GRGIDoc:string,Material:string,StartDate:Date,EndDate:Date ): Observable<BPCReportGRR[] | string> {
+    return this._httpClient.get<BPCReportGRR[]>
+        (`${this.baseAddress}poapi/PO/FilterGRRListByPartnerID??PartnerID=${PartnerID}&GRGIDoc=${GRGIDoc}&Material=${Material}&StartDate=${StartDate}&EndDate=${EndDate}`)
+        .pipe(catchError(this.errorHandler));
+}
+//
   GetFilteredReportGRRByPartnerID(PartnerId: string, material: string): Observable<any> {
     return this._httpClient.get<BPCReportOV[]>(`${this.baseAddress}reportapi/Report/GetFilteredReportGRRByPartnerID?PartnerID=${PartnerId}&Material=${material}`)
       .pipe(catchError(this.errorHandler));
