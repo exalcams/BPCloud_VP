@@ -40,13 +40,13 @@ export class AccountStatementComponent implements OnInit {
   SelectValue: string;
   isExpanded: boolean;
   tableDisplayedColumns: string[] = [
-    'DocumentID',
+    'DocumentNumber',
     'DocumentDate',
-    'PostingDate',
-    'RefID',
-    'DebitAmount',
-    'CreditAmount',
-    'ItemText'
+    'InvoiceNumber',
+    'InvoiceDate',
+    'InvoiceAmount',
+    'PaidAmount',
+    'Reference'
   ];
   fuseConfig: any;
   BGClassName: any;
@@ -232,13 +232,13 @@ export class AccountStatementComponent implements OnInit {
     const itemsShowedd = [];
     itemsShowed.forEach(x => {
       const item = {
-        'Document': x.DocumentID,
+        'Document Number': x.DocumentNumber,
         'Document Date': x.DocumentDate ? this._datePipe.transform(x.DocumentDate, 'dd-MM-yyyy') : '',
-        'Posting Date': x.PostingDate ? this._datePipe.transform(x.PostingDate, 'dd-MM-yyyy') : '',
-        'Reference': x.RefID,
-        'Debit Amount': x.DebitAmount,
-        'Credit Amount': x.CreditAmount,
-        'Line Item text': x.ItemText,
+        'Invoice Number': x.InvoiceNumber,
+        'Invoice Date': x.InvoiceDate ? this._datePipe.transform(x.InvoiceDate, 'dd-MM-yyyy') : '',
+        'Invoice Amount': x.InvoiceAmount,
+        'Paid Amount': x.PaidAmount,
+        'Reference': x.Reference,
       };
       itemsShowedd.push(item);
     });

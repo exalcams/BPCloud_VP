@@ -1,19 +1,21 @@
 import { CommonClass } from './common';
 
 export class BPCPayAccountStatement extends CommonClass {
-    ID: number;
     Client: string;
     Company: string;
     Type: string;
-    PatnerID: string;
-    FYear: string;
-    DocumentID: string;
+    PartnerID: string;
+    FiscalYear: string;
+    DocumentNumber: string;
     DocumentDate: Date | string | null;
-    RefID: string;
-    PostingDate: Date | string | null;
-    DebitAmount: number;
-    CreditAmount: number;
-    ItemText: string;
+    InvoiceNumber: string;
+    InvoiceDate: Date | string | null;
+    InvoiceAmount: number;
+    PaidAmount: number;
+    Reference: string;
+    Status: string;
+    AcceptedOn: Date | string | null;
+    AcceptedBy: string;
 }
 
 export class BPCPayTDS extends CommonClass {

@@ -145,8 +145,8 @@
             </div>
           </div>
         </div>
-        <div class="tab-divider"></div>
-        <div fxFlex="8" (click)="tabThreeClicked()">
+        <div class="tab-divider" *ngIf="asnCount"></div>
+        <div fxFlex="8" (click)="tabThreeClicked()" *ngIf="asnCount">
           <div class="container" fxLayout fxLayoutAlign="center" fxLayoutGap="10px">
             <div class="asn-round1">
               <div style="margin-top: 3px; margin-left: 30px;">
@@ -160,8 +160,8 @@
             </div>
           </div>
         </div>
-        <div class="tab-divider"></div>
-        <div fxFlex="8" (click)="tabFourClicked()">
+        <div class="tab-divider" *ngIf="grnCount"></div>
+        <div fxFlex="8" (click)="tabFourClicked()" *ngIf="grnCount">
           <div class="container" fxLayout fxLayoutAlign="center" fxLayoutGap="10px">
             <div class="grn-round1">
               <div style="margin-top: 3px; margin-left: 30px;">
@@ -220,7 +220,7 @@
             </div>
           </div>
         </div>
-        <div class="tab-divider"></div>
+        <!-- <div class="tab-divider"></div>
         <div fxFlex="8" (click)="tabSevenClicked()">
           <div class="container" fxLayout fxLayoutAlign="center center" fxLayoutGap="10px">
             <div class="flip-round1">
@@ -234,7 +234,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
     <!-- Tabs -->

@@ -48,7 +48,7 @@ export class ASNListComponent implements OnInit {
   AllASNHeaders: BPCASNHeader[] = [];
   SelectedASNView: BPCASNView;
   AllASNList: ASNListView[] = [];
-  ASNPackFormGroup: FormGroup;
+  //ASNPackFormGroup: FormGroup;
   SelectedASNNumber: string;
   ASNPackFormArray: FormArray = this._formBuilder.array([]);
   displayColumn: string[] = ['ASNNumber', 'ASNDate', 'DocNumber', 'AWBNumber', 'VessleNumber', 'DepartureDate',
@@ -67,14 +67,14 @@ export class ASNListComponent implements OnInit {
   i: number;
   PO: BPCOFHeader;
   POItems: BPCOFItem[] = [];
-  ASNFormGroup: FormGroup;
-  ASNItemFormGroup: FormGroup;
+  // ASNFormGroup: FormGroup;
+  // ASNItemFormGroup: FormGroup;
   SubconViews: BPCOFSubconView[] = [];
   maxDate: Date;
-  InvoiceDetailsFormGroup: FormGroup;
+  // InvoiceDetailsFormGroup: FormGroup;
   ASNPackDataSource = new BehaviorSubject<AbstractControl[]>([]);
   ASNItemFormArray: FormArray = this._formBuilder.array([]);
-  ASNItemDataSource = new BehaviorSubject<AbstractControl[]>([])
+  ASNItemDataSource = new BehaviorSubject<AbstractControl[]>([]);
   AllDocumentCenters: DocumentCenter[] = [];
   ArrivalDateInterval: number;
   invAttach: BPCInvoiceAttachment;
@@ -117,7 +117,7 @@ export class ASNListComponent implements OnInit {
     this.DefaultFromDate.setDate(this.DefaultFromDate.getDate() - 30);
     this.DefaultToDate = new Date();
     this.SelectedASNHeader = new BPCASNHeader();
-
+    this.SelectedASNView = new BPCASNView();
   }
 
   ngOnInit(): void {

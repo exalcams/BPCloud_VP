@@ -28,6 +28,9 @@ import { Guid } from "guid-typescript";
 import { SoccDialogComponent } from '../socc-dialog/socc-dialog.component';
 import { CookieService } from 'angular2-cookie/services/cookies.service';
 import { LoginService } from 'app/services/login.service';
+import { ForgetUserIdLinkDialogComponent } from "../forget-user-id-link-dialog/forget-user-id-link-dialog.component";
+import { FactService } from "app/services/fact.service";
+import { BPCFact } from "app/models/fact";
 
 @Component({
     selector: "login",
@@ -88,6 +91,7 @@ export class LoginComponent implements OnInit {
         private _formBuilder: FormBuilder,
         private _router: Router,
         private _authService: AuthService,
+        private _factService: FactService,
         private _menuUpdationService: MenuUpdataionService,
         private _compiler: Compiler,
         // private _loginService: LoginService,
@@ -132,7 +136,7 @@ export class LoginComponent implements OnInit {
             userName: ["", Validators.required],
             password: ["", Validators.required],
         });
-       
+
         if (undefined !== this._cookieService.get("key")) {
             this.Username = this._cookieService.get("key");
         }
@@ -355,6 +359,48 @@ export class LoginComponent implements OnInit {
                         );
                         // this.notificationSnackBarComponent.openSnackBar(`Reset password link sent successfully to ${emailModel.EmailAddress}`, SnackBarStatus.success);
                         // this.ResetControl();
+                        this.isProgressBarVisibile = false;
+                        // this._router.navigate(['auth/login']);
+                    },
+                    (err) => {
+                        console.error(err);
+                        this.isProgressBarVisibile = false;
+                        this.notificationSnackBarComponent.openSnackBar(
+                            err instanceof Object
+                                ? "Something went wrong"
+                                : err,
+                            SnackBarStatus.danger
+                        );
+                        console.error(err);
+                    }
+                );
+            }
+        });
+    }
+
+    openForgetUserIDLinkDialog(): void {
+        const dialogConfig: MatDialogConfig = {
+            data: null,
+            panelClass: "forget-userid-link-dialog",
+        };
+        const dialogRef = this.dialog.open(
+            ForgetUserIdLinkDialogComponent,
+            dialogConfig
+        );
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                const taxNumber = result as string;
+                this.isProgressBarVisibile = true;
+                this._factService.FindFactByTaxNumber(taxNumber).subscribe(
+                    (data) => {
+                        const res = data as BPCFact;
+                        if (res && res.PatnerID) {
+                            this.notificationSnackBarComponent.openSnackBar(
+                                `User ID ${res.PatnerID} found`,
+                                SnackBarStatus.success
+                            );
+                            this.loginForm.get('userName').patchValue(res.PatnerID);
+                        }
                         this.isProgressBarVisibile = false;
                         // this._router.navigate(['auth/login']);
                     },
