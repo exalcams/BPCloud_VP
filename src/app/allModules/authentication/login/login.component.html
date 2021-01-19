@@ -65,13 +65,18 @@
             Forgot Password?
           </span>
         </div>
+        <div class="remember-forgot-password" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between center">
+          <div class="forgot-password" style="cursor: pointer;" (click)="openForgetUserIDLinkDialog()">
+            Forgot User ID?
+          </div>
+        </div>
 
         <button mat-raised-button color="accent" class="submit-button" aria-label="LOGIN" (click)="loginClicked()">
           <span class="loginButton">LOG IN </span>
         </button>
         <!-- <a class="link" href="/#/register/vendor">Click here to regster</a> -->
       </form>
-      <div>
+      <!-- <div>
         <a (click)="openDialog()" style="cursor: pointer;">
           <p>Supplier Code of Conduct</p>
         </a>
@@ -80,7 +85,7 @@
         <a style="cursor: pointer;">
           <p>Benefits being associated with us</p>
         </a>
-      </div>
+      </div> -->
     </div>
     <mat-progress-spinner *ngIf="isProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
     </mat-progress-spinner>

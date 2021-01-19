@@ -271,11 +271,11 @@
                 <mat-option value="POLookup" (click)="goToPOFactSheetClicked(element.DocNumber)">PO Factsheet
                 </mat-option>
                 <mat-option value="ASN" (click)="goToASNClicked(element.DocNumber)">ASN</mat-option>
-                <mat-option value="POFlip" (click)="goToPOFlipClicked(element.DocNumber)">PO Flip</mat-option>
+                <!-- <mat-option value="POFlip" (click)="goToPOFlipClicked(element.DocNumber)">PO Flip</mat-option> -->
                 <mat-option value="Subcon" *ngIf="(element.DocType | lowercase)==='subcon'"
                   (click)="goToSubconClicked(element.DocNumber)">Subcon</mat-option>
-                <mat-option value="SupportDesk" (click)="goToSupportDeskClicked(element.DocNumber)">Support
-                  Desk
+                <mat-option value="SupportDesk" (click)="goToSupportDeskClicked(element.DocNumber)">Get
+                  Solved
                 </mat-option>
                 <mat-option value="PrintPO" (click)="goToPrintPOClicked(element.DocNumber)">Print PO
                 </mat-option>

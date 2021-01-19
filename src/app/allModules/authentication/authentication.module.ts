@@ -14,6 +14,7 @@ import { ChangePasswordDialogComponent } from './change-password-dialog/change-p
 import { CookieService } from 'angular2-cookie/services/cookies.service';
 import { SoccDialogComponent } from './socc-dialog/socc-dialog.component'; 
 import { CookieOptions } from 'angular2-cookie/services/base-cookie-options';
+import { ForgetUserIdLinkDialogComponent } from './forget-user-id-link-dialog/forget-user-id-link-dialog.component';
 
 // import { PdfViewerModule } from 'ng2-pdf-viewer';
 // import { PdfViewerModule } from 'ng2-pdf-viewer';
@@ -43,7 +44,9 @@ const authRoutes: Routes = [
         ForgotPasswordComponent,
         ChangePasswordDialogComponent,
         ForgetPasswordLinkDialogComponent,
-        SoccDialogComponent
+        SoccDialogComponent,
+        // ForgetUserIDLinkDialogComponent,
+        ForgetUserIdLinkDialogComponent
     ],
     imports: [
         // PdfViewerModule,
@@ -65,6 +68,7 @@ const authRoutes: Routes = [
     entryComponents: [
         ChangePasswordDialogComponent,
         ForgetPasswordLinkDialogComponent,
+        ForgetUserIdLinkDialogComponent,
         SoccDialogComponent
     ],
     

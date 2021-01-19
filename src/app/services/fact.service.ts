@@ -44,6 +44,11 @@ export class FactService {
       .pipe(catchError(this.errorHandler));
   }
 
+  FindFactByTaxNumber(TaxNumber: string): Observable<BPCFact | string> {
+    return this._httpClient.get<BPCFact>(`${this.baseAddress}factapi/Fact/FindFactByTaxNumber?TaxNumber=${TaxNumber}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
   CreateFact(Fact: BPCFactView): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/CreateFact`,
       Fact,
