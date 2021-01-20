@@ -35,6 +35,7 @@ import { NgxDonutChartModule } from 'ngx-doughnut-chart';
 import { ChartsModule } from 'ng2-charts';
 import { AttachmentViewDialogComponent } from './notifications/attachment-view-dialog/attachment-view-dialog.component';
 import { AttachmentDialogComponent } from './notifications/attachment-dialog/attachment-dialog.component';
+// import { InvoiceCreationComponent } from './allModules/invoice-creation/invoice-creation.component';
 // import { ChatModule } from './allModules/chat/chat.module';
 
 const appRoutes: Routes = [
@@ -53,6 +54,10 @@ const appRoutes: Routes = [
     {
         path: 'poflip',
         loadChildren: './allModules/po-flip/po-flip.module#POFlipModule'
+    },
+    {
+        path: 'invoicecreat',
+        loadChildren: './allModules/invoice-creation/invoice-creation.module#InvoiceCreationModule'
     },
     {
         path: 'gate',
@@ -132,7 +137,7 @@ const appRoutes: Routes = [
         AttachmentDialogComponent,
         AttachmentViewDialogComponent,
         InformationDialogComponent,
-        ASNReleaseDialogComponent
+        ASNReleaseDialogComponent,
     ],
     imports: [
         BrowserModule,

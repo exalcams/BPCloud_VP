@@ -49,9 +49,7 @@ export class BPCASNHeader extends CommonClass {
     Field9: string;
     Field10: string;
 }
-
 export class BPCASNItem extends CommonClass {
-    ID: number;
     Client: string;
     Company: string;
     Type: string;
@@ -67,15 +65,39 @@ export class BPCASNItem extends CommonClass {
     OpenQty: number;
     ASNQty: number;
     UOM: string;
-    Batch: string;
-    ManufactureDate: Date | string | null;
-    ExpiryDate: Date | string | null;
-    ManfCountry: string;
     PlantCode: string;
     UnitPrice: number | null;
     Value: number | null;
     TaxAmount: number | null;
     TaxCode: string;
+}
+
+export class BPCASNItemBatch extends CommonClass {
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
+    ASNNumber: string;
+    Item: string;
+    Batch: string;
+    Qty: number;
+    ManufactureDate: Date | string | null;
+    ExpiryDate: Date | string | null;
+    ManufactureCountry: string;
+}
+
+export class BPCASNItemSES extends CommonClass {
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
+    ASNNumber: string;
+    Item: string;
+    ServiceNo: string;
+    ServiceItem: string;
+    OrderedQty: number;
+    OpenQty: number;
+    ServiceQty: number;
 }
 export class BPCASNPack extends CommonClass {
     ID: number;
@@ -180,6 +202,7 @@ export class BPCASNView extends CommonClass {
     InvoiceAmountUOM: string;
     InvDocReferenceNo: string;
     IsSubmitted: boolean;
+    Status: string;
     ArrivalDateInterval: number;
     BillOfLading: string;
     TransporterName: string;
@@ -197,11 +220,13 @@ export class BPCASNView extends CommonClass {
     Field9: string;
     Field10: string;
     ASNItems: BPCASNItem[];
+    ASNItemBatches: BPCASNItemBatch[];
     ASNPacks: BPCASNPack[];
     DocumentCenters: DocumentCenter[];
     constructor() {
         super();
         this.ASNItems = [];
+        this.ASNItemBatches = [];
         this.ASNPacks = [];
         this.DocumentCenters = [];
     }
@@ -266,10 +291,10 @@ export class ASNListView {
     PatnerID: string;
     ASNNumber: string;
     ASNDate: Date | string | null;
-    ArrivalDate:Date | string | null;
-    DepartureDate:Date | string | null;
+    ArrivalDate: Date | string | null;
+    DepartureDate: Date | string | null;
     TurnaroundTime: string;
-    TransportMode:string ;
+    TransportMode: string;
     DocNumber: string;
     VessleNumber: string;
     AWBNumber: string;

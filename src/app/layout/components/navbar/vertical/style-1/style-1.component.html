@@ -50,5 +50,25 @@
     </div>
     <div fxLayout fxLayoutAlign="center" class="mb-8">
         <span (click)="logOutClick()" class="powerClass px-16 log-text">Logout</span>
+        <!-- <button mat-button [matMenuTriggerFor]="userMenu" class="user-button">
+            <div fxLayout="row" fxLayoutAlign="center center">
+                <span class="hg mr-12" fxHide fxShow.gt-sm>{{CurrentLoggedInUser | removeLeadingZero}}</span>
+                <mat-icon class="hg s-16" fxHide.xs>keyboard_arrow_down</mat-icon>
+            </div>
+        </button>
+
+        <mat-menu #userMenu="matMenu" [overlapTrigger]="false">
+
+            <button *ngIf="authenticationDetails?.userType !== 'Himalaya email id user'" mat-menu-item
+                (click)="ChangePasswordClick()">
+                <mat-icon>account_circle</mat-icon>
+                <span>Change Password</span>
+            </button>
+            <button mat-menu-item class="" (click)="logOutClick()">
+                <mat-icon>exit_to_app</mat-icon>
+                <span>Logout</span>
+            </button>
+
+        </mat-menu> -->
     </div>
 </div>

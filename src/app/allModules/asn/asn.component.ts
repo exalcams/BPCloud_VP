@@ -12,7 +12,7 @@ import { ASNService } from 'app/services/asn.service';
 import { ShareParameterService } from 'app/services/share-parameters.service';
 import {
     BPCASNHeader, BPCASNItem, DocumentCenter, BPCASNView, BPCInvoiceAttachment,
-    BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster, BPCASNPack, ASNItemXLSX, BPCASNFieldMaster
+    BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster, BPCASNPack, ASNItemXLSX, BPCASNFieldMaster, BPCASNItemBatch
 } from 'app/models/ASN';
 import { BehaviorSubject } from 'rxjs';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
@@ -139,6 +139,8 @@ export class ASNComponent implements OnInit {
     IsAtleastOneASNQty: boolean;
 
     AllASNFieldMaster: BPCASNFieldMaster[] = [];
+
+    IsShipmentNotRelevant: boolean = false;
 
     constructor(
         private _fuseConfigService: FuseConfigService,
@@ -392,7 +394,15 @@ export class ASNComponent implements OnInit {
             }
         }
     }
-
+    ShipmentNotRelevantChecked(completed: boolean): void {
+        this.IsShipmentNotRelevant = completed;
+        if (this.IsShipmentNotRelevant) {
+            const aSNItemFormArray = this.ASNItemFormGroup.get('ASNItems') as FormArray;
+            aSNItemFormArray.controls.forEach((x, i) => {
+                x.get('ASNQty').patchValue(0);
+            });
+        }
+    }
     GetASNBasedOnCondition(): void {
         if (this.SelectedDocNumber) {
             this.GetASNByDocAndPartnerID();
@@ -721,6 +731,11 @@ export class ASNComponent implements OnInit {
 
     LoadSelectedASN(seletedASN: BPCASNHeader): void {
         this.SelectedASNHeader = seletedASN;
+        if (this.SelectedASNHeader.Status === 'ShipmentNotRelevant') {
+            this.IsShipmentNotRelevant = true;
+        } else {
+            this.IsShipmentNotRelevant = false;
+        }
         this.SelectedASNView.ASNNumber = this.SelectedASNHeader.ASNNumber;
         this.SelectedASNNumber = this.SelectedASNHeader.ASNNumber;
         this.GetPOByDocAndPartnerID(this.SelectedASNHeader.DocNumber);
@@ -790,17 +805,24 @@ export class ASNComponent implements OnInit {
         this._ASNService.GetASNItemsByASN(this.SelectedASNHeader.ASNNumber).subscribe(
             (data) => {
                 this.SelectedASNView.ASNItems = data as BPCASNItem[];
-                this.ClearFormArray(this.ASNItemFormArray);
-                if (this.SelectedASNView.ASNItems && this.SelectedASNView.ASNItems.length) {
-                    this.SelectedASNView.ASNItems.forEach(x => {
-                        this.InsertASNItemsFormGroup(x);
+                this._ASNService.GetASNItemBatchesByASN(this.SelectedASNHeader.ASNNumber).subscribe(
+                    (data1) => {
+                        this.SelectedASNView.ASNItemBatches = data1 as BPCASNItemBatch[];
+                        this.ClearFormArray(this.ASNItemFormArray);
+                        if (this.SelectedASNView.ASNItems && this.SelectedASNView.ASNItems.length) {
+                            this.SelectedASNView.ASNItems.forEach((x, i) => {
+                                this.InsertASNItemsFormGroup(x, this.SelectedASNView.ASNItemBatches[i]);
+                            });
+                        }
+                        if (this.SelectedASNHeader.IsSubmitted) {
+                            this.DisableASNItemFormGroup();
+                        } else {
+                            this.EnableASNItemFormGroup();
+                        }
+                    },
+                    (err) => {
+                        console.error(err);
                     });
-                }
-                if (this.SelectedASNHeader.IsSubmitted) {
-                    this.DisableASNItemFormGroup();
-                } else {
-                    this.EnableASNItemFormGroup();
-                }
             },
             (err) => {
                 console.error(err);
@@ -940,7 +962,7 @@ export class ASNComponent implements OnInit {
         // return row;
     }
 
-    InsertASNItemsFormGroup(asnItem: BPCASNItem): void {
+    InsertASNItemsFormGroup(asnItem: BPCASNItem, asnItemBatch: BPCASNItemBatch): void {
         const row = this._formBuilder.group({
             Item: [asnItem.Item],
             Material: [asnItem.Material],
@@ -952,9 +974,9 @@ export class ASNComponent implements OnInit {
             OpenQty: [asnItem.OpenQty],
             ASNQty: [asnItem.ASNQty, [Validators.pattern('^([0-9]{0,10})([.][0-9]{1,3})?$')]],
             UOM: [asnItem.UOM],
-            Batch: [asnItem.Batch],
-            ManufactureDate: [asnItem.ManufactureDate],
-            ExpiryDate: [asnItem.ExpiryDate],
+            Batch: [asnItemBatch ? asnItemBatch.Batch : ''],
+            ManufactureDate: [asnItemBatch ? asnItemBatch.ManufactureDate : ''],
+            ExpiryDate: [asnItemBatch ? asnItemBatch.ExpiryDate : ''],
             PlantCode: [asnItem.PlantCode],
             UnitPrice: [asnItem.UnitPrice],
             Value: [asnItem.Value],
@@ -1072,11 +1094,14 @@ export class ASNComponent implements OnInit {
 
     GetASNItemValues(): void {
         this.SelectedASNView.ASNItems = [];
+        this.SelectedASNView.ASNItemBatches = [];
         this.IsAtleastOneASNQty = false;
         const aSNItemFormArray = this.ASNItemFormGroup.get('ASNItems') as FormArray;
         aSNItemFormArray.controls.forEach((x, i) => {
             const item: BPCASNItem = new BPCASNItem();
+            const itemBatch: BPCASNItemBatch = new BPCASNItemBatch();
             item.Item = x.get('Item').value;
+            itemBatch.Item = item.Item;
             item.Material = x.get('Material').value;
             item.MaterialText = x.get('MaterialText').value;
             item.DeliveryDate = x.get('DeliveryDate').value;
@@ -1086,7 +1111,8 @@ export class ASNComponent implements OnInit {
             item.TransitQty = +x.get('PipelineQty').value;
             item.OpenQty = +x.get('OpenQty').value;
             item.ASNQty = +x.get('ASNQty').value;
-            item.Batch = x.get('Batch').value;
+            itemBatch.Batch = x.get('Batch').value;
+            itemBatch.Qty = + x.get('ASNQty').value;
             item.PlantCode = x.get('PlantCode').value;
             item.UnitPrice = x.get('UnitPrice').value;
             item.Value = x.get('Value').value;
@@ -1094,31 +1120,40 @@ export class ASNComponent implements OnInit {
             item.TaxCode = x.get('TaxCode').value;
             const manufDate = x.get('ManufactureDate').value;
             if (manufDate) {
-                item.ManufactureDate = this._datePipe.transform(manufDate, 'yyyy-MM-dd HH:mm:ss');
+                itemBatch.ManufactureDate = this._datePipe.transform(manufDate, 'yyyy-MM-dd HH:mm:ss');
             } else {
-                item.ManufactureDate = x.get('ManufactureDate').value;
+                itemBatch.ManufactureDate = x.get('ManufactureDate').value;
             }
             const expDate = x.get('ExpiryDate').value;
             if (expDate) {
-                item.ExpiryDate = this._datePipe.transform(expDate, 'yyyy-MM-dd HH:mm:ss');
+                itemBatch.ExpiryDate = this._datePipe.transform(expDate, 'yyyy-MM-dd HH:mm:ss');
             } else {
-                item.ExpiryDate = x.get('ExpiryDate').value;
+                itemBatch.ExpiryDate = x.get('ExpiryDate').value;
             }
             if (this.SelectedDocNumber && this.PO) {
                 item.Client = this.PO.Client;
                 item.Company = this.PO.Company;
                 item.Type = this.PO.Type;
                 item.PatnerID = this.PO.PatnerID;
+                itemBatch.Client = this.PO.Client;
+                itemBatch.Company = this.PO.Company;
+                itemBatch.Type = this.PO.Type;
+                itemBatch.PatnerID = this.PO.PatnerID;
             } else {
                 item.Client = this.SelectedASNHeader.Client;
                 item.Company = this.SelectedASNHeader.Company;
                 item.Type = this.SelectedASNHeader.Type;
                 item.PatnerID = this.SelectedASNHeader.PatnerID;
+                itemBatch.Client = this.SelectedASNHeader.Client;
+                itemBatch.Company = this.SelectedASNHeader.Company;
+                itemBatch.Type = this.SelectedASNHeader.Type;
+                itemBatch.PatnerID = this.SelectedASNHeader.PatnerID;
             }
             if (item.ASNQty > 0) {
                 this.IsAtleastOneASNQty = true;
             }
             this.SelectedASNView.ASNItems.push(item);
+            this.SelectedASNView.ASNItemBatches.push(itemBatch);
         });
     }
 
@@ -1215,86 +1250,134 @@ export class ASNComponent implements OnInit {
 
     SaveClicked(): void {
         this.InvoiceDetailsFormGroup.get('InvoiceAmount').disable();
-        if (this.ASNFormGroup.valid) {
-            if (!this.isWeightError) {
-                if (this.ASNItemFormGroup.valid) {
-                    if (this.ASNPackFormGroup.valid) {
-                        if (this.InvoiceDetailsFormGroup.valid) {
-                            this.GetASNValues();
-                            this.GetASNItemValues();
-                            this.GetASNPacksValues();
-                            if (this.CheckForNonZeroOpenQty()) {
-                                if (this.IsAtleastOneASNQty) {
-                                    this.CalculateInvoiceAmount();
-                                    if (!this.isPOBasicPriceError) {
-                                        this.GetInvoiceDetailValues();
-                                        this.GetDocumentCenterValues();
-                                        this.SelectedASNView.IsSubmitted = false;
-                                        this.SetActionToOpenConfirmation('Save');
-                                    }
-                                } else {
-                                    this.notificationSnackBarComponent.openSnackBar('Atleast one item should have non zero value to proceed', SnackBarStatus.danger);
-                                }
-                            } else {
-                                this.notificationSnackBarComponent.openSnackBar('There is no Open Qty', SnackBarStatus.danger);
-                            }
+        // if (this.ASNFormGroup.valid) {
+        //     if (!this.isWeightError) {
+        //         if (this.ASNItemFormGroup.valid) {
+        //             if (this.ASNPackFormGroup.valid) {
+        //                 if (this.InvoiceDetailsFormGroup.valid) {
+        //                     this.GetASNValues();
+        //                     this.GetASNItemValues();
+        //                     this.GetASNPacksValues();
+        //                     if (this.CheckForNonZeroOpenQty()) {
+        //                         if (this.IsAtleastOneASNQty) {
+        //                             this.CalculateInvoiceAmount();
+        //                             if (!this.isPOBasicPriceError) {
+        //                                 this.GetInvoiceDetailValues();
+        //                                 this.GetDocumentCenterValues();
+        //                                 this.SelectedASNView.IsSubmitted = false;
+        //                                 this.SetActionToOpenConfirmation('Save');
+        //                             }
+        //                         } else {
+        //                             this.notificationSnackBarComponent.openSnackBar('Atleast one item should have non zero value to proceed', SnackBarStatus.danger);
+        //                         }
+        //                     } else {
+        //                         this.notificationSnackBarComponent.openSnackBar('There is no Open Qty', SnackBarStatus.danger);
+        //                     }
 
-                        } else {
-                            this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
-                        }
-                    } else {
-                        this.ShowValidationErrors(this.ASNPackFormGroup);
+        //                 } else {
+        //                     this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
+        //                 }
+        //             } else {
+        //                 this.ShowValidationErrors(this.ASNPackFormGroup);
+        //             }
+
+        //         } else {
+        //             this.ShowValidationErrors(this.ASNItemFormGroup);
+        //         }
+        //     }
+
+        // } else {
+        //     this.ShowValidationErrors(this.ASNFormGroup);
+        // }
+        if (!this.isWeightError) {
+            this.GetASNValues();
+            this.GetASNItemValues();
+            this.GetASNPacksValues();
+            if (this.CheckForNonZeroOpenQty()) {
+                if (this.IsAtleastOneASNQty) {
+                    this.CalculateInvoiceAmount();
+                    if (!this.isPOBasicPriceError) {
+                        this.GetInvoiceDetailValues();
+                        this.GetDocumentCenterValues();
+                        this.SelectedASNView.IsSubmitted = false;
+                        this.SelectedASNView.Status = 'Saved';
+                        this.SetActionToOpenConfirmation('Save');
                     }
-
                 } else {
-                    this.ShowValidationErrors(this.ASNItemFormGroup);
+                    this.notificationSnackBarComponent.openSnackBar('Atleast one item should have non zero value to proceed', SnackBarStatus.danger);
                 }
+            } else {
+                this.notificationSnackBarComponent.openSnackBar('There is no Open Qty', SnackBarStatus.danger);
             }
 
         } else {
-            this.ShowValidationErrors(this.ASNFormGroup);
+            this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
         }
     }
     SubmitClicked(): void {
         this.EnableAllFormGroup();
-        this.InvoiceDetailsFormGroup.get('InvoiceAmount').disable()
-        if (this.ASNFormGroup.valid) {
+        this.InvoiceDetailsFormGroup.get('InvoiceAmount').disable();
+        if (this.IsShipmentNotRelevant) {
             if (!this.isWeightError) {
-                if (this.ASNItemFormGroup.valid) {
-                    if (this.ASNPackFormGroup.valid) {
-                        if (this.InvoiceDetailsFormGroup.valid) {
-                            this.GetASNValues();
-                            this.GetASNItemValues();
-                            this.GetASNPacksValues();
-                            if (this.CheckForNonZeroOpenQty()) {
-                                if (this.IsAtleastOneASNQty) {
-                                    this.CalculateInvoiceAmount();
-                                    if (!this.isPOBasicPriceError) {
-                                        this.GetInvoiceDetailValues();
-                                        this.GetDocumentCenterValues();
-                                        this.SelectedASNView.IsSubmitted = true;
-                                        this.OpenASNReleaseDialog();
+                this.GetASNValues();
+                this.GetASNItemValues();
+                this.GetASNPacksValues();
+                if (this.CheckForNonZeroOpenQty()) {
+                    this.CalculateInvoiceAmount();
+                    if (!this.isPOBasicPriceError) {
+                        this.GetInvoiceDetailValues();
+                        this.GetDocumentCenterValues();
+                        this.SelectedASNView.IsSubmitted = true;
+                        this.SelectedASNView.Status = 'ShipmentNotRelevant';
+                        this.SetActionToOpenConfirmation('Submit');
+                    }
+                } else {
+                    this.notificationSnackBarComponent.openSnackBar('There is no Open Qty', SnackBarStatus.danger);
+                }
+
+            } else {
+                this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
+            }
+        } else {
+            if (this.ASNFormGroup.valid) {
+                if (!this.isWeightError) {
+                    if (this.ASNItemFormGroup.valid) {
+                        if (this.ASNPackFormGroup.valid) {
+                            if (this.InvoiceDetailsFormGroup.valid) {
+                                this.GetASNValues();
+                                this.GetASNItemValues();
+                                this.GetASNPacksValues();
+                                if (this.CheckForNonZeroOpenQty()) {
+                                    if (this.IsAtleastOneASNQty) {
+                                        this.CalculateInvoiceAmount();
+                                        if (!this.isPOBasicPriceError) {
+                                            this.GetInvoiceDetailValues();
+                                            this.GetDocumentCenterValues();
+                                            this.SelectedASNView.Status = 'Submitted';
+                                            this.SelectedASNView.IsSubmitted = true;
+                                            this.OpenASNReleaseDialog();
+                                        }
+                                    } else {
+                                        this.notificationSnackBarComponent.openSnackBar('Atleast one item should have non zero value to proceed', SnackBarStatus.danger);
                                     }
                                 } else {
-                                    this.notificationSnackBarComponent.openSnackBar('Atleast one item should have non zero value to proceed', SnackBarStatus.danger);
+                                    this.notificationSnackBarComponent.openSnackBar('There is no Open Qty', SnackBarStatus.danger);
                                 }
                             } else {
-                                this.notificationSnackBarComponent.openSnackBar('There is no Open Qty', SnackBarStatus.danger);
+                                this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
                             }
                         } else {
-                            this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
+                            this.ShowValidationErrors(this.ASNPackFormGroup);
                         }
+
                     } else {
-                        this.ShowValidationErrors(this.ASNPackFormGroup);
+                        this.ShowValidationErrors(this.ASNItemFormGroup);
                     }
-
-                } else {
-                    this.ShowValidationErrors(this.ASNItemFormGroup);
                 }
-            }
 
-        } else {
-            this.ShowValidationErrors(this.ASNFormGroup);
+            } else {
+                this.ShowValidationErrors(this.ASNFormGroup);
+            }
         }
     }
     DeleteClicked(): void {
@@ -1385,7 +1468,7 @@ export class ASNComponent implements OnInit {
                     } else {
                         this.notificationSnackBarComponent.openSnackBar(`ASN ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
                         this.IsProgressBarVisibile = false;
-                        if (Actiontype === 'Submit') {
+                        if (Actiontype === 'Submit' && !this.IsShipmentNotRelevant) {
                             this.CreateASNPdf();
                         } else {
                             this.ResetControl();
@@ -1408,7 +1491,7 @@ export class ASNComponent implements OnInit {
                 } else {
                     this.notificationSnackBarComponent.openSnackBar(`ASN ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
                     this.IsProgressBarVisibile = false;
-                    if (Actiontype === 'Submit') {
+                    if (Actiontype === 'Submit' && !this.IsShipmentNotRelevant) {
                         this.CreateASNPdf();
                     } else {
                         this.ResetControl();
@@ -1425,7 +1508,7 @@ export class ASNComponent implements OnInit {
             (dat) => {
                 this.notificationSnackBarComponent.openSnackBar(`ASN ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
                 this.IsProgressBarVisibile = false;
-                if (Actiontype === 'Submit') {
+                if (Actiontype === 'Submit' && !this.IsShipmentNotRelevant) {
                     this.CreateASNPdf();
                 } else {
                     this.ResetControl();
@@ -1461,7 +1544,7 @@ export class ASNComponent implements OnInit {
                     } else {
                         this.notificationSnackBarComponent.openSnackBar(`ASN ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
                         this.IsProgressBarVisibile = false;
-                        if (Actiontype === 'Submit') {
+                        if (Actiontype === 'Submit' && !this.IsShipmentNotRelevant) {
                             this.CreateASNPdf();
                         } else {
                             this.ResetControl();
@@ -1636,7 +1719,7 @@ export class ASNComponent implements OnInit {
     DownloadASNItems(): void {
         this.GetASNItemValues();
         const itemsShowedd = [];
-        this.SelectedASNView.ASNItems.forEach(x => {
+        this.SelectedASNView.ASNItems.forEach((x, i) => {
             const item: ASNItemXLSX = {
                 'Item': x.Item,
                 'Material': x.Material,
@@ -1648,9 +1731,9 @@ export class ASNComponent implements OnInit {
                 'PipelineQty': x.TransitQty,
                 'OpenQty': x.OpenQty,
                 'ASNQty': x.ASNQty,
-                'Batch': x.Batch,
-                'ManufactureDate': x.ManufactureDate ? this._datePipe.transform(x.ManufactureDate, 'dd-MM-yyyy') : '',
-                'ExpiryDate': x.ExpiryDate ? this._datePipe.transform(x.ExpiryDate, 'dd-MM-yyyy') : '',
+                'Batch': this.SelectedASNView.ASNItemBatches[i].Batch,
+                'ManufactureDate': this.SelectedASNView.ASNItemBatches[i].ManufactureDate ? this._datePipe.transform(this.SelectedASNView.ASNItemBatches[i].ManufactureDate, 'dd-MM-yyyy') : '',
+                'ExpiryDate': this.SelectedASNView.ASNItemBatches[i].ExpiryDate ? this._datePipe.transform(this.SelectedASNView.ASNItemBatches[i].ExpiryDate, 'dd-MM-yyyy') : '',
             };
             itemsShowedd.push(item);
         });

@@ -18,7 +18,7 @@ import { MenuUpdataionService } from './services/menu-update.service';
 import { MatIconRegistry, MatSnackBar, MatDialogConfig, MatDialog } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { BnNgIdleService } from 'bn-ng-idle';
-import { AuthenticationDetails, SessionMaster } from './models/master';
+import { AuthenticationDetails, SessionMaster, UserPreference } from './models/master';
 import { NotificationSnackBarComponent } from './notifications/notification-snack-bar/notification-snack-bar.component';
 import { AuthService } from './services/auth.service';
 import { Router } from '@angular/router';
@@ -309,7 +309,46 @@ export class AppComponent implements OnInit, OnDestroy {
                 this._fuseNavigationService.setCurrentNavigation('main');
             }
         );
+
+        this.UpdateUserPreference();
     }
+
+    UpdateUserPreference(): void {
+        this._fuseConfigService.config
+          // .pipe(takeUntil(this._unsubscribeAll))
+          .subscribe((config) => {
+            this.fuseConfig = config;
+            // Retrive user preference from Local Storage
+            const userPre = localStorage.getItem('userPreferenceData');
+            if (userPre) {
+              const userPrefercence: UserPreference = JSON.parse(userPre) as UserPreference;
+              if (userPrefercence.NavbarPrimaryBackground && userPrefercence.NavbarPrimaryBackground !== '-') {
+                this.fuseConfig.layout.navbar.primaryBackground = userPrefercence.NavbarPrimaryBackground;
+              } else {
+                this.fuseConfig.layout.navbar.primaryBackground = 'fuse-navy-700';
+              }
+              if (userPrefercence.NavbarSecondaryBackground && userPrefercence.NavbarSecondaryBackground !== '-') {
+                this.fuseConfig.layout.navbar.secondaryBackground = userPrefercence.NavbarSecondaryBackground;
+              } else {
+                this.fuseConfig.layout.navbar.secondaryBackground = 'fuse-navy-700';
+              }
+              if (userPrefercence.ToolbarBackground && userPrefercence.ToolbarBackground !== '-') {
+                this.fuseConfig.layout.toolbar.background = userPrefercence.ToolbarBackground;
+                this.fuseConfig.layout.toolbar.customBackgroundColor = true;
+              } else {
+                this.fuseConfig.layout.toolbar.background = 'blue-800';
+                this.fuseConfig.layout.toolbar.customBackgroundColor = true;
+              }
+            } else {
+              this.fuseConfig.layout.navbar.primaryBackground = 'fuse-navy-700';
+              this.fuseConfig.layout.navbar.secondaryBackground = 'fuse-navy-700';
+              this.fuseConfig.layout.toolbar.background = 'blue-800';
+              this.fuseConfig.layout.toolbar.customBackgroundColor = true;
+            }
+    
+          });
+        this._fuseConfigService.config = this.fuseConfig;
+      }
 
     /**
      * On destroy
