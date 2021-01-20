@@ -831,7 +831,7 @@ export class LoginComponent implements OnInit {
         if (this.menuItems.indexOf("SupportDesk") >= 0) {
             this.supportSubChildren.push({
                 id: "supportdesk",
-                title: "Get Support",
+                title: "Get Solved",
                 translate: "NAV.VENDOR.GET_SUPPORT",
                 type: "item",
                 url: "/support/supportdesk",

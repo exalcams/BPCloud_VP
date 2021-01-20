@@ -65,16 +65,10 @@
                         </div>
                       </div>
                     </div>
-                    <div fxFlex='60' *ngIf="SelectedDocNumber && !AllASNHeaders.length" fxLayout fxLayoutGap="10px"
+                    <div fxFlex='60' fxLayout fxLayoutGap="10px"
                       class="No-Invoice-Created-for-this-PO">
                       <div fxFlex fxLayoutAlign="end center" align="end">
-                        <img src="assets/images/asn/alert.png" class="alert">
-                        <span>No ASN Created for this PO</span>
-                      </div>
-                    </div>
-                    <div fxFlex='60' *ngIf="SelectedASNHeader?.ASNNumber" fxLayout fxLayoutGap="10px">
-                      <div fxFlex fxLayoutAlign="end center" align="end">
-                        <img src="assets/images/DownloadIcon.png" (click)="CreateASNPdf()" class="alert">
+                        <mat-checkbox [disabled]="SelectedASNHeader.IsSubmitted" [checked]="IsShipmentNotRelevant" (change)="ShipmentNotRelevantChecked($event.checked)" class="example-margin">Shipment not relevant – ASN</mat-checkbox>
                       </div>
                     </div>
                   </div>
@@ -89,6 +83,18 @@
                         </div>
                       </div>
                     </div>
+                    <!-- <div fxFlex='60' *ngIf="SelectedDocNumber && !AllASNHeaders.length" fxLayout fxLayoutGap="10px"
+                      class="No-Invoice-Created-for-this-PO">
+                      <div fxFlex fxLayoutAlign="end center" align="end">
+                        <img src="assets/images/asn/alert.png" class="alert">
+                        <span>No ASN Created for this PO</span>
+                      </div>
+                    </div>
+                    <div fxFlex='60' *ngIf="SelectedASNHeader?.ASNNumber" fxLayout fxLayoutGap="10px">
+                      <div fxFlex fxLayoutAlign="end center" align="end">
+                        <img src="assets/images/DownloadIcon.png" (click)="CreateASNPdf()" class="alert">
+                      </div>
+                    </div> -->
                   </div>
                 </div>
               </div>
@@ -1402,7 +1408,7 @@
             <div fxFlex align="end">
               <button *ngIf="( SelectedASNHeader?.ASNNumber|| PO?.DocNumber) && IsInvoiceDetailsFormGroupEnabled"
                 mat-raised-button class="SaveBtn" (click)="SubmitClicked()">Release</button>
-              <button *ngIf="( SelectedASNHeader?.ASNNumber|| PO?.DocNumber) && !SelectedASNHeader?.IsSubmitted"
+              <button *ngIf="( SelectedASNHeader?.ASNNumber|| PO?.DocNumber) && !SelectedASNHeader?.IsSubmitted && !IsShipmentNotRelevant"
                 mat-raised-button class="SaveBtn" (click)="SaveClicked()">Save</button>
             </div>
           </div>

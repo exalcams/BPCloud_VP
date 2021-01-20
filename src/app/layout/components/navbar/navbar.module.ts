@@ -16,7 +16,8 @@ import { NavbarVerticalStyle2Module } from 'app/layout/components/navbar/vertica
 
         NavbarHorizontalStyle1Module,
         NavbarVerticalStyle1Module,
-        NavbarVerticalStyle2Module
+        NavbarVerticalStyle2Module,
+        
     ],
     exports     : [
         NavbarComponent

@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import {
     BPCASNHeader, BPCASNView, BPCASNItem, DocumentCenter, BPCInvoiceAttachment,
-    BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster, BPCASNPack, ASNListView, BPCASNFieldMaster
+    BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster, BPCASNPack, ASNListView, BPCASNFieldMaster, BPCASNItemBatch
 } from 'app/models/ASN';
 
 @Injectable({
@@ -142,6 +142,10 @@ export class ASNService {
     }
     GetASNItemsByASN(ASNNumber: string): Observable<BPCASNItem[] | string> {
         return this._httpClient.get<BPCASNItem[]>(`${this.baseAddress}poapi/ASN/GetASNItemsByASN?ASNNumber=${ASNNumber}`)
+            .pipe(catchError(this.errorHandler));
+    }
+    GetASNItemBatchesByASN(ASNNumber: string): Observable<BPCASNItemBatch[] | string> {
+        return this._httpClient.get<BPCASNItemBatch[]>(`${this.baseAddress}poapi/ASN/GetASNItemBatchesByASN?ASNNumber=${ASNNumber}`)
             .pipe(catchError(this.errorHandler));
     }
     GetASNPacksByASN(ASNNumber: string): Observable<BPCASNPack[] | string> {
