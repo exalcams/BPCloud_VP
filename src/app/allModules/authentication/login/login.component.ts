@@ -805,6 +805,15 @@ export class LoginComponent implements OnInit {
                 url: "/payment/tds",
             });
         }
+        if (true || this.menuItems.indexOf("BalanceConfirmation") >= 0) {
+            this.paymentSubChildren.push({
+                id: "balanceconfirmation",
+                title: "Balance Confirmation",
+                translate: "NAV.VENDOR.TDS",
+                type: "item",
+                url: "/balanceconfirmation",
+            });
+        }
 
         if (
             this.menuItems.indexOf("Flip") >= 0 ||

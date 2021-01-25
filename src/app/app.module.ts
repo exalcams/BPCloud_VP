@@ -35,6 +35,7 @@ import { NgxDonutChartModule } from 'ngx-doughnut-chart';
 import { ChartsModule } from 'ng2-charts';
 import { AttachmentViewDialogComponent } from './notifications/attachment-view-dialog/attachment-view-dialog.component';
 import { AttachmentDialogComponent } from './notifications/attachment-dialog/attachment-dialog.component';
+import { BalanceConfirmationModule } from './allModules/balance-confirmation/balance-confirmation.module';
 // import { InvoiceCreationComponent } from './allModules/invoice-creation/invoice-creation.component';
 // import { ChatModule } from './allModules/chat/chat.module';
 
@@ -122,6 +123,10 @@ const appRoutes: Routes = [
     {
         path: 'support',
         loadChildren: './allModules/support/support.module#SupportModule'
+    },
+    {
+        path: 'balanceconfirmation',
+        loadChildren: './allModules/balance-confirmation/balance-confirmation.module#BalanceConfirmationModule'
     },
     {
         path: '**',
@@ -226,7 +231,8 @@ const appRoutes: Routes = [
         FormsModule,
         // ElementModule
         // AuditModule,
-        // ChatModule
+        // ChatModule,
+        // BalanceConfirmationModule
     ],
     providers: [
         DatePipe,
