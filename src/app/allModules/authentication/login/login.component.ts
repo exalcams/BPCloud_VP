@@ -553,7 +553,7 @@ export class LoginComponent implements OnInit {
         if (this.menuItems.indexOf("ASN") >= 0) {
             this.orderFulfilmentSubChildren.push({
                 id: "asn",
-                title: "ASN",
+                title: "ASN / SCN",
                 translate: "NAV.VENDOR.ASN",
                 type: "item",
                 url: "/asn",
@@ -562,7 +562,7 @@ export class LoginComponent implements OnInit {
 
         this.orderFulfilmentSubChildren.push({
             id: "asnlist",
-            title: "ASN List",
+            title: "ASN / SCN List",
             translate: "NAV.VENDOR.FULFILMENT_CENTER",
             type: "item",
             url: "/orderfulfilment/asnlist",

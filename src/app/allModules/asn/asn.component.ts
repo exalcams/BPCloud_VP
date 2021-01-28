@@ -71,6 +71,7 @@ export class ASNComponent implements OnInit {
         'MaterialText',
         'UnitPrice',
         'DeliveryDate',
+        'HSN',
         'OrderedQty',
         'GRQty',
         'PipelineQty',
@@ -653,12 +654,13 @@ export class ASNComponent implements OnInit {
                 if (this.SelectedDocNumber) {
                     this.InvoiceDetailsFormGroup.get('InvoiceAmountUOM').patchValue(this.PO.Currency);
                 }
-                if (this.PO && this.PO.DocType && this.PO.DocType.toLocaleLowerCase() === "subcon") {
-                    this.GetSubconViewByDocAndPartnerID();
-                }
-                else if (this.SelectedDocNumber && !this.SelectedASNHeader.ASNNumber) {
-                    this.GetPOItemsByDocAndPartnerID();
-                }
+                // if (this.PO && this.PO.DocType && this.PO.DocType.toLocaleLowerCase() === "subcon") {
+                //     this.GetSubconViewByDocAndPartnerID();
+                // }
+                // else if (this.SelectedDocNumber && !this.SelectedASNHeader.ASNNumber) {
+                //     this.GetPOItemsByDocAndPartnerID();
+                // }
+                this.GetPOItemsByDocAndPartnerID();
             },
             (err) => {
                 console.error(err);
@@ -679,15 +681,16 @@ export class ASNComponent implements OnInit {
                     this.SelectedASNHeader.DocNumber = this.SelectedASNView.DocNumber = this.POItems[0].DocNumber;
                     this.POItems.forEach(poItem => {
                         if (poItem.OpenQty && poItem.OpenQty > 0) {
-                            if (this.PO && this.PO.DocType && this.PO.DocType.toLocaleLowerCase() === "subcon") {
-                                const sub = this.SubconViews.filter(x => x.Item === poItem.Item)[0];
-                                if (sub) {
-                                    const remainingQty = sub.OrderedQty - poItem.TransitQty;
-                                    poItem.MaxAllowedQty = remainingQty;
-                                }
-                            } else {
-                                poItem.MaxAllowedQty = poItem.OpenQty;
-                            }
+                            // if (this.PO && this.PO.DocType && this.PO.DocType.toLocaleLowerCase() === "subcon") {
+                            //     const sub = this.SubconViews.filter(x => x.Item === poItem.Item)[0];
+                            //     if (sub) {
+                            //         const remainingQty = sub.OrderedQty - poItem.TransitQty;
+                            //         poItem.MaxAllowedQty = remainingQty;
+                            //     }
+                            // } else {
+                            //     poItem.MaxAllowedQty = poItem.OpenQty;
+                            // }
+                            poItem.MaxAllowedQty = poItem.OpenQty;
                         }
                         this.InsertPOItemsFormGroup(poItem);
                     });
@@ -915,6 +918,7 @@ export class ASNComponent implements OnInit {
             Material: [poItem.Material],
             MaterialText: [poItem.MaterialText],
             DeliveryDate: [poItem.DeliveryDate],
+            HSN: [poItem.HSN],
             OrderedQty: [poItem.OrderedQty],
             GRQty: [poItem.CompletedQty],
             PipelineQty: [poItem.TransitQty],
@@ -968,6 +972,7 @@ export class ASNComponent implements OnInit {
             Material: [asnItem.Material],
             MaterialText: [asnItem.MaterialText],
             DeliveryDate: [asnItem.DeliveryDate],
+            HSN: [asnItem.HSN],
             OrderedQty: [asnItem.OrderedQty],
             GRQty: [asnItem.CompletedQty],
             PipelineQty: [asnItem.TransitQty],
@@ -1105,6 +1110,7 @@ export class ASNComponent implements OnInit {
             item.Material = x.get('Material').value;
             item.MaterialText = x.get('MaterialText').value;
             item.DeliveryDate = x.get('DeliveryDate').value;
+            item.HSN = x.get('HSN').value;
             item.OrderedQty = x.get('OrderedQty').value;
             item.UOM = x.get('UOM').value;
             item.CompletedQty = +x.get('GRQty').value;
@@ -1726,6 +1732,7 @@ export class ASNComponent implements OnInit {
                 'MaterialText': x.MaterialText,
                 'UnitPrice': x.UnitPrice,
                 'DeliveryDate': x.DeliveryDate ? this._datePipe.transform(x.DeliveryDate, 'dd-MM-yyyy') : '',
+                'HSN': x.HSN,
                 'OrderedQty': x.OrderedQty,
                 'GRQty': x.CompletedQty,
                 'PipelineQty': x.TransitQty,

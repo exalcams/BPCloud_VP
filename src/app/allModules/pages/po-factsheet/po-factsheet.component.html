@@ -304,13 +304,13 @@
                   </td>
                 </ng-container>
 
-                <ng-container matColumnDef="DalivaryDate">
+                <ng-container matColumnDef="DeliveryDate">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Delivery Date</th>
                   <td mat-cell style="text-align: left" *matCellDef="let element; let index = index"
                     [formGroupName]="index">
-                    <!-- <input matInput formControlName="DalivaryDate"> -->
-                    {{ackFormGroup.get('POItems')?.controls[index]?.get('DalivaryDate')?.value | date : 'dd/MM/yyyy'}}
-                    <!-- {{element.DalivaryDate| date :'dd/MM/yyyy'}}  -->
+                    <!-- <input matInput formControlName="DeliveryDate"> -->
+                    {{ackFormGroup.get('POItems')?.controls[index]?.get('DeliveryDate')?.value | date : 'dd/MM/yyyy'}}
+                    <!-- {{element.DeliveryDate| date :'dd/MM/yyyy'}}  -->
                   </td>
                 </ng-container>
 
@@ -336,15 +336,15 @@
                     </mat-form-field>
                     <!-- <mat-form-field>
                   <input matInput placeholder="Proposed delivery date" [matDatepicker]="picker1"
-                    formControlName="DalivaryDate" required>
+                    formControlName="DeliveryDate" required>
                   <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                   <mat-datepicker #picker1></mat-datepicker>
                   <mat-error
-                    *ngIf="ackFormGroup.get('DalivaryDate').touched && ackFormGroup.get('DalivaryDate').hasError('required')">
+                    *ngIf="ackFormGroup.get('DeliveryDate').touched && ackFormGroup.get('DeliveryDate').hasError('required')">
                     Proposed delivery date is required
                   </mat-error>
                 </mat-form-field> -->
-                    <!-- {{element.DalivaryDate| date :'dd/MM/yyyy'}}  -->
+                    <!-- {{element.DeliveryDate| date :'dd/MM/yyyy'}}  -->
                   </td>
                 </ng-container>
 
