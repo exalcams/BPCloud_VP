@@ -243,6 +243,16 @@ export class DashboardService {
       })
       .pipe(catchError(this.errorHandler));
   }
+  UpdatePOItems(ACK: Acknowledgement): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}poapi/Dashboard/UpdatePOItems`,
+      ACK,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
 
   GetAllPOBasedOnDate(poSearch: OfOption): Observable<PO[] | string> {
     return this._httpClient.post<PO[]>(`${this.baseAddress}poapi/Dashboard/GetAllPOBasedOnDate`,

@@ -65,6 +65,7 @@ export class BPCASNItem extends CommonClass {
     OpenQty: number;
     ASNQty: number;
     UOM: string;
+    HSN: string;
     PlantCode: string;
     UnitPrice: number | null;
     Value: number | null;
@@ -272,6 +273,7 @@ export class ASNItemXLSX {
     Material: string;
     MaterialText: string;
     UnitPrice: number;
+    HSN: string;
     DeliveryDate: Date | string | null;
     OrderedQty: number;
     GRQty: number;

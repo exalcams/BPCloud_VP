@@ -13,7 +13,7 @@ export class PO {
 export class ItemDetails {
     Item: string;
     MaterialText: string;
-    DalivaryDate: Date;
+    DeliveryDate: Date;
     Proposeddeliverydate: string;
     OrderQty: number;
     GRQty: number;

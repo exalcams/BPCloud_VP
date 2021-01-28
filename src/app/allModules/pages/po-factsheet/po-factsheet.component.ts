@@ -16,6 +16,7 @@ import { BPCPIHeader } from 'app/models/customer';
 import { CustomerService } from 'app/services/customer.service';
 import { BPCInvoiceAttachment } from 'app/models/ASN';
 import { AttachmentViewDialogComponent } from 'app/notifications/attachment-view-dialog/attachment-view-dialog.component';
+import { NotificationDialog1Component } from 'app/notifications/notification-dialog1/notification-dialog1.component';
 @Component({
     selector: 'app-po-factsheet',
     templateUrl: './po-factsheet.component.html',
@@ -31,8 +32,8 @@ export class PoFactsheetComponent implements OnInit {
     currentUserRole: string;
     partnerID: string;
     isProgressBarVisibile: boolean;
-  
-    yesterday=new Date()
+
+    isDeliveryDateMismatched: boolean;
 
     public tab1: boolean;
     public tab2: boolean;
@@ -67,7 +68,7 @@ export class PoFactsheetComponent implements OnInit {
         'Item',
         'Material',
         'Description',
-        'DalivaryDate',
+        'DeliveryDate',
         'Proposeddeliverydate',
         'OrderQty',
         'GRQty',
@@ -175,7 +176,7 @@ export class PoFactsheetComponent implements OnInit {
     poItemFormArray: FormArray = this.formBuilder.array([]);
     ret: BPCPIHeader[];
     ofAttachments: BPCInvoiceAttachment[];
-
+    yesterday = new Date();
     constructor(
         private route: ActivatedRoute,
         public _dashboardService: DashboardService,
@@ -195,6 +196,7 @@ export class PoFactsheetComponent implements OnInit {
         this.tab7 = false;
         this.tab8 = false;
         this.ItemPlantDetails = new BPCPlantMaster();
+        this.isDeliveryDateMismatched = false;
     }
 
     ngOnInit(): void {
@@ -547,6 +549,21 @@ export class PoFactsheetComponent implements OnInit {
             }
         );
     }
+    UpdatePOItems(): void {
+        this.isProgressBarVisibile = true;
+        this._dashboardService.UpdatePOItems(this.acknowledgement).subscribe(
+            (data) => {
+                this._router.navigate(["/support/supportticket"], {
+                    queryParams: { id: this.acknowledgement.PONumber },
+                });
+                this.isProgressBarVisibile = false;
+            },
+            (err) => {
+                this.isProgressBarVisibile = false;
+                console.error(err);
+            }
+        );
+    }
 
     tabOneClicked(): void {
         this.tab1 = true;
@@ -674,7 +691,7 @@ export class PoFactsheetComponent implements OnInit {
         const row = this.formBuilder.group({
             Item: [poItem.Item],
             MaterialText: [poItem.MaterialText],
-            DalivaryDate: [poItem.DalivaryDate],
+            DeliveryDate: [poItem.DeliveryDate],
             Proposeddeliverydate: [poItem.Proposeddeliverydate, Validators.required],
             OrderQty: [poItem.OrderQty],
             GRQty: [poItem.GRQty],
@@ -696,21 +713,25 @@ export class PoFactsheetComponent implements OnInit {
 
     getPOItemValues(): void {
         this.orderFulfilmentDetails.itemDetails = [];
+        this.isDeliveryDateMismatched = false;
         const poItemFormArray = this.ackFormGroup.get('POItems') as FormArray;
         poItemFormArray.controls.forEach((x, i) => {
             const item: ItemDetails = new ItemDetails();
             item.Item = x.get('Item').value;
             item.MaterialText = x.get('MaterialText').value;
-            // item.DalivaryDate = x.get('DaliveryDate').value;
-            const proposeddeliverydate = this.datepipe.transform(x.get('Proposeddeliverydate').value, 'yyyy-MM-dd HH:mm:ss');
-            item.Proposeddeliverydate = proposeddeliverydate;
+            item.DeliveryDate = x.get('DeliveryDate').value;
+            const proposeddeliverydate = x.get('Proposeddeliverydate').value as Date;
+            item.Proposeddeliverydate = this.datepipe.transform(proposeddeliverydate, 'yyyy-MM-dd HH:mm:ss');
             item.OrderQty = x.get('OrderQty').value;
             item.UOM = x.get('UOM').value;
             item.GRQty = x.get('GRQty').value;
             item.PipelineQty = x.get('PipelineQty').value;
             item.OpenQty = x.get('OpenQty').value;
             this.orderFulfilmentDetails.itemDetails.push(item);
-            console.log(this.orderFulfilmentDetails.itemDetails);
+            if (item.DeliveryDate !== proposeddeliverydate) {
+                this.isDeliveryDateMismatched = true;
+            }
+            // console.log(this.orderFulfilmentDetails.itemDetails);
         });
     }
 
@@ -719,8 +740,12 @@ export class PoFactsheetComponent implements OnInit {
             this.getPOItemValues();
             this.acknowledgement.PONumber = this.PO;
             this.acknowledgement.ItemDetails = this.orderFulfilmentDetails.itemDetails;
-            this.openNotificationDialog();
-        }else{
+            if (this.isDeliveryDateMismatched) {
+                this.openNotificationDialog1();
+            } else {
+                this.openNotificationDialog();
+            }
+        } else {
             this.ShowValidationErrors(this.ackFormGroup);
         }
     }
@@ -765,6 +790,23 @@ export class PoFactsheetComponent implements OnInit {
             result => {
                 if (result) {
                     this.CreateAcknowledgement();
+                }
+            });
+    }
+
+    openNotificationDialog1(): void {
+        const dialogConfig: MatDialogConfig = {
+            data: {
+                title: 'Unable to acknowledge the record since proposed delivery date is mismatched.',
+                subtitle: 'Please create a support ticket to acknowledge it.'
+            },
+            panelClass: 'confirmation-dialog'
+        };
+        const dialogRef = this.dialog.open(NotificationDialog1Component, dialogConfig);
+        dialogRef.afterClosed().subscribe(
+            result => {
+                if (result) {
+                    this.UpdatePOItems();
                 }
             });
     }
