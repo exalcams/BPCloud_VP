@@ -37,6 +37,7 @@ import { AttachmentViewDialogComponent } from './notifications/attachment-view-d
 import { AttachmentDialogComponent } from './notifications/attachment-dialog/attachment-dialog.component';
 import { BalanceConfirmationModule } from './allModules/balance-confirmation/balance-confirmation.module';
 import { NotificationDialog1Component } from './notifications/notification-dialog1/notification-dialog1.component';
+// import { ASNItemBatchDialogComponent } from './allModules/asn/asnitem-batch-dialog/asnitem-batch-dialog.component';
 // import { InvoiceCreationComponent } from './allModules/invoice-creation/invoice-creation.component';
 // import { ChatModule } from './allModules/chat/chat.module';
 
@@ -253,7 +254,7 @@ const appRoutes: Routes = [
         AttachmentDialogComponent,
         AttachmentViewDialogComponent,
         InformationDialogComponent,
-        ASNReleaseDialogComponent
+        ASNReleaseDialogComponent,
     ]
 })
 export class AppModule {

@@ -60,6 +60,7 @@ import "chartjs-plugin-annotation";
 import { ChatModule } from '../chat/chat.module';
 import { ASNComponent } from './asn.component';
 import { AsnPrintDialogComponent } from './asn-print-dialog/asn-print-dialog.component';
+import { ASNItemBatchDialogComponent } from "./asnitem-batch-dialog/asnitem-batch-dialog.component";
 // import { ChatModule } from '../chat';
 // import 'chart.piecelabel.js';
 
@@ -147,8 +148,9 @@ const routes = [
     declarations: [
         ASNComponent,
         AsnPrintDialogComponent,
+        ASNItemBatchDialogComponent,
     ],
     providers: [DecimalPipe],
-    entryComponents: [AsnPrintDialogComponent],
+    entryComponents: [AsnPrintDialogComponent, ASNItemBatchDialogComponent],
 })
 export class ASNModule { }

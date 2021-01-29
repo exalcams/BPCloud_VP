@@ -12,7 +12,7 @@ import { ASNService } from 'app/services/asn.service';
 import { ShareParameterService } from 'app/services/share-parameters.service';
 import {
     BPCASNHeader, BPCASNItem, DocumentCenter, BPCASNView, BPCInvoiceAttachment,
-    BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster, BPCASNPack, ASNItemXLSX, BPCASNFieldMaster, BPCASNItemBatch
+    BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster, BPCASNPack, ASNItemXLSX, BPCASNFieldMaster, BPCASNItemBatch, BPCASNItemView
 } from 'app/models/ASN';
 import { BehaviorSubject } from 'rxjs';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
@@ -31,6 +31,7 @@ import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
 import { AsnPrintDialogComponent } from './asn-print-dialog/asn-print-dialog.component';
 import { AttachmentDialogComponent } from 'app/notifications/attachment-dialog/attachment-dialog.component';
+import { ASNItemBatchDialogComponent } from './asnitem-batch-dialog/asnitem-batch-dialog.component';
 @Component({
     selector: 'app-asn',
     templateUrl: './asn.component.html',
@@ -78,8 +79,8 @@ export class ASNComponent implements OnInit {
         'OpenQty',
         'ASNQty',
         'Batch',
-        'ManufactureDate',
-        'ExpiryDate'
+        // 'ManufactureDate',
+        // 'ExpiryDate'
     ];
     ASNItemFormArray: FormArray = this._formBuilder.array([]);
     ASNItemDataSource = new BehaviorSubject<AbstractControl[]>([]);
@@ -160,7 +161,6 @@ export class ASNComponent implements OnInit {
         private _formBuilder: FormBuilder) {
         this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
         this.authenticationDetails = new AuthenticationDetails();
-        this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
         this.IsProgressBarVisibile = false;
         this.PO = new BPCOFHeader();
         this.SelectedASNHeader = new BPCASNHeader();
@@ -295,12 +295,12 @@ export class ASNComponent implements OnInit {
             InvoiceDate: [''],
             InvoiceAttachment: [''],
         });
-        this.InvoiceDetailsFormGroup.get('InvoiceAmount').disable();
-        this.InvoiceDetailsFormGroup.get('POBasicPrice').valueChanges.subscribe(
-            () => {
-                this.CalculateInvoiceAmount();
-            }
-        );
+        this.InvoiceDetailsFormGroup.get('POBasicPrice').disable();
+        // this.InvoiceDetailsFormGroup.get('POBasicPrice').valueChanges.subscribe(
+        //     () => {
+        //         this.CalculateInvoiceAmount();
+        //     }
+        // );
         // this.DynamicallyAddAcceptedValidation();
     }
 
@@ -805,27 +805,28 @@ export class ASNComponent implements OnInit {
     }
 
     GetASNItemsByASN(): void {
-        this._ASNService.GetASNItemsByASN(this.SelectedASNHeader.ASNNumber).subscribe(
+        this._ASNService.GetASNItemsWithBatchesByASN(this.SelectedASNHeader.ASNNumber).subscribe(
             (data) => {
-                this.SelectedASNView.ASNItems = data as BPCASNItem[];
-                this._ASNService.GetASNItemBatchesByASN(this.SelectedASNHeader.ASNNumber).subscribe(
-                    (data1) => {
-                        this.SelectedASNView.ASNItemBatches = data1 as BPCASNItemBatch[];
-                        this.ClearFormArray(this.ASNItemFormArray);
-                        if (this.SelectedASNView.ASNItems && this.SelectedASNView.ASNItems.length) {
-                            this.SelectedASNView.ASNItems.forEach((x, i) => {
-                                this.InsertASNItemsFormGroup(x, this.SelectedASNView.ASNItemBatches[i]);
-                            });
-                        }
-                        if (this.SelectedASNHeader.IsSubmitted) {
-                            this.DisableASNItemFormGroup();
-                        } else {
-                            this.EnableASNItemFormGroup();
-                        }
-                    },
-                    (err) => {
-                        console.error(err);
+                this.SelectedASNView.ASNItems = data as BPCASNItemView[];
+                this.ClearFormArray(this.ASNItemFormArray);
+                if (this.SelectedASNView.ASNItems && this.SelectedASNView.ASNItems.length) {
+                    this.SelectedASNView.ASNItems.forEach((x, i) => {
+                        this.InsertASNItemsFormGroup(x);
                     });
+                }
+                if (this.SelectedASNHeader.IsSubmitted) {
+                    this.DisableASNItemFormGroup();
+                } else {
+                    this.EnableASNItemFormGroup();
+                }
+                // this._ASNService.GetASNItemBatchesByASN(this.SelectedASNHeader.ASNNumber).subscribe(
+                //     (data1) => {
+                //         this.SelectedASNView.ASNItemBatches = data1 as BPCASNItemBatch[];
+
+                //     },
+                //     (err) => {
+                //         console.error(err);
+                //     });
             },
             (err) => {
                 console.error(err);
@@ -925,7 +926,7 @@ export class ASNComponent implements OnInit {
             OpenQty: [poItem.OpenQty],
             ASNQty: [poItem.MaxAllowedQty],
             UOM: [poItem.UOM],
-            Batch: [''],
+            Batch: [[]],
             ManufactureDate: [''],
             ExpiryDate: [''],
             PlantCode: [poItem.PlantCode],
@@ -958,15 +959,15 @@ export class ASNComponent implements OnInit {
         //         row.get('ASNQty').enable();
         //     }
         // }
-        row.get('Batch').enable();
-        row.get('ManufactureDate').enable();
-        row.get('ExpiryDate').enable();
+        // row.get('Batch').enable();
+        // row.get('ManufactureDate').enable();
+        // row.get('ExpiryDate').enable();
         this.ASNItemFormArray.push(row);
         this.ASNItemDataSource.next(this.ASNItemFormArray.controls);
         // return row;
     }
 
-    InsertASNItemsFormGroup(asnItem: BPCASNItem, asnItemBatch: BPCASNItemBatch): void {
+    InsertASNItemsFormGroup(asnItem: BPCASNItemView): void {
         const row = this._formBuilder.group({
             Item: [asnItem.Item],
             Material: [asnItem.Material],
@@ -979,9 +980,9 @@ export class ASNComponent implements OnInit {
             OpenQty: [asnItem.OpenQty],
             ASNQty: [asnItem.ASNQty, [Validators.pattern('^([0-9]{0,10})([.][0-9]{1,3})?$')]],
             UOM: [asnItem.UOM],
-            Batch: [asnItemBatch ? asnItemBatch.Batch : ''],
-            ManufactureDate: [asnItemBatch ? asnItemBatch.ManufactureDate : ''],
-            ExpiryDate: [asnItemBatch ? asnItemBatch.ExpiryDate : ''],
+            Batch: [asnItem.ASNItemBatches],
+            // ManufactureDate: [asnItemBatch ? asnItemBatch.ManufactureDate : ''],
+            // ExpiryDate: [asnItemBatch ? asnItemBatch.ExpiryDate : ''],
             PlantCode: [asnItem.PlantCode],
             UnitPrice: [asnItem.UnitPrice],
             Value: [asnItem.Value],
@@ -990,9 +991,9 @@ export class ASNComponent implements OnInit {
         });
         row.disable();
         // row.get('ASNQty').enable();
-        row.get('Batch').enable();
-        row.get('ManufactureDate').enable();
-        row.get('ExpiryDate').enable();
+        // row.get('Batch').enable();
+        // row.get('ManufactureDate').enable();
+        // row.get('ExpiryDate').enable();
         this.ASNItemFormArray.push(row);
         this.ASNItemDataSource.next(this.ASNItemFormArray.controls);
         // return row;
@@ -1099,14 +1100,11 @@ export class ASNComponent implements OnInit {
 
     GetASNItemValues(): void {
         this.SelectedASNView.ASNItems = [];
-        this.SelectedASNView.ASNItemBatches = [];
         this.IsAtleastOneASNQty = false;
         const aSNItemFormArray = this.ASNItemFormGroup.get('ASNItems') as FormArray;
         aSNItemFormArray.controls.forEach((x, i) => {
-            const item: BPCASNItem = new BPCASNItem();
-            const itemBatch: BPCASNItemBatch = new BPCASNItemBatch();
+            const item: BPCASNItemView = new BPCASNItemView();
             item.Item = x.get('Item').value;
-            itemBatch.Item = item.Item;
             item.Material = x.get('Material').value;
             item.MaterialText = x.get('MaterialText').value;
             item.DeliveryDate = x.get('DeliveryDate').value;
@@ -1117,52 +1115,92 @@ export class ASNComponent implements OnInit {
             item.TransitQty = +x.get('PipelineQty').value;
             item.OpenQty = +x.get('OpenQty').value;
             item.ASNQty = +x.get('ASNQty').value;
-            itemBatch.Batch = x.get('Batch').value;
-            itemBatch.Qty = + x.get('ASNQty').value;
+            item.ASNItemBatches = x.get('Batch').value;
             item.PlantCode = x.get('PlantCode').value;
             item.UnitPrice = x.get('UnitPrice').value;
             item.Value = x.get('Value').value;
             item.TaxAmount = x.get('TaxAmount').value;
             item.TaxCode = x.get('TaxCode').value;
-            const manufDate = x.get('ManufactureDate').value;
-            if (manufDate) {
-                itemBatch.ManufactureDate = this._datePipe.transform(manufDate, 'yyyy-MM-dd HH:mm:ss');
-            } else {
-                itemBatch.ManufactureDate = x.get('ManufactureDate').value;
-            }
-            const expDate = x.get('ExpiryDate').value;
-            if (expDate) {
-                itemBatch.ExpiryDate = this._datePipe.transform(expDate, 'yyyy-MM-dd HH:mm:ss');
-            } else {
-                itemBatch.ExpiryDate = x.get('ExpiryDate').value;
-            }
+            // const manufDate = x.get('ManufactureDate').value;
+            // if (manufDate) {
+            //     itemBatch.ManufactureDate = this._datePipe.transform(manufDate, 'yyyy-MM-dd HH:mm:ss');
+            // } else {
+            //     itemBatch.ManufactureDate = x.get('ManufactureDate').value;
+            // }
+            // const expDate = x.get('ExpiryDate').value;
+            // if (expDate) {
+            //     itemBatch.ExpiryDate = this._datePipe.transform(expDate, 'yyyy-MM-dd HH:mm:ss');
+            // } else {
+            //     itemBatch.ExpiryDate = x.get('ExpiryDate').value;
+            // }
             if (this.SelectedDocNumber && this.PO) {
                 item.Client = this.PO.Client;
                 item.Company = this.PO.Company;
                 item.Type = this.PO.Type;
                 item.PatnerID = this.PO.PatnerID;
-                itemBatch.Client = this.PO.Client;
-                itemBatch.Company = this.PO.Company;
-                itemBatch.Type = this.PO.Type;
-                itemBatch.PatnerID = this.PO.PatnerID;
+                item.ASNItemBatches.forEach(y => {
+                    y.Client = this.PO.Client;
+                    y.Company = this.PO.Company;
+                    y.Type = this.PO.Type;
+                    y.PatnerID = this.PO.PatnerID;
+                    y.Item = item.Item;
+                });
+                // itemBatch.Client = this.PO.Client;
+                // itemBatch.Company = this.PO.Company;
+                // itemBatch.Type = this.PO.Type;
+                // itemBatch.PatnerID = this.PO.PatnerID;
             } else {
                 item.Client = this.SelectedASNHeader.Client;
                 item.Company = this.SelectedASNHeader.Company;
                 item.Type = this.SelectedASNHeader.Type;
                 item.PatnerID = this.SelectedASNHeader.PatnerID;
-                itemBatch.Client = this.SelectedASNHeader.Client;
-                itemBatch.Company = this.SelectedASNHeader.Company;
-                itemBatch.Type = this.SelectedASNHeader.Type;
-                itemBatch.PatnerID = this.SelectedASNHeader.PatnerID;
+                item.ASNItemBatches.forEach(y => {
+                    y.Client = this.PO.Client;
+                    y.Company = this.PO.Company;
+                    y.Type = this.PO.Type;
+                    y.PatnerID = this.PO.PatnerID;
+                    y.Item = item.Item;
+                });
+                // itemBatch.Client = this.SelectedASNHeader.Client;
+                // itemBatch.Company = this.SelectedASNHeader.Company;
+                // itemBatch.Type = this.SelectedASNHeader.Type;
+                // itemBatch.PatnerID = this.SelectedASNHeader.PatnerID;
             }
             if (item.ASNQty > 0) {
                 this.IsAtleastOneASNQty = true;
             }
             this.SelectedASNView.ASNItems.push(item);
-            this.SelectedASNView.ASNItemBatches.push(itemBatch);
+            // this.SelectedASNView.ASNItemBatches.push(itemBatch);
         });
     }
+    OpenItemBatch(index: number): void {
+        const fg = this.ASNItemFormArray.controls[index] as FormGroup;
+        const asQ = fg.get('ASNQty').value;
+        if (asQ) {
+            this.OpenASNItemBatchDialog(asQ, index);
+        } else {
+            this.notificationSnackBarComponent.openSnackBar('Please enter ASN Qty value', SnackBarStatus.danger);
+        }
+    }
+    OpenASNItemBatchDialog(asQ: number, index: number): void {
+        const Actiontype = "Submit";
+        const dialogConfig: MatDialogConfig = {
+            data: asQ,
+            panelClass: 'asn-item-batch-dialog'
+        };
+        const dialogRef = this.dialog.open(ASNItemBatchDialogComponent, dialogConfig);
+        dialogRef.afterClosed().subscribe(
+            result => {
+                if (result) {
+                    const fg = this.ASNItemFormArray.controls[index] as FormGroup;
+                    fg.get('Batch').patchValue(result);
+                } else {
 
+                }
+            }, (err) => {
+
+            });
+    }
     GetASNPacksValues(): void {
         this.SelectedASNView.ASNPacks = [];
         // const aSNPackFormArray = this.ASNItemFormGroup.get('ASNPacks') as FormArray;
@@ -1219,6 +1257,17 @@ export class ASNComponent implements OnInit {
         this.SelectedASNHeader.TaxAmount = this.SelectedASNView.TaxAmount = this.InvoiceDetailsFormGroup.get('TaxAmount').value;
         this.SelectedASNHeader.InvoiceAmount = this.SelectedASNView.InvoiceAmount = this.InvoiceDetailsFormGroup.get('InvoiceAmount').value;
 
+    }
+
+    CalculateShipmentAmount(): void {
+        let TotalASNAmount = 0;
+        this.ASNItemFormArray.controls.forEach((x, i) => {
+            const asq = +x.get('ASNQty').value;
+            const up = +x.get('UnitPrice').value;
+            TotalASNAmount += (asq * up);
+        });
+        this.InvoiceDetailsFormGroup.get('POBasicPrice').patchValue(TotalASNAmount);
+        this.InvoiceDetailsFormGroup.get('POBasicPrice').disable();
     }
 
     CalculateInvoiceAmount(): void {
@@ -1738,9 +1787,9 @@ export class ASNComponent implements OnInit {
                 'PipelineQty': x.TransitQty,
                 'OpenQty': x.OpenQty,
                 'ASNQty': x.ASNQty,
-                'Batch': this.SelectedASNView.ASNItemBatches[i].Batch,
-                'ManufactureDate': this.SelectedASNView.ASNItemBatches[i].ManufactureDate ? this._datePipe.transform(this.SelectedASNView.ASNItemBatches[i].ManufactureDate, 'dd-MM-yyyy') : '',
-                'ExpiryDate': this.SelectedASNView.ASNItemBatches[i].ExpiryDate ? this._datePipe.transform(this.SelectedASNView.ASNItemBatches[i].ExpiryDate, 'dd-MM-yyyy') : '',
+                // 'Batch': this.SelectedASNView.ASNItemBatches[i].Batch,
+                // 'ManufactureDate': this.SelectedASNView.ASNItemBatches[i].ManufactureDate ? this._datePipe.transform(this.SelectedASNView.ASNItemBatches[i].ManufactureDate, 'dd-MM-yyyy') : '',
+                // 'ExpiryDate': this.SelectedASNView.ASNItemBatches[i].ExpiryDate ? this._datePipe.transform(this.SelectedASNView.ASNItemBatches[i].ExpiryDate, 'dd-MM-yyyy') : '',
             };
             itemsShowedd.push(item);
         });
@@ -1781,9 +1830,9 @@ export class ASNComponent implements OnInit {
             const curr = this.ASNItemXLSXs.filter(y => y.Item === item.Item && y.Material === item.Material)[0];
             if (curr) {
                 x.get('ASNQty').patchValue(curr.ASNQty);
-                x.get('Batch').patchValue(curr.Batch);
-                x.get('ManufactureDate').patchValue(curr.ManufactureDate);
-                x.get('ExpiryDate').patchValue(curr.ExpiryDate);
+                // x.get('Batch').patchValue(curr.Batch);
+                // x.get('ManufactureDate').patchValue(curr.ManufactureDate);
+                // x.get('ExpiryDate').patchValue(curr.ExpiryDate);
             }
         });
     }
