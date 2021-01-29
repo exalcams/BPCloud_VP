@@ -14,6 +14,9 @@ import { NotificationDialogComponent } from 'app/notifications/notification-dial
 import { MasterService } from 'app/services/master.service';
 import { BPCFact } from 'app/models/fact';
 import { FactService } from 'app/services/fact.service';
+import { POService } from 'app/services/po.service';
+import { BPCOFItem } from 'app/models/OrderFulFilment';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-support-ticket',
@@ -41,8 +44,10 @@ export class SupportTicketComponent implements OnInit {
   SupportHeader: SupportHeader;
   dateOfCreation: Date;
   docRefNo: string;
+  reason: string;
   notificationSnackBarComponent: NotificationSnackBarComponent;
   navigator_page: any;
+  OFItems: BPCOFItem[] = [];
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _router: Router,
@@ -52,6 +57,8 @@ export class SupportTicketComponent implements OnInit {
     public _supportDeskService: SupportDeskService,
     private _masterService: MasterService,
     private _FactService: FactService,
+    private _POService: POService,
+    private _datePipe: DatePipe
   ) {
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.authenticationDetails = new AuthenticationDetails();
@@ -83,10 +90,11 @@ export class SupportTicketComponent implements OnInit {
 
     this._activatedRoute.queryParams.subscribe(params => {
       this.docRefNo = params['id'];
-      this.navigator_page=params["navigator_page"]
+      this.reason = params['reason'];
+      this.navigator_page = params["navigator_page"];
 
     });
-    console.log( this.navigator_page)
+    console.log(this.navigator_page)
     if (!this.docRefNo) {
       this.docRefNo = '';
     }
@@ -95,13 +103,13 @@ export class SupportTicketComponent implements OnInit {
     this.GetUsers();
     this.GetFactByPartnerID();
   }
-  backbutton(){
-    if(this.navigator_page=="po-schedules")
-    {
-      
-    this._router.navigate(['/orderfulfilment/poschedules'])}
-    else if(this.navigator_page=="asnlist"){
-this._router.navigate(['/orderfulfilment/asnlist'])
+  backbutton(): void {
+    if (this.navigator_page === "po-schedules") {
+
+      this._router.navigate(['/orderfulfilment/poschedules']);
+    }
+    else if (this.navigator_page === "asnlist") {
+      this._router.navigate(['/orderfulfilment/asnlist']);
     }
   }
   CreateAppUsage(): void {
@@ -158,6 +166,15 @@ this._router.navigate(['/orderfulfilment/asnlist'])
       .subscribe((data) => {
         if (data) {
           this.SupportMasters = <SupportMaster[]>data;
+          if (this.reason) {
+            const reson = this.SupportMasters.filter(x => x.ReasonText === this.reason)[0];
+            if (reson) {
+              this.SupportTicketFormGroup.get('ReasonCode').patchValue(reson.ReasonCode);
+            }
+            if (this.docRefNo && this.reason === 'Delivery Date Mismatch') {
+              this.GetSupportPOItemsByDoc();
+            }
+          }
         }
         this.IsProgressBarVisibile = false;
       },
@@ -166,7 +183,26 @@ this._router.navigate(['/orderfulfilment/asnlist'])
           this.IsProgressBarVisibile = false;
         });
   }
-
+  GetSupportPOItemsByDoc(): void {
+    this._POService.GetSupportPOItemsByDoc(this.docRefNo).subscribe(
+      (data) => {
+        this.OFItems = data as BPCOFItem[];
+        let message = '';
+        this.OFItems.forEach(x => {
+          let delDate = x.DeliveryDate as Date;
+          let actDelDate = x.AckDeliveryDate as Date;
+          if (delDate && actDelDate && actDelDate !== delDate) {
+            message = message + `Delivery date changed from ${this._datePipe.transform(delDate, 'dd/MM/yyyy')} to ${this._datePipe.transform(actDelDate, 'dd/MM/yyyy')} for Item ${x.Item}, `;
+          }
+        });
+        this.SupportTicketFormGroup.get('Remarks').patchValue(message);
+        this.SupportTicketFormGroup.get('Remarks').disable();
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
   GetUsers(): void {
     this.IsProgressBarVisibile = true;
     this._masterService.GetAllUsers().subscribe(
@@ -347,7 +383,7 @@ this._router.navigate(['/orderfulfilment/asnlist'])
       }
     });
   }
- 
+
 
 }
 

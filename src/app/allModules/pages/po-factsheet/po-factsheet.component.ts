@@ -554,7 +554,7 @@ export class PoFactsheetComponent implements OnInit {
         this._dashboardService.UpdatePOItems(this.acknowledgement).subscribe(
             (data) => {
                 this._router.navigate(["/support/supportticket"], {
-                    queryParams: { id: this.acknowledgement.PONumber },
+                    queryParams: { id: this.acknowledgement.PONumber, reason: 'Delivery Date Mismatch' },
                 });
                 this.isProgressBarVisibile = false;
             },

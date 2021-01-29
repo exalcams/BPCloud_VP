@@ -73,6 +73,35 @@ export class BPCASNItem extends CommonClass {
     TaxCode: string;
 }
 
+export class BPCASNItemView extends CommonClass {
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
+    ASNNumber: string;
+    Item: string;
+    Material: string;
+    MaterialText: string;
+    DeliveryDate: Date | string | null;
+    OrderedQty: number;
+    CompletedQty: number;
+    TransitQty: number;
+    OpenQty: number;
+    ASNQty: number;
+    UOM: string;
+    HSN: string;
+    PlantCode: string;
+    UnitPrice: number | null;
+    Value: number | null;
+    TaxAmount: number | null;
+    TaxCode: string;
+    ASNItemBatches: BPCASNItemBatch[];
+    constructor() {
+        super();
+        this.ASNItemBatches = [];
+    }
+}
+
 export class BPCASNItemBatch extends CommonClass {
     Client: string;
     Company: string;
@@ -220,14 +249,12 @@ export class BPCASNView extends CommonClass {
     Field8: string;
     Field9: string;
     Field10: string;
-    ASNItems: BPCASNItem[];
-    ASNItemBatches: BPCASNItemBatch[];
+    ASNItems: BPCASNItemView[];
     ASNPacks: BPCASNPack[];
     DocumentCenters: DocumentCenter[];
     constructor() {
         super();
         this.ASNItems = [];
-        this.ASNItemBatches = [];
         this.ASNPacks = [];
         this.DocumentCenters = [];
     }
@@ -280,9 +307,9 @@ export class ASNItemXLSX {
     PipelineQty: number;
     OpenQty: number;
     ASNQty: number;
-    Batch: string;
-    ManufactureDate: Date | string | null;
-    ExpiryDate: Date | string | null;
+    // Batch: string;
+    // ManufactureDate: Date | string | null;
+    // ExpiryDate: Date | string | null;
 }
 
 
