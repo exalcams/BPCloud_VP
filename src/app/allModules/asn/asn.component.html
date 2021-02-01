@@ -65,10 +65,11 @@
                         </div>
                       </div>
                     </div>
-                    <div fxFlex='60' fxLayout fxLayoutGap="10px"
-                      class="No-Invoice-Created-for-this-PO">
+                    <div fxFlex='60' fxLayout fxLayoutGap="10px" class="No-Invoice-Created-for-this-PO">
                       <div fxFlex fxLayoutAlign="end center" align="end">
-                        <mat-checkbox [disabled]="SelectedASNHeader.IsSubmitted" [checked]="IsShipmentNotRelevant" (change)="ShipmentNotRelevantChecked($event.checked)" class="example-margin">Shipment not relevant</mat-checkbox>
+                        <mat-checkbox [disabled]="SelectedASNHeader.IsSubmitted" [checked]="IsShipmentNotRelevant"
+                          (change)="ShipmentNotRelevantChecked($event.checked)" class="example-margin">Shipment not
+                          relevant</mat-checkbox>
                       </div>
                     </div>
                   </div>
@@ -760,8 +761,7 @@
                       </ng-container>
 
                       <ng-container matColumnDef="UnitPrice">
-                        <th mat-header-cell *matHeaderCellDef [ngClass]="BGClassName?.layout?.toolbar?.background"> Unit
-                          Price </th>
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="BGClassName?.layout?.toolbar?.background"> Gross price </th>
                         <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
                           <!-- <input matInput formControlName="MaterialText">  -->
                           {{ASNItemFormGroup.get('ASNItems')?.controls[index]?.get('UnitPrice')?.value}}
@@ -773,14 +773,15 @@
                           Delivery Date </th>
                         <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
                           <!-- <input matInput formControlName="DeliveryDate"> -->
-                          {{ASNItemFormGroup.get('ASNItems')?.controls[index]?.get('DeliveryDate')?.value | date : 'dd/MM/yyyy'}}
+                          {{ASNItemFormGroup.get('ASNItems')?.controls[index]?.get('DeliveryDate')?.value | date :
+                          'dd/MM/yyyy'}}
                         </td>
                       </ng-container>
 
                       <ng-container matColumnDef="HSN">
-                        <th mat-header-cell *matHeaderCellDef [ngClass]="BGClassName?.layout?.toolbar?.background"> HSN / SAC</th>
-                        <td mat-cell *matCellDef="let element; let index = index"
-                          [formGroupName]="index">
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="BGClassName?.layout?.toolbar?.background"> HSN
+                          / SAC</th>
+                        <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
                           <!-- <input matInput formControlName="OpenQty">  -->
                           {{ASNItemFormGroup.get('ASNItems')?.controls[index]?.get('HSN')?.value}}
                         </td>
@@ -832,7 +833,8 @@
                         <td mat-cell class="QtyClass editable" *matCellDef="let element; let index = index"
                           [formGroupName]="index" style="width: 120px;">
                           <mat-form-field class="px-8" appearance="outline" style="width: 100px;">
-                            <input matInput formControlName="ASNQty" (keydown)="decimalOnly($event)" (blur)="CalculateShipmentAmount()">
+                            <input matInput formControlName="ASNQty" (keydown)="decimalOnly($event)"
+                              (blur)="CalculateShipmentAmount()">
                             <mat-error *ngIf="ASNItemFormGroup.get('ASNItems').controls[index]?.get('ASNQty').touched && 
                             ASNItemFormGroup.get('ASNItems').controls[index]?.get('ASNQty').hasError('required')">
                               *
@@ -858,7 +860,8 @@
                           [ngClass]="BGClassName?.layout?.toolbar?.background"> Batch</th>
                         <td mat-cell *matCellDef="let element; let index = index" style="width: 150px;"
                           [formGroupName]="index" class="editable">
-                          <button type="button" mat-raised-button color="accent" (click)="OpenItemBatch(index)">Batch</button>
+                          <button type="button" mat-raised-button class="DeleteBtn" (click)="OpenItemBatch(index)">Batch
+                            {{ASNItemFormGroup.get('ASNItems').controls[index]?.get('Batch').value?.length>0?'('+ASNItemFormGroup.get('ASNItems').controls[index]?.get('Batch').value?.length+')':''}}</button>
                           <!-- <mat-form-field class="pl-8 pr-12" appearance="outline" style="width: 120px;">
                             <input matInput formControlName="Batch">
                             <mat-error *ngIf="ASNItemFormGroup.get('ASNItems').controls[index]?.get('Batch').touched && 
@@ -1212,7 +1215,7 @@
                       <div fxFlex='70'>
                         <mat-form-field class="pl-8 pr-12" style="width: 100%;">
                           <input matInput placeholder="Invoice Value" formControlName="InvoiceAmount"
-                            (keydown)="decimalOnly($event)">
+                            (keydown)="decimalOnly($event)" (blur)="AmountCheck()">
                           <mat-error
                             *ngIf="InvoiceDetailsFormGroup.get('InvoiceAmount').touched && InvoiceDetailsFormGroup.get('InvoiceAmount').hasError('required')">
                             Invoice Value is required
@@ -1411,7 +1414,8 @@
             <div fxFlex align="end">
               <button *ngIf="( SelectedASNHeader?.ASNNumber|| PO?.DocNumber) && IsInvoiceDetailsFormGroupEnabled"
                 mat-raised-button class="SaveBtn" (click)="SubmitClicked()">Release</button>
-              <button *ngIf="( SelectedASNHeader?.ASNNumber|| PO?.DocNumber) && !SelectedASNHeader?.IsSubmitted && !IsShipmentNotRelevant"
+              <button
+                *ngIf="( SelectedASNHeader?.ASNNumber|| PO?.DocNumber) && !SelectedASNHeader?.IsSubmitted && !IsShipmentNotRelevant"
                 mat-raised-button class="SaveBtn" (click)="SaveClicked()">Save</button>
             </div>
           </div>

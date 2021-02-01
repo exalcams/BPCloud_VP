@@ -1,7 +1,7 @@
 <div class="dialog-content-wrapper">
   <mat-toolbar class="toolBg m-0">
     <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
-      <span class="title dialog-title">Information</span>
+      <span class="title dialog-title">Batch details</span>
       <button mat-icon-button (click)="dialogRef.close()" aria-label="Close dialog">
         <mat-icon svgIcon="closeIcon"></mat-icon>
       </button>
@@ -51,7 +51,7 @@
           </mat-error>
         </mat-form-field>
 
-        <div fxFlex="10" fxLayoutAlign="center">
+        <div fxFlex="10" fxLayoutAlign="center" *ngIf="ASNItemBatchQty?.IsEnabled">
           <img class="addIcon" src="assets/images/logos/add-button.png" (click)="AddASNItemBatchToTable()">
         </div>
         
@@ -72,35 +72,35 @@
       <table *ngIf="asnItemBatches?.length" class="table" mat-table
         [dataSource]="ASNItemBatchDataSource" matSort>
 
+        <ng-container matColumnDef="Batch">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Batch </th>
+          <td mat-cell *matCellDef="let element" style="width: 20%;" class="tableLeftBorder"> {{element.Batch}} </td>
+        </ng-container>
+
         <ng-container matColumnDef="Qty">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">Qty</th>
-          <td mat-cell *matCellDef="let element" style="width: 20%;" class="tableLeftBorder">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;">Qty</th>
+          <td mat-cell *matCellDef="let element" style="width: 20%;">
             {{element.Qty}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="Batch">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Batch </th>
-          <td mat-cell *matCellDef="let element" style="width: 25%;"> {{element.Batch}} </td>
-        </ng-container>
-
         <ng-container matColumnDef="ManufactureDate">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;">
             ManufactureDate </th>
-          <td mat-cell *matCellDef="let element" style="width: 25%;">
+          <td mat-cell *matCellDef="let element" style="width: 20%;">
             {{element.ManufactureDate | date}} </td>
         </ng-container>
 
         <ng-container matColumnDef="ExpiryDate">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;">
             ExpiryDate </th>
-          <td mat-cell *matCellDef="let element" style="width: 25%;">
+          <td mat-cell *matCellDef="let element" style="width: 20%;">
             {{element.ExpiryDate | date}} </td>
         </ng-container>
 
         <ng-container matColumnDef="Action">
           <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> </th>
           <td mat-cell *matCellDef="let element;let index=index" style="width: 10%;text-align: center;">
-            <img class="removeIcon" src="assets/images/remove-button.png"
+            <img *ngIf="ASNItemBatchQty?.IsEnabled" class="removeIcon" src="assets/images/remove-button.png"
               (click)="RemoveASNItemBatchFromTable(element)">
           </td>
         </ng-container>
@@ -115,8 +115,10 @@
       </div>
     </div>
   </mat-dialog-content>
-  <mat-dialog-actions class="m-0 p-16" fxLayoutAlign="space-between center" align="end">
-    <button mat-button type="button" (click)="CloseClicked()">No</button>
-    <button mat-button type="button" class="btnBg" (click)="YesClicked()">Yes</button>
+  <mat-dialog-actions class="m-0 p-16" fxLayoutAlign="center" align="end">
+    <button mat-button type="button" (click)="CloseClicked()" *ngIf="ASNItemBatchQty?.IsEnabled">No</button>
+    <div fxFlex align="end">
+      <button mat-button type="button" class="btnBg" (click)="YesClicked()" align="end">Yes</button>
+    </div>
   </mat-dialog-actions>
 </div>

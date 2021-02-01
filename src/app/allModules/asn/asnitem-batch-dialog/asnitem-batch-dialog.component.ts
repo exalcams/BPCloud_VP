@@ -1,14 +1,17 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatTableDataSource, MatSnackBar } from '@angular/material';
-import { BPCASNItem, BPCASNItemBatch } from 'app/models/ASN';
+import { fuseAnimations } from '@fuse/animations';
+import { BPCASNItem, BPCASNItemBatch, BPCASNItemBatchQty } from 'app/models/ASN';
 import { NotificationSnackBarComponent } from '../../../notifications/notification-snack-bar/notification-snack-bar.component';
 import { SnackBarStatus } from '../../../notifications/notification-snack-bar/notification-snackbar-status-enum';
 
 @Component({
   selector: 'app-asnitem-batch-dialog',
   templateUrl: './asnitem-batch-dialog.component.html',
-  styleUrls: ['./asnitem-batch-dialog.component.scss']
+  styleUrls: ['./asnitem-batch-dialog.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  animations: fuseAnimations
 })
 export class ASNItemBatchDialogComponent implements OnInit {
   asnItemBatches: BPCASNItemBatch[] = [];
@@ -21,7 +24,7 @@ export class ASNItemBatchDialogComponent implements OnInit {
   constructor(
     private _formBuilder: FormBuilder,
     public snackBar: MatSnackBar,
-    @Inject(MAT_DIALOG_DATA) public asnQty: number,
+    @Inject(MAT_DIALOG_DATA) public ASNItemBatchQty: BPCASNItemBatchQty,
     public dialogRef: MatDialogRef<ASNItemBatchDialogComponent>,
   ) {
     this.toDay = new Date();
@@ -37,8 +40,25 @@ export class ASNItemBatchDialogComponent implements OnInit {
       ManufactureDate: [''],
       ExpiryDate: [''],
     });
+    this.ASNItemBatchQty.ASNItemBatchs.forEach(x => {
+      this.asnItemBatches.push(x);
+      this.ASNItemBatchDataSource = new MatTableDataSource(this.asnItemBatches);
+    });
   }
-
+  ResetFormGroup(formGroup: FormGroup): void {
+    formGroup.reset();
+    Object.keys(formGroup.controls).forEach(key => {
+      formGroup.get(key).enable();
+      formGroup.get(key).markAsUntouched();
+    });
+  }
+  // ClearASNItems(): void {
+  //   this.ClearFormArray(this.ASNItemFormArray);
+  //   this.ASNItemDataSource.next(this.ASNItemFormArray.controls);
+  // }
+  ResetASNItemBatchFormGroup(): void {
+    this.ResetFormGroup(this.ASNItemBatchFormGroup);
+  }
   AddASNItemBatchToTable(): void {
     if (this.ASNItemBatchFormGroup.valid) {
       const itemBatch = new BPCASNItemBatch();
@@ -54,6 +74,7 @@ export class ASNItemBatchDialogComponent implements OnInit {
       itemBatch.ExpiryDate = this.ASNItemBatchFormGroup.get('ExpiryDate').value;
       this.asnItemBatches.push(itemBatch);
       this.ASNItemBatchDataSource = new MatTableDataSource(this.asnItemBatches);
+      this.ResetASNItemBatchFormGroup();
     } else {
       this.ShowValidationErrors(this.ASNItemBatchFormGroup);
     }
@@ -119,8 +140,12 @@ export class ASNItemBatchDialogComponent implements OnInit {
 
   QtyValidation(): boolean {
     let sum: number = 0;
-    this.asnItemBatches.forEach(a => sum += a.Qty);
-    return sum === this.asnQty;
+    this.asnItemBatches.forEach(a => {
+      const qt = +a.Qty;
+      sum = +(sum + qt);
+    });
+    const asnQ = +this.ASNItemBatchQty.ASNQty;
+    return sum === asnQ;
   }
 
   CloseClicked(): void {

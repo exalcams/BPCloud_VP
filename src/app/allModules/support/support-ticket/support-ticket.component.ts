@@ -195,8 +195,8 @@ export class SupportTicketComponent implements OnInit {
             message = message + `Delivery date changed from ${this._datePipe.transform(delDate, 'dd/MM/yyyy')} to ${this._datePipe.transform(actDelDate, 'dd/MM/yyyy')} for Item ${x.Item}, `;
           }
         });
-        this.SupportTicketFormGroup.get('Remarks').patchValue(message);
-        this.SupportTicketFormGroup.get('Remarks').disable();
+        // this.SupportTicketFormGroup.get('Remarks').patchValue(message);
+        // this.SupportTicketFormGroup.get('Remarks').disable();
       },
       (err) => {
         console.log(err);

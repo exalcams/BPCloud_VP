@@ -33,7 +33,7 @@
       </div>
       <div class="tile mx-20" fxFlex="30" fxLayout="column" fxLayoutAlign="start">
         <div fxLayoutAlign="start center" class="pt-8">
-          <span class="boldClass  pl-8">Quality Index</span>
+          <span class="boldClass  pl-8">PPM</span>
         </div>
         <span [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="orangeBorderBottom"></span>
         <div fxFlex fxLayoutAlign="center" class="pt-8">
@@ -160,12 +160,12 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="DocVersion">
+        <!-- <ng-container matColumnDef="DocVersion">
           <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 8%;"
             [ngClass]="BGClassName?.layout?.toolbar?.background"> Version </th>
           <td mat-cell *matCellDef="let element" (click)="acknowledgementClicked(element.DocNumber)">
             {{element.DocVersion}} </td>
-        </ng-container>
+        </ng-container> -->
 
         <ng-container matColumnDef="DocType">
           <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 8%;"

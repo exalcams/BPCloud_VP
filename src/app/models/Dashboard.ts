@@ -12,6 +12,7 @@ export class PO {
 }
 export class ItemDetails {
     Item: string;
+    Material: string;
     MaterialText: string;
     DeliveryDate: Date;
     Proposeddeliverydate: string;
