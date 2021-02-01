@@ -124,7 +124,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     ofOption: OfOption;
     ofDetailsDisplayedColumns: string[] = [
         "PONumber",
-        "DocVersion",
+        // "DocVersion",
         "DocType",
         "DocDate",
         "Plant",
@@ -149,11 +149,9 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     ];
     ofTypeOptions: OfType[] = [
         { Value: "All", Name: "All" },
-        { Value: "Material", Name: "Material" },
-        { Value: "Service", Name: "Service" },
-        { Value: "Framework", Name: "Framework" },
-        { Value: "Contract", Name: "Contract" },
-        { Value: "Subcon", Name: "Subcon" },
+        { Value: "MAT", Name: "Material" },
+        { Value: "SER", Name: "Service" },
+        { Value: "AST", Name: "Asset" },
     ];
     searchText = "";
     FilterVal = "All";

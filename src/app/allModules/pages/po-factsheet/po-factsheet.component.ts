@@ -78,8 +78,8 @@ export class PoFactsheetComponent implements OnInit {
         // 'PlantCode',
         'UnitPrice',
         'Value',
-        'TaxAmount',
-        'TaxCode'
+        // 'TaxAmount',
+        // 'TaxCode'
     ];
     asnDisplayedColumns: string[] = [
         'ASN',
@@ -122,10 +122,10 @@ export class PoFactsheetComponent implements OnInit {
         'OrderedQty',
         'Material',
         'Description',
-        'Proposeddeliverydate',
-        'OrderQty',
-        'GRQty',
-        'PipelineQty',
+        // 'Proposeddeliverydate',
+        // 'OrderQty',
+        // 'GRQty',
+        // 'PipelineQty',
         'OpenQty',
         'UOM'
     ];
@@ -690,6 +690,7 @@ export class PoFactsheetComponent implements OnInit {
     insertPOItemsFormGroup(poItem: ItemDetails): void {
         const row = this.formBuilder.group({
             Item: [poItem.Item],
+            Material: [poItem.Material],
             MaterialText: [poItem.MaterialText],
             DeliveryDate: [poItem.DeliveryDate],
             Proposeddeliverydate: [poItem.Proposeddeliverydate, Validators.required],
@@ -718,6 +719,7 @@ export class PoFactsheetComponent implements OnInit {
         poItemFormArray.controls.forEach((x, i) => {
             const item: ItemDetails = new ItemDetails();
             item.Item = x.get('Item').value;
+            item.Material = x.get('Material').value;
             item.MaterialText = x.get('MaterialText').value;
             item.DeliveryDate = x.get('DeliveryDate').value;
             const proposeddeliverydate = x.get('Proposeddeliverydate').value as Date;

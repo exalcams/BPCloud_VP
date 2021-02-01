@@ -74,7 +74,7 @@
   .TablePadFont {
     padding: 5px;
     font-size: 12px;
-    min-width: 100px !important;
+    min-width: 70px !important;
   }
 
   table {
@@ -92,7 +92,7 @@
       @extend .TablePadFont;
       font-size: 12px;
       max-width: 25px !important;
-      text-align: center;
+      //text-align: center;
       color: black;
       min-width: max-content !important;
     }

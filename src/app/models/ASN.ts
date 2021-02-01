@@ -116,6 +116,12 @@ export class BPCASNItemBatch extends CommonClass {
     ManufactureCountry: string;
 }
 
+export class BPCASNItemBatchQty extends CommonClass {
+    ASNQty: number;
+    ASNItemBatchs: BPCASNItemBatch[];
+    IsEnabled: boolean;
+}
+
 export class BPCASNItemSES extends CommonClass {
     Client: string;
     Company: string;

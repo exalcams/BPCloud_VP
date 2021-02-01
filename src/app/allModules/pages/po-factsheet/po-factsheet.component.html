@@ -12,24 +12,23 @@
     <!-- Top Header -->
     <div fxLayout="row" style="margin-top: 20px !important;margin-top: 10px !important;">
       <div fxFlex="50" class="p-8" style="margin-left:20px">
-        <div fxFlex="45" class="mx-8 mb-8 mt-0" fxLayout="column" fxLayoutAlign="space-evenly stretch" >
-          <div fxLayout="row" class="py-4" fxLayoutAlign="start center"  fxLayoutGap="20px">
+        <div fxFlex="45" class="mx-8 mb-8 mt-0" fxLayout="column" fxLayoutAlign="space-evenly stretch">
+          <div fxLayout="row" class="py-4" fxLayoutAlign="start center" fxLayoutGap="20px">
             <div>PO No : </div>
             <div> <strong style=" line-height: 20px;">{{orderFulfilmentDetails.PONumber}}</strong></div>
           </div>
           <div fxLayout="row" class="py-4" fxLayoutAlign="start center" fxLayoutGap="10px">
-            <div >PO Date : </div>
-            <div > <strong
-                style=" line-height: 20px;">{{orderFulfilmentDetails.PODate  | date :'dd/MM/yyyy'}}</strong>
+            <div>PO Date : </div>
+            <div> <strong style=" line-height: 20px;">{{orderFulfilmentDetails.PODate | date :'dd/MM/yyyy'}}</strong>
             </div>
           </div>
           <div fxLayout="row" class="py-4" fxLayoutAlign="start center" fxLayoutGap="10px">
-            <div  >Version : </div>
-            <div > <strong style=" line-height: 20px;">{{orderFulfilmentDetails.Version}}</strong></div>
+            <div>Version : </div>
+            <div> <strong style=" line-height: 20px;">{{orderFulfilmentDetails.Version}}</strong></div>
           </div>
           <div fxLayout="row" class="py-4" fxLayoutGap="10px" fxLayoutAlign="start center">
-            <div >Currency : </div>
-            <div > <strong style=" line-height: 20px;">{{orderFulfilmentDetails.Currency}}</strong></div>
+            <div>Currency : </div>
+            <div> <strong style=" line-height: 20px;">{{orderFulfilmentDetails.Currency}}</strong></div>
           </div>
         </div>
         <!-- <div fxFlex="10">
@@ -41,12 +40,12 @@
             <div fxFlex style="text-align: left;"> <strong style=" line-height: 20px;">Delivery address</strong></div>
           </div>
           <div fxLayout="row" class="py-4" fxLayoutAlign="start" fxLayoutGap="5px">
-            <div fxFlex style="text-align: left;"> <span
-                style=" line-height: 20px;">{{ItemPlantDetails.PlantText + ' , '}}</span></div>
+            <div fxFlex style="text-align: left;"> <span style=" line-height: 20px;">{{ItemPlantDetails.PlantText + ' ,
+                '}}</span></div>
           </div>
           <div fxLayout="row" class="py-4" fxLayoutAlign="start" fxLayoutGap="5px">
-            <div fxFlex style="text-align: left;"> <span
-                style=" line-height: 20px;">{{ItemPlantDetails.AddressLine1 + ' , '}}</span>
+            <div fxFlex style="text-align: left;"> <span style=" line-height: 20px;">{{ItemPlantDetails.AddressLine1 + '
+                , '}}</span>
             </div>
           </div>
           <div fxLayout="row" class="py-4" fxLayoutAlign="start" fxLayoutGap="5px">
@@ -54,8 +53,8 @@
                 {{ItemPlantDetails.State}}</span></div>
           </div>
           <div fxLayout="row" class="py-4" fxLayoutAlign="start" fxLayoutGap="5px">
-            <div fxFlex style="text-align: left;"> <span
-                style=" line-height: 20px;">{{ItemPlantDetails.Country + ' - '}} {{ItemPlantDetails.PinCode}}</span>
+            <div fxFlex style="text-align: left;"> <span style=" line-height: 20px;">{{ItemPlantDetails.Country + ' -
+                '}} {{ItemPlantDetails.PinCode}}</span>
             </div>
           </div>
         </div>
@@ -281,7 +280,7 @@
                       <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
                       <div fxFlex class="pl-4">
                         <!-- <input matInput formControlName="MaterialText"> -->
-                        {{ackFormGroup.get('POItems')?.controls[index]?.get('MaterialText')?.value}}
+                        {{ackFormGroup.get('POItems')?.controls[index]?.get('Material')?.value}}
                       </div>
                     </div>
                     <!-- {{element.MaterialText}}  -->
@@ -289,9 +288,9 @@
                 </ng-container>
 
                 <ng-container matColumnDef="Description">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;">Description</th>
                   <td mat-cell style="text-align: left" *matCellDef="let element;let odd=odd;let index=index"
-                    [formGroupName]="index" class="tableLeftBorder pl-0">
+                    [formGroupName]="index" class="tableLeftBorder pl-0" style="width: 25%;">
                     <!-- <input matInput formControlName="MaterialText"> -->
                     <div fxLayout>
                       <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
@@ -315,18 +314,18 @@
                 </ng-container>
 
                 <ng-container matColumnDef="Proposeddeliverydate">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Proposed Delivery
-                    Date</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Proposed Date</th>
                   <td mat-cell style="text-align: left" *matCellDef="let element; let index = index"
                     [formGroupName]="index">
                     <!-- <input matInput formControlName="Proposeddeliverydate"> -->
                     <mat-form-field style="width: 65%;">
-                      <input matInput  [matDatepicker]="picker" formControlName="Proposeddeliverydate"  [min]="yesterday"   required>
+                      <input matInput [matDatepicker]="picker" formControlName="Proposeddeliverydate" [min]="yesterday"
+                        required>
                       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                       <mat-datepicker #picker color="primary"></mat-datepicker>
                       <!-- <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle> -->
                       <!-- <mat-datepicker-toggle matSuffix [for]="picker"> -->
-                        <!-- <img matDatepickerToggleIcon class="calendarImg" src="assets/images/calendar.png"> -->
+                      <!-- <img matDatepickerToggleIcon class="calendarImg" src="assets/images/calendar.png"> -->
                       <!-- </mat-datepicker-toggle> -->
                       <!-- <mat-datepicker #picker></mat-datepicker> -->
                       <span class="pl-4 errorClass" *ngIf="ackFormGroup.get('POItems').controls[index].get('Proposeddeliverydate').touched &&
@@ -409,12 +408,10 @@
                 </ng-container> -->
 
                 <ng-container matColumnDef="UnitPrice">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Net Rate</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Gross price</th>
                   <td mat-cell style="text-align: right;" *matCellDef="let element; let index = index"
                     [formGroupName]="index">
-                    <!-- <input matInput formControlName="UOM"> -->
                     {{ackFormGroup.get('POItems')?.controls[index]?.get('UnitPrice')?.value | number : 2}}
-                    <!-- {{element.UOM}} -->
                     {{12.52311 | number : 2}}
                   </td>
                 </ng-container>
@@ -423,31 +420,25 @@
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Net Value</th>
                   <td mat-cell style="text-align: right" *matCellDef="let element; let index = index"
                     [formGroupName]="index">
-                    <!-- <input matInput formControlName="UOM"> -->
                     {{ackFormGroup.get('POItems')?.controls[index]?.get('Value')?.value}}
-                    <!-- {{element.UOM}} -->
                   </td>
                 </ng-container>
 
-                <ng-container matColumnDef="TaxAmount">
+                <!-- <ng-container matColumnDef="TaxAmount">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Tax Value</th>
                   <td mat-cell style="text-align: right" *matCellDef="let element; let index = index"
                     [formGroupName]="index">
-                    <!-- <input matInput formControlName="UOM"> -->
                     {{ackFormGroup.get('POItems')?.controls[index]?.get('TaxAmount')?.value}}
-                    <!-- {{element.UOM}} -->
-                  </td>
+                 </td>
                 </ng-container>
 
                 <ng-container matColumnDef="TaxCode">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Tax Code</th>
                   <td mat-cell style="text-align: right" *matCellDef="let element; let index = index"
                     [formGroupName]="index">
-                    <!-- <input matInput formControlName="UOM"> -->
                     {{ackFormGroup.get('POItems')?.controls[index]?.get('TaxCode')?.value}}
-                    <!-- {{element.UOM}} -->
                   </td>
-                </ng-container>
+                </ng-container> -->
 
                 <tr mat-header-row *matHeaderRowDef="itemDisplayedColumns;sticky: true"></tr>
                 <tr mat-row *matRowDef="let row; columns: itemDisplayedColumns;let even=even" style=" cursor: pointer;">
@@ -462,7 +453,7 @@
       <!-- SL -->
       <div class="content" fxLayout="column" *ngIf="tab2">
         <div class="p-12  mt-24">
-          <table style="width: 55% !important;" class="table" mat-table [dataSource]="slDataSource" matSort>
+          <table style="width: 80% !important;" class="table" mat-table [dataSource]="slDataSource" matSort>
 
             <ng-container matColumnDef="Item">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Item </th>
@@ -497,11 +488,11 @@
             </ng-container>
 
             <ng-container matColumnDef="Description">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: right">Description</th>
-              <td mat-cell style="text-align: right" *matCellDef="let element"> {{element.Description}} </td>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: right;width:15%">Description</th>
+              <td mat-cell style="width:15%" *matCellDef="let element"> {{element.Description}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="Proposeddeliverydate">
+            <!-- <ng-container matColumnDef="Proposeddeliverydate">
               <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: right">Proposed delivery date
               </th>
               <td mat-cell style="text-align: right" *matCellDef="let element"> {{element.Proposeddeliverydate}} </td>
@@ -520,7 +511,7 @@
             <ng-container matColumnDef="PipelineQty">
               <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: right">Pipeline Qty</th>
               <td mat-cell style="text-align: right" *matCellDef="let element"> {{element.PipelineQty}} </td>
-            </ng-container>
+            </ng-container> -->
 
             <ng-container matColumnDef="OpenQty">
               <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: right">Open Qty</th>
@@ -783,7 +774,8 @@
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="documentDisplayedColumns;sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: documentDisplayedColumns;let even=even" (click)="viewOfAttachmentClicked(row)" style=" cursor: pointer;">
+            <tr mat-row *matRowDef="let row; columns: documentDisplayedColumns;let even=even"
+              (click)="viewOfAttachmentClicked(row)" style=" cursor: pointer;">
             </tr>
           </table>
         </div>
