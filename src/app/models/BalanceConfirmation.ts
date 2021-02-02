@@ -30,3 +30,21 @@ export class BalanceConfirmationItem extends CommonClass {
 export class ConfirmationDetails {
     ConfirmedBy: string;
 }
+// export class BPCPayAccountStatement extends CommonClass {
+//     Client: string;
+//     Company: string;
+//     Type: string;
+//     PartnerID: string;
+//     FiscalYear: string;
+//     DocumentNumber: string;
+//     DocumentDate: string | null;
+//     InvoiceNumber: string;
+//     InvoiceDate: string | null;
+//     InvoiceAmount: number;
+//     BalanceAmount: number;
+//     PaidAmount: number;
+//     Reference: string;
+//     Status: string;
+//     AcceptedOn: string | null;
+//     AcceptedBy: string;
+// }

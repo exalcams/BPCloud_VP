@@ -165,5 +165,4 @@ export class BalanceConfirmationComponent implements OnInit {
       this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
     });
   }
-
 }

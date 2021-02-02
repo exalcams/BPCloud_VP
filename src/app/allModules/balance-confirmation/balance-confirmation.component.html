@@ -114,15 +114,14 @@
     </mat-progress-spinner>
     <div id="overlay" *ngIf="isProgressBarVisibile"></div>
   </div>
-  <div class="px-20 pb-20" style="position: absolute;width: 100%;
-    bottom: 6rem;" fxLayout fxLayoutAlign="start center" fxLayoutGap="2.5rem">
-    <mat-checkbox [(ngModel)]="isAccepted"></mat-checkbox>
-    <span style="height: 3rem;border-right:2px solid grey;width: 1px;"></span>
-    <div style="width: 100%;">
-      <label style="font-size: 15px;">I acknowledge the balance shown here matches with our book of account</label>
+    <div class="px-20 pb-20" style="position: absolute;width: 100%;
+      bottom: 6rem;" fxLayout fxLayoutAlign="start center" fxLayoutGap="2.5rem">
+      <mat-checkbox [(ngModel)]="isAccepted"></mat-checkbox>
+      <span style="height: 3rem;border-right:2px solid grey;width: 1px;"></span>
+      <div style="width: 100%;">
+        <label style="font-size: 15px;">I acknowledge the balance shown here matches with our book of account</label>
+      </div>
     </div>
-  </div>
-
   <div class="px-20 pb-20 footer" fxLayout="row" fxLayoutAlign="space-between center">
     <button (click)="handle_getsolved()" mat-raised-button class="SaveBtn"
       [ngClass]="BGClassName?.layout?.navbar?.primaryBackground">Get Solved</button>

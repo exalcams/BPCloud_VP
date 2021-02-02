@@ -54,7 +54,12 @@
     .semiBoldClass {
         font-weight: 500;
     }
-
+    .SaveBtn {
+        background-color: #efb577;
+        padding: 0px 40px;
+        color: white;
+        margin-top: 2rem;
+    }
     .subTitle {
         @extend .semiBoldClass;
         font-size: 12px;
@@ -149,7 +154,7 @@
             @extend .TableCommon;
             // min-width: max-content !important;
             &.QtyClass {
-                text-align: right;
+                text-align: left;
             }
             .mat-form-field-underline {
                 display: none;
@@ -435,5 +440,12 @@
         font-size: 12px;
         margin-top: -16px;
         // margin-left: 32px;
+    }
+    .footer{
+        box-shadow: 0 -5px 10px 0 rgba(0, 0, 0, 0.16);
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        height: 6rem;
     }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { MatTableDataSource, MatPaginator, MatMenuTrigger, MatSort, MatSnackBar, MatDialog } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatMenuTrigger, MatSort, MatSnackBar, MatDialog, MatDialogConfig } from '@angular/material';
 import { PO } from 'app/models/Dashboard';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { fuseAnimations } from '@fuse/animations';
@@ -15,6 +15,7 @@ import { DatePipe } from '@angular/common';
 import { ExcelService } from 'app/services/excel.service';
 import { MasterService } from 'app/services/master.service';
 import { FuseConfigService } from '@fuse/services/config.service';
+import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 
 @Component({
   selector: 'app-account-statement',
@@ -46,14 +47,20 @@ export class AccountStatementComponent implements OnInit {
     'InvoiceDate',
     'InvoiceAmount',
     'PaidAmount',
-    'Reference'
+    'Reference',
+    'Balance',
+    'Action'
   ];
   fuseConfig: any;
   BGClassName: any;
+  isAccepted: boolean = false;
+  render=false;
   tableDataSource: MatTableDataSource<BPCPayAccountStatement>;
   @ViewChild(MatPaginator) tablePaginator: MatPaginator;
   @ViewChild(MatMenuTrigger) matMenuTrigger: MatMenuTrigger;
   @ViewChild(MatSort) tableSort: MatSort;
+  BPCPayAccountStatement: BPCPayAccountStatement[]=[];
+  BCHeader:BPCPayAccountStatement;
   constructor(
     private _fuseConfigService: FuseConfigService,
     private formBuilder: FormBuilder,
@@ -64,6 +71,7 @@ export class AccountStatementComponent implements OnInit {
     private _masterService: MasterService,
     private _datePipe: DatePipe,
     private _excelService: ExcelService,
+    
   ) {
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.authenticationDetails = new AuthenticationDetails();
@@ -76,6 +84,8 @@ export class AccountStatementComponent implements OnInit {
     this.DefaultFromDate = new Date();
     this.DefaultFromDate.setDate(this.DefaultFromDate.getDate() - 30);
     this.DefaultToDate = new Date();
+    this.BCHeader = new BPCPayAccountStatement();
+
   }
 
   ngOnInit(): void {
@@ -142,7 +152,9 @@ export class AccountStatementComponent implements OnInit {
     this.paymentService.GetAccountStatementByPartnerID(this.currentUserName).subscribe(
       (data) => {
         this.AccountStatements = data as BPCPayAccountStatement[];
-        this.tableDataSource = new MatTableDataSource(this.AccountStatements);
+        this.BPCPayAccountStatement=this.AccountStatements;
+        this.tableDataSource = new MatTableDataSource<BPCPayAccountStatement>(this.AccountStatements);
+        console.log('AccountStatements Table',this.tableDataSource.data);
         this.tableDataSource.paginator = this.tablePaginator;
         this.tableDataSource.sort = this.tableSort;
         this.IsProgressBarVisibile = false;
@@ -153,6 +165,7 @@ export class AccountStatementComponent implements OnInit {
       }
     );
   }
+  
   DateSelected(): void {
     const FROMDATEVAL = this.SearchFormGroup.get('FromDate').value as Date;
     const TODATEVAL = this.SearchFormGroup.get('ToDate').value as Date;
@@ -180,10 +193,13 @@ export class AccountStatementComponent implements OnInit {
         this.paymentService.FilterAccountStatementByPartnerID(this.currentUserName, DocumentID, FromDate, ToDate).subscribe(
           (data) => {
             this.AccountStatements = data as BPCPayAccountStatement[];
+            // this.BPCPayAccountStatement=this.AccountStatements;
             this.tableDataSource = new MatTableDataSource(this.AccountStatements);
             this.tableDataSource.paginator = this.tablePaginator;
             this.tableDataSource.sort = this.tableSort;
+            this.render=true;
             this.IsProgressBarVisibile = false;
+            
           },
           (err) => {
             console.error(err);
@@ -257,8 +273,56 @@ export class AccountStatementComponent implements OnInit {
         this.fuseConfig = config;
         this.BGClassName = config;
       });
-      console.log("Account-statement",this.BGClassName);
+      // console.log("Account-statement",this.BGClassName);
     // this._fuseConfigService.config = this.fuseConfig;
+  }
+  handle_accept(element:BPCPayAccountStatement):void{
+    console.log('handle_accept',element);
+    if(this.BPCPayAccountStatement.length >=1 )
+    {
+      this.BPCPayAccountStatement.pop();
+    }
+    this.BPCPayAccountStatement.push(element);
+    this.OpenConfirmationDialog('Confirm', 'Balance');
+
+  }
+  handle_getsolved(element:BPCPayAccountStatement):void
+  {
+    this.BCHeader=element;
+    this._router.navigate(["/support/supportticket"], {
+      queryParams: { period: this.BCHeader.FiscalYear },
+    });
+  }
+  OpenConfirmationDialog(Actiontype: string, Catagory: string): void {
+    const dialogConfig: MatDialogConfig = {
+      data: {
+        Actiontype: Actiontype,
+        Catagory: Catagory
+      },
+      panelClass: 'confirmation-dialog'
+    };
+    const dialogRef = this.dialog.open(NotificationDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      result => {
+        if (result) {
+          this.AccpetAccountStatement();
+        }
+      });
+  }
+  AccpetAccountStatement():void{
+    this.IsProgressBarVisibile=true;
+    this.BPCPayAccountStatement.forEach((Payment) => {
+      Payment.AcceptedBy=this.currentUserName;
+    });
+    console.log('AccpetAccountStatement',this.BPCPayAccountStatement);
+    this.paymentService.AcceptBC(this.BPCPayAccountStatement).subscribe(x => {
+      this.IsProgressBarVisibile=false;
+
+      this.notificationSnackBarComponent.openSnackBar('Account Statement Confirmed', SnackBarStatus.success);
+    }, err => {
+      this.IsProgressBarVisibile=false;
+      this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+    });
   }
 }
 
