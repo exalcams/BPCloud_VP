@@ -12,6 +12,7 @@ export class BPCPayAccountStatement extends CommonClass {
     InvoiceDate: Date | string | null;
     InvoiceAmount: number;
     PaidAmount: number;
+    BalanceAmount :string;
     Reference: string;
     Status: string;
     AcceptedOn: Date | string | null;

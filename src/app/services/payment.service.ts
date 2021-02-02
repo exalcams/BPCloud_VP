@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { Observable, throwError } from 'rxjs';
 import { BPCPayAccountStatement, BPCPayPayable, BPCPayPayment, BPCPayTDS } from 'app/models/Payment.model';
@@ -57,5 +57,12 @@ export class PaymentService {
     return this._httpClient.get<BPCPayTDS[]>
       (`${this.baseAddress}poapi/Payment/FilterTDSByPartnerID?PartnerID=${PartnerID}&FromDate=${FromDate}&ToDate=${ToDate}`)
       .pipe(catchError(this.errorHandler));
+  }
+  AcceptBC(BPCPayAccountStatement: BPCPayAccountStatement[]): Observable<any> {
+    return this._httpClient.post(`${this.baseAddress}poapi/Payment/AcceptBC`, BPCPayAccountStatement, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    }).pipe(catchError(this.errorHandler));
   }
 }
