@@ -293,8 +293,8 @@ export class ASNComponent implements OnInit {
             POBasicPrice: ['', [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,2})?$')]],
             TaxAmount: ['', [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,2})?$')]],
             InvoiceAmount: ['', [Validators.required, Validators.pattern('^([0-9]{0,10})([.][0-9]{1,2})?$')]],
-            InvoiceAmountUOM: [''],
-            InvoiceDate: [''],
+            InvoiceAmountUOM: ['', Validators.required],
+            InvoiceDate: ['', Validators.required],
             InvoiceAttachment: [''],
         });
         this.InvoiceDetailsFormGroup.get('POBasicPrice').disable();
@@ -340,7 +340,7 @@ export class ASNComponent implements OnInit {
     }
     ResetInvoiceDetailsFormGroup(): void {
         this.ResetFormGroup(this.InvoiceDetailsFormGroup);
-        this.InvoiceDetailsFormGroup.get('InvoiceAmount').disable();
+        this.InvoiceDetailsFormGroup.get('POBasicPrice').disable();
     }
     ResetDocumentCenterFormGroup(): void {
         this.ResetFormGroup(this.DocumentCenterFormGroup);
@@ -770,7 +770,7 @@ export class ASNComponent implements OnInit {
         } else {
             this.EnableAllFormGroup();
         }
-        this.InvoiceDetailsFormGroup.get('InvoiceAmount').disable();
+        this.InvoiceDetailsFormGroup.get('POBasicPrice').disable();
     }
     DisableAllFormGroup(): void {
         this.ASNFormGroup.disable();
@@ -1035,7 +1035,7 @@ export class ASNComponent implements OnInit {
         this.InvoiceDetailsFormGroup.get('TaxAmount').patchValue(this.SelectedASNHeader.TaxAmount);
         this.InvoiceDetailsFormGroup.get('InvoiceAmount').patchValue(this.SelectedASNHeader.InvoiceAmount);
         this.InvoiceDetailsFormGroup.get('InvoiceAmountUOM').patchValue(this.SelectedASNHeader.InvoiceAmountUOM);
-        this.InvoiceDetailsFormGroup.get('InvoiceAmount').disable();
+        this.InvoiceDetailsFormGroup.get('POBasicPrice').disable();
     }
 
     GetASNValues(): void {
@@ -1347,7 +1347,7 @@ export class ASNComponent implements OnInit {
     }
 
     SaveClicked(): void {
-        this.InvoiceDetailsFormGroup.get('InvoiceAmount').disable();
+        this.InvoiceDetailsFormGroup.get('POBasicPrice').disable();
         // if (this.ASNFormGroup.valid) {
         //     if (!this.isWeightError) {
         //         if (this.ASNItemFormGroup.valid) {
@@ -1393,7 +1393,7 @@ export class ASNComponent implements OnInit {
             this.GetASNPacksValues();
             if (this.CheckForNonZeroOpenQty()) {
                 if (this.IsAtleastOneASNQty) {
-                    this.CalculateInvoiceAmount();
+                    //this.CalculateInvoiceAmount();
                     if (!this.isPOBasicPriceError) {
                         if (this.IsPriceNotMatched) {
                             const dialogConfig: MatDialogConfig = {
@@ -1441,54 +1441,59 @@ export class ASNComponent implements OnInit {
     }
     SubmitClicked(): void {
         this.EnableAllFormGroup();
-        this.InvoiceDetailsFormGroup.get('InvoiceAmount').disable();
+        this.InvoiceDetailsFormGroup.get('POBasicPrice').disable();
         if (this.IsShipmentNotRelevant) {
             if (!this.isWeightError) {
-                this.GetASNValues();
-                this.GetASNItemValues();
-                this.GetASNPacksValues();
-                if (this.CheckForNonZeroOpenQty()) {
-                    this.CalculateInvoiceAmount();
-                    if (!this.isPOBasicPriceError) {
-                        if (this.IsPriceNotMatched) {
-                            const dialogConfig: MatDialogConfig = {
-                                data: {
-                                    title: 'Price does not match with Shipment Value',
-                                    // subtitle: 'Please create a support ticket to acknowledge it.'
-                                },
-                                panelClass: 'confirmation-dialog'
-                            };
-                            const dialogRef = this.dialog.open(NotificationDialog1Component, dialogConfig);
-                            dialogRef.afterClosed().subscribe(
-                                result => {
-                                    if (result) {
-                                        this.IsPriceNotMatched = false;
-                                        this.GetInvoiceDetailValues();
-                                        this.GetDocumentCenterValues();
-                                        this.SelectedASNView.IsSubmitted = true;
-                                        this.SelectedASNView.Status = 'ShipmentNotRelevant';
-                                        this.SetActionToOpenConfirmation('Submit');
-                                    } else {
-                                        this.IsPriceNotMatched = true;
-                                    }
-                                },
-                                () => {
-                                    this.IsPriceNotMatched = true;
-                                });
+                if (this.InvoiceDetailsFormGroup.valid) {
+                    if (this.invoiceAttachment && this.invoiceAttachment.name) {
+                        this.GetASNValues();
+                        this.GetASNItemValues();
+                        this.GetASNPacksValues();
+                        if (this.CheckForNonZeroOpenQty()) {
+                            // this.CalculateInvoiceAmount();
+                            if (!this.isPOBasicPriceError) {
+                                if (this.IsPriceNotMatched) {
+                                    const dialogConfig: MatDialogConfig = {
+                                        data: {
+                                            title: 'Price does not match with Shipment Value',
+                                            // subtitle: 'Please create a support ticket to acknowledge it.'
+                                        },
+                                        panelClass: 'confirmation-dialog'
+                                    };
+                                    const dialogRef = this.dialog.open(NotificationDialog1Component, dialogConfig);
+                                    dialogRef.afterClosed().subscribe(
+                                        result => {
+                                            if (result) {
+                                                this.IsPriceNotMatched = false;
+                                                this.GetInvoiceDetailValues();
+                                                this.GetDocumentCenterValues();
+                                                this.SelectedASNView.IsSubmitted = true;
+                                                this.SelectedASNView.Status = 'ShipmentNotRelevant';
+                                                this.SetActionToOpenConfirmation('Submit');
+                                            } else {
+                                                this.IsPriceNotMatched = true;
+                                            }
+                                        },
+                                        () => {
+                                            this.IsPriceNotMatched = true;
+                                        });
+                                } else {
+                                    this.GetInvoiceDetailValues();
+                                    this.GetDocumentCenterValues();
+                                    this.SelectedASNView.IsSubmitted = true;
+                                    this.SelectedASNView.Status = 'ShipmentNotRelevant';
+                                    this.SetActionToOpenConfirmation('Submit');
+                                }
+                            }
                         } else {
-                            this.GetInvoiceDetailValues();
-                            this.GetDocumentCenterValues();
-                            this.SelectedASNView.IsSubmitted = true;
-                            this.SelectedASNView.Status = 'ShipmentNotRelevant';
-                            this.SetActionToOpenConfirmation('Submit');
+                            this.notificationSnackBarComponent.openSnackBar('There is no Open Qty', SnackBarStatus.danger);
                         }
+                    } else {
+                        this.notificationSnackBarComponent.openSnackBar('Please add Invoice attachment', SnackBarStatus.danger);
                     }
                 } else {
-                    this.notificationSnackBarComponent.openSnackBar('There is no Open Qty', SnackBarStatus.danger);
+                    this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
                 }
-
-            } else {
-                this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
             }
         } else {
             if (this.ASNFormGroup.valid) {
@@ -1496,51 +1501,55 @@ export class ASNComponent implements OnInit {
                     if (this.ASNItemFormGroup.valid) {
                         if (this.ASNPackFormGroup.valid) {
                             if (this.InvoiceDetailsFormGroup.valid) {
-                                this.GetASNValues();
-                                this.GetASNItemValues();
-                                this.GetASNPacksValues();
-                                if (this.CheckForNonZeroOpenQty()) {
-                                    if (this.IsAtleastOneASNQty) {
-                                        this.CalculateInvoiceAmount();
-                                        if (!this.isPOBasicPriceError) {
-                                            if (this.IsPriceNotMatched) {
-                                                const dialogConfig: MatDialogConfig = {
-                                                    data: {
-                                                        title: 'Price does not match with Shipment Value',
-                                                        // subtitle: 'Please create a support ticket to acknowledge it.'
-                                                    },
-                                                    panelClass: 'confirmation-dialog'
-                                                };
-                                                const dialogRef = this.dialog.open(NotificationDialog1Component, dialogConfig);
-                                                dialogRef.afterClosed().subscribe(
-                                                    result => {
-                                                        if (result) {
-                                                            this.IsPriceNotMatched = false;
-                                                            this.GetInvoiceDetailValues();
-                                                            this.GetDocumentCenterValues();
-                                                            this.SelectedASNView.Status = 'Submitted';
-                                                            this.SelectedASNView.IsSubmitted = true;
-                                                            this.OpenASNReleaseDialog();
-                                                        } else {
+                                if (this.invoiceAttachment && this.invoiceAttachment.name) {
+                                    this.GetASNValues();
+                                    this.GetASNItemValues();
+                                    this.GetASNPacksValues();
+                                    if (this.CheckForNonZeroOpenQty()) {
+                                        if (this.IsAtleastOneASNQty) {
+                                            // this.CalculateInvoiceAmount();
+                                            if (!this.isPOBasicPriceError) {
+                                                if (this.IsPriceNotMatched) {
+                                                    const dialogConfig: MatDialogConfig = {
+                                                        data: {
+                                                            title: 'Price does not match with Shipment Value',
+                                                            // subtitle: 'Please create a support ticket to acknowledge it.'
+                                                        },
+                                                        panelClass: 'confirmation-dialog'
+                                                    };
+                                                    const dialogRef = this.dialog.open(NotificationDialog1Component, dialogConfig);
+                                                    dialogRef.afterClosed().subscribe(
+                                                        result => {
+                                                            if (result) {
+                                                                this.IsPriceNotMatched = false;
+                                                                this.GetInvoiceDetailValues();
+                                                                this.GetDocumentCenterValues();
+                                                                this.SelectedASNView.Status = 'Submitted';
+                                                                this.SelectedASNView.IsSubmitted = true;
+                                                                this.OpenASNReleaseDialog();
+                                                            } else {
+                                                                this.IsPriceNotMatched = true;
+                                                            }
+                                                        },
+                                                        () => {
                                                             this.IsPriceNotMatched = true;
-                                                        }
-                                                    },
-                                                    () => {
-                                                        this.IsPriceNotMatched = true;
-                                                    });
-                                            } else {
-                                                this.GetInvoiceDetailValues();
-                                                this.GetDocumentCenterValues();
-                                                this.SelectedASNView.Status = 'Submitted';
-                                                this.SelectedASNView.IsSubmitted = true;
-                                                this.OpenASNReleaseDialog();
+                                                        });
+                                                } else {
+                                                    this.GetInvoiceDetailValues();
+                                                    this.GetDocumentCenterValues();
+                                                    this.SelectedASNView.Status = 'Submitted';
+                                                    this.SelectedASNView.IsSubmitted = true;
+                                                    this.OpenASNReleaseDialog();
+                                                }
                                             }
+                                        } else {
+                                            this.notificationSnackBarComponent.openSnackBar('Atleast one item should have non zero value to proceed', SnackBarStatus.danger);
                                         }
                                     } else {
-                                        this.notificationSnackBarComponent.openSnackBar('Atleast one item should have non zero value to proceed', SnackBarStatus.danger);
+                                        this.notificationSnackBarComponent.openSnackBar('There is no Open Qty', SnackBarStatus.danger);
                                     }
                                 } else {
-                                    this.notificationSnackBarComponent.openSnackBar('There is no Open Qty', SnackBarStatus.danger);
+                                    this.notificationSnackBarComponent.openSnackBar('Please add Invoice attachment', SnackBarStatus.danger);
                                 }
                             } else {
                                 this.ShowValidationErrors(this.InvoiceDetailsFormGroup);
