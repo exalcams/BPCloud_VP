@@ -59,18 +59,20 @@ export class BPCKRA extends CommonClass {
     KRAValue: string;
 }
 export class BPCAIACT extends CommonClass {
-    ID: number;
     Client: string;
     Company: string;
     Type: string;
     PatnerID: string;
-    SeqNo: string;
+    SeqNo: number;
+    ActType: string;
     AppID: string;
     DocNumber: string;
+    Action: string;
     ActionText: string;
     Status: string;
     Date: Date | string | null;
     Time: string;
+    IsSeen: boolean;
 }
 export class BPCCertificate extends CommonClass {
     ID: number;

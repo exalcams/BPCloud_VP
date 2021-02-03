@@ -132,6 +132,27 @@ export class FactService {
       .pipe(catchError(this.errorHandler));
   }
 
+  GetActionsByPartnerID(PartnerID: string): Observable<BPCAIACT[] | string> {
+    return this._httpClient.get<BPCAIACT[]>(`${this.baseAddress}factapi/Fact/GetActionsByPartnerID?PartnerID=${PartnerID}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetNotificationsByPartnerID(PartnerID: string): Observable<BPCAIACT[] | string> {
+    return this._httpClient.get<BPCAIACT[]>(`${this.baseAddress}factapi/Fact/GetNotificationsByPartnerID?PartnerID=${PartnerID}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  UpdateAIACT(notification: BPCAIACT): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/UpdateAIACT`,
+      notification,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
   GetCertificatesByPartnerID(PartnerID: string): Observable<BPCCertificate[] | string> {
     return this._httpClient.get<BPCCertificate[]>(`${this.baseAddress}factapi/Fact/GetCertificatesByPartnerID?PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));
