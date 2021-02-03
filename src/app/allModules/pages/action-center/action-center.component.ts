@@ -3,8 +3,7 @@ import { AuthenticationDetails, AppUsage } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { SelectionModel } from '@angular/cdk/collections';
-import { BPCFact } from 'app/models/fact';
-import { BPCOFAIACT } from 'app/models/OrderFulFilment';
+import { BPCAIACT, BPCFact } from 'app/models/fact';
 import { FactService } from 'app/services/fact.service';
 import { MasterService } from 'app/services/master.service';
 import { DashboardService } from 'app/services/dashboard.service';
@@ -38,49 +37,49 @@ export class ActionCenterComponent implements OnInit {
   selection = new SelectionModel<any>(true, []);
   todayDate: any;
   selectedFact: BPCFact;
-  selectedAIACT: BPCOFAIACT;
+  selectedAIACT: BPCAIACT;
   facts: BPCFact[] = [];
-  actions: BPCOFAIACT[] = [];
-  notifications: BPCOFAIACT[] = [];
+  actions: BPCAIACT[] = [];
+  notifications: BPCAIACT[] = [];
   notificationCount: number;
-  aIACTs: BPCOFAIACT[] = [];
-  aIACTsView: BPCOFAIACT[] = [];
+  aIACTs: BPCAIACT[] = [];
+  aIACTsView: BPCAIACT[] = [];
   SetIntervalID: any;
   fileToUpload1: File;
   fileToUpload2: File;
   fileToUploadList: File[] = [];
   AttachmentData1: SafeUrl;
   AttachmentData2: SafeUrl;
-  TempActionData = [
-    {
-      PoNumber: '12345',
-      Action: 'Accept',
-      Time: '04:32 PM',
-      Day: 'Today',
-      Stage: 'PO'
-    },
-    {
-      PoNumber: '56789',
-      Action: 'View',
-      Time: '04:32 PM',
-      Day: 'Yesteday',
-      Stage: 'Payment'
-    },
-    {
-      PoNumber: '74838',
-      Action: 'Ship',
-      Time: '04:32 PM',
-      Day: 'Today',
-      Stage: 'PO'
-    },
-    {
-      PoNumber: '12345',
-      Action: 'View',
-      Time: '04:32 PM',
-      Day: 'Today',
-      Stage: 'Support'
-    }
-  ];
+  // TempActionData = [
+  //   {
+  //     PoNumber: '12345',
+  //     Action: 'Accept',
+  //     Time: '04:32 PM',
+  //     Day: 'Today',
+  //     Stage: 'PO'
+  //   },
+  //   {
+  //     PoNumber: '56789',
+  //     Action: 'View',
+  //     Time: '04:32 PM',
+  //     Day: 'Yesteday',
+  //     Stage: 'Payment'
+  //   },
+  //   {
+  //     PoNumber: '74838',
+  //     Action: 'Ship',
+  //     Time: '04:32 PM',
+  //     Day: 'Today',
+  //     Stage: 'PO'
+  //   },
+  //   {
+  //     PoNumber: '12345',
+  //     Action: 'View',
+  //     Time: '04:32 PM',
+  //     Day: 'Today',
+  //     Stage: 'Support'
+  //   }
+  // ];
   constructor(
     private _fuseConfigService: FuseConfigService,
 
@@ -93,7 +92,7 @@ export class ActionCenterComponent implements OnInit {
     private sanitizer: DomSanitizer,
   ) {
     this.selectedFact = new BPCFact();
-    this.selectedAIACT = new BPCOFAIACT();
+    this.selectedAIACT = new BPCAIACT();
     this.authenticationDetails = new AuthenticationDetails();
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(
       this.snackBar
@@ -147,11 +146,11 @@ export class ActionCenterComponent implements OnInit {
   }
   getColor(stage): any {
     switch (stage) {
-      case "PO": return '#67c18b';
+      case "01": return '#67c18b';
 
-      case "Payment": return '#eb6767';
+      case "04": return '#eb6767';
 
-      case "Support": return '#efb577';
+      case "05": return '#efb577';
 
     }
     console.log(stage);
@@ -246,36 +245,36 @@ export class ActionCenterComponent implements OnInit {
       );
   }
 
-  GetAIACTsByPartnerID(PartnerID: any): void {
-    this.isProgressBarVisibile = true;
-    this._dashboardService.GetAIACTsByPartnerID(PartnerID).subscribe(
-      (data) => {
-        this.isProgressBarVisibile = false;
-        this.aIACTs = data as BPCOFAIACT[];
-        this.aIACTs.forEach((x) => {
-          if (x.Type === "Action") {
-            this.actions.push(x);
-          } else {
-            this.notifications.push(x);
-          }
-        });
-      },
-      (err) => {
-        console.error(err);
-        this.isProgressBarVisibile = false;
-        // this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-      }
-    );
-  }
+  // GetAIACTsByPartnerID(PartnerID: any): void {
+  //   this.isProgressBarVisibile = true;
+  //   this._factService.GetAIACTsByPartnerID(PartnerID).subscribe(
+  //     (data) => {
+  //       this.isProgressBarVisibile = false;
+  //       this.aIACTs = data as BPCAIACT[];
+  //       this.aIACTs.forEach((x) => {
+  //         if (x.Type === "Action") {
+  //           this.actions.push(x);
+  //         } else {
+  //           this.notifications.push(x);
+  //         }
+  //       });
+  //     },
+  //     (err) => {
+  //       console.error(err);
+  //       this.isProgressBarVisibile = false;
+  //       // this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+  //     }
+  //   );
+  // }
 
   GetActionsByPartnerID(): void {
     this.isProgressBarVisibile = true;
-    this._dashboardService
+    this._factService
       .GetActionsByPartnerID(this.authenticationDetails.UserName)
       .subscribe(
         (data) => {
           if (data) {
-            this.actions = data as BPCOFAIACT[];
+            this.actions = data as BPCAIACT[];
           }
           this.isProgressBarVisibile = false;
         },
@@ -287,12 +286,12 @@ export class ActionCenterComponent implements OnInit {
   }
 
   GetNotificationsByPartnerID(): void {
-    this._dashboardService
+    this._factService
       .GetNotificationsByPartnerID(this.authenticationDetails.UserName)
       .subscribe(
         (data) => {
           if (data) {
-            this.notifications = data as BPCOFAIACT[];
+            this.notifications = data as BPCAIACT[];
             this.notificationCount = this.notifications.length;
           }
         },
@@ -302,14 +301,26 @@ export class ActionCenterComponent implements OnInit {
       );
   }
 
-  UpdateNotification(selectedNotification: BPCOFAIACT): void {
+  UpdateAction(selectedNotification: BPCAIACT, buttonType: string): void {
     if (selectedNotification) {
-      selectedNotification.HasSeen = true;
-      this._dashboardService
-        .UpdateNotification(selectedNotification)
+      selectedNotification.IsSeen = true;
+      this._factService
+        .UpdateAIACT(selectedNotification)
         .subscribe(
           () => {
-            this.GetNotificationsByPartnerID();
+            if (buttonType === 'No') {
+              this.GetActionsByPartnerID();
+            }
+            else if (buttonType === 'Yes') {
+              if (selectedNotification.AppID === '01') { // PO
+                this._router.navigate(['pages/polookup'], { queryParams: { id: selectedNotification.DocNumber }});
+              }
+            }
+            else if (buttonType === 'View') {
+              if (selectedNotification.AppID === '01') { // PO
+                this._router.navigate(['pages/polookup'], { queryParams: { id: selectedNotification.DocNumber }});
+              }
+            }
           },
           (err) => {
             console.error(err);
@@ -318,82 +329,86 @@ export class ActionCenterComponent implements OnInit {
     }
   }
 
-  AcceptAIACT(): void {
-    this.selectedAIACT.ModifiedBy = this.authenticationDetails.UserID.toString();
-    this.selectedAIACT.Status = "Accepted";
-    this.selectedAIACT.ActionText = "View";
-    this.isProgressBarVisibile = true;
-    this._dashboardService.AcceptAIACT(this.selectedAIACT).subscribe(
-      () => {
-        this.notificationSnackBarComponent.openSnackBar(
-          "PO Accepted successfully",
-          SnackBarStatus.success
-        );
-        this.isProgressBarVisibile = false;
-      },
-      (err) => {
-        console.error(err);
-        this.notificationSnackBarComponent.openSnackBar(
-          err instanceof Object ? "Something went wrong" : err,
-          SnackBarStatus.danger
-        );
-        this.isProgressBarVisibile = false;
-      }
-    );
+  YesClicked(selectedNotification: BPCAIACT): void {
+
   }
 
-  RejectAIACT(): void {
-    this.selectedAIACT.ModifiedBy = this.authenticationDetails.UserID.toString();
-    this.selectedAIACT.Status = "Rejected";
-    this.selectedAIACT.ActionText = "View";
-    this.isProgressBarVisibile = true;
-    this._dashboardService.RejectAIACT(this.selectedAIACT).subscribe(
-      () => {
-        this.notificationSnackBarComponent.openSnackBar(
-          "PO Rejected successfully",
-          SnackBarStatus.success
-        );
-        this.isProgressBarVisibile = false;
-      },
-      (err) => {
-        console.error(err);
-        this.notificationSnackBarComponent.openSnackBar(
-          err instanceof Object ? "Something went wrong" : err,
-          SnackBarStatus.danger
-        );
-        this.isProgressBarVisibile = false;
-      }
-    );
-  }
+  // AcceptAIACT(): void {
+  //   this.selectedAIACT.ModifiedBy = this.authenticationDetails.UserID.toString();
+  //   this.selectedAIACT.Status = "Accepted";
+  //   this.selectedAIACT.ActionText = "View";
+  //   this.isProgressBarVisibile = true;
+  //   this._dashboardService.AcceptAIACT(this.selectedAIACT).subscribe(
+  //     () => {
+  //       this.notificationSnackBarComponent.openSnackBar(
+  //         "PO Accepted successfully",
+  //         SnackBarStatus.success
+  //       );
+  //       this.isProgressBarVisibile = false;
+  //     },
+  //     (err) => {
+  //       console.error(err);
+  //       this.notificationSnackBarComponent.openSnackBar(
+  //         err instanceof Object ? "Something went wrong" : err,
+  //         SnackBarStatus.danger
+  //       );
+  //       this.isProgressBarVisibile = false;
+  //     }
+  //   );
+  // }
 
-  AcceptAIACTs(): void {
-    this.aIACTs.forEach((x) => {
-      if (x.Status === "Open") {
-        x.ModifiedBy = this.authenticationDetails.UserID.toString();
-        x.Status = "Accepted";
-        x.ActionText = "View";
-        this.aIACTsView.push(x);
-      }
-    });
-    this.isProgressBarVisibile = true;
-    this._dashboardService.AcceptAIACTs(this.aIACTsView).subscribe(
-      () => {
-        this.notificationSnackBarComponent.openSnackBar(
-          "POs Accepted successfully",
-          SnackBarStatus.success
-        );
-        this.isProgressBarVisibile = false;
-      },
-      (err) => {
-        console.error(err);
-        this.notificationSnackBarComponent.openSnackBar(
-          err instanceof Object ? "Something went wrong" : err,
-          SnackBarStatus.danger
-        );
-        this.isProgressBarVisibile = false;
-      }
-    );
-  }
+  // RejectAIACT(): void {
+  //   this.selectedAIACT.ModifiedBy = this.authenticationDetails.UserID.toString();
+  //   this.selectedAIACT.Status = "Rejected";
+  //   this.selectedAIACT.ActionText = "View";
+  //   this.isProgressBarVisibile = true;
+  //   this._dashboardService.RejectAIACT(this.selectedAIACT).subscribe(
+  //     () => {
+  //       this.notificationSnackBarComponent.openSnackBar(
+  //         "PO Rejected successfully",
+  //         SnackBarStatus.success
+  //       );
+  //       this.isProgressBarVisibile = false;
+  //     },
+  //     (err) => {
+  //       console.error(err);
+  //       this.notificationSnackBarComponent.openSnackBar(
+  //         err instanceof Object ? "Something went wrong" : err,
+  //         SnackBarStatus.danger
+  //       );
+  //       this.isProgressBarVisibile = false;
+  //     }
+  //   );
+  // }
+
+  // AcceptAIACTs(): void {
+  //   this.aIACTs.forEach((x) => {
+  //     if (x.Status === "Open") {
+  //       x.ModifiedBy = this.authenticationDetails.UserID.toString();
+  //       x.Status = "Accepted";
+  //       x.ActionText = "View";
+  //       this.aIACTsView.push(x);
+  //     }
+  //   });
+  //   this.isProgressBarVisibile = true;
+  //   this._dashboardService.AcceptAIACTs(this.aIACTsView).subscribe(
+  //     () => {
+  //       this.notificationSnackBarComponent.openSnackBar(
+  //         "POs Accepted successfully",
+  //         SnackBarStatus.success
+  //       );
+  //       this.isProgressBarVisibile = false;
+  //     },
+  //     (err) => {
+  //       console.error(err);
+  //       this.notificationSnackBarComponent.openSnackBar(
+  //         err instanceof Object ? "Something went wrong" : err,
+  //         SnackBarStatus.danger
+  //       );
+  //       this.isProgressBarVisibile = false;
+  //     }
+  //   );
+  // }
 
   loadSelectedFact(selectedBPCFact: BPCFact): void {
     if (selectedBPCFact) {
@@ -403,77 +418,77 @@ export class ActionCenterComponent implements OnInit {
     }
   }
 
-  openConfirmationDialog(Actiontype: string, Catagory: string): void {
-    const dialogConfig: MatDialogConfig = {
-      data: {
-        Actiontype: Actiontype,
-        Catagory: Catagory,
-      },
-      panelClass: "confirmation-dialog",
-    };
-    const dialogRef = this.dialog.open(
-      NotificationDialogComponent,
-      dialogConfig
-    );
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        if (Actiontype === "Accept") {
-          this.AcceptAIACT();
-        } else if (Actiontype === "Reject") {
-          this.RejectAIACT();
-        } else if (Actiontype === "Accept All") {
-          this.AcceptAIACTs();
-        }
-      }
-    });
-  }
+  // openConfirmationDialog(Actiontype: string, Catagory: string): void {
+  //   const dialogConfig: MatDialogConfig = {
+  //     data: {
+  //       Actiontype: Actiontype,
+  //       Catagory: Catagory,
+  //     },
+  //     panelClass: "confirmation-dialog",
+  //   };
+  //   const dialogRef = this.dialog.open(
+  //     NotificationDialogComponent,
+  //     dialogConfig
+  //   );
+  //   dialogRef.afterClosed().subscribe((result) => {
+  //     if (result) {
+  //       if (Actiontype === "Accept") {
+  //         this.AcceptAIACT();
+  //       } else if (Actiontype === "Reject") {
+  //         this.RejectAIACT();
+  //       } else if (Actiontype === "Accept All") {
+  //         this.AcceptAIACTs();
+  //       }
+  //     }
+  //   });
+  // }
 
-  actionTextButtonClicked(aIACTByPartnerID: BPCOFAIACT): void {
-    if (aIACTByPartnerID) {
-      if (aIACTByPartnerID.ActionText.toLowerCase() === "accept") {
-        this.selectedAIACT = aIACTByPartnerID;
-        const Actiontype = "Accept";
-        const Catagory = "PO";
-        this.openConfirmationDialog(Actiontype, Catagory);
-      } else if (aIACTByPartnerID.ActionText.toLowerCase() === "reject") {
-        this.selectedAIACT = aIACTByPartnerID;
-        const Actiontype = "Reject";
-        const Catagory = "PO";
-        this.openConfirmationDialog(Actiontype, Catagory);
-      } else if (aIACTByPartnerID.ActionText.toLowerCase() === "view") {
-        this._router.navigate(["/pages/polookup"], {
-          queryParams: { id: aIACTByPartnerID.DocNumber },
-        });
-      } else if (aIACTByPartnerID.ActionText.toLowerCase() === "ack") {
-        this._router.navigate(["/pages/polookup"], {
-          queryParams: { id: aIACTByPartnerID.DocNumber },
-        });
-      } else if (aIACTByPartnerID.ActionText.toLowerCase() === "asn") {
-        this._router.navigate(["/asn"], {
-          queryParams: { id: aIACTByPartnerID.DocNumber },
-        });
-      } else if (aIACTByPartnerID.ActionText.toLowerCase() === "grn") {
-        this._router.navigate(["/pages/polookup"], {
-          queryParams: { id: aIACTByPartnerID.DocNumber },
-        });
-      } else if (aIACTByPartnerID.ActionText.toLowerCase() === "gate") {
-        this._router.navigate(["/pages/polookup"], {
-          queryParams: { id: aIACTByPartnerID.DocNumber },
-        });
-      }
-    } else {
-    }
-  }
+  // actionTextButtonClicked(aIACTByPartnerID: BPCAIACT): void {
+  //   if (aIACTByPartnerID) {
+  //     if (aIACTByPartnerID.ActionText.toLowerCase() === "accept") {
+  //       this.selectedAIACT = aIACTByPartnerID;
+  //       const Actiontype = "Accept";
+  //       const Catagory = "PO";
+  //       this.openConfirmationDialog(Actiontype, Catagory);
+  //     } else if (aIACTByPartnerID.ActionText.toLowerCase() === "reject") {
+  //       this.selectedAIACT = aIACTByPartnerID;
+  //       const Actiontype = "Reject";
+  //       const Catagory = "PO";
+  //       this.openConfirmationDialog(Actiontype, Catagory);
+  //     } else if (aIACTByPartnerID.ActionText.toLowerCase() === "view") {
+  //       this._router.navigate(["/pages/polookup"], {
+  //         queryParams: { id: aIACTByPartnerID.DocNumber },
+  //       });
+  //     } else if (aIACTByPartnerID.ActionText.toLowerCase() === "ack") {
+  //       this._router.navigate(["/pages/polookup"], {
+  //         queryParams: { id: aIACTByPartnerID.DocNumber },
+  //       });
+  //     } else if (aIACTByPartnerID.ActionText.toLowerCase() === "asn") {
+  //       this._router.navigate(["/asn"], {
+  //         queryParams: { id: aIACTByPartnerID.DocNumber },
+  //       });
+  //     } else if (aIACTByPartnerID.ActionText.toLowerCase() === "grn") {
+  //       this._router.navigate(["/pages/polookup"], {
+  //         queryParams: { id: aIACTByPartnerID.DocNumber },
+  //       });
+  //     } else if (aIACTByPartnerID.ActionText.toLowerCase() === "gate") {
+  //       this._router.navigate(["/pages/polookup"], {
+  //         queryParams: { id: aIACTByPartnerID.DocNumber },
+  //       });
+  //     }
+  //   } else {
+  //   }
+  // }
 
   noButtonClicked(): void { }
 
-  setActionToOpenConfirmation(actiontype: string): void {
-    if (this.selectedFact.PatnerID) {
-      const Actiontype = actiontype;
-      const Catagory = "Vendor";
-      this.openConfirmationDialog(Actiontype, Catagory);
-    }
-  }
+  // setActionToOpenConfirmation(actiontype: string): void {
+  //   if (this.selectedFact.PatnerID) {
+  //     const Actiontype = actiontype;
+  //     const Catagory = "Vendor";
+  //     this.openConfirmationDialog(Actiontype, Catagory);
+  //   }
+  // }
 
   numberOnly(event): boolean {
     const charCode = event.which ? event.which : event.keyCode;
@@ -499,13 +514,13 @@ export class ActionCenterComponent implements OnInit {
     // this._router.navigate(["/fact"]);
   }
 
-  onAcceptAllButtonClicked(): void {
-    if (this.aIACTs && this.aIACTs.length > 0) {
-      const Actiontype = "Accept All";
-      const Catagory = "PO";
-      this.openConfirmationDialog(Actiontype, Catagory);
-    }
-  }
+  // onAcceptAllButtonClicked(): void {
+  //   if (this.aIACTs && this.aIACTs.length > 0) {
+  //     const Actiontype = "Accept All";
+  //     const Catagory = "PO";
+  //     this.openConfirmationDialog(Actiontype, Catagory);
+  //   }
+  // }
 
   onClearAllButtonClicked(): void { }
 
@@ -520,7 +535,7 @@ export class ActionCenterComponent implements OnInit {
     }
   }
 
-  getActionData(element: BPCOFAIACT, actionDataFor: string): string {
+  getActionData(element: BPCAIACT, actionDataFor: string): string {
     switch (actionDataFor) {
       case "actionFirstData":
         return element.Status === "DueForACK"

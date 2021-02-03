@@ -211,15 +211,14 @@
           <p [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="underline"></p>
           <div fxFlex>
             <mat-tab-group mat-align-tabs="start">
-              <mat-tab label="Action ({{TempActionData?.length}})" class="mat_lable">
-                <div *ngFor="let actionData of TempActionData;let i=index">
+              <mat-tab label="Action ({{actions?.length}})" class="mat_lable">
+                <div *ngFor="let actionData of actions;let i=index">
                   <div fxLayout="row" fxLayoutAlign="space-between center" style="margin-top: 20px;">
-                    <p class="line" [ngStyle]="{'background-color':getColor(actionData.Stage)}"
+                    <p class="line" [ngStyle]="{'background-color':getColor(actionData.AppID)}"
                       [style.height]="actionData.Action === 'Accept'?'120px':'81px'"></p>
                     <mat-toolbar class="Rectangle-46">
                       <mat-toolbar-row class="cl_toolbar_row">
-                        <span class="ActionUpperText">{{actionData.Stage}} <b>{{actionData.PoNumber}}</b> to be
-                          accepted</span>
+                        <span class="ActionUpperText">{{actionData.ActionText}}</span>
                       </mat-toolbar-row>
 
                       <mat-toolbar-row class="cl_toolbar_row" *ngIf="actionData.Action === 'Accept'">
@@ -227,8 +226,8 @@
 
                         <span class="cl_spacer"></span>
                         <div fxFlex fxLayout.md="column" fxLayoutGap="20px">
-                          <button mat-flat-button class="ActionBTnYes">Yes</button>
-                          <button mat-flat-button class="ActionBTnNo">No</button>
+                          <button mat-flat-button class="ActionBTnYes" (click)="YesClicked(actionData)">Yes</button>
+                          <button mat-flat-button class="ActionBTnNo" (click)="NoClicked(actionData)">No</button>
                         </div>
 
                       </mat-toolbar-row>
@@ -237,7 +236,7 @@
                         <span class="ActionLowerText">{{actionData.Day}}, {{actionData.Time}}</span>
                         <span class="cl_spacer"></span>
                         <button *ngIf="actionData.Action != 'Accept'" mat-flat-button
-                          class="ActionBTn">{{actionData.Action}}</button>
+                          class="ActionBTn" (click)="ActionClicked(actionData)">{{actionData.Action}}</button>
                       </mat-toolbar-row>
                     </mat-toolbar>
                   </div>
