@@ -123,11 +123,11 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     ofDetailsFormGroup: FormGroup;
     ofOption: OfOption;
     ofDetailsDisplayedColumns: string[] = [
-        "PONumber",
+        "DocNumber",
         // "DocVersion",
         "DocType",
         "DocDate",
-        "Plant",
+        "PlantName",
         "Status",
         "Document",
         "NextProcess",

@@ -63,6 +63,7 @@ import { SupportTicketComponent } from './support-ticket/support-ticket.componen
 import { SupportChatComponent } from './support-chat/support-chat.component';
 import { PoListComponent } from './po-list/po-list.component';
 import { FactComponent } from './fact/fact.component';
+import { GrnListComponent } from './grn-list/grn-list.component';
 
 const routes = [
     {
@@ -88,6 +89,10 @@ const routes = [
     {
         path: 'fact',
         component: FactComponent
+    },
+    {
+        path: 'grnlist',
+        component: GrnListComponent
     },
     {
         path: '**',
@@ -151,7 +156,8 @@ const routes = [
         ChartsModule,
         CKEditorModule
     ],
-    declarations: [AsnListComponent, SupportChatComponent, SupportDeskComponent, SupportTicketComponent, PoListComponent, FactComponent],
+    declarations: [AsnListComponent, SupportChatComponent, GrnListComponent,
+        SupportDeskComponent, SupportTicketComponent, PoListComponent, FactComponent],
     providers: [
         DecimalPipe
     ],
