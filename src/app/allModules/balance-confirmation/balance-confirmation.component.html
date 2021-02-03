@@ -38,15 +38,16 @@
         </div>
       </div>
 
+      <div class="table-wrapper">
       <table class="table" mat-table [dataSource]="balanceConfirmationDataSource" matSort style="margin-top: 10px;">
 
-        <ng-container matColumnDef="Period">
+        <ng-container matColumnDef="FiscalYear">
           <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">
-            Period </th>
+            FiscalYear </th>
           <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
             <div fxLayout>
               <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
-              <div fxFlex class="pl-8">{{element.Period | date:'dd/MM/yyyy'}} </div>
+              <div fxFlex class="pl-8">{{element.FiscalYear}} </div>
             </div>
           </td>
         </ng-container>
@@ -83,19 +84,67 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="PaidAmount">
+        <ng-container matColumnDef="BillAmount">
           <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">
-            PaidAmount </th>
+            BillAmount </th>
           <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
-            {{element.PaidAmount}}
+            {{element.BillAmount}}
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="BalanceAmount">
+        <ng-container matColumnDef="PaidAmont">
           <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">
-            BalanceAmount </th>
+            PaidAmont </th>
           <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
-            {{element.BalanceAmount}}
+            {{element.PaidAmont}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="TDSAmount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">
+            TDSAmount </th>
+          <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
+            {{element.TDSAmount}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="TotalPaidAmount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">
+            TotalPaidAmount </th>
+          <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
+            {{element.TotalPaidAmount}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="DownPayment">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">
+            DownPayment </th>
+          <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
+            {{element.DownPayment}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="NetDueAmount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">
+            NetDueAmount </th>
+          <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
+            {{element.NetDueAmount}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Currency">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">
+            Currency </th>
+          <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
+            {{element.Currency}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="BalDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="BGClassName?.layout?.toolbar?.background">
+            BalDate </th>
+          <td mat-cell *matCellDef="let element;let i= index;" class="QtyClass">
+            {{element.BalDate | date:'dd/MM/yyyy'}}
           </td>
         </ng-container>
 
@@ -103,6 +152,7 @@
         <tr mat-row *matRowDef="let row; columns: balanceConfirmationDisplayedColumns;">
         </tr>
       </table>
+    </div>
       <div>
         <mat-paginator [pageSizeOptions]="[5, 10, 20, 50, 100, 200, 500]"></mat-paginator>
       </div>

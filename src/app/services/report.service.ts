@@ -173,11 +173,17 @@ export class ReportService {
         (`${this.baseAddress}poapi/PO/FilterGRRListByPartnerID??PartnerID=${PartnerID}&GRGIDoc=${GRGIDoc}&Material=${Material}&StartDate=${StartDate}&EndDate=${EndDate}`)
         .pipe(catchError(this.errorHandler));
 }
+FilterGRRListForBuyer(GRGIDoc:string,Material:string,StartDate:Date,EndDate:Date ): Observable<BPCReportGRR[] | string> {
+  return this._httpClient.get<BPCReportGRR[]>
+      (`${this.baseAddress}poapi/PO/FilterGRRListForBuyer??GRGIDoc=${GRGIDoc}&Material=${Material}&StartDate=${StartDate}&EndDate=${EndDate}`)
+      .pipe(catchError(this.errorHandler));
+}
 //
   GetFilteredReportGRRByPartnerID(PartnerId: string, material: string): Observable<any> {
     return this._httpClient.get<BPCReportOV[]>(`${this.baseAddress}reportapi/Report/GetFilteredReportGRRByPartnerID?PartnerID=${PartnerId}&Material=${material}`)
       .pipe(catchError(this.errorHandler));
   }
+
 
   // FG Child Part Stock
   GetAllReportFGCPSByPartnerID(PartnerId: string): Observable<BPCReportFGCPS[] | string> {

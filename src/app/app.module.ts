@@ -145,7 +145,7 @@ const appRoutes: Routes = [
         AttachmentViewDialogComponent,
         InformationDialogComponent,
         ASNReleaseDialogComponent,
-        NotificationDialog1Component,
+        NotificationDialog1Component
     ],
     imports: [
         BrowserModule,

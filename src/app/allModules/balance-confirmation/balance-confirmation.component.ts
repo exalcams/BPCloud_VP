@@ -38,7 +38,8 @@ export class BalanceConfirmationComponent implements OnInit {
   BCHeader: BalanceConfirmationHeader;
   BCItems: BalanceConfirmationItem[];
   balanceConfirmationDataSource: MatTableDataSource<BalanceConfirmationItem>;
-  balanceConfirmationDisplayedColumns = ["Period", "DocNumber", "DocDate", "InvoiceNumber", "InvoiceAmount", "PaidAmount", "BalanceAmount"];
+  balanceConfirmationDisplayedColumns = ["FiscalYear", "DocNumber", "DocDate", "InvoiceNumber", "InvoiceAmount", "BillAmount", "PaidAmont",
+   "TDSAmount", "TotalPaidAmount", "DownPayment", "NetDueAmount", "Currency", "BalDate"];
   constructor(
     private _fuseConfigService: FuseConfigService,
     private _bcService: BalanceConfirmationService,
@@ -100,6 +101,7 @@ export class BalanceConfirmationComponent implements OnInit {
       this.balanceConfirmationDataSource.paginator = this.balanceConfirmationPaginator;
       this.balanceConfirmationDataSource.sort = this.balanceConfirmationSort;
       this.isProgressBarVisibile = false;
+      // console.log(data);
     });
   }
 
@@ -112,13 +114,19 @@ export class BalanceConfirmationComponent implements OnInit {
     const itemsShowedd = [];
     itemsShowed.forEach(x => {
       const item = {
-        'Period': x.Period,
+        'Period': x.FiscalYear,
         'DocNumber': x.DocNumber,
         'DocDate': x.DocDate ? this._datePipe.transform(x.DocDate, 'dd-MM-yyyy') : '',
         'InvoiceNumber': x.InvoiceNumber,
         'InvoiceAmount': x.InvoiceAmount,
-        'PaidAmount': x.PaidAmount,
-        'BalanceAmount': x.BalanceAmount
+        'BillAmount':x.BillAmount,
+        'PaidAmount': x.PaidAmont,
+        'TDSAmount': x.TDSAmount,
+        'TotalPaidAmount': x.TotalPaidAmount,
+        'DownPayment': x.DownPayment,
+        'NetDueAmount': x.NetDueAmount,
+        'Currency': x.Currency,
+        'BalDate': x.BalDate,
       };
       itemsShowedd.push(item);
     });
@@ -127,7 +135,7 @@ export class BalanceConfirmationComponent implements OnInit {
 
   handle_getsolved(): void {
     this._router.navigate(["/support/supportticket"], {
-      queryParams: { period: this.BCHeader.Period },
+      queryParams: { period: this.BCHeader.FiscalYear },
     });
   }
   handle_accept(): void {

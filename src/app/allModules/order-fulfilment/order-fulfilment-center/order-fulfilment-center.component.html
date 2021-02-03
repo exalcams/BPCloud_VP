@@ -147,7 +147,7 @@
     <!-- ofTable -->
     <div class="px-20 pb-20">
       <table class="abnormal" mat-table [dataSource]="ofDetailsDataSource" matSort>
-        <ng-container matColumnDef="PONumber">
+        <ng-container matColumnDef="DocNumber">
           <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"
             [ngClass]="BGClassName?.layout?.toolbar?.background">
             PO Number </th>
@@ -181,7 +181,7 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="Plant">
+        <ng-container matColumnDef="PlantName">
           <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 8%;"
             [ngClass]="BGClassName?.layout?.toolbar?.background"> Plant </th>
           <td mat-cell *matCellDef="let element" (click)="acknowledgementClicked(element.DocNumber)">

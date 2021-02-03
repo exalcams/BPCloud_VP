@@ -5,9 +5,14 @@ export class BalanceConfirmationHeader extends CommonClass {
     Company: string;
     Type: string;
     PatnerID: string;
-    Period: Date | string | null;
-    BalAmount: number | null;
-    BalCurrency: string;
+    FiscalYear: string;
+    BillAmount: number | null;
+    PaidAmont: number | null;
+    TDSAmount: number | null;
+    TotalPaidAmount: number | null;
+    DownPayment: number | null;
+    NetDueAmount: number | null;
+    Currency: string;
     BalDate: Date | string | null;
     Status: string;
     AcceptedOn: Date | string | null;
@@ -19,13 +24,19 @@ export class BalanceConfirmationItem extends CommonClass {
     Company: string;
     Type: string;
     PatnerID: string;
-    Period: Date | string | null;
+    FiscalYear: string;
     DocNumber: string;
     DocDate: Date | string | null;
     InvoiceNumber: string;
     InvoiceAmount: number | null;
-    PaidAmount: number | null;
-    BalanceAmount: number | null;
+    BillAmount: number | null;
+    PaidAmont: number | null;
+    TDSAmount: number | null;
+    TotalPaidAmount: number | null;
+    DownPayment: number | null;
+    NetDueAmount: number | null;
+    Currency:string;
+    BalDate: Date | string | null;
 }
 export class ConfirmationDetails {
     ConfirmedBy: string;

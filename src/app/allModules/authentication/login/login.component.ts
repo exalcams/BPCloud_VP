@@ -1040,6 +1040,19 @@ export class LoginComponent implements OnInit {
                 url: "/buyer/asnlist",
             });
         }
+
+        if (this.menuItems.indexOf("BuyerGRNList") >= 0) {
+            this.children.push({
+                id: "buyergrnlist",
+                title: "GRN List",
+                translate: "NAV.CUSTOMER.GET_SUPPORT",
+                type: "item",
+                icon: "reportIcon",
+                isSvgIcon: true,
+                url: "/buyer/grnlist",
+            });
+        }
+
         this.GetRFQMenus();
         if (this.menuItems.indexOf("BuyerSupportDesk") >= 0) {
             this.buyerSupportSubChildren.push({
