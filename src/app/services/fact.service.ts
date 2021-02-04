@@ -153,6 +153,17 @@ export class FactService {
       .pipe(catchError(this.errorHandler));
   }
 
+  UpdateAIACTs(SeqNos: number[]): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/UpdateAIACTs`,
+    SeqNos,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
   GetCertificatesByPartnerID(PartnerID: string): Observable<BPCCertificate[] | string> {
     return this._httpClient.get<BPCCertificate[]>(`${this.baseAddress}factapi/Fact/GetCertificatesByPartnerID?PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));

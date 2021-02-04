@@ -233,7 +233,7 @@
                       </mat-toolbar-row>
 
                       <mat-toolbar-row>
-                        <span class="ActionLowerText">{{actionData.Day}}, {{actionData.Time}}</span>
+                        <span class="ActionLowerText">{{actionData.Date | date:'dd/MM/yyyy'}}, {{actionData.Time}}</span>
                         <span class="cl_spacer"></span>
                         <button *ngIf="actionData.Action != 'Accept'" mat-flat-button
                           class="ActionBTn" (click)="ActionClicked(actionData)">{{actionData.Action}}</button>

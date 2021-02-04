@@ -805,7 +805,7 @@ export class LoginComponent implements OnInit {
                 url: "/payment/tds",
             });
         }
-        if (true || this.menuItems.indexOf("BalanceConfirmation") >= 0) {
+        if (this.menuItems.indexOf("BalanceConfirmation") >= 0) {
             this.paymentSubChildren.push({
                 id: "balanceconfirmation",
                 title: "Balance Confirmation",

@@ -313,12 +313,12 @@ export class ActionCenterComponent implements OnInit {
             }
             else if (buttonType === 'Yes') {
               if (selectedNotification.AppID === '01') { // PO
-                this._router.navigate(['pages/polookup'], { queryParams: { id: selectedNotification.DocNumber }});
+                this._router.navigate(['pages/polookup'], { queryParams: { id: selectedNotification.DocNumber } });
               }
             }
             else if (buttonType === 'View') {
               if (selectedNotification.AppID === '01') { // PO
-                this._router.navigate(['pages/polookup'], { queryParams: { id: selectedNotification.DocNumber }});
+                this._router.navigate(['pages/polookup'], { queryParams: { id: selectedNotification.DocNumber } });
               }
             }
           },
@@ -330,9 +330,14 @@ export class ActionCenterComponent implements OnInit {
   }
 
   YesClicked(selectedNotification: BPCAIACT): void {
-
+    this.UpdateAction(selectedNotification, 'Yes');
   }
-
+  NoClicked(selectedNotification: BPCAIACT): void {
+    this.UpdateAction(selectedNotification, 'No');
+  }
+  ActionClicked(selectedNotification: BPCAIACT): void {
+    this.UpdateAction(selectedNotification, selectedNotification.Action);
+  }
   // AcceptAIACT(): void {
   //   this.selectedAIACT.ModifiedBy = this.authenticationDetails.UserID.toString();
   //   this.selectedAIACT.Status = "Accepted";
@@ -522,7 +527,25 @@ export class ActionCenterComponent implements OnInit {
   //   }
   // }
 
-  onClearAllButtonClicked(): void { }
+  onClearAllButtonClicked(): void {
+    let seqNos = [];
+    this.actions.forEach(x => seqNos.push(x.SeqNo));
+    this.isProgressBarVisibile = true;
+    this._factService
+      .UpdateAIACTs(seqNos)
+      .subscribe(
+        (data) => {
+          if (data) {
+          }
+          this.isProgressBarVisibile = false;
+          this.GetActionsByPartnerID();
+        },
+        (err) => {
+          console.error(err);
+          this.isProgressBarVisibile = false;
+        }
+      );
+  }
 
   getTodayDate(): any {
     const today = new Date();
