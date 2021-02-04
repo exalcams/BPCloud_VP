@@ -1288,6 +1288,8 @@ export class ASNComponent implements OnInit {
             // this.notificationSnackBarComponent.openSnackBar('Shipment amount is not matched with Invoice amount', SnackBarStatus.warning, 6000);
             this.IsPriceNotMatched = true;
             this.openNotificationDialog1();
+        } else {
+            this.IsPriceNotMatched = false;
         }
     }
 
