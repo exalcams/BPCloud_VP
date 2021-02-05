@@ -52,6 +52,10 @@ export class POService {
     return this._httpClient.get<BPCOFItem[]>(`${this.baseAddress}poapi/PO/GetPOItemsByDocAndPartnerID?DocNumber=${DocNumber}&PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));
   }
+  GetPOItemViewsByDocAndPartnerID(DocNumber: string, PartnerID: string): Observable<BPCOFItem[] | string> {
+    return this._httpClient.get<BPCOFItem[]>(`${this.baseAddress}poapi/PO/GetPOItemViewsByDocAndPartnerID?DocNumber=${DocNumber}&PartnerID=${PartnerID}`)
+      .pipe(catchError(this.errorHandler));
+  }
   GetPOGRGIByDocAndPartnerID(DocNumber: string, PartnerID: string): Observable<BPCOFGRGI[] | string> {
     return this._httpClient.get<BPCOFGRGI[]>(`${this.baseAddress}poapi/PO/GetPOGRGIByDocAndPartnerID?DocNumber=${DocNumber}&PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));

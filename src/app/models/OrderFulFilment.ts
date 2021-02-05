@@ -1,5 +1,5 @@
 import { CommonClass } from './common';
-import { BPCInvoiceAttachment } from './ASN';
+import { BPCASNItemSES, BPCInvoiceAttachment } from './ASN';
 export class BPCOFHeader extends CommonClass {
     Client: string;
     Company: string;
@@ -47,6 +47,37 @@ export class BPCOFItem extends CommonClass {
     TaxAmount: number | null;
     TaxCode: string;
     MaxAllowedQty: number;
+}
+export class BPCOFItemView extends CommonClass {
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
+    DocNumber: string;
+    Item: string;
+    Material: string;
+    MaterialText: string;
+    DeliveryDate: Date | string | null;
+    OrderedQty: number;
+    CompletedQty: number;
+    TransitQty: number;
+    OpenQty: number;
+    UOM: string;
+    HSN: string;
+    IsClosed: boolean;
+    AckStatus: string;
+    AckDeliveryDate: Date | string | null;
+    PlantCode: string;
+    UnitPrice: number | null;
+    Value: number | null;
+    TaxAmount: number | null;
+    TaxCode: string;
+    MaxAllowedQty: number;
+    ASNItemSESes: BPCASNItemSES[];
+    constructor() {
+        super();
+        this.ASNItemSESes = [];
+    }
 }
 export class BPCOFScheduleLine extends CommonClass {
     ID: number;

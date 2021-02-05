@@ -96,9 +96,11 @@ export class BPCASNItemView extends CommonClass {
     TaxAmount: number | null;
     TaxCode: string;
     ASNItemBatches: BPCASNItemBatch[];
+    ASNItemSESes: BPCASNItemSES[];
     constructor() {
         super();
         this.ASNItemBatches = [];
+        this.ASNItemSESes = [];
     }
 }
 
