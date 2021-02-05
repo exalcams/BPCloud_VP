@@ -12,7 +12,7 @@ import { ASNService } from 'app/services/asn.service';
 import { ShareParameterService } from 'app/services/share-parameters.service';
 import {
     BPCASNHeader, BPCASNItem, DocumentCenter, BPCASNView, BPCInvoiceAttachment,
-    BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster, BPCASNPack, ASNItemXLSX, BPCASNFieldMaster, BPCASNItemBatch, BPCASNItemView
+    BPCCountryMaster, BPCCurrencyMaster, BPCDocumentCenterMaster, BPCASNPack, ASNItemXLSX, BPCASNFieldMaster, BPCASNItemBatch, BPCASNItemView, BPCASNItemSES
 } from 'app/models/ASN';
 import { BehaviorSubject } from 'rxjs';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
@@ -33,6 +33,7 @@ import { AsnPrintDialogComponent } from './asn-print-dialog/asn-print-dialog.com
 import { AttachmentDialogComponent } from 'app/notifications/attachment-dialog/attachment-dialog.component';
 import { ASNItemBatchDialogComponent } from './asnitem-batch-dialog/asnitem-batch-dialog.component';
 import { NotificationDialog1Component } from 'app/notifications/notification-dialog1/notification-dialog1.component';
+import { ASNItemServiceDialogComponent } from './asnitem-service-dialog/asnitem-service-dialog.component';
 @Component({
     selector: 'app-asn',
     templateUrl: './asn.component.html',
@@ -80,6 +81,7 @@ export class ASNComponent implements OnInit {
         'OpenQty',
         'ASNQty',
         'Batch',
+        'SES',
         // 'ManufactureDate',
         // 'ExpiryDate'
     ];
@@ -145,6 +147,7 @@ export class ASNComponent implements OnInit {
 
     IsShipmentNotRelevant: boolean = false;
     IsPriceNotMatched = false;
+    DocumentType: string;
 
     constructor(
         private _fuseConfigService: FuseConfigService,
@@ -178,6 +181,7 @@ export class ASNComponent implements OnInit {
         this.ArrivalDateInterval = 1;
         this.IsAtleastOneASNQty = false;
         this.IsInvoiceDetailsFormGroupEnabled = true;
+        this.DocumentType = '';
     }
 
     ngOnInit(): void {
@@ -656,6 +660,7 @@ export class ASNComponent implements OnInit {
                 if (this.SelectedDocNumber) {
                     this.InvoiceDetailsFormGroup.get('InvoiceAmountUOM').patchValue(this.PO.Currency);
                 }
+                this.DocumentType = this.PO.DocType;
                 // if (this.PO && this.PO.DocType && this.PO.DocType.toLocaleLowerCase() === "subcon") {
                 //     this.GetSubconViewByDocAndPartnerID();
                 // }
@@ -663,6 +668,18 @@ export class ASNComponent implements OnInit {
                 //     this.GetPOItemsByDocAndPartnerID();
                 // }
                 this.GetPOItemsByDocAndPartnerID();
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
+
+    GetPOByDocAndPartnerID1(selectedDocNumber: string): void {
+        this._POService.GetPOByDocAndPartnerID(selectedDocNumber, this.currentUserName).subscribe(
+            (data) => {
+                const re = data as BPCOFHeader;
+                this.DocumentType = re.DocType;
             },
             (err) => {
                 console.error(err);
@@ -745,6 +762,7 @@ export class ASNComponent implements OnInit {
         this.SelectedASNView.ASNNumber = this.SelectedASNHeader.ASNNumber;
         this.SelectedASNNumber = this.SelectedASNHeader.ASNNumber;
         // this.GetPOByDocAndPartnerID(this.SelectedASNHeader.DocNumber);
+        this.GetPOByDocAndPartnerID1(this.SelectedASNView.DocNumber);
         this.ClearASNItems();
         this.GetASNItemsByASN();
         this.GetASNPacksByASN();
@@ -931,6 +949,7 @@ export class ASNComponent implements OnInit {
             ASNQty: [poItem.MaxAllowedQty],
             UOM: [poItem.UOM],
             Batch: [[]],
+            SES: [[]],
             ManufactureDate: [''],
             ExpiryDate: [''],
             PlantCode: [poItem.PlantCode],
@@ -986,6 +1005,7 @@ export class ASNComponent implements OnInit {
             ASNQty: [asnItem.ASNQty, [Validators.pattern('^([0-9]{0,10})([.][0-9]{1,3})?$')]],
             UOM: [asnItem.UOM],
             Batch: [asnItem.ASNItemBatches],
+            SES: [asnItem.ASNItemSESes],
             // ManufactureDate: [asnItemBatch ? asnItemBatch.ManufactureDate : ''],
             // ExpiryDate: [asnItemBatch ? asnItemBatch.ExpiryDate : ''],
             PlantCode: [asnItem.PlantCode],
@@ -1121,6 +1141,7 @@ export class ASNComponent implements OnInit {
             item.OpenQty = +x.get('OpenQty').value;
             item.ASNQty = +x.get('ASNQty').value;
             item.ASNItemBatches = x.get('Batch').value;
+            item.ASNItemSESes = x.get('SES').value;
             item.PlantCode = x.get('PlantCode').value;
             item.UnitPrice = x.get('UnitPrice').value;
             item.Value = x.get('Value').value;
@@ -1189,6 +1210,7 @@ export class ASNComponent implements OnInit {
             this.notificationSnackBarComponent.openSnackBar('Please enter ASN Qty value', SnackBarStatus.danger);
         }
     }
+
     OpenASNItemBatchDialog(asQ: number, asBatch: BPCASNItemBatch[], isEnabled: boolean, index: number): void {
         const Actiontype = "Submit";
         const dialogConfig: MatDialogConfig = {
@@ -1205,6 +1227,40 @@ export class ASNComponent implements OnInit {
                 if (result) {
                     const fg = this.ASNItemFormArray.controls[index] as FormGroup;
                     fg.get('Batch').patchValue(result);
+                } else {
+
+                }
+            }, (err) => {
+
+            });
+    }
+    OpenItemSES(index: number): void {
+        const fg = this.ASNItemFormArray.controls[index] as FormGroup;
+        const asQ = fg.get('ASNQty').value;
+        const asSES = fg.get('SES').value;
+        const isEnabled = fg.get('ASNQty').enabled;
+        if (asQ) {
+            this.OpenASNItemSESDialog(asQ, asSES, isEnabled, index);
+        } else {
+            this.notificationSnackBarComponent.openSnackBar('Please enter ASN Qty value', SnackBarStatus.danger);
+        }
+    }
+    OpenASNItemSESDialog(asQ: number, asSES: BPCASNItemSES[], isEnabled: boolean, index: number): void {
+        const Actiontype = "Submit";
+        const dialogConfig: MatDialogConfig = {
+            data: {
+                ASNQty: asQ,
+                ASNItemSESs: asSES,
+                IsEnabled: isEnabled
+            },
+            panelClass: 'asn-item-ses-dialog'
+        };
+        const dialogRef = this.dialog.open(ASNItemServiceDialogComponent, dialogConfig);
+        dialogRef.afterClosed().subscribe(
+            result => {
+                if (result) {
+                    const fg = this.ASNItemFormArray.controls[index] as FormGroup;
+                    fg.get('SES').patchValue(result);
                 } else {
 
                 }

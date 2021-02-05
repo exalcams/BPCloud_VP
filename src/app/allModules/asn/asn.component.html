@@ -761,7 +761,8 @@
                       </ng-container>
 
                       <ng-container matColumnDef="UnitPrice">
-                        <th mat-header-cell *matHeaderCellDef [ngClass]="BGClassName?.layout?.toolbar?.background"> Gross price </th>
+                        <th mat-header-cell *matHeaderCellDef [ngClass]="BGClassName?.layout?.toolbar?.background">
+                          Gross price </th>
                         <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
                           <!-- <input matInput formControlName="MaterialText">  -->
                           {{ASNItemFormGroup.get('ASNItems')?.controls[index]?.get('UnitPrice')?.value}}
@@ -857,11 +858,29 @@
 
                       <ng-container matColumnDef="Batch">
                         <th mat-header-cell *matHeaderCellDef style="width: 150px;"
-                          [ngClass]="BGClassName?.layout?.toolbar?.background"> Batch</th>
+                          [ngClass]="BGClassName?.layout?.toolbar?.background" [hidden]="DocumentType==='SES'"> Batch
+                        </th>
                         <td mat-cell *matCellDef="let element; let index = index" style="width: 150px;"
-                          [formGroupName]="index" class="editable">
+                          [formGroupName]="index" class="editable" [hidden]="DocumentType==='SES'">
                           <button type="button" mat-raised-button class="DeleteBtn" (click)="OpenItemBatch(index)">Batch
                             {{ASNItemFormGroup.get('ASNItems').controls[index]?.get('Batch').value?.length>0?'('+ASNItemFormGroup.get('ASNItems').controls[index]?.get('Batch').value?.length+')':''}}</button>
+                          <!-- <mat-form-field class="pl-8 pr-12" appearance="outline" style="width: 120px;">
+                            <input matInput formControlName="Batch">
+                            <mat-error *ngIf="ASNItemFormGroup.get('ASNItems').controls[index]?.get('Batch').touched && 
+                            ASNItemFormGroup.get('ASNItems').controls[index]?.get('Batch').hasError('required')">
+                              *
+                            </mat-error>
+                          </mat-form-field> -->
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="SES">
+                        <th mat-header-cell *matHeaderCellDef style="width: 150px;"
+                          [ngClass]="BGClassName?.layout?.toolbar?.background" [hidden]="DocumentType!=='SES'"> SES</th>
+                        <td mat-cell *matCellDef="let element; let index = index" style="width: 150px;"
+                          [hidden]="DocumentType!=='SES'" [formGroupName]="index" class="editable">
+                          <button type="button" mat-raised-button class="DeleteBtn" (click)="OpenItemSES(index)">SES
+                          </button>
                           <!-- <mat-form-field class="pl-8 pr-12" appearance="outline" style="width: 120px;">
                             <input matInput formControlName="Batch">
                             <mat-error *ngIf="ASNItemFormGroup.get('ASNItems').controls[index]?.get('Batch').touched && 

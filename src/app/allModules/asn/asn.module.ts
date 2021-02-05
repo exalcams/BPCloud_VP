@@ -61,6 +61,7 @@ import { ChatModule } from '../chat/chat.module';
 import { ASNComponent } from './asn.component';
 import { AsnPrintDialogComponent } from './asn-print-dialog/asn-print-dialog.component';
 import { ASNItemBatchDialogComponent } from "./asnitem-batch-dialog/asnitem-batch-dialog.component";
+import { ASNItemServiceDialogComponent } from './asnitem-service-dialog/asnitem-service-dialog.component';
 // import { ChatModule } from '../chat';
 // import 'chart.piecelabel.js';
 
@@ -149,8 +150,9 @@ const routes = [
         ASNComponent,
         AsnPrintDialogComponent,
         ASNItemBatchDialogComponent,
+        ASNItemServiceDialogComponent,
     ],
     providers: [DecimalPipe],
-    entryComponents: [AsnPrintDialogComponent, ASNItemBatchDialogComponent],
+    entryComponents: [AsnPrintDialogComponent, ASNItemBatchDialogComponent, ASNItemServiceDialogComponent],
 })
 export class ASNModule { }
