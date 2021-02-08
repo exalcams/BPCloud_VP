@@ -48,6 +48,7 @@ export class BPCOFItem extends CommonClass {
     TaxCode: string;
     MaxAllowedQty: number;
 }
+
 export class BPCOFItemView extends CommonClass {
     Client: string;
     Company: string;
@@ -73,10 +74,10 @@ export class BPCOFItemView extends CommonClass {
     TaxAmount: number | null;
     TaxCode: string;
     MaxAllowedQty: number;
-    ASNItemSESes: BPCASNItemSES[];
+    BPCOFItemSESes: BPCASNItemSES[];
     constructor() {
         super();
-        this.ASNItemSESes = [];
+        this.BPCOFItemSESes = [];
     }
 }
 export class BPCOFScheduleLine extends CommonClass {

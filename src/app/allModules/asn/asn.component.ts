@@ -21,7 +21,7 @@ import { FactService } from 'app/services/fact.service';
 import { VendorMasterService } from 'app/services/vendor-master.service';
 import { POService } from 'app/services/po.service';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { BPCOFItem, BPCOFHeader, BPCOFSubconView } from 'app/models/OrderFulFilment';
+import { BPCOFItem, BPCOFHeader, BPCOFSubconView, BPCOFItemView } from 'app/models/OrderFulFilment';
 import { AttachmentDetails } from 'app/models/task';
 import { DatePipe } from '@angular/common';
 import { SubconService } from 'app/services/subcon.service';
@@ -61,7 +61,7 @@ export class ASNComponent implements OnInit {
     AllUserWithRoles: UserWithRole[] = [];
     SelectedDocNumber: string;
     PO: BPCOFHeader;
-    POItems: BPCOFItem[] = [];
+    POItems: BPCOFItemView[] = [];
     SelectedASNHeader: BPCASNHeader;
     SelectedASNNumber: string;
     SelectedASNView: BPCASNView;
@@ -688,9 +688,9 @@ export class ASNComponent implements OnInit {
     }
 
     GetPOItemsByDocAndPartnerID(): void {
-        this._POService.GetPOItemsByDocAndPartnerID(this.SelectedDocNumber, this.currentUserName).subscribe(
+        this._POService.GetPOItemViewsByDocAndPartnerID(this.SelectedDocNumber, this.currentUserName).subscribe(
             (data) => {
-                this.POItems = data as BPCOFItem[];
+                this.POItems = data as BPCOFItemView[];
                 this.ClearFormArray(this.ASNItemFormArray);
                 if (this.POItems && this.POItems.length) {
                     this.SelectedASNHeader.Client = this.SelectedASNView.Client = this.POItems[0].Client;
@@ -935,7 +935,7 @@ export class ASNComponent implements OnInit {
         this.ASNFormGroup.get('Field10').patchValue(this.SelectedASNHeader.Field10);
     }
 
-    InsertPOItemsFormGroup(poItem: BPCOFItem): void {
+    InsertPOItemsFormGroup(poItem: BPCOFItemView): void {
         const row = this._formBuilder.group({
             Item: [poItem.Item],
             Material: [poItem.Material],
@@ -949,7 +949,7 @@ export class ASNComponent implements OnInit {
             ASNQty: [poItem.MaxAllowedQty],
             UOM: [poItem.UOM],
             Batch: [[]],
-            SES: [[]],
+            SES: [poItem.BPCOFItemSESes],
             ManufactureDate: [''],
             ExpiryDate: [''],
             PlantCode: [poItem.PlantCode],
@@ -1171,6 +1171,13 @@ export class ASNComponent implements OnInit {
                     y.PatnerID = this.PO.PatnerID;
                     y.Item = item.Item;
                 });
+                item.ASNItemSESes.forEach(y => {
+                    y.Client = this.PO.Client;
+                    y.Company = this.PO.Company;
+                    y.Type = this.PO.Type;
+                    y.PatnerID = this.PO.PatnerID;
+                    y.Item = item.Item;
+                });
                 // itemBatch.Client = this.PO.Client;
                 // itemBatch.Company = this.PO.Company;
                 // itemBatch.Type = this.PO.Type;
@@ -1181,6 +1188,13 @@ export class ASNComponent implements OnInit {
                 item.Type = this.SelectedASNHeader.Type;
                 item.PatnerID = this.SelectedASNHeader.PatnerID;
                 item.ASNItemBatches.forEach(y => {
+                    y.Client = this.PO.Client;
+                    y.Company = this.PO.Company;
+                    y.Type = this.PO.Type;
+                    y.PatnerID = this.PO.PatnerID;
+                    y.Item = item.Item;
+                });
+                item.ASNItemSESes.forEach(y => {
                     y.Client = this.PO.Client;
                     y.Company = this.PO.Company;
                     y.Type = this.PO.Type;
@@ -1250,7 +1264,7 @@ export class ASNComponent implements OnInit {
         const dialogConfig: MatDialogConfig = {
             data: {
                 ASNQty: asQ,
-                ASNItemSESs: asSES,
+                ASNItemSESes: asSES,
                 IsEnabled: isEnabled
             },
             panelClass: 'asn-item-ses-dialog'
@@ -1503,7 +1517,7 @@ export class ASNComponent implements OnInit {
         if (this.IsShipmentNotRelevant) {
             if (!this.isWeightError) {
                 if (this.InvoiceDetailsFormGroup.valid) {
-                    if (this.invoiceAttachment && this.invoiceAttachment.name) {
+                    if ((this.invoiceAttachment && this.invoiceAttachment.name) || this.invAttach.AttachmentName) {
                         this.GetASNValues();
                         this.GetASNItemValues();
                         this.GetASNPacksValues();
@@ -1559,7 +1573,7 @@ export class ASNComponent implements OnInit {
                     if (this.ASNItemFormGroup.valid) {
                         if (this.ASNPackFormGroup.valid) {
                             if (this.InvoiceDetailsFormGroup.valid) {
-                                if (this.invoiceAttachment && this.invoiceAttachment.name) {
+                                if ((this.invoiceAttachment && this.invoiceAttachment.name) || this.invAttach.AttachmentName) {
                                     this.GetASNValues();
                                     this.GetASNItemValues();
                                     this.GetASNPacksValues();

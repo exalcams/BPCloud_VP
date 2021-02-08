@@ -1,7 +1,7 @@
 <div class="dialog-content-wrapper">
   <mat-toolbar class="toolBg m-0">
     <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
-      <span class="title dialog-title">Batch details</span>
+      <span class="title dialog-title">SES details</span>
       <button mat-icon-button (click)="dialogRef.close()" aria-label="Close dialog">
         <mat-icon svgIcon="closeIcon"></mat-icon>
       </button>
@@ -10,18 +10,17 @@
 
   <mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
     <div fxFlex fxLayout="column" fxLayoutGap="20px" class="px-12 mt-4">
-      <div fxFlex fxLayout fxLayoutAlign="space-between center">
+      <!-- <div fxFlex fxLayout fxLayoutAlign="space-between center">
         <span class="Shipment-Proposal pb-4">Service items</span>
-      </div>
+      </div> -->
       <div fxFlex fxLayout="column">
         <form autocomplete="off" class="abnormal" fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto" name="form"
           novalidate [formGroup]="ASNItemSESFormGroup">
-          <div style="overflow-x:auto;">
-            <table *ngIf="ASNItemSESes && ASNItemSESes?.length)" class="table" mat-table
-              [dataSource]="ASNItemSESDataSource" formArrayName="ASNItemSESes">
+          <div style="overflow-x:auto;width: 100%;">
+            <table *ngIf="BPCASNItemSESes?.length" class="table" mat-table [dataSource]="ASNItemSESDataSource" formArrayName="ASNItemSESes">
 
               <ng-container matColumnDef="Item">
-                <th mat-header-cell *matHeaderCellDef [ngClass]="BGClassName?.layout?.toolbar?.background"> Item
+                <th mat-header-cell *matHeaderCellDef> Item
                 </th>
                 <td mat-cell *matCellDef="let element;let odd=odd;let index=index" [formGroupName]="index"
                   class="tableLeftBorder pl-0">
@@ -35,54 +34,60 @@
               </ng-container>
 
               <ng-container matColumnDef="ServiceNo">
-                <th mat-header-cell *matHeaderCellDef [ngClass]="BGClassName?.layout?.toolbar?.background">
+                <th mat-header-cell *matHeaderCellDef>
                   Service No </th>
                 <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
-                  <!-- <input matInput formControlName="ServiceItem">  -->
                   {{ASNItemSESFormGroup.get('ASNItemSESes')?.controls[index]?.get('ServiceNo')?.value}}
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="ServiceItem">
-                <th mat-header-cell *matHeaderCellDef [ngClass]="BGClassName?.layout?.toolbar?.background">
+                <th mat-header-cell *matHeaderCellDef>
                   Service Item </th>
                 <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
-                  <!-- <input matInput formControlName="ServiceItem">  -->
                   {{ASNItemSESFormGroup.get('ASNItemSESes')?.controls[index]?.get('ServiceItem')?.value}}
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="OrderedQty">
-                <th mat-header-cell *matHeaderCellDef [ngClass]="BGClassName?.layout?.toolbar?.background">
+                <th mat-header-cell *matHeaderCellDef>
                   Order Qty </th>
                 <td mat-cell class="QtyClass" *matCellDef="let element; let index = index" [formGroupName]="index">
-                  <!-- <input matInput formControlName="OrderedQty">  -->
                   {{ASNItemSESFormGroup.get('ASNItemSESes')?.controls[index]?.get('OrderedQty')?.value}}
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="OpenQty">
-                <th mat-header-cell *matHeaderCellDef [ngClass]="BGClassName?.layout?.toolbar?.background"> Open
+                <th mat-header-cell *matHeaderCellDef> Open
                   Qty </th>
                 <td mat-cell class="QtyClass" *matCellDef="let element; let index = index" [formGroupName]="index">
-                  <!-- <input matInput formControlName="OpenQty">  -->
                   {{ASNItemSESFormGroup.get('ASNItemSESes')?.controls[index]?.get('OpenQty')?.value}}
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="ServiceQty">
-                <th mat-header-cell *matHeaderCellDef [ngClass]="BGClassName?.layout?.toolbar?.background">
+                <th mat-header-cell *matHeaderCellDef>
                   Service Qty</th>
                 <td mat-cell class="QtyClass" *matCellDef="let element; let index = index" [formGroupName]="index">
-                  <!-- <input matInput formControlName="ServiceQty">  -->
-                  {{ASNItemSESFormGroup.get('ASNItemSESes')?.controls[index]?.get('ServiceQty')?.value}}
+                  <mat-form-field class="px-8" appearance="outline" style="width: 100px;">
+                    <input matInput formControlName="ServiceQty">
+                    <mat-error *ngIf="ASNItemSESFormGroup.get('ASNItemSESes').controls[index]?.get('ServiceQty').touched && 
+                    ASNItemSESFormGroup.get('ASNItemSESes').controls[index]?.get('ServiceQty').hasError('required')">
+                      *
+                    </mat-error>
+                  </mat-form-field>
                 </td>
               </ng-container>
 
-              <tr mat-header-row *matHeaderRowDef="ASNItemSESDisplayedColumns;sticky: true"></tr>
-              <tr mat-row *matRowDef="let row; columns: ASNItemSESDisplayedColumns;let even=even">
+              <tr mat-header-row *matHeaderRowDef="BPCASNItemSESDisplayedColumns;sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: BPCASNItemSESDisplayedColumns;let even=even">
               </tr>
             </table>
+            <mat-toolbar *ngIf="BPCASNItemSESes?.length === 0">
+              <span class="example-spacer"></span>
+              <span>No Records Found</span>
+              <span class="example-spacer"></span>
+            </mat-toolbar>
           </div>
         </form>
 
@@ -90,8 +95,9 @@
     </div>
   </mat-dialog-content>
   <mat-dialog-actions class="m-0 p-16" fxLayoutAlign="center" align="end">
-    <button mat-button type="button" (click)="CloseClicked()" *ngIf="ASNItemBatchQty?.IsEnabled">No</button>
+    <button mat-button type="button" (click)="CloseClicked()" *ngIf="ASNItemSESQty?.IsEnabled">No</button>
     <div fxFlex align="end">
       <button mat-button type="button" class="btnBg" (click)="YesClicked()" align="end">Yes</button>
     </div>
   </mat-dialog-actions>
+</div>
