@@ -16,7 +16,7 @@ import { BPCFact } from 'app/models/fact';
 import { FactService } from 'app/services/fact.service';
 import { POService } from 'app/services/po.service';
 import { BPCOFItem } from 'app/models/OrderFulFilment';
-import { DatePipe } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 
 @Component({
   selector: 'app-support-ticket',
@@ -58,7 +58,8 @@ export class SupportTicketComponent implements OnInit {
     private _masterService: MasterService,
     private _FactService: FactService,
     private _POService: POService,
-    private _datePipe: DatePipe
+    private _datePipe: DatePipe,
+    private _location: Location
   ) {
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.authenticationDetails = new AuthenticationDetails();
@@ -104,13 +105,19 @@ export class SupportTicketComponent implements OnInit {
     this.GetFactByPartnerID();
   }
   backbutton(): void {
-    if (this.navigator_page === "po-schedules") {
-
-      this._router.navigate(['/orderfulfilment/poschedules']);
-    }
-    else if (this.navigator_page === "asnlist") {
-      this._router.navigate(['/orderfulfilment/asnlist']);
-    }
+    // if (this.navigator_page === "orderfulfilmentCenter") {
+    //   this._router.navigate(['/orderfulfilment/orderfulfilmentCenter']);
+    // }
+    // else if (this.navigator_page === "polookup") {
+    //   this._router.navigate(['/pages/polookup']);
+    // }
+    // else if (this.navigator_page === "po-schedules") {
+    //   this._router.navigate(['/orderfulfilment/poschedules']);
+    // }
+    // else if (this.navigator_page === "asnlist") {
+    //   this._router.navigate(['/orderfulfilment/asnlist']);
+    // }
+    this._location.back();
   }
   CreateAppUsage(): void {
     const appUsage: AppUsage = new AppUsage();

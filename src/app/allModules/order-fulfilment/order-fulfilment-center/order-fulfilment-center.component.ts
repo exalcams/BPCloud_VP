@@ -541,7 +541,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
                     enabled: false,
                 },
                 redrawOnParentResize: true,
-                
+
             },
             colors: ['#40a8e2', '#fb863a'],
 
@@ -915,7 +915,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
 
     goToSupportDeskClicked(po: string): void {
         this._router.navigate(["/support/supportticket"], {
-            queryParams: { id: po },
+            queryParams: { id: po, navigator_page: 'orderfulfilmentCenter' },
         });
     }
 

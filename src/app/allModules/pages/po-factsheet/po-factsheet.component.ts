@@ -17,6 +17,7 @@ import { CustomerService } from 'app/services/customer.service';
 import { BPCInvoiceAttachment } from 'app/models/ASN';
 import { AttachmentViewDialogComponent } from 'app/notifications/attachment-view-dialog/attachment-view-dialog.component';
 import { NotificationDialog1Component } from 'app/notifications/notification-dialog1/notification-dialog1.component';
+import {Location} from '@angular/common';
 @Component({
     selector: 'app-po-factsheet',
     templateUrl: './po-factsheet.component.html',
@@ -186,6 +187,8 @@ export class PoFactsheetComponent implements OnInit {
         private formBuilder: FormBuilder,
         private datepipe: DatePipe,
         private dialog: MatDialog,
+        private _location: Location
+        
     ) {
         this.tab1 = true;
         this.tab2 = false;
@@ -554,7 +557,7 @@ export class PoFactsheetComponent implements OnInit {
         this._dashboardService.UpdatePOItems(this.acknowledgement).subscribe(
             (data) => {
                 this._router.navigate(["/support/supportticket"], {
-                    queryParams: { id: this.acknowledgement.PONumber, reason: 'Delivery Date Mismatch' },
+                    queryParams: { id: this.acknowledgement.PONumber, navigator_page: 'polookup', reason: 'Delivery Date Mismatch' },
                 });
                 this.isProgressBarVisibile = false;
             },
@@ -721,8 +724,11 @@ export class PoFactsheetComponent implements OnInit {
             item.Item = x.get('Item').value;
             item.Material = x.get('Material').value;
             item.MaterialText = x.get('MaterialText').value;
-            item.DeliveryDate = x.get('DeliveryDate').value;
+            item.DeliveryDate = x.get('DeliveryDate').value as Date;
+            const DeliveryDat = new Date(item.DeliveryDate);
+            const DeliveryDate1 = DeliveryDat.setHours(0, 0, 0, 0);
             const proposeddeliverydate = x.get('Proposeddeliverydate').value as Date;
+            const proposeddeliverydate1 = proposeddeliverydate.setHours(0, 0, 0, 0);
             item.Proposeddeliverydate = this.datepipe.transform(proposeddeliverydate, 'yyyy-MM-dd HH:mm:ss');
             item.OrderQty = x.get('OrderQty').value;
             item.UOM = x.get('UOM').value;
@@ -730,9 +736,12 @@ export class PoFactsheetComponent implements OnInit {
             item.PipelineQty = x.get('PipelineQty').value;
             item.OpenQty = x.get('OpenQty').value;
             this.orderFulfilmentDetails.itemDetails.push(item);
-            if (item.DeliveryDate !== proposeddeliverydate) {
+            if (DeliveryDate1 !== proposeddeliverydate1) {
                 this.isDeliveryDateMismatched = true;
             }
+            // else {
+            //     this.isDeliveryDateMismatched = false;
+            // }
             // console.log(this.orderFulfilmentDetails.itemDetails);
         });
     }

@@ -37,25 +37,25 @@ export class ASNDetails {
 export class GRNDetails {
     Item: string;
     Material: string;
-    Description:string;
+    Description: string;
     GRNDate: Date;
     Qty: number;
     DeliveryNote: string;
 }
 export class RETURNDetails {
-    Date:Date;
-    Type:string;
-    Material:string;
-    Description:string;
-    Qty:number;
-    Reason:string;
-    DeliveryNote:string;
+    Date: Date;
+    Type: string;
+    Material: string;
+    Description: string;
+    Qty: number;
+    Reason: string;
+    DeliveryNote: string;
 }
 
 export class QADetails {
     Item: string;
     Material: string;
-    Description:string;
+    Description: string;
     Date: Date;
     LotQty: number;
     RejQty: number;
@@ -67,14 +67,14 @@ export class SLDetails {
     SlLine: string;
     DeliveryDate: Date;
     OrderedQty: number;
-    Material:string;
-    Description:string;
-    Proposeddeliverydate:Date;
-    OrderQty:number;
-    GRQty:number;
-    PipelineQty:number;
-    OpenQty:number;
-    UOM:string;
+    Material: string;
+    Description: string;
+    Proposeddeliverydate: Date;
+    OrderQty: number;
+    GRQty: number;
+    PipelineQty: number;
+    OpenQty: number;
+    UOM: string;
 }
 
 export class DocumentDetails extends CommonClass {
@@ -111,9 +111,9 @@ export class OrderFulfilmentDetails {
     aSNDetails: ASNDetails[];
     itemDetails: ItemDetails[];
     gRNDetails: GRNDetails[];
-    ReturnDetails:RETURNDetails[];
+    ReturnDetails: RETURNDetails[];
     qADetails: QADetails[];
-    BPCPIHeader:BPCPIHeader[]
+    BPCPIHeader: BPCPIHeader[]
     slDetails: SLDetails[];
     documentDetails: DocumentDetails[];
     flipDetails: FlipDetails[];

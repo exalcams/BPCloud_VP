@@ -99,12 +99,12 @@
             <div class="round" [style.border-color]="getStatusColor('GRN')"></div>
           </div>
         </div>
-        <div fxLayout class="mt-8" style="margin-left: -12px">
+        <!-- <div fxLayout class="mt-8" style="margin-left: -12px">
           <div fxFlex="25" fxLayout>{{orderFulfilmentDetails.ACKDate | date :'dd/MM/yyyy' }}</div>
           <div fxFlex="25" fxLayout></div>
           <div fxFlex="25" fxLayout></div>
           <div fxFlex="25" fxLayout></div>
-        </div>
+        </div> -->
       </div>
     </div>
     <!-- Top Header -->
@@ -411,13 +411,12 @@
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Gross price</th>
                   <td mat-cell style="text-align: right;" *matCellDef="let element; let index = index"
                     [formGroupName]="index">
-                    {{ackFormGroup.get('POItems')?.controls[index]?.get('UnitPrice')?.value | number : 2}}
-                    {{12.52311 | number : 2}}
+                    {{ackFormGroup.get('POItems')?.controls[index]?.get('UnitPrice')?.value }}
                   </td>
                 </ng-container>
 
                 <ng-container matColumnDef="Value">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Net Value</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Gross Value</th>
                   <td mat-cell style="text-align: right" *matCellDef="let element; let index = index"
                     [formGroupName]="index">
                     {{ackFormGroup.get('POItems')?.controls[index]?.get('Value')?.value}}

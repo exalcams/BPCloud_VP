@@ -124,6 +124,12 @@ export class BPCASNItemBatchQty extends CommonClass {
     IsEnabled: boolean;
 }
 
+export class BPCASNItemSESQty extends CommonClass {
+    ASNQty: number;
+    ASNItemSESes: BPCASNItemSES[];
+    IsEnabled: boolean;
+}
+
 export class BPCASNItemSES extends CommonClass {
     Client: string;
     Company: string;
