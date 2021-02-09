@@ -11,6 +11,7 @@ export const locale = {
                 'ASN': 'ASN',
                 'FLIP': 'Flip',
                 'PO_FLIP': 'Po Flip',
+                'UPLOADINVOICE': 'Upload Invoice',
                 'INVOICE': 'Invoice',
                 'RESOURCE': 'Resource',
                 'DATA_MIGRATION': 'Data Migration',
