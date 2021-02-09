@@ -90,7 +90,13 @@ export class POFlipService {
     return this._httpClient.get<BPCFLIPItem[]>(`${this.baseAddress}poapi/PO/GetFLIPItemsByFLIPID?FLIPID=${FLIPID}`)
       .pipe(catchError(this.errorHandler));
   }
-
+  GetFlipAttachmentByDocNumber(DocNumber: string,AttachmentName:string): Observable<Blob | string> {
+    return this._httpClient.get(`${this.baseAddress}poapi/PO/GetFlipAttachmentByDocNumber?DocNumber=${DocNumber}&AttachmentName=${AttachmentName}`, {
+      responseType: 'blob',
+      headers: new HttpHeaders().append('Content-Type', 'application/json')
+    })
+      .pipe(catchError(this.errorHandler));
+  }
   GetFLIPCostsByFLIPID(FLIPID: string): Observable<BPCFLIPCost[] | string> {
     return this._httpClient.get<BPCFLIPCost[]>(`${this.baseAddress}poapi/PO/GetFLIPCostsByFLIPID?FLIPID=${FLIPID}`)
       .pipe(catchError(this.errorHandler));

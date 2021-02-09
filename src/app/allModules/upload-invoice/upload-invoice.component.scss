@@ -131,7 +131,9 @@
       margin: 0;
       color: rgba(0, 0, 0, 0.54);
     }
-
+    .iconAdd{
+      color: #ffffff !important;
+    }
     input {
       padding: 0 12px 0 8px;
       background-color: #ffffff;
@@ -458,6 +460,15 @@
     border: 1px solid #e3dbdb;
     height: 47px;
     border-top: 0px;
+  }
+  .AddButton{
+    margin-right: 19px;
+    margin-bottom: 12px;
+    background-color: #efb577 !important;
+    // position: absolute !important;
+    // z-index: 1;
+    // bottom: 48px;
+    // right: 10px;
   }
   .pdfLinkClass {
     color: #1e8bed;

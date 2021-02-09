@@ -148,6 +148,7 @@ export class UploadInvoiceComponent implements OnInit {
       this.GetCountryMasters();
       this.GetExpenseTypeMasters();
       this.GetPOPartnerID();
+      this.GetFlipsByPartnerID();
     } else {
       this._router.navigate(['/auth/login']);
     }
@@ -167,11 +168,107 @@ export class UploadInvoiceComponent implements OnInit {
       }
     );
   }
+  GetFlipsByPartnerID(): void {
+    this._poFlipService.GetPOFLIPsByPartnerID(this.authenticationDetails.UserName).subscribe(
+      (data) => {
+        this.flips = data as BPCFLIPHeader[];
+        if (this.flips && this.flips.length) {
+          this.loadSelectedFlip(this.flips[0]);
+        }
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+  loadSelectedFlip(selectedFLIP: BPCFLIPHeader): void {
+    this.selectedFlip = selectedFLIP;
+    console.log("selectedFlip",this.selectedFlip);
+    this.selectedFlipView.FLIPID = this.selectedFlip.FLIPID;
+    this.selectedFLIPID = selectedFLIP.FLIPID;
+    this.selectedDocDate = selectedFLIP.InvoiceDate;
+    // this.GetPOByDocAndPartnerID(this.selectedFlip.DocNumber);
+    this.GetFlipItemsByFLIPID();
+    this.GetFlipCostsByFLIPID();
+    this.setFlipFormValues();
+    this.GetFlipAttachmentByDocNumber();
+  }
+  GetFlipAttachmentByDocNumber(){
+    this.isProgressBarVisibile=true;
+    this._poFlipService.GetFlipAttachmentByDocNumber(this.selectedFlip.DocNumber,this.selectedFlip.InvoiceAttachmentName).subscribe(
+      (data) => {
+        if (data) {
+          const fileName=this.selectedFlip.InvoiceAttachmentName; 
+          const Files=new File([data],fileName);
+          this.fileToUpload=Files;
+          this.isProgressBarVisibile=false;
+        }
+      },
+      (err)=>{
+        // this.notificationSnackBarComponent.openSnackBar(err,SnackBarStatus.danger);
+        console.log(err);
+        this.isProgressBarVisibile=false;
+        this.fileToUpload=null;
+      });
+  }
+  OpenAttachmentDialog(): void {
+    const FileName=this.fileToUpload.name;
+    let fileType = 'image/jpg';
+          fileType = FileName.toLowerCase().includes('.jpg') ? 'image/jpg' :
+          FileName.toLowerCase().includes('.jpeg') ? 'image/jpeg' :
+          FileName.toLowerCase().includes('.png') ? 'image/png' :
+          FileName.toLowerCase().includes('.gif') ? 'image/gif' :
+                FileName.toLowerCase().includes('.pdf') ? 'application/pdf' : '';
+    const blob=new Blob([this.fileToUpload],{type:fileType});
+    const attachmentDetails: AttachmentDetails = {
+      FileName: FileName,
+      blob: blob
+    };
+    const dialogConfig: MatDialogConfig = {
+      data: attachmentDetails,
+      panelClass: 'attachment-dialog'
+    };
+    const dialogRef = this.dialog.open(AttachmentDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+      }
+    });
+  }
+  GetFlipItemsByFLIPID(): void {
+    this._poFlipService.GetFLIPItemsByFLIPID(this.selectedFlip.FLIPID).subscribe(
+      (data) => {
+        this.selectedFlipView.FLIPItems = data as BPCFLIPItem[];
+        this.flipItems=[];
+        if (this.selectedFlipView.FLIPItems && this.selectedFlipView.FLIPItems.length) {
+          this.selectedFlipView.FLIPItems.forEach(x => {
+            this.flipItems.push(x);
+          });
+          this.flipItemDataSource=new MatTableDataSource<BPCFLIPItem>(this.flipItems);
+        }
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+  GetFlipCostsByFLIPID(): void {
+    this.isProgressBarVisibile = true;
+    this._poFlipService.GetFLIPCostsByFLIPID(this.selectedFlip.FLIPID).subscribe(
+      (data) => {
+        this.isProgressBarVisibile = false;
+        this.flipCosts = data as BPCFLIPCost[];
+        this.flipCostDataSource = new MatTableDataSource<BPCFLIPCost>(this.flipCosts);
+      },
+      (err) => {
+        console.error(err);
+        this.isProgressBarVisibile = false;
+      }
+    );
+  }
   GetPOPartnerID(): void {
     this._factService.GetFactByPartnerID(this.authenticationDetails.UserName).subscribe(
       (data) => { 
         const fact=data as BPCFact;
-        console.log(fact,data);
         this.poHeader = new BPCOFHeader();
 
         this.poHeader.Client =this.selectedFlip.Client = fact.Client;
@@ -202,8 +299,8 @@ export class UploadInvoiceComponent implements OnInit {
               (dat) => {
                 this.resetControl();
                 this.notificationSnackBarComponent.openSnackBar('PO Flip Saved successfully', SnackBarStatus.success);
+                this.GetFlipsByPartnerID();
                 this.isProgressBarVisibile = false;
-                // this.getFlipBasedOnCondition();
               },
               (err) => {
                 this.showErrorNotificationSnackBar(err);
@@ -223,15 +320,16 @@ export class UploadInvoiceComponent implements OnInit {
       }
     );
   }
-
+  CreateUploadInvoice():void{
+    this.resetControl();
+    this.selectedFlip= new BPCFLIPHeader;
+    this.selectedFlipView=new BPCFLIPHeaderView;
+    this.GetPOPartnerID();
+  }
   UpdateFlip(): void {
     this.selectedFlipView.FLIPID = this.selectedFlip.FLIPID;
     this.selectedFlipView.ModifiedBy = this.authenticationDetails.UserID.toString();
-    // this.selectedFlipView.Client = this.selectedFlip.Client;
-    // this.selectedFlipView.Company = this.selectedFlip.Company;
-    // this.selectedFlipView.Type = this.selectedFlip.Type;
-    // this.selectedFlipView.PatnerID = this.selectedFlip.PatnerID;
-    // this.selectedFlipView.DocNumber = this.selectedFlip.DocNumber;
+    console.log('UpdateFlip',this.selectedFlipView);
     this.isProgressBarVisibile = true;
     this._poFlipService.UpdatePOFLIP(this.selectedFlipView).subscribe(
       (data) => {
@@ -242,7 +340,7 @@ export class UploadInvoiceComponent implements OnInit {
               this.resetControl();
               this.notificationSnackBarComponent.openSnackBar('PO Flip Updated successfully', SnackBarStatus.success);
               this.isProgressBarVisibile = false;
-              // this.getFlipBasedOnCondition();
+              this.GetFlipsByPartnerID();
             },
             (err) => {
               this.showErrorNotificationSnackBar(err);
@@ -272,7 +370,7 @@ export class UploadInvoiceComponent implements OnInit {
         this.resetControl();
         this.notificationSnackBarComponent.openSnackBar('PO Flip deleted successfully', SnackBarStatus.success);
         this.isProgressBarVisibile = false;
-        // this.getFlipBasedOnCondition();
+        this.GetFlipsByPartnerID();
       },
       (err) => {
         console.error(err);
@@ -363,8 +461,13 @@ export class UploadInvoiceComponent implements OnInit {
     this.fileToUploadList = [];
     this.clearFlipCostFormGroup();
     this.clearFlipCostDataSource();
-  }
+    this.clearFlipItemDataSource();
 
+  }
+  clearFlipItemDataSource():void{
+    this.flipItems=[];
+    this.flipItemDataSource=new MatTableDataSource<BPCFLIPItem>(this.flipItems);
+  }
   clearFlipFormGroup(): void {
     this.flipFormGroup.reset();
     Object.keys(this.flipFormGroup.controls).forEach(key => {
@@ -399,6 +502,7 @@ export class UploadInvoiceComponent implements OnInit {
 
 
   setFlipFormValues(): void {
+    this.flipFormGroup.get('DocumentNumber').patchValue(this.selectedFlip.DocNumber);
     this.flipFormGroup.get('InvoiceNumber').patchValue(this.selectedFlip.InvoiceNumber);
     this.flipFormGroup.get('InvoiceDate').patchValue(this.selectedFlip.InvoiceDate);
     this.flipFormGroup.get('InvoiceCurrency').patchValue(this.selectedFlip.InvoiceCurrency);
@@ -457,6 +561,10 @@ export class UploadInvoiceComponent implements OnInit {
   getFlipCostFormValues(): void {
     this.selectedFlipView.FLIPCosts = [];
     this.flipCosts.forEach(x => {
+      x.Client=this.selectedFlip.Client;
+      x.Company=this.selectedFlip.Company;
+      x.Type=this.selectedFlip.Type;
+      x.PatnerID=this.selectedFlip.PatnerID;
       this.selectedFlipView.FLIPCosts.push(x);
     });
   }
@@ -548,9 +656,13 @@ export class UploadInvoiceComponent implements OnInit {
       this.showValidationErrors(this.flipFormGroup);
     }
   }
-  getFlipItemFormValues():void{
+  getFlipItemFormValues():void {
     this.selectedFlipView.FLIPItems = [];
     this.flipItems.forEach(x => {
+      x.Client=this.selectedFlip.Client;
+      x.Company=this.selectedFlip.Company;
+      x.Type=this.selectedFlip.Type;
+      x.PatnerID=this.selectedFlip.PatnerID;
       this.selectedFlipView.FLIPItems.push(x);
     });
   }
@@ -786,4 +898,5 @@ export class UploadInvoiceComponent implements OnInit {
     this.flipCostFormGroup.get('ExpenceType').patchValue(this.SelectFlipCostTableRow.ExpenceType);
 
   }
+  
 }
