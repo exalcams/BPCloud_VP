@@ -759,7 +759,15 @@ export class LoginComponent implements OnInit {
                 url: "/poflip",
             });
         }
-
+        if (this.menuItems.indexOf("UploadInvoice") >= 0) {
+            this.paymentSubChildren.push({
+                id: "uploadinvoice",
+                title: "Upload Invoice",
+                translate: "NAV.VENDOR.UPLOADINVOICE",
+                type: "item",
+                url: "/uploadinvoice",
+            });
+        }
         if (this.menuItems.indexOf("AccountStatement") >= 0) {
             this.paymentSubChildren.push({
                 id: "accountStatement",

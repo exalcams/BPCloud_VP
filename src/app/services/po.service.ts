@@ -5,6 +5,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { BPCOFHeader, BPCOFItem, BPCOFHeaderXLSX, BPCOFItemXLSX, BPCOFScheduleLineXLSX, BPCOFGRGIXLSX, BPCOFQMXLSX, BPCOFGRGI, SOItemCount, BPCOFItemView } from 'app/models/OrderFulFilment';
 import { BPCCEOMessage, BPCSCOCMessage } from 'app/models/Message.model';
+import { BPCFact } from 'app/models/fact';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +40,10 @@ export class POService {
     return this._httpClient.get<any>(`${this.baseAddress}poapi/PO/GetPOByDocAndPartnerID?DocNumber=${DocNumber}&PartnerID=${PartnerID}`)
       .pipe(catchError(this.errorHandler));
   }
-
+  GetPOPartnerID(PartnerID: string): Observable<BPCFact | string> {
+    return this._httpClient.get<any>(`${this.baseAddress}poapi/PO/GetFactByPartnerID?PartnerID=${PartnerID}`)
+      .pipe(catchError(this.errorHandler));
+  }
   GetPOItemsByDoc(DocNumber: string): Observable<BPCOFItem[] | string> {
     return this._httpClient.get<BPCOFItem[]>(`${this.baseAddress}poapi/PO/GetPOItemsByDoc?DocNumber=${DocNumber}`)
       .pipe(catchError(this.errorHandler));
