@@ -1728,7 +1728,8 @@ export class ASNComponent implements OnInit {
                     } else {
                         this.notificationSnackBarComponent.openSnackBar(`ASN ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
                         this.IsProgressBarVisibile = false;
-                        if (Actiontype === 'Submit' && !this.IsShipmentNotRelevant) {
+                        // if (Actiontype === 'Submit' && !this.IsShipmentNotRelevant) {
+                        if (Actiontype === 'Submit') {
                             this.CreateASNPdf();
                         } else {
                             this.ResetControl();
@@ -1751,7 +1752,7 @@ export class ASNComponent implements OnInit {
                 } else {
                     this.notificationSnackBarComponent.openSnackBar(`ASN ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
                     this.IsProgressBarVisibile = false;
-                    if (Actiontype === 'Submit' && !this.IsShipmentNotRelevant) {
+                    if (Actiontype === 'Submit') {
                         this.CreateASNPdf();
                     } else {
                         this.ResetControl();
@@ -1768,7 +1769,7 @@ export class ASNComponent implements OnInit {
             (dat) => {
                 this.notificationSnackBarComponent.openSnackBar(`ASN ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
                 this.IsProgressBarVisibile = false;
-                if (Actiontype === 'Submit' && !this.IsShipmentNotRelevant) {
+                if (Actiontype === 'Submit') {
                     this.CreateASNPdf();
                 } else {
                     this.ResetControl();
@@ -1804,7 +1805,7 @@ export class ASNComponent implements OnInit {
                     } else {
                         this.notificationSnackBarComponent.openSnackBar(`ASN ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
                         this.IsProgressBarVisibile = false;
-                        if (Actiontype === 'Submit' && !this.IsShipmentNotRelevant) {
+                        if (Actiontype === 'Submit') {
                             this.CreateASNPdf();
                         } else {
                             this.ResetControl();
