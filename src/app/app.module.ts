@@ -140,7 +140,7 @@ const appRoutes: Routes = [
     },
     {
         path: '**',
-        redirectTo: 'discount'
+        redirectTo: 'auth/login'
     }
 ];
 
