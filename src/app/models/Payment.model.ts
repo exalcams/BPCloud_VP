@@ -13,6 +13,8 @@ export class BPCPayAccountStatement extends CommonClass {
     InvoiceAmount: number;
     PaidAmount: number;
     BalanceAmount :string;
+    DueDate: Date | string | null;
+    ProfitCenter:string;
     Reference: string;
     Status: string;
     AcceptedOn: Date | string | null;
@@ -66,4 +68,35 @@ export class BPCPayPayment extends CommonClass {
     PaidAmount: number;
     BankName: string;
     BankAccount: string;
+}
+export class BPCPayDis extends CommonClass{
+    Client: string;
+    Company: string;
+    Type: string;
+    PartnerID: string;
+    FiscalYear: string;
+    DocumentNumber: string;
+    DocumentDate: Date | string | null;
+    InvoiceNumber: string;
+    InvoiceDate: Date | string | null;
+    InvoiceAmount: number;
+    PaidAmount: number;
+    BalanceAmount :string;
+    DueDate: Date | string | null;
+    ProposedDueDate:Date | string | null;
+    ProposedDiscount:number;
+    PostDiscountAmount:number;
+    ProfitCenter:string;
+    Status: string;
+    ApprovedOn: Date | string | null;
+    ApprovedBy: string;
+}
+
+export class BPCDiscountMaster extends CommonClass{
+    ID:number;
+    FiscalYear:string;
+    Amount:number;
+    Days: number;
+    Discount:number;
+    ProfitCenter: string;
 }

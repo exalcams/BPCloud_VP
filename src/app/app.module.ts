@@ -35,7 +35,6 @@ import { NgxDonutChartModule } from 'ngx-doughnut-chart';
 import { ChartsModule } from 'ng2-charts';
 import { AttachmentViewDialogComponent } from './notifications/attachment-view-dialog/attachment-view-dialog.component';
 import { AttachmentDialogComponent } from './notifications/attachment-dialog/attachment-dialog.component';
-import { BalanceConfirmationModule } from './allModules/balance-confirmation/balance-confirmation.module';
 import { NotificationDialog1Component } from './notifications/notification-dialog1/notification-dialog1.component';
 import { UploadInvoiceComponent } from './allModules/upload-invoice/upload-invoice.component';
 // import { ASNItemBatchDialogComponent } from './allModules/asn/asnitem-batch-dialog/asnitem-batch-dialog.component';
@@ -136,8 +135,12 @@ const appRoutes: Routes = [
         loadChildren: './allModules/balance-confirmation/balance-confirmation.module#BalanceConfirmationModule'
     },
     {
+        path:'discount',
+        loadChildren:'./allModules/discount/discount.module#DiscountModule'
+    },
+    {
         path: '**',
-        redirectTo: 'auth/login'
+        redirectTo: 'discount'
     }
 ];
 
@@ -260,7 +263,7 @@ const appRoutes: Routes = [
         AttachmentDialogComponent,
         AttachmentViewDialogComponent,
         InformationDialogComponent,
-        ASNReleaseDialogComponent,
+        ASNReleaseDialogComponent
     ]
 })
 export class AppModule {

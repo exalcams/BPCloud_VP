@@ -102,6 +102,9 @@ export class BalanceConfirmationComponent implements OnInit {
       this.balanceConfirmationDataSource.sort = this.balanceConfirmationSort;
       this.isProgressBarVisibile = false;
       // console.log(data);
+    },
+    (err)=>{
+      this.isProgressBarVisibile=false;
     });
   }
 

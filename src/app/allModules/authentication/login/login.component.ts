@@ -750,6 +750,7 @@ export class LoginComponent implements OnInit {
     }
 
     GetPaymentMenus(): void {
+        console.log("test");
         if (this.menuItems.indexOf("Flip") >= 0) {
             this.paymentSubChildren.push({
                 id: "flip",
@@ -823,13 +824,24 @@ export class LoginComponent implements OnInit {
             });
         }
 
+        if (true || this.menuItems.indexOf("InvoiceDiscount") >= 0) {
+            this.paymentSubChildren.push({
+                id: "InvoiceDiscount",
+                title: "Invoice Discount",
+                translate: "NAV.VENDOR.TDS",
+                type: "item",
+                url: "/discount/invoice-discount",
+            });
+        }
+
         if (
             this.menuItems.indexOf("Flip") >= 0 ||
             this.menuItems.indexOf("Payments") >= 0 ||
             this.menuItems.indexOf("Payable") >= 0 ||
             this.menuItems.indexOf("AccountStatement") >= 0 ||
             this.menuItems.indexOf("TDS") >= 0 ||
-            this.menuItems.indexOf("Payment") >= 0
+            this.menuItems.indexOf("Payment") >= 0 ||
+            this.menuItems.indexOf("InvoiceDiscount") >= 0
         ) {
             this.children.push({
                 id: "master",
@@ -1058,6 +1070,17 @@ export class LoginComponent implements OnInit {
                 icon: "reportIcon",
                 isSvgIcon: true,
                 url: "/buyer/grnlist",
+            });
+        }
+        if (this.menuItems.indexOf("BuyerInvoiceDiscount") >= 0) {
+            this.children.push({
+                id: "BuyerInvoiceDiscount",
+                title: "Invoice Discount",
+                translate: "NAV.CUSTOMER.GET_SUPPORT",
+                type: "item",
+                icon: "paymentIcon",
+                isSvgIcon: true,
+                url: "/discount/buyer-discount",
             });
         }
 
