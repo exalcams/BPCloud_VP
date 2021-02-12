@@ -133,7 +133,7 @@ export class UploadInvoiceComponent implements OnInit {
       this.currentUserName = this.authenticationDetails.UserName;
       this.currentUserRole = this.authenticationDetails.UserRole;
       this.menuItems = this.authenticationDetails.MenuItemNames.split(',');
-      if (this.menuItems.indexOf('Flip') < 0) {
+      if (this.menuItems.indexOf('UploadInvoice') < 0) {
         this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
         );
         this._router.navigate(['/auth/login']);

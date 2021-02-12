@@ -175,7 +175,7 @@ export class ReportService {
 }
 FilterGRRListForBuyer(GRGIDoc:string,Material:string,StartDate:Date,EndDate:Date ): Observable<BPCReportGRR[] | string> {
   return this._httpClient.get<BPCReportGRR[]>
-      (`${this.baseAddress}poapi/PO/FilterGRRListForBuyer??GRGIDoc=${GRGIDoc}&Material=${Material}&StartDate=${StartDate}&EndDate=${EndDate}`)
+      (`${this.baseAddress}poapi/PO/FilterGRRListForBuyer?GRGIDoc=${GRGIDoc}&Material=${Material}&ASNFromDate=${StartDate}&ASNToDate=${EndDate}`)
       .pipe(catchError(this.errorHandler));
 }
 //

@@ -114,7 +114,7 @@
     input {
       padding: 0 12px 0 8px;
       background-color: #ffffff;
-      height: 36px;
+      height: 26px !important;
       border: none;
     }
   }
@@ -223,154 +223,6 @@
     // background: whitesmoke !important;
     // cursor: not-allowed !important;
   }
-  // .tableData {
-  //   overflow: auto;
-  //   height: 60vh !important;
-  //   min-height: 60vh !important;
-  //   // max-height: 33vh !important;
-  //   .table {
-  //     width: 150vw;
-  //     max-width: 100%;
-  //     overflow: auto;
-  //     margin-bottom: 10px;
-  //     display: table;
-  //     border-collapse: collapse;
-  //     margin: 0px;
-  //     // background-color: rgb(238, 238, 238);
-  //   }
-  //   .row,
-  //   .header-row {
-  //     display: table-row;
-  //     min-height: 36px !important;
-  //   }
-  //   .mat-row:hover {
-  //     background-color: lightgrey;
-  //   }
-  //   .cell,
-  //   .header-cell {
-  //     word-wrap: initial;
-  //     display: table-cell;
-  //     padding: 0px 5px;
-  //     line-break: unset;
-  //     width: fit-content;
-  //     white-space: nowrap;
-  //     overflow: hidden;
-  //     vertical-align: middle;
-  //     text-align: center;
-  //   }
-  //   .header-row,
-  //   .header-cell {
-  //     margin: 0 auto;
-  //     min-height: 100px !important;
-  //     text-align: center;
-  //     vertical-align: middle;
-  //     align-self: center;
-  //   }
-  //   .mat-card {
-  //     min-width: max-content;
-  //     max-width: max-content;
-  //   }
-  //   .sort-header {
-  //     display: flex;
-  //     align-content: center;
-  //     text-align: center;
-  //     justify-content: center;
-  //     font-size: 12pt;
-  //   }
-  //   .header-cell {
-  //     font-weight: bold;
-  //   }
-  // }
-
-  @mixin TableBorderRight($color) {
-    border-right: 1px solid $color;
-  }
-
-  .TableCommon {
-    padding: 5px;
-    font-size: 14px;
-    min-width: 50px !important;
-    white-space: nowrap;
-  }
-
-  table {
-    width: 100%;
-
-    th {
-      @include TableBorderRight(gray);
-      @extend .TableCommon;
-      // min-width: max-content !important;
-      color: white;
-      background-color: #121214;
-    }
-
-    td {
-      @include TableBorderRight(rgba(0, 0, 0, 0.12));
-      @extend .TableCommon;
-      // min-width: max-content !important;
-      &.QtyClass {
-        text-align: right;
-      }
-      .mat-form-field-underline {
-        display: none;
-      }
-    }
-
-    tr {
-      height: 40px;
-    }
-
-    .mat-sort-header-container {
-      display: flex;
-      justify-content: center;
-    }
-  }
-  .abnormal {
-    .mat-form-field-flex > .mat-form-field-infix {
-      padding: 0.3em 0px !important;
-    }
-    .mat-form-field-label-wrapper {
-      top: -1.5em;
-    }
-    .mat-form-field-wrapper {
-      margin: 0 !important;
-      padding-bottom: 4px !important;
-      padding-top: 4px !important;
-    }
-    .mat-form-field-appearance-outline .mat-form-field-flex {
-      padding: 0 0.4em 0 0.4em;
-    }
-    .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
-      transform: translateY(-1.1em) scale(0.75);
-      width: 133.33333%;
-    }
-    .mat-form-field-outline-start,
-    .mat-form-field-outline-end {
-      border-radius: 0 !important;
-    }
-  }
-  // td.mat-cell {
-  //   /* row padding */
-  //   padding: 16px 0;
-  //   /* row border */
-  //   border-bottom: 1px solid #ffa600;
-  //   border-top: 1px solid #ffa600;
-  //  }
-
-  //  td.mat-cell:first-child {
-  //    /* row border */
-  //    border-left: 1px solid #ffa600;
-  //  }
-
-  //  td.mat-cell:last-child {
-  //    /* row border */
-  //    border-right: 1px solid #ffa600;
-  //  }
-
-  //  table {
-  //    /* row spacing / margin */
-  //    border-spacing: 0 8px !important;
-  //  }
   .whiteBg {
     background-color: white !important;
   }
@@ -392,6 +244,38 @@
   }
   .orangeBorderBottom {
     border-bottom: 2px solid #ffd15c;
+  }
+  .mat-form-field-flex > .mat-form-field-infix {
+    padding: 0em 0px 0.6em !important;
+  }
+  .mat-form-field-appearance-outline {
+    .mat-form-field-suffix,
+    .mat-form-field-prefix {
+      top: 0.5em;
+      .mat-icon-button {
+        width: 1.5em;
+        height: 1.5em;
+      }
+    }
+  }
+  .mat-form-field-infix {
+    width: auto;
+  }
+  .mat-form-field-label-wrapper {
+    top: -1.5em;
+  }
+  .mat-form-field-wrapper {
+    margin: 0 0 0 0;
+    padding-bottom: 1em;
+  }
+
+  .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
+    transform: translateY(-1.1em) scale(0.75);
+    width: 133.33333%;
+  }
+  .mat-form-field-outline-start,
+  .mat-form-field-outline-end {
+    border-radius: 0 !important;
   }
   .rightCard {
     min-height: 300px !important;
@@ -466,12 +350,12 @@
       color: rgba(0, 0, 0, 0.54);
     }
 
-    input {
-      padding: 0 12px 0 8px;
-      background-color: #ffffff;
-      height: 36px;
-      border: none;
-    }
+    // input {
+    //   padding: 0 12px 0 8px;
+    //   background-color: #ffffff;
+    //   height: 26px !important;
+    //   border: none;
+    // }
   }
   .doughnutChartPosition {
     margin-bottom: 8px;
@@ -491,63 +375,66 @@
     }
   }
 
-  // .mat-form-field-appearance-outline {
-  //   .mat-form-field-outline {
-  //     color: rgba(0, 0, 0, 0.5) !important;
-  //   }
-  // }
-  // .mat-form-field-appearance-outline.ng-invalid.ng-touched {
-  //     .mat-form-field-outline {
-  //         color: red !important;
-  //     }
-  // }
+  @mixin TableBorderRight($color) {
+    border-right: 1px solid $color;
+  }
 
-  // .mat-form-field-appearance-outline.ng-valid {
-  //     .mat-form-field-outline {
-  //         color: rgba(0, 0, 0, 0.5) !important;
-  //     }
-  // }
+  .TableCommon {
+    padding: 5px;
+    font-size: 12px;
+    min-width: 100px !important;
+  }
 
-  // .mat-form-field-appearance-outline .mat-form-field-outline {
-  //   top: 0.4em !important;
-  // }
-  // .mat-form-field-flex > .mat-form-field-infix {
-  //   padding: 0.002em 0px !important;
-  // }
-  // .normal .mat-form-field-flex > .mat-form-field-infix {
-  //   padding: 0.4375em 0 !important;
-  // }
-  // .mat-form-field-label-wrapper {
-  //   top: -1em;
-  // }
+  table {
+    width: 100%;
 
-  // .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
-  //   transform: translateY(-0.5em) scale(0.75);
-  // }
+    th {
+      @include TableBorderRight(gray);
+      @extend .TableCommon;
+      text-align: left;
+      color: white;
+      background-color: #121214;
+    }
 
-  // .mat-form-field-suffix .mat-icon-button {
-  //   width: 2.5em;
-  //   height: 1.5em !important;
-  // }
+    td {
+      @include TableBorderRight(rgba(0, 0, 0, 0.12));
+      @extend .TableCommon;
+      // font-size: 12px;
+      padding: 7px 5px !important;
+      &.AmountClass {
+        text-align: center;
+      }
+      &.Selectoption{
+        text-align: center;
+      }
+      min-width: max-content !important;
+    }
 
-  // .mat-form-field-appearance-outline .mat-form-field-outline-start {
-  //   border-radius: 0px 0 0 0px !important;
-  // }
-  // .mat-form-field-appearance-outline .mat-form-field-outline-end {
-  //   border-radius: 0px 0 0 0px !important;
-  // }
+    tr {
+      height: 40px;
+    }
 
-  // .mat-form-field-outline-gap {
-  //   border: 1px solid #1b56ca;
-  //   border-radius: 1e-6px;
-  // }
-  // .mat-form-field-wrapper {
-  //   padding-bottom: 0.7em !important;
-  // }
+    .mat-sort-header-container {
+      padding-left: 5px;
+      display: flex;
+      justify-content: flex-start;
+    }
+  }
   .tableLeftBorder {
     border-left: 1px solid rgba(0, 0, 0, 0.12);
   }
-
+  .TableSelect .mat-form-field-wrapper {
+  padding-bottom: 0px !important; 
+}
+  .tableCellBorder {
+    height: 20px;
+    vertical-align: middle;
+    width: 10px;
+    background-color: #d87e39;
+    opacity: 0.7;
+    margin-left: -5px;
+  }
+  
   .roundCommon {
     height: 20px;
     width: 20px;
@@ -600,32 +487,10 @@
     border-radius: 2px;
     background-color: #f9d2a8;
   }
-  .tableCellBorder {
-    height: 20px;
-    vertical-align: middle;
-    width: 10px;
-    background-color: #d87e39;
-    opacity: 0.7;
-  }
+
   .next {
     background-color: #e8ffeb;
     padding: 4px 2px;
-  }
-
-  .mat-form-field-flex > .mat-form-field-infix {
-    padding: 0.3em 0px !important;
-  }
-  .mat-form-field-label-wrapper {
-    top: -1.5em;
-  }
-  .mat-form-field-wrapper {
-    margin: 1em 0 0 0;
-    padding-bottom: 1em;
-  }
-
-  .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
-    transform: translateY(-1.1em) scale(0.75);
-    width: 133.33333%;
   }
 
   .progress__svg {
@@ -798,38 +663,6 @@
       font-weight: 400;
       margin-top: 15px;
     }
-    .table_responsive {
-      overflow-x: auto !important;
-    }
-    .selectInput_table {
-      width: 85px !important;
-      height: 25px !important;
-      padding-left: 15px;
-      padding-right: 8px !important;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      font-size: 11px !important;
-      font-weight: 500;
-      background-size: 8px !important;
-      background-position-y: 9px !important;
-      border: 1px solid #c3c3c3 !important;
-      border-radius: 0.4px !important;
-    }
-    .tableHeader {
-      color: white;
-      font-size: 11px !important;
-      font-weight: 500;
-      opacity: 0.9;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    .tableElement {
-      line-height: 55px;
-      font-size: 10.5px !important;
-      font-weight: 500;
-      height: 50px;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      opacity: 0.9;
-    }
   }
 
   .cl_searchBtn {
@@ -841,6 +674,29 @@
     color: white;
     border-radius: 2.5px;
     letter-spacing: 1px;
+  }
+  .SearchBtn {
+    height: 36px;
+    min-width: 107px !important;
+  }
+  .excelImg {
+    // margin: 4px 6px 4px 4px;
+    height: 24px;
+  }
+  .excelBtn {
+    margin-top: -16px;
+    min-width: 0px;
+    background-color: white;
+    color: rgb(46, 125, 50);
+    &.mat-stroked-button {
+      // border-radius: 5px;
+      padding: 0px 8px;
+    }
+  }
+  .expandImg {
+    height: 36px;
+    margin-top: -16px;
+    cursor: pointer;
   }
   .inp_Img_date {
     object-fit: contain;
@@ -889,62 +745,13 @@
     margin-top: 15px;
   }
 
-  .cl_table {
-    margin-left: 20px;
-    margin-right: 20px;
-    margin-top: 11px;
-
-    box-shadow: none;
-    border-left: 1px solid #e0d7d7;
-    border-right: 1.5px solid #d4d1d1;
-    /* overflow-x:auto; */
-  }
-  /* .table_responsive {
-   
-    overflow-x:auto !important;
-   
-} */
-  mat-header-row {
-    min-height: 42px;
-    background-color: #343436 !important;
-    width: 100.2%;
-    margin-left: -1px;
-  }
   .cl_box {
     position: absolute;
     height: 22px;
     width: 9px;
-    margin-left: -24px;
+    // margin-left: -6px;
     opacity: 0.7;
-    margin-top: 5px;
-  }
-  .tableHeader {
-    color: white;
-    font-size: 12px;
-    font-weight: 500;
-    opacity: 0.9;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  }
-
-  .tableElement {
-    line-height: 55px;
-    font-size: 12px;
-    font-weight: 500;
-    height: 50px;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    opacity: 0.9;
-  }
-
-  .selectInput_table {
-    width: 110px;
-    height: 35px;
-    padding-left: 25px;
-    padding-right: 20px;
-    border: 1px solid #c3c3c3;
-    border-radius: 3px;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 12px;
-    font-weight: 400;
+    // margin-top: 5px;
   }
   .lightning_img {
     object-fit: contain;

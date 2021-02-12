@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AuthenticationDetails } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
@@ -10,11 +10,14 @@ import { ASNService } from 'app/services/asn.service';
 import { ExcelService } from 'app/services/excel.service';
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
+import { fuseAnimations } from '@fuse/animations';
 
 @Component({
   selector: 'app-asn-list',
   templateUrl: './asn-list.component.html',
-  styleUrls: ['./asn-list.component.scss']
+  styleUrls: ['./asn-list.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  animations: fuseAnimations
 })
 export class AsnListComponent implements OnInit {
 
@@ -41,6 +44,8 @@ export class AsnListComponent implements OnInit {
   isDateError: boolean;
   DefaultFromDate: Date;
   DefaultToDate: Date;
+  SelectValue: string;
+  TableSelectValue: string;
   constructor(
     private _fuseConfigService: FuseConfigService,
     private formBuilder: FormBuilder,
@@ -59,6 +64,8 @@ export class AsnListComponent implements OnInit {
     this.DefaultFromDate = new Date();
     this.DefaultFromDate.setDate(this.DefaultFromDate.getDate() - 30);
     this.DefaultToDate = new Date();
+    this.SelectValue = 'All';
+    this.TableSelectValue='Action'
   }
 
   ngOnInit(): void {
@@ -94,6 +101,8 @@ export class AsnListComponent implements OnInit {
       ASNFromDate: [this.DefaultFromDate],
       ASNToDate: [this.DefaultToDate]
     });
+    
+
   }
   ResetControl(): void {
     this.AllASNList = [];
