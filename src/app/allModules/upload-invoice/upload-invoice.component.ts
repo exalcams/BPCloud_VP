@@ -115,7 +115,7 @@ export class UploadInvoiceComponent implements OnInit {
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.isProgressBarVisibile = false;
     // this.currencies = ['USD', 'INR'];
-    this.invoiceTypes = ['Service', 'Registered'];
+    this.invoiceTypes = ['Service', 'FI','Employee','Expense'];
 
     this.maxDate = new Date();
   }
@@ -173,6 +173,7 @@ export class UploadInvoiceComponent implements OnInit {
       (data) => {
         this.flips = data as BPCFLIPHeader[];
         if (this.flips && this.flips.length) {
+          console.log('Filps',this.flips);
           this.loadSelectedFlip(this.flips[0]);
         }
       },
@@ -270,7 +271,7 @@ export class UploadInvoiceComponent implements OnInit {
       (data) => { 
         const fact=data as BPCFact;
         this.poHeader = new BPCOFHeader();
-
+        console.log('GetPOPartnerID',this.poHeader);
         this.poHeader.Client =this.selectedFlip.Client = fact.Client;
         this.poHeader.Type =this.selectedFlip.Type= fact.Type;
         this.poHeader.PatnerID =this.selectedFlip.PatnerID= fact.PatnerID;
@@ -298,7 +299,7 @@ export class UploadInvoiceComponent implements OnInit {
             this._poFlipService.AddPOFLIPAttachment(this.selectedFlip.FLIPID, this.authenticationDetails.UserID.toString(), this.fileToUploadList).subscribe(
               (dat) => {
                 this.resetControl();
-                this.notificationSnackBarComponent.openSnackBar('PO Flip Saved successfully', SnackBarStatus.success);
+                this.notificationSnackBarComponent.openSnackBar('Invoice Saved successfully', SnackBarStatus.success);
                 this.GetFlipsByPartnerID();
                 this.isProgressBarVisibile = false;
               },
@@ -309,7 +310,7 @@ export class UploadInvoiceComponent implements OnInit {
           }
           else {
             this.resetControl();
-            this.notificationSnackBarComponent.openSnackBar('PO Flip Saved successfully', SnackBarStatus.success);
+            this.notificationSnackBarComponent.openSnackBar('Invoice Saved successfully', SnackBarStatus.success);
             this.isProgressBarVisibile = false;
             // this.getFlipBasedOnCondition();
           }
@@ -324,6 +325,8 @@ export class UploadInvoiceComponent implements OnInit {
     this.resetControl();
     this.selectedFlip= new BPCFLIPHeader;
     this.selectedFlipView=new BPCFLIPHeaderView;
+    this.fileToUpload=null;
+    this.fileToUploadList=[];
     this.GetPOPartnerID();
   }
   UpdateFlip(): void {
@@ -338,7 +341,7 @@ export class UploadInvoiceComponent implements OnInit {
           this._poFlipService.AddPOFLIPAttachment(this.selectedFlip.FLIPID, this.authenticationDetails.UserID.toString(), this.fileToUploadList).subscribe(
             (dat) => {
               this.resetControl();
-              this.notificationSnackBarComponent.openSnackBar('PO Flip Updated successfully', SnackBarStatus.success);
+              this.notificationSnackBarComponent.openSnackBar('Invoice Updated successfully', SnackBarStatus.success);
               this.isProgressBarVisibile = false;
               this.GetFlipsByPartnerID();
             },
@@ -349,7 +352,7 @@ export class UploadInvoiceComponent implements OnInit {
         }
         else {
           this.resetControl();
-          this.notificationSnackBarComponent.openSnackBar('PO Flip Updated successfully', SnackBarStatus.success);
+          this.notificationSnackBarComponent.openSnackBar('Invoice Updated successfully', SnackBarStatus.success);
           this.isProgressBarVisibile = false;
           // this.getFlipBasedOnCondition();
         }
@@ -368,7 +371,7 @@ export class UploadInvoiceComponent implements OnInit {
     this._poFlipService.DeletePOFLIP(this.selectedFlip).subscribe(
       (data) => {
         this.resetControl();
-        this.notificationSnackBarComponent.openSnackBar('PO Flip deleted successfully', SnackBarStatus.success);
+        this.notificationSnackBarComponent.openSnackBar('Invoice deleted successfully', SnackBarStatus.success);
         this.isProgressBarVisibile = false;
         this.GetFlipsByPartnerID();
       },
@@ -434,7 +437,7 @@ export class UploadInvoiceComponent implements OnInit {
       InvoiceAmount: ['', [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,2})?$')]],
       InvoiceCurrency: ['', Validators.required],
       InvoiceType: ['', Validators.required],
-      IsInvoiceOrCertified: ['', Validators.required],
+      IsInvoiceOrCertified: [''],
     });
   }
 
