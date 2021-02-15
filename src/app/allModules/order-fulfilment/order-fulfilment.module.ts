@@ -25,6 +25,7 @@ import { InvoiceListComponent } from './invoice-list/invoice-list.component';
 import { AsnlistPrintDialogComponent } from './asnlist/asnlist-print-dialogue/asnlist-print-dialog/asnlist-print-dialog.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { ChatModule } from '../chat/chat.module';
+import { SharedModule } from 'app/shared/shared-module';
 const route: Routes = [
   {
     path: "orderfulfilmentCenter",
@@ -109,7 +110,8 @@ const route: Routes = [
     TranslateModule,
 
     NgApexchartsModule,
-    ChatModule
+    ChatModule,
+    SharedModule
   ],
   entryComponents: [
     AsnlistPrintDialogComponent

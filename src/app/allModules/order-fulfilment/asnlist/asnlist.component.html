@@ -166,29 +166,28 @@
 
           <!-- MaterialText Column -->
           <ng-container matColumnDef="ArrivalDate">
-            <mat-header-cell fxFlex="23" *matHeaderCellDef class="tableHeader"
+            <mat-header-cell fxFlex="10" *matHeaderCellDef class="tableHeader"
               [ngClass]="BGClassName?.layout?.toolbar?.background"> Arrival Date</mat-header-cell>
-            <mat-cell fxFlex="23" *matCellDef="let element">
+            <mat-cell fxFlex="10" *matCellDef="let element">
               <p class="tableElement">{{element.ArrivalDate| date :'dd/MM/yyyy'}} </p>
             </mat-cell>
           </ng-container>
 
           <!-- AcceptedQuantity Column -->
-          <ng-container matColumnDef="TurnaroundTime">
+          <!-- <ng-container matColumnDef="TurnaroundTime">
             <mat-header-cell fxFlex="9" *matHeaderCellDef class="tableHeader"
               [ngClass]="BGClassName?.layout?.toolbar?.background">Turnaround Time </mat-header-cell>
             <mat-cell fxFlex="9" *matCellDef="let element">
               <p class="tableElement">{{element.TurnaroundTime}} </p>
             </mat-cell>
-          </ng-container>
+          </ng-container> -->
 
           <!-- RejectedQuantity Column -->
           <ng-container matColumnDef="Status">
             <mat-header-cell fxFlex="8" *matHeaderCellDef class="tableHeader"
               [ngClass]="BGClassName?.layout?.toolbar?.background"> Status </mat-header-cell>
             <mat-cell fxFlex="8" *matCellDef="let element">
-              <img [src]="element.Status == 'ship' ? ship_url : element.Status == 'truck' ? truck_url: delivery_url"
-                height="22px" width="26px">
+              <p class="tableElement">{{element.Status}} </p>
             </mat-cell>
           </ng-container>
 

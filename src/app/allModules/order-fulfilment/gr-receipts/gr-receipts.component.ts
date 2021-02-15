@@ -28,7 +28,7 @@ import { ThrowStmt } from '@angular/compiler';
 })
 export class GRReceiptsComponent implements OnInit {
   BGClassName: any;
-    fuseConfig: any;
+  fuseConfig: any;
   authenticationDetails: AuthenticationDetails;
   currentUserID: Guid;
   currentUserName: string;
@@ -225,22 +225,22 @@ export class GRReceiptsComponent implements OnInit {
       this._router.navigate(['/auth/login']);
     }
     this.CreateAppUsage();
-    this.GetGRReceiptsReports();
+    // this.GetGRReceiptsReports();
     this.initializeSearchForm();
-    // this.searchButtonClicked();
+    this.searchButtonClicked();
 
 
-    
+
   }
 
   SetUserPreference(): void {
     this._fuseConfigService.config
-        .subscribe((config) => {
-            this.fuseConfig = config;
-            this.BGClassName = config;
-        });
+      .subscribe((config) => {
+        this.fuseConfig = config;
+        this.BGClassName = config;
+      });
     // this._fuseConfigService.config = this.fuseConfig;
-}
+  }
 
   CreateAppUsage(): void {
     const appUsage: AppUsage = new AppUsage();
@@ -257,11 +257,11 @@ export class GRReceiptsComponent implements OnInit {
       }
     );
   }
-  
+
 
   GetGRReceiptsReports(): void {
     this.isProgressBarVisibile = true;
-    this._reportService.GetAllGRR().subscribe(
+    this._reportService.GetGRRByPartnerId(this.currentUserName).subscribe(
       (data) => {
         this.grReceiptsReports = data as BPCReportGRR[];
         this.grReceiptsReportDataSource = new MatTableDataSource(this.grReceiptsReports);
@@ -348,9 +348,9 @@ export class GRReceiptsComponent implements OnInit {
     this.searchFormGroup = this.formBuilder.group({
       // PONumber: [''],
       Material: [''],
-      GRNNo:[''],
-      GRNDatefrom:[''],
-      GRNDateto:[]
+      GRNNo: [''],
+      GRNDatefrom: [''],
+      GRNDateto: []
       // FromDate: [this.defaultFromDate],
       // ToDate: [this.defaultToDate]
     });
@@ -381,14 +381,14 @@ export class GRReceiptsComponent implements OnInit {
 
   fromAndToDateChanged(): void {
     const FROMDATEVAL = this.searchFormGroup.get("GRNDatefrom")
-        .value as Date;
+      .value as Date;
     const TODATEVAL = this.searchFormGroup.get("GRNDateto").value as Date;
     if (FROMDATEVAL && TODATEVAL && FROMDATEVAL > TODATEVAL) {
-        this.isDateError = true;
+      this.isDateError = true;
     } else {
-        this.isDateError = false;
+      this.isDateError = false;
     }
-}
+  }
   searchButtonClicked(): void {
     if (this.searchFormGroup.valid) {
       // if (!this.isDateError) {
@@ -404,55 +404,55 @@ export class GRReceiptsComponent implements OnInit {
       // }
       // const poNumber = this.searchFormGroup.get('PONumber').value;
       const value = this.searchFormGroup.get('Material').value;
-console.log(this.grReceiptsReports)
-this.GRN="";
-this.QTY="";
-this.material="";
-this.Date="";
-this.material=this.searchFormGroup.get('Material').value;
-this.GRN=this.searchFormGroup.get('GRNNo').value;
-const fromDate=this.searchFormGroup.get('GRNDatefrom').value;
- const  todate=   this.searchFormGroup.get('GRNDateto').value;   
-        if (fromDate && todate) {
-         this.Datefrom=this._datePipe.transform(fromDate, 'yyyy-MM-dd');
-         
-this.Dateto=this._datePipe.transform(todate, 'yyyy-MM-dd');
-        }
-  
-  
+      console.log(this.grReceiptsReports)
+      this.GRN = "";
+      this.QTY = "";
+      this.material = "";
+      this.Date = "";
+      this.material = this.searchFormGroup.get('Material').value;
+      this.GRN = this.searchFormGroup.get('GRNNo').value;
+      const fromDate = this.searchFormGroup.get('GRNDatefrom').value;
+      const todate = this.searchFormGroup.get('GRNDateto').value;
+      if (fromDate && todate) {
+        this.Datefrom = this._datePipe.transform(fromDate, 'yyyy-MM-dd');
 
-// for (this.i=0;this.i<this.grReceiptsReports.length;this.i++){
-//   if(value ==this.grReceiptsReports[this.i].GRGIDoc){
-// this.GRN=(value);
-//   }
- 
-//   else if(value==this.grReceiptsReports[this.i].Material)
-//   {
-//     this.material=value
-//   }
+        this.Dateto = this._datePipe.transform(todate, 'yyyy-MM-dd');
+      }
 
 
-// }
+
+      // for (this.i=0;this.i<this.grReceiptsReports.length;this.i++){
+      //   if(value ==this.grReceiptsReports[this.i].GRGIDoc){
+      // this.GRN=(value);
+      //   }
+
+      //   else if(value==this.grReceiptsReports[this.i].Material)
+      //   {
+      //     this.material=value
+      //   }
 
 
-      this._reportService.FilterGRRListByPartnerID(this.currentUserName, this.GRN,this.material,this.Datefrom,this.Dateto).subscribe(
+      // }
+
+
+      this._reportService.FilterGRRListByPartnerID(this.currentUserName, this.GRN, this.material, this.Datefrom, this.Dateto).subscribe(
         (data) => {
-        console.log(data)
-      
+          console.log(data)
+
           this.grReceiptsReports = data as BPCReportGRR[];
           this.grReceiptsReportDataSource = new MatTableDataSource(this.grReceiptsReports);
           this.grReceiptsReportDataSource.paginator = this.grReceiptsPaginator;
           this.grReceiptsReportDataSource.sort = this.grReceiptsSort;
           this.isProgressBarVisibile = false;
-       
-         
-     
-          
+
+
+
+
         },
-      
+
         (err) => {
           console.error(err);
-         
+
         }
       );
       // const grReceiptsReportOption = new GRReceiptsReportOption();
@@ -538,7 +538,7 @@ this.Dateto=this._datePipe.transform(todate, 'yyyy-MM-dd');
     return this.data;
   }
 
- 
+
 }
 
 
