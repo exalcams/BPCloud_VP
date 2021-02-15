@@ -955,7 +955,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
             this._router.navigate(["/pages/polookup"], {
                 queryParams: { id: po },
             });
-        } else if (nextProcess === "ASN") {
+        } else if (nextProcess === "ASN/SCN") {
             this._router.navigate(["/asn"], { queryParams: { id: po } });
         }
     }
@@ -1028,7 +1028,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         if (element.Status === "DueForACK") {
             element.NextProcess = "ACK";
         } else if (element.Status === "DueForASN") {
-            element.NextProcess = "ASN";
+            element.NextProcess = "ASN/SCN";
         } else if (element.Status === "DueForGate") {
             element.NextProcess = "Gate";
         } else {
