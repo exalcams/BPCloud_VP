@@ -195,10 +195,10 @@
             <div fxLayout class="mt-4 mx-8">
               <div fxFlex="30" fxLayout>
                 <div class="round" (click)="acknowledgementClicked(element.DocNumber)"
-                  [style.border-color]="element.Status==='DueForACK'?'#efb577':'#34ad65'"></div>
+                  [style.border-color]="element.Status==='DueForACK'?'gray':'#34ad65'"></div>
                 <div style="width: 10px;margin-left: -1px !important"
-                  [class]="element.Status==='DueForACK'?'orange-timeline':'green-timeline'"></div>
-                <div [class]="element.Status==='DueForACK'?'white-timeline':'green-timeline'" fxFlex></div>
+                  [class]="element.Status==='DueForACK'?'white-timeline':'green-timeline'"></div>
+                <div [class]="element.Status==='DueForACK'?'white-timeline':element.Status==='DueForASN'?'white-timeline':'green-timeline'" fxFlex></div>
               </div>
               <div fxFlex="30" fxLayout>
                 <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline(element,'ASN')">

@@ -999,26 +999,33 @@ export class OrderFulFilmentCenterComponent implements OnInit {
                 return element.Status === "DueForACK"
                     ? "gray"
                     : element.Status === "DueForASN"
-                        ? "#efb577"
-                        : "#34ad65";
+                        ? "gray"
+                        : element.Status === "PartialASN"
+                            ? "#efb577" : "#34ad65";
             case "Gate":
                 return element.Status === "DueForACK"
                     ? "gray"
                     : element.Status === "DueForASN"
                         ? "gray"
-                        : element.Status === "DueForGate"
-                            ? "#efb577"
-                            : "#34ad65";
+                        : element.Status === "PartialASN"
+                            ? "gray"
+                            : element.Status === "DueForGate"
+                                ? "gray"
+                                : "#34ad65";
             case "GRN":
                 return element.Status === "DueForACK"
                     ? "gray"
                     : element.Status === "DueForASN"
                         ? "gray"
-                        : element.Status === "DueForGate"
+                        : element.Status === "PartialASN"
                             ? "gray"
-                            : element.Status === "DueForGRN"
-                                ? "#efb577"
-                                : "#34ad65";
+                            : element.Status === "DueForGate"
+                                ? "gray"
+                                : element.Status === "DueForGRN"
+                                    ? "gray"
+                                    : element.Status === "PartialGRN"
+                                        ? "#efb577"
+                                        : "#34ad65";
             default:
                 return "";
         }
@@ -1029,9 +1036,15 @@ export class OrderFulFilmentCenterComponent implements OnInit {
             element.NextProcess = "ACK";
         } else if (element.Status === "DueForASN") {
             element.NextProcess = "ASN/SCN";
-        } else if (element.Status === "DueForGate") {
+        } else if (element.Status === "PartialASN") {
+            element.NextProcess = "ASN/SCN";
+        }
+        else if (element.Status === "DueForGate") {
             element.NextProcess = "Gate";
-        } else {
+        } else if (element.Status === "PartialGRN") {
+            element.NextProcess = "GRN";
+        }
+        else {
             element.NextProcess = "GRN";
         }
     }
@@ -1042,26 +1055,33 @@ export class OrderFulFilmentCenterComponent implements OnInit {
                 return element.Status === "DueForACK"
                     ? "white-timeline"
                     : element.Status === "DueForASN"
-                        ? "orange-timeline"
-                        : "green-timeline";
+                        ? "white-timeline"
+                        : element.Status === "PartialASN"
+                            ? "orange-timeline" : "green-timeline";
             case "Gate":
                 return element.Status === "DueForACK"
                     ? "white-timeline"
                     : element.Status === "DueForASN"
                         ? "white-timeline"
-                        : element.Status === "DueForGate"
-                            ? "orange-timeline"
-                            : "green-timeline";
+                        : element.Status === "PartialASN"
+                            ? "white-timeline"
+                            : element.Status === "DueForGate"
+                                ? "white-timeline"
+                                : "green-timeline";
             case "GRN":
                 return element.Status === "DueForACK"
                     ? "white-timeline"
                     : element.Status === "DueForASN"
                         ? "white-timeline"
-                        : element.Status === "DueForGate"
+                        : element.Status === "PartialASN"
                             ? "white-timeline"
-                            : element.Status === "DueForGRN"
-                                ? "orange-timeline"
-                                : "green-timeline";
+                            : element.Status === "DueForGate"
+                                ? "white-timeline"
+                                : element.Status === "DueForGRN"
+                                    ? "white-timeline"
+                                    : element.Status === "PartialGRN"
+                                        ? "orange-timeline"
+                                        : "green-timeline";
             default:
                 return "";
         }
@@ -1074,25 +1094,37 @@ export class OrderFulFilmentCenterComponent implements OnInit {
                     ? "white-timeline"
                     : element.Status === "DueForASN"
                         ? "white-timeline"
-                        : "green-timeline";
+                        : element.Status === "PartialASN"
+                            ? "white-timeline"
+                            : element.Status === "DueForGate"
+                                ? "white-timeline"
+                                : "green-timeline";
             case "Gate":
                 return element.Status === "DueForACK"
                     ? "white-timeline"
                     : element.Status === "DueForASN"
                         ? "white-timeline"
-                        : element.Status === "DueForGate"
+                        : element.Status === "PartialASN"
                             ? "white-timeline"
-                            : "green-timeline";
+                            : element.Status === "DueForGate"
+                                ? "white-timeline"
+                                : element.Status === "DueForGRN"
+                                    ? "white-timeline"
+                                    : "green-timeline";
             case "GRN":
                 return element.Status === "DueForACK"
                     ? "white-timeline"
                     : element.Status === "DueForASN"
                         ? "white-timeline"
-                        : element.Status === "DueForGate"
+                        : element.Status === "PartialASN"
                             ? "white-timeline"
-                            : element.Status === "DueForGRN"
+                            : element.Status === "DueForGate"
                                 ? "white-timeline"
-                                : "green-timeline";
+                                : element.Status === "DueForGRN"
+                                    ? "white-timeline"
+                                    : element.Status === "PartialGRN"
+                                        ? "white-timeline"
+                                        : "green-timeline";
             default:
                 return "";
         }

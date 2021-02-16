@@ -453,7 +453,8 @@
                               *ngIf="bankDetailsFormGroup.get('AccountNumber').touched && bankDetailsFormGroup.get('AccountNumber').hasError('required')">
                               Account No is required
                             </mat-error>
-                          </span></td>
+                          </span>
+                        </td>
                       </ng-container>
 
                       <!-- <ng-container matColumnDef="Name">
@@ -479,7 +480,8 @@
                               *ngIf="bankDetailsFormGroup.get('BankName').touched && bankDetailsFormGroup.get('BankName').hasError('required')">
                               Bank Name is required
                             </mat-error>
-                          </span></td>
+                          </span>
+                        </td>
                       </ng-container>
 
 
@@ -504,7 +506,8 @@
                               *ngIf="bankDetailsFormGroup.get('BankID').touched && bankDetailsFormGroup.get('BankID').hasError('required')">
                               BankID is required
                             </mat-error>
-                          </span></td>
+                          </span>
+                        </td>
                       </ng-container>
 
                       <ng-container matColumnDef="Action">
@@ -798,8 +801,8 @@
                         <!-- <span *ngIf="i <= Certificatecount" class="linkClass">{{element.Attachment }}</span> -->
                         <div fxLayout="row" fxLayoutAlign="space-between center">
                           <span *ngIf=" i <Certificatecount-Certificateadd" (click)="ViewAttachmentClicked(element)">
-                            <button><input type="text" [disabled]="true" class="InputAttachment" value="{{element.Attachment}}"
-                              name="Attachment" #input></button>
+                            <button><input type="text" [disabled]="true" class="InputAttachment"
+                                value="{{element.Attachment}}" name="Attachment" #input></button>
                           </span>
                           <span *ngIf="i== Certificatecount-Certificateadd || !change">
                             <input hidden type="file" #fileInput
@@ -863,13 +866,16 @@
     </div>
     <div fxLayout id="footerCard">
       <div fxLayout fxFlex class="my-8 px-24" fxLayoutAlign="end">
-        <button (click)="Change()" [ngClass]="BGClassName?.layout?.navbar?.primaryBackground" class="ChangeBtn"
+        <!-- <button (click)="Change()" [ngClass]="BGClassName?.layout?.navbar?.primaryBackground" class="ChangeBtn"
           mat-raised-button>
-          Change</button>
+          Change</button> -->
 
-        <button *ngIf="!change" (click)="SaveClicked()"
+        <!-- <button *ngIf="!change" (click)="SaveClicked()"
           [ngStyle]="{'cursor': change ==true ? 'not-allowed !important' : 'pointer !important' }"
           [ngClass]="BGClassName?.layout?.navbar?.primaryBackground" class="SaveBtn" mat-raised-button>
+          Save</button> -->
+        <button (click)="SaveClicked()" [ngClass]="BGClassName?.layout?.navbar?.primaryBackground" class="SaveBtn"
+          mat-raised-button>
           Save</button>
       </div>
     </div>
