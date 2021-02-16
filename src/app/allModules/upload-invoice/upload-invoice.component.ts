@@ -106,7 +106,7 @@ export class UploadInvoiceComponent implements OnInit {
     public snackBar: MatSnackBar,
     private dialog: MatDialog,
     private _formBuilder: FormBuilder,
-    private _factService:FactService
+    private _factService: FactService
   ) {
     this.selectedFlip = new BPCFLIPHeader();
     this.selectedFlipView = new BPCFLIPHeaderView();
@@ -115,7 +115,7 @@ export class UploadInvoiceComponent implements OnInit {
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.isProgressBarVisibile = false;
     // this.currencies = ['USD', 'INR'];
-    this.invoiceTypes = ['Service', 'FI','Employee','Expense'];
+    this.invoiceTypes = ['Service', 'FI', 'Employee expense'];
 
     this.maxDate = new Date();
   }
@@ -173,7 +173,7 @@ export class UploadInvoiceComponent implements OnInit {
       (data) => {
         this.flips = data as BPCFLIPHeader[];
         if (this.flips && this.flips.length) {
-          console.log('Filps',this.flips);
+          console.log('Filps', this.flips);
           this.loadSelectedFlip(this.flips[0]);
         }
       },
@@ -184,7 +184,7 @@ export class UploadInvoiceComponent implements OnInit {
   }
   loadSelectedFlip(selectedFLIP: BPCFLIPHeader): void {
     this.selectedFlip = selectedFLIP;
-    console.log("selectedFlip",this.selectedFlip);
+    console.log("selectedFlip", this.selectedFlip);
     this.selectedFlipView.FLIPID = this.selectedFlip.FLIPID;
     this.selectedFLIPID = selectedFLIP.FLIPID;
     this.selectedDocDate = selectedFLIP.InvoiceDate;
@@ -194,33 +194,33 @@ export class UploadInvoiceComponent implements OnInit {
     this.setFlipFormValues();
     this.GetFlipAttachmentByDocNumber();
   }
-  GetFlipAttachmentByDocNumber(){
-    this.isProgressBarVisibile=true;
-    this._poFlipService.GetFlipAttachmentByDocNumber(this.selectedFlip.DocNumber,this.selectedFlip.InvoiceAttachmentName).subscribe(
+  GetFlipAttachmentByDocNumber() {
+    this.isProgressBarVisibile = true;
+    this._poFlipService.GetFlipAttachmentByDocNumber(this.selectedFlip.DocNumber, this.selectedFlip.InvoiceAttachmentName).subscribe(
       (data) => {
         if (data) {
-          const fileName=this.selectedFlip.InvoiceAttachmentName; 
-          const Files=new File([data],fileName);
-          this.fileToUpload=Files;
-          this.isProgressBarVisibile=false;
+          const fileName = this.selectedFlip.InvoiceAttachmentName;
+          const Files = new File([data], fileName);
+          this.fileToUpload = Files;
+          this.isProgressBarVisibile = false;
         }
       },
-      (err)=>{
+      (err) => {
         // this.notificationSnackBarComponent.openSnackBar(err,SnackBarStatus.danger);
         console.log(err);
-        this.isProgressBarVisibile=false;
-        this.fileToUpload=null;
+        this.isProgressBarVisibile = false;
+        this.fileToUpload = null;
       });
   }
   OpenAttachmentDialog(): void {
-    const FileName=this.fileToUpload.name;
+    const FileName = this.fileToUpload.name;
     let fileType = 'image/jpg';
-          fileType = FileName.toLowerCase().includes('.jpg') ? 'image/jpg' :
-          FileName.toLowerCase().includes('.jpeg') ? 'image/jpeg' :
-          FileName.toLowerCase().includes('.png') ? 'image/png' :
+    fileType = FileName.toLowerCase().includes('.jpg') ? 'image/jpg' :
+      FileName.toLowerCase().includes('.jpeg') ? 'image/jpeg' :
+        FileName.toLowerCase().includes('.png') ? 'image/png' :
           FileName.toLowerCase().includes('.gif') ? 'image/gif' :
-                FileName.toLowerCase().includes('.pdf') ? 'application/pdf' : '';
-    const blob=new Blob([this.fileToUpload],{type:fileType});
+            FileName.toLowerCase().includes('.pdf') ? 'application/pdf' : '';
+    const blob = new Blob([this.fileToUpload], { type: fileType });
     const attachmentDetails: AttachmentDetails = {
       FileName: FileName,
       blob: blob
@@ -239,12 +239,12 @@ export class UploadInvoiceComponent implements OnInit {
     this._poFlipService.GetFLIPItemsByFLIPID(this.selectedFlip.FLIPID).subscribe(
       (data) => {
         this.selectedFlipView.FLIPItems = data as BPCFLIPItem[];
-        this.flipItems=[];
+        this.flipItems = [];
         if (this.selectedFlipView.FLIPItems && this.selectedFlipView.FLIPItems.length) {
           this.selectedFlipView.FLIPItems.forEach(x => {
             this.flipItems.push(x);
           });
-          this.flipItemDataSource=new MatTableDataSource<BPCFLIPItem>(this.flipItems);
+          this.flipItemDataSource = new MatTableDataSource<BPCFLIPItem>(this.flipItems);
         }
       },
       (err) => {
@@ -268,14 +268,14 @@ export class UploadInvoiceComponent implements OnInit {
   }
   GetPOPartnerID(): void {
     this._factService.GetFactByPartnerID(this.authenticationDetails.UserName).subscribe(
-      (data) => { 
-        const fact=data as BPCFact;
+      (data) => {
+        const fact = data as BPCFact;
         this.poHeader = new BPCOFHeader();
-        console.log('GetPOPartnerID',this.poHeader);
-        this.poHeader.Client =this.selectedFlip.Client = fact.Client;
-        this.poHeader.Type =this.selectedFlip.Type= fact.Type;
-        this.poHeader.PatnerID =this.selectedFlip.PatnerID= fact.PatnerID;
-        this.poHeader.Company = this.selectedFlip.Company=fact.Company;
+        console.log('GetPOPartnerID', this.poHeader);
+        this.poHeader.Client = this.selectedFlip.Client = fact.Client;
+        this.poHeader.Type = this.selectedFlip.Type = fact.Type;
+        this.poHeader.PatnerID = this.selectedFlip.PatnerID = fact.PatnerID;
+        this.poHeader.Company = this.selectedFlip.Company = fact.Company;
         this.selectedDocDate = this.poHeader.DocDate as Date;
         if (this.selectedDocNumber && !this.selectedFlip.FLIPID) {
           // this.GetPOItemsByDocAndPartnerID();
@@ -288,7 +288,7 @@ export class UploadInvoiceComponent implements OnInit {
   }
   CreateFlip(): void {
     this.selectedFlipView.CreatedBy = this.authenticationDetails.UserID.toString();
-    console.log("selectedFlipView",this.selectedFlipView);
+    console.log("selectedFlipView", this.selectedFlipView);
 
     this.isProgressBarVisibile = true;
     this._poFlipService.CreatePOFLIP(this.selectedFlipView).subscribe(
@@ -321,18 +321,18 @@ export class UploadInvoiceComponent implements OnInit {
       }
     );
   }
-  CreateUploadInvoice():void{
+  CreateUploadInvoice(): void {
     this.resetControl();
-    this.selectedFlip= new BPCFLIPHeader;
-    this.selectedFlipView=new BPCFLIPHeaderView;
-    this.fileToUpload=null;
-    this.fileToUploadList=[];
+    this.selectedFlip = new BPCFLIPHeader;
+    this.selectedFlipView = new BPCFLIPHeaderView;
+    this.fileToUpload = null;
+    this.fileToUploadList = [];
     this.GetPOPartnerID();
   }
   UpdateFlip(): void {
     this.selectedFlipView.FLIPID = this.selectedFlip.FLIPID;
     this.selectedFlipView.ModifiedBy = this.authenticationDetails.UserID.toString();
-    console.log('UpdateFlip',this.selectedFlipView);
+    console.log('UpdateFlip', this.selectedFlipView);
     this.isProgressBarVisibile = true;
     this._poFlipService.UpdatePOFLIP(this.selectedFlipView).subscribe(
       (data) => {
@@ -420,12 +420,12 @@ export class UploadInvoiceComponent implements OnInit {
       Item: ['', Validators.required],
       MaterialText: ['', Validators.required],
       HSN: ['', Validators.required],
-      OrderedQty: ['', [Validators.required,Validators.pattern('^([1-9][0-9]{0,9})')]],
-      OpenQty: ['', [Validators.required,Validators.pattern('^([1-9][0-9]{0,9})')]],
-      InvoiceQty: ['', [Validators.required,Validators.pattern('^([1-9][0-9]{0,9})')]],
-      Price: ['', [Validators.required,Validators.pattern('^([1-9][0-9]{0,9})')]],
-      Tax: ['', [Validators.required,Validators.pattern('^([1-9][0-9]{0,9})')]],
-      Amount: ['', [Validators.required,Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,2})?$')]],
+      OrderedQty: ['', [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})')]],
+      OpenQty: ['', [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})')]],
+      InvoiceQty: ['', [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})')]],
+      Price: ['', [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})')]],
+      Tax: ['', [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})')]],
+      Amount: ['', [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,2})?$')]],
     });
   }
 
@@ -467,9 +467,9 @@ export class UploadInvoiceComponent implements OnInit {
     this.clearFlipItemDataSource();
 
   }
-  clearFlipItemDataSource():void{
-    this.flipItems=[];
-    this.flipItemDataSource=new MatTableDataSource<BPCFLIPItem>(this.flipItems);
+  clearFlipItemDataSource(): void {
+    this.flipItems = [];
+    this.flipItemDataSource = new MatTableDataSource<BPCFLIPItem>(this.flipItems);
   }
   clearFlipFormGroup(): void {
     this.flipFormGroup.reset();
@@ -564,10 +564,10 @@ export class UploadInvoiceComponent implements OnInit {
   getFlipCostFormValues(): void {
     this.selectedFlipView.FLIPCosts = [];
     this.flipCosts.forEach(x => {
-      x.Client=this.selectedFlip.Client;
-      x.Company=this.selectedFlip.Company;
-      x.Type=this.selectedFlip.Type;
-      x.PatnerID=this.selectedFlip.PatnerID;
+      x.Client = this.selectedFlip.Client;
+      x.Company = this.selectedFlip.Company;
+      x.Type = this.selectedFlip.Type;
+      x.PatnerID = this.selectedFlip.PatnerID;
       this.selectedFlipView.FLIPCosts.push(x);
     });
   }
@@ -659,13 +659,13 @@ export class UploadInvoiceComponent implements OnInit {
       this.showValidationErrors(this.flipFormGroup);
     }
   }
-  getFlipItemFormValues():void {
+  getFlipItemFormValues(): void {
     this.selectedFlipView.FLIPItems = [];
     this.flipItems.forEach(x => {
-      x.Client=this.selectedFlip.Client;
-      x.Company=this.selectedFlip.Company;
-      x.Type=this.selectedFlip.Type;
-      x.PatnerID=this.selectedFlip.PatnerID;
+      x.Client = this.selectedFlip.Client;
+      x.Company = this.selectedFlip.Company;
+      x.Type = this.selectedFlip.Type;
+      x.PatnerID = this.selectedFlip.PatnerID;
       this.selectedFlipView.FLIPItems.push(x);
     });
   }
@@ -901,5 +901,5 @@ export class UploadInvoiceComponent implements OnInit {
     this.flipCostFormGroup.get('ExpenceType').patchValue(this.SelectFlipCostTableRow.ExpenceType);
 
   }
-  
+
 }
