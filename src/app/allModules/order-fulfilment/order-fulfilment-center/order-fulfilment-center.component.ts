@@ -915,7 +915,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
 
     goToSupportDeskClicked(po: string): void {
         this._router.navigate(["/support/supportticket"], {
-            queryParams: { id: po, navigator_page: 'orderfulfilmentCenter' },
+            queryParams: { id: po, navigator_page: 'OrderFulFilmentCenter' },
         });
     }
 

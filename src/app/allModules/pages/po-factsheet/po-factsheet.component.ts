@@ -861,32 +861,77 @@ export class PoFactsheetComponent implements OnInit {
 
     getStatusColor(statusFor: string): string {
         switch (statusFor) {
-            case 'ASN':
-                return this.poStatus === 'DueForACK' ? 'gray' : this.poStatus === 'DueForASN' ? '#efb577' : '#34ad65';
-            case 'Gate':
-                return this.poStatus === 'DueForACK' ? 'gray' : this.poStatus === 'DueForASN' ? 'gray' : this.poStatus === 'DueForGate' ? '#efb577' :
-                    '#34ad65';
-            case 'GRN':
-                return this.poStatus === 'DueForACK' ? 'gray' : this.poStatus === 'DueForASN' ? 'gray' : this.poStatus === 'DueForGate' ? 'gray' :
-                    this.poStatus === 'DueForGRN' ? '#efb577' : '#34ad65';
+            case "ASN":
+                return this.poStatus === "DueForACK"
+                    ? "gray"
+                    : this.poStatus === "DueForASN"
+                        ? "gray"
+                        : this.poStatus === "PartialASN"
+                            ? "#efb577" : "#34ad65";
+            case "Gate":
+                return this.poStatus === "DueForACK"
+                    ? "gray"
+                    : this.poStatus === "DueForASN"
+                        ? "gray"
+                        : this.poStatus === "PartialASN"
+                            ? "gray"
+                            : this.poStatus === "DueForGate"
+                                ? "gray"
+                                : "#34ad65";
+            case "GRN":
+                return this.poStatus === "DueForACK"
+                    ? "gray"
+                    : this.poStatus === "DueForASN"
+                        ? "gray"
+                        : this.poStatus === "PartialASN"
+                            ? "gray"
+                            : this.poStatus === "DueForGate"
+                                ? "gray"
+                                : this.poStatus === "DueForGRN"
+                                    ? "gray"
+                                    : this.poStatus === "PartialGRN"
+                                        ? "#efb577"
+                                        : "#34ad65";
             default:
-                return '';
+                return "";
         }
     }
 
     getTimeline(statusFor: string): string {
         switch (statusFor) {
-            case 'ASN':
-                return this.poStatus === 'DueForACK' ? 'white-timeline' : this.poStatus === 'DueForASN' ? 'orange-timeline' : 'green-timeline';
-            case 'Gate':
-                return this.poStatus === 'DueForACK' ? 'white-timeline' : this.poStatus === 'DueForASN' ? 'white-timeline' :
-                    this.poStatus === 'DueForGate' ? 'orange-timeline' : 'green-timeline';
-            case 'GRN':
-                return this.poStatus === 'DueForACK' ? 'white-timeline' : this.poStatus === 'DueForASN' ? 'white-timeline' :
-                    this.poStatus === 'DueForGate' ? 'white-timeline' :
-                        this.poStatus === 'DueForGRN' ? 'orange-timeline' : 'green-timeline';
+            case "ASN":
+                return this.poStatus === "DueForACK"
+                    ? "white-timeline"
+                    : this.poStatus === "DueForASN"
+                        ? "white-timeline"
+                        : this.poStatus === "PartialASN"
+                            ? "orange-timeline" : "green-timeline";
+            case "Gate":
+                return this.poStatus === "DueForACK"
+                    ? "white-timeline"
+                    : this.poStatus === "DueForASN"
+                        ? "white-timeline"
+                        : this.poStatus === "PartialASN"
+                            ? "white-timeline"
+                            : this.poStatus === "DueForGate"
+                                ? "white-timeline"
+                                : "green-timeline";
+            case "GRN":
+                return this.poStatus === "DueForACK"
+                    ? "white-timeline"
+                    : this.poStatus === "DueForASN"
+                        ? "white-timeline"
+                        : this.poStatus === "PartialASN"
+                            ? "white-timeline"
+                            : this.poStatus === "DueForGate"
+                                ? "white-timeline"
+                                : this.poStatus === "DueForGRN"
+                                    ? "white-timeline"
+                                    : this.poStatus === "PartialGRN"
+                                        ? "orange-timeline"
+                                        : "green-timeline";
             default:
-                return '';
+                return "";
         }
     }
 
@@ -896,17 +941,44 @@ export class PoFactsheetComponent implements OnInit {
 
     getRestTimeline(statusFor: string): string {
         switch (statusFor) {
-            case 'ASN':
-                return this.poStatus === 'DueForACK' ? 'white-timeline' : this.poStatus === 'DueForASN' ? 'white-timeline' : 'green-timeline';
-            case 'Gate':
-                return this.poStatus === 'DueForACK' ? 'white-timeline' : this.poStatus === 'DueForASN' ? 'white-timeline' :
-                    this.poStatus === 'DueForGate' ? 'white-timeline' : 'green-timeline';
-            case 'GRN':
-                return this.poStatus === 'DueForACK' ? 'white-timeline' : this.poStatus === 'DueForASN' ? 'white-timeline' :
-                    this.poStatus === 'DueForGate' ? 'white-timeline' :
-                        this.poStatus === 'DueForGRN' ? 'white-timeline' : 'green-timeline';
+            case "ASN":
+                return this.poStatus === "DueForACK"
+                    ? "white-timeline"
+                    : this.poStatus === "DueForASN"
+                        ? "white-timeline"
+                        : this.poStatus === "PartialASN"
+                            ? "white-timeline"
+                            : this.poStatus === "DueForGate"
+                                ? "white-timeline"
+                                : "green-timeline";
+            case "Gate":
+                return this.poStatus === "DueForACK"
+                    ? "white-timeline"
+                    : this.poStatus === "DueForASN"
+                        ? "white-timeline"
+                        : this.poStatus === "PartialASN"
+                            ? "white-timeline"
+                            : this.poStatus === "DueForGate"
+                                ? "white-timeline"
+                                : this.poStatus === "DueForGRN"
+                                    ? "white-timeline"
+                                    : "green-timeline";
+            case "GRN":
+                return this.poStatus === "DueForACK"
+                    ? "white-timeline"
+                    : this.poStatus === "DueForASN"
+                        ? "white-timeline"
+                        : this.poStatus === "PartialASN"
+                            ? "white-timeline"
+                            : this.poStatus === "DueForGate"
+                                ? "white-timeline"
+                                : this.poStatus === "DueForGRN"
+                                    ? "white-timeline"
+                                    : this.poStatus === "PartialGRN"
+                                        ? "white-timeline"
+                                        : "green-timeline";
             default:
-                return '';
+                return "";
         }
     }
 }
