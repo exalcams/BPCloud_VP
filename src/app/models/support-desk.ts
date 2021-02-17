@@ -1,20 +1,28 @@
-import { UserWithRole } from './master';
-import { CommonClass } from './common';
 
+import { CommonClass } from './common';
+export class SupportMaster extends CommonClass {
+    Client: string;
+    Company: string;
+    Type: string;
+    ReasonCode: string;
+    ReasonText: string;
+}
 export class SupportHeader extends CommonClass {
-    SupportID: string;
     Client: string;
     Company: string;
     Type: string;
     PatnerID: string;
+    SupportID: string;
     ReasonCode: string;
-    Date: string;
-    AssignTo: string;
-    Status: string;
-    ReasonRemarks: string;
+    Plant: string;
+    Date: Date | string | null;
     DocumentRefNo: string;
-    Reason: string;
-    IsResolved: boolean;
+    AppID: string;
+    AttachmentID: string;
+    Remarks: string;
+    Status: string;
+    IsResolved: boolean;    
+
 }
 export class SupportLog extends CommonClass {
     Client: string;
@@ -23,8 +31,8 @@ export class SupportLog extends CommonClass {
     PatnerID: string;
     SupportID: string;
     SupportLogID: string;
-    Status: string;
     Remarks: string;
+    AttachmentID: string;
     IsResolved: boolean;
 }
 export class SupportDetails extends CommonClass {
@@ -32,21 +40,6 @@ export class SupportDetails extends CommonClass {
     supportLogs: SupportLog[];
     supportAttachments: BPCSupportAttachment[];
     supportLogAttachments: BPCSupportAttachment[];
-}
-export class SupportMaster extends CommonClass {
-    ID: number;
-    Client: string;
-    Company: string;
-    Type: string;
-    PatnerID: string;
-    Plant: string;
-    App: string;
-    ReasonCode: string;
-    ReasonText: string;
-    Person1: string;
-    Person2: string;
-    Person3: string;
-
 }
 export class BPCSupportAttachment {
     AttachmentID: number;
@@ -63,15 +56,15 @@ export class SupportHeaderView extends CommonClass {
     Company: string;
     Type: string;
     PatnerID: string;
+    Plant: string;
     ReasonCode: string;
-    Date: string;
+    Date: Date | string | null;
     AssignTo: string;
     Status: string;
-    ReasonRemarks: string;
+    Remarks: string;
     DocumentRefNo: string;
-    Reason: string;
     IsResolved: boolean;
-    Users: UserWithRole[];
+    Reason: string;
 }
 export class SupportLogView extends CommonClass {
     ID: number;

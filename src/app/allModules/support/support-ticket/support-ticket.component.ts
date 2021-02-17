@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { Guid } from 'guid-typescript';
-import { AuthenticationDetails, UserWithRole, AppUsage } from 'app/models/master';
+import { AuthenticationDetails, UserWithRole, AppUsage, MenuApp } from 'app/models/master';
 import { MatSnackBar, MatDialogConfig, MatDialog } from '@angular/material';
 import { AttachmentDetails } from 'app/models/task';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -48,6 +48,7 @@ export class SupportTicketComponent implements OnInit {
   notificationSnackBarComponent: NotificationSnackBarComponent;
   navigator_page: any;
   OFItems: BPCOFItem[] = [];
+  AllMenuApp: MenuApp[] = [];
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _router: Router,
@@ -93,9 +94,8 @@ export class SupportTicketComponent implements OnInit {
       this.docRefNo = params['id'];
       this.reason = params['reason'];
       this.navigator_page = params["navigator_page"];
-
     });
-    console.log(this.navigator_page)
+    console.log(this.navigator_page);
     if (!this.docRefNo) {
       this.docRefNo = '';
     }
@@ -225,6 +225,21 @@ export class SupportTicketComponent implements OnInit {
     );
   }
 
+  GetAllMenuApp(): void {
+    this.IsProgressBarVisibile = true;
+    this._masterService.GetAllMenuApp().subscribe(
+      (data) => {
+        this.IsProgressBarVisibile = false;
+        this.AllMenuApp = <MenuApp[]>data;
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+      }
+    );
+  }
+
   SaveClicked(): void {
     if (this.SupportTicketFormGroup.valid) {
       this.GetSupportTicket();
@@ -259,7 +274,7 @@ export class SupportTicketComponent implements OnInit {
       this.SupportTicket.PatnerID = this.SupportTicketView.PatnerID = this.SelectedBPCFact.PatnerID;
     }
     this.SupportTicket.ReasonCode = this.SupportTicketView.ReasonCode = this.SupportTicketFormGroup.get('ReasonCode').value;
-    this.SupportTicket.ReasonRemarks = this.SupportTicketView.ReasonRemarks = this.SupportTicketFormGroup.get('Remarks').value;
+    this.SupportTicket.Remarks = this.SupportTicketView.Remarks = this.SupportTicketFormGroup.get('Remarks').value;
     this.SupportTicket.DocumentRefNo = this.SupportTicketView.DocumentRefNo = this.SupportTicketFormGroup.get('DocumentRefNo').value;
     this.SupportTicket.PatnerID = this.SupportTicketView.PatnerID = this.PartnerID;
     let supportMaster = new SupportMaster();
