@@ -238,7 +238,7 @@ export class ASNListComponent implements OnInit {
   // }
   help(po: string): void {
     this._router.navigate(["/support/supportticket"], {
-      queryParams: { id: po, navigator_page: "asnlist" },
+      queryParams: { id: po, navigator_page: "ASN" },
     });
 
 

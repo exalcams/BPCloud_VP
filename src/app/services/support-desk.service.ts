@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { SupportHeader, SupportLog, SupportHeaderView, SupportMaster, SupportMasterView } from 'app/models/support-desk';
+import { SupportHeader, SupportLog, SupportHeaderView, SupportMaster, SupportMasterView, SupportAppMaster } from 'app/models/support-desk';
 import { UserWithRole } from 'app/models/master';
 
 @Injectable({
@@ -37,6 +37,10 @@ export class SupportDeskService {
 
     GetSupportMasters(): Observable<any | string> {
         return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportMasters`)
+            .pipe(catchError(this.errorHandler));
+    }
+    GetSupportAppMasters(): Observable<SupportAppMaster[] | string> {
+        return this._httpClient.get<SupportAppMaster[]>(`${this.baseAddress}supportapi/SupportDesk/GetSupportAppMasters`)
             .pipe(catchError(this.errorHandler));
     }
 
@@ -98,6 +102,11 @@ export class SupportDeskService {
 
     GetSupportTicketsByPartnerIDAndType(PartnerID: any, Type: string): Observable<any | string> {
         return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportTicketsByPartnerIDAndType?PartnerID=${PartnerID}&Type=${Type}`)
+            .pipe(catchError(this.errorHandler));
+    }
+
+    GetBuyerSupportTickets(PartnerID: any, Plant: string): Observable<any | string> {
+        return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetBuyerSupportTickets?PartnerID=${PartnerID}&Type=${Plant}`)
             .pipe(catchError(this.errorHandler));
     }
 

@@ -21,7 +21,7 @@ export class SupportHeader extends CommonClass {
     AttachmentID: string;
     Remarks: string;
     Status: string;
-    IsResolved: boolean;    
+    IsResolved: boolean;
 
 }
 export class SupportLog extends CommonClass {
@@ -57,6 +57,7 @@ export class SupportHeaderView extends CommonClass {
     Type: string;
     PatnerID: string;
     Plant: string;
+    AppID: string;
     ReasonCode: string;
     Date: Date | string | null;
     AssignTo: string;
@@ -93,3 +94,10 @@ export class SupportMasterView extends CommonClass {
     Person3: string;
 }
 
+export class SupportAppMaster extends CommonClass {
+    Client: string;
+    Company: string;
+    Type: string;
+    AppID: string;
+    AppName: string;
+}

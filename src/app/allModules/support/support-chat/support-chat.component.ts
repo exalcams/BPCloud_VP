@@ -135,7 +135,7 @@ export class SupportChatComponent implements OnInit {
 
           this.SupportHeader = this.SupportDetails.supportHeader;
           if (this.SupportHeader.ReasonCode === "1236" && this.SupportHeader.Status === "Closed") {
-            console.log("Success",this.SupportHeader.PatnerID);
+            console.log("Success", this.SupportHeader.PatnerID);
             this._FactService.UpdateFactSupportDataToMasterData(this.SupportHeader.PatnerID).subscribe(
               (msg) => {
                 console.log("Success", msg);
@@ -238,9 +238,9 @@ export class SupportChatComponent implements OnInit {
   AddCommentClicked(): void {
     const supportLog = new SupportLog();
     supportLog.PatnerID = this.PartnerID;
-    supportLog.Status = "Open";
+    //supportLog.Status = "Open";
     supportLog.IsResolved = false;
-    supportLog.CreatedOn = new Date();
+    // supportLog.CreatedOn = new Date();
     this.SupportLogs.push(supportLog);
   }
 
@@ -263,8 +263,8 @@ export class SupportChatComponent implements OnInit {
     // this.SelectedSupportLog.PatnerID = this.SelectedSupportLogView.PatnerID = this.PartnerID;
     this.SelectedSupportLog.Remarks = this.SelectedSupportLogView.Remarks = this.SupportLogFormGroup.get('Comments').value;
     this.SelectedSupportLog.CreatedBy = this.SelectedSupportLogView.CreatedBy = this.authenticationDetails.UserName;
-    let user = new UserWithRole();
-    user = this.Users.find(x => x.UserName.toLowerCase() === this.SupportHeader.PatnerID.toLowerCase());
+    // let user = new UserWithRole();
+    // user = this.Users.find(x => x.UserName.toLowerCase() === this.SupportHeader.PatnerID.toLowerCase());
     // this.SelectedSupportLog.PatnerEmail = this.SelectedSupportLogView.PatnerEmail = user.Email;
   }
 

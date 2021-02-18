@@ -128,6 +128,17 @@ export class MasterService {
             )
             .pipe(catchError(this.errorHandler));
     }
+
+    GetBuyerPlant(UserID: Guid): Observable<any> {
+        return this._httpClient
+            .get(
+                `${this.baseAddress}authenticationapi/Master/GetBuyerPlant?UserID=${UserID}`, {
+                responseType: 'text'
+            }
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+
     GetAppUsagesByUser(UserID: Guid): Observable<AppUsageView[] | string> {
         return this._httpClient
             .get<AppUsageView[]>(

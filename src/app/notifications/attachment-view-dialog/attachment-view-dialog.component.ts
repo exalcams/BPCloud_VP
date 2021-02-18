@@ -353,34 +353,34 @@ export class AttachmentViewDialogComponent implements OnInit {
     this.supportTicketView.Type = this.ofAttachmentData.Type;
     this.supportTicketView.PatnerID = this.ofAttachmentData.PatnerID;
     this.supportTicketView.ReasonCode = "4592";
-    this.supportTicketView.ReasonRemarks = "ABC Ticket is raised for the PO " + documentRefNo;
+    this.supportTicketView.Remarks = "ABC Ticket is raised for the PO " + documentRefNo;
     this.supportTicketView.DocumentRefNo = documentRefNo;
     this.supportTicketView.PatnerID = this.authenticationDetails.UserName;
-    let supportMaster = new SupportMaster();
-    supportMaster = this.supportMasters.find(x => x.ReasonCode === this.supportTicketView.ReasonCode);
-    if (supportMaster) {
-      this.getFilteredUsers(supportMaster);
-    }
-    this.supportTicketView.Users = this.filteredUsers;
-    console.log(this.filteredUsers);
+    // let supportMaster = new SupportMaster();
+    // supportMaster = this.supportMasters.find(x => x.ReasonCode === this.supportTicketView.ReasonCode);
+    // if (supportMaster) {
+    //   this.getFilteredUsers(supportMaster);
+    // }
+    // this.supportTicketView.Users = this.filteredUsers;
+    // console.log(this.filteredUsers);
   }
 
-  getFilteredUsers(supportMaster: SupportMaster): any {
-    if (supportMaster.Person1 && supportMaster.Person1 != null) {
-      let user = new UserWithRole();
-      user = this.users.find(x => x.UserName.toLowerCase() === supportMaster.Person1.toLowerCase());
-      this.filteredUsers.push(user);
-    }
-    else if (supportMaster.Person2 && supportMaster.Person2 != null) {
-      let user = new UserWithRole();
-      user = this.users.find(x => x.UserName.toLowerCase() === supportMaster.Person2.toLowerCase());
-      this.filteredUsers.push(user);
-    }
-    else if (supportMaster.Person3 && supportMaster.Person3 != null) {
-      let user = new UserWithRole();
-      user = this.users.find(x => x.UserName.toLowerCase() === supportMaster.Person3.toLowerCase());
-      this.filteredUsers.push(user);
-    }
-  }
+  // getFilteredUsers(supportMaster: SupportMaster): any {
+  //   if (supportMaster.Person1 && supportMaster.Person1 != null) {
+  //     let user = new UserWithRole();
+  //     user = this.users.find(x => x.UserName.toLowerCase() === supportMaster.Person1.toLowerCase());
+  //     this.filteredUsers.push(user);
+  //   }
+  //   else if (supportMaster.Person2 && supportMaster.Person2 != null) {
+  //     let user = new UserWithRole();
+  //     user = this.users.find(x => x.UserName.toLowerCase() === supportMaster.Person2.toLowerCase());
+  //     this.filteredUsers.push(user);
+  //   }
+  //   else if (supportMaster.Person3 && supportMaster.Person3 != null) {
+  //     let user = new UserWithRole();
+  //     user = this.users.find(x => x.UserName.toLowerCase() === supportMaster.Person3.toLowerCase());
+  //     this.filteredUsers.push(user);
+  //   }
+  // }
 
 }
