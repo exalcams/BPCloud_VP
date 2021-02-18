@@ -222,7 +222,7 @@ export class SupportChatComponent implements OnInit {
   AddCommentClicked(): void {
     const supportLog = new SupportLog();
     supportLog.PatnerID = this.PartnerID;
-    supportLog.Status = "Open";
+    // supportLog.Status = "Open";
     supportLog.IsResolved = false;
     supportLog.CreatedOn = new Date();
     this.SupportLogs.push(supportLog);

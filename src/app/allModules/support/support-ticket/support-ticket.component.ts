@@ -8,7 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AttachmentDialogComponent } from 'app/notifications/attachment-dialog/attachment-dialog.component';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { SupportMaster, SupportHeader, SupportHeaderView } from 'app/models/support-desk';
+import { SupportMaster, SupportHeader, SupportHeaderView, SupportAppMaster } from 'app/models/support-desk';
 import { SupportDeskService } from 'app/services/support-desk.service';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { MasterService } from 'app/services/master.service';
@@ -48,7 +48,7 @@ export class SupportTicketComponent implements OnInit {
   notificationSnackBarComponent: NotificationSnackBarComponent;
   navigator_page: any;
   OFItems: BPCOFItem[] = [];
-  AllMenuApp: MenuApp[] = [];
+  SupportAppMasters: SupportAppMaster[] = [];
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _router: Router,
@@ -100,8 +100,10 @@ export class SupportTicketComponent implements OnInit {
       this.docRefNo = '';
     }
     this.InitializeSupportTicketFormGroup();
+    this.GetSupportAppMasters();
     this.GetSupportMasters();
-    this.GetUsers();
+    // this.GetUsers();
+    this.GetPlantBasedOnCondition();
     this.GetFactByPartnerID();
   }
   backbutton(): void {
@@ -137,6 +139,8 @@ export class SupportTicketComponent implements OnInit {
   InitializeSupportTicketFormGroup(): void {
     this.SupportTicketFormGroup = this._formBuilder.group({
       ReasonCode: ['', Validators.required],
+      AppID: [''],
+      Plant: [''],
       DocumentRefNo: [this.docRefNo, Validators.required],
       Remarks: ['', Validators.required]
     });
@@ -190,6 +194,45 @@ export class SupportTicketComponent implements OnInit {
           this.IsProgressBarVisibile = false;
         });
   }
+  GetPlantBasedOnCondition(): void {
+    if (this.navigator_page) {
+      if (this.navigator_page === 'PO') {
+        this.GetPlantByDocNmber(this.docRefNo);
+      }
+      else if (this.navigator_page === 'ASN') {
+        this.GetPlantByASNNmber(this.docRefNo);
+      }
+      else if (this.navigator_page === 'Payment') {
+
+      } else {
+        this.SupportTicketFormGroup.get('Plant').patchValue('1000');
+      }
+    } else {
+      this.SupportTicketFormGroup.get('Plant').patchValue('1000');
+    }
+  }
+  GetPlantByDocNmber(docRefNo): void {
+    this._POService.GetPlantByDocNmber(docRefNo, this.currentUserName).subscribe(
+      (data) => {
+        const plant = data as string;
+        this.SupportTicketFormGroup.get('Plant').patchValue(plant);
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+  GetPlantByASNNmber(docRefNo): void {
+    this._POService.GetPlantByASNNmber(docRefNo, this.currentUserName).subscribe(
+      (data) => {
+        const plant = data as string;
+        this.SupportTicketFormGroup.get('Plant').patchValue(plant);
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
   GetSupportPOItemsByDoc(): void {
     this._POService.GetSupportPOItemsByDoc(this.docRefNo).subscribe(
       (data) => {
@@ -210,27 +253,38 @@ export class SupportTicketComponent implements OnInit {
       }
     );
   }
-  GetUsers(): void {
-    this.IsProgressBarVisibile = true;
-    this._masterService.GetAllUsers().subscribe(
-      (data) => {
-        this.IsProgressBarVisibile = false;
-        this.Users = <UserWithRole[]>data;
-      },
-      (err) => {
-        console.error(err);
-        this.IsProgressBarVisibile = false;
-        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-      }
-    );
-  }
+  // GetUsers(): void {
+  //   this.IsProgressBarVisibile = true;
+  //   this._masterService.GetAllUsers().subscribe(
+  //     (data) => {
+  //       this.IsProgressBarVisibile = false;
+  //       this.Users = <UserWithRole[]>data;
+  //     },
+  //     (err) => {
+  //       console.error(err);
+  //       this.IsProgressBarVisibile = false;
+  //       this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+  //     }
+  //   );
+  // }
 
-  GetAllMenuApp(): void {
+  GetSupportAppMasters(): void {
     this.IsProgressBarVisibile = true;
-    this._masterService.GetAllMenuApp().subscribe(
+    this._supportDeskService.GetSupportAppMasters().subscribe(
       (data) => {
         this.IsProgressBarVisibile = false;
-        this.AllMenuApp = <MenuApp[]>data;
+        this.SupportAppMasters = data as SupportAppMaster[];
+        if (this.navigator_page) {
+          const appMster = this.SupportAppMasters.filter(x => x.AppName === this.navigator_page)[0];
+          if (appMster) {
+            this.SupportTicketFormGroup.get('AppID').patchValue(appMster.AppID);
+          }
+        } else {
+          const appMster = this.SupportAppMasters.filter(x => x.AppName === 'Support')[0];
+          if (appMster) {
+            this.SupportTicketFormGroup.get('AppID').patchValue(appMster.AppID);
+          }
+        }
       },
       (err) => {
         console.error(err);
@@ -276,33 +330,35 @@ export class SupportTicketComponent implements OnInit {
     this.SupportTicket.ReasonCode = this.SupportTicketView.ReasonCode = this.SupportTicketFormGroup.get('ReasonCode').value;
     this.SupportTicket.Remarks = this.SupportTicketView.Remarks = this.SupportTicketFormGroup.get('Remarks').value;
     this.SupportTicket.DocumentRefNo = this.SupportTicketView.DocumentRefNo = this.SupportTicketFormGroup.get('DocumentRefNo').value;
-    this.SupportTicket.PatnerID = this.SupportTicketView.PatnerID = this.PartnerID;
-    let supportMaster = new SupportMaster();
-    supportMaster = this.SupportMasters.find(x => x.ReasonCode === this.SupportTicket.ReasonCode);
-    if (supportMaster) {
-      this.GetFilteredUsers(supportMaster);
-    }
-    console.log(this.FilteredUsers);
-    this.SupportTicketView.Users = this.FilteredUsers;
+    this.SupportTicket.ReasonCode = this.SupportTicketView.ReasonCode = this.SupportTicketFormGroup.get('ReasonCode').value;
+    this.SupportTicket.Plant = this.SupportTicketView.Plant = this.SupportTicketFormGroup.get('Plant').value;
+    this.SupportTicket.AppID = this.SupportTicketView.AppID = this.SupportTicketFormGroup.get('AppID').value;
+    this.SupportTicket.CreatedBy = this.SupportTicketView.CreatedBy = this.currentUserName;
+    // let supportMaster = new SupportMaster();
+    // supportMaster = this.SupportMasters.find(x => x.ReasonCode === this.SupportTicket.ReasonCode);
+    // if (supportMaster) {
+    //   this.GetFilteredUsers(supportMaster);
+    // }
+    // console.log(this.FilteredUsers);
   }
 
-  GetFilteredUsers(supportMaster: SupportMaster): any {
-    if (supportMaster.Person1 && supportMaster.Person1 != null) {
-      let user = new UserWithRole();
-      user = this.Users.find(x => x.UserName.toLowerCase() === supportMaster.Person1.toLowerCase());
-      this.FilteredUsers.push(user);
-    }
-    else if (supportMaster.Person2 && supportMaster.Person2 != null) {
-      let user = new UserWithRole();
-      user = this.Users.find(x => x.UserName.toLowerCase() === supportMaster.Person2.toLowerCase());
-      this.FilteredUsers.push(user);
-    }
-    else if (supportMaster.Person3 && supportMaster.Person3 != null) {
-      let user = new UserWithRole();
-      user = this.Users.find(x => x.UserName.toLowerCase() === supportMaster.Person3.toLowerCase());
-      this.FilteredUsers.push(user);
-    }
-  }
+  // GetFilteredUsers(supportMaster: SupportMaster): any {
+  //   if (supportMaster.Person1 && supportMaster.Person1 != null) {
+  //     let user = new UserWithRole();
+  //     user = this.Users.find(x => x.UserName.toLowerCase() === supportMaster.Person1.toLowerCase());
+  //     this.FilteredUsers.push(user);
+  //   }
+  //   else if (supportMaster.Person2 && supportMaster.Person2 != null) {
+  //     let user = new UserWithRole();
+  //     user = this.Users.find(x => x.UserName.toLowerCase() === supportMaster.Person2.toLowerCase());
+  //     this.FilteredUsers.push(user);
+  //   }
+  //   else if (supportMaster.Person3 && supportMaster.Person3 != null) {
+  //     let user = new UserWithRole();
+  //     user = this.Users.find(x => x.UserName.toLowerCase() === supportMaster.Person3.toLowerCase());
+  //     this.FilteredUsers.push(user);
+  //   }
+  // }
 
   CreateSupportTicket(): void {
     this.IsProgressBarVisibile = true;

@@ -887,33 +887,33 @@ export class CustomerFactComponent implements OnInit {
     SupportTicketView.Reason = 'Master Data Change';
     SupportTicketView.DocumentRefNo = this.SelectedBPCFact.PatnerID;
     SupportTicketView.CreatedBy = this.CurrentUserID.toString();
-    let supportMaster = new SupportMaster();
-    supportMaster = this.SupportMasters.find(x => x.ReasonCode === SupportTicketView.ReasonCode);
-    if (supportMaster) {
-      this.GetFilteredUsers(supportMaster);
-    }
-    console.log(this.FilteredUsers);
-    SupportTicketView.Users = this.FilteredUsers;
+    // let supportMaster = new SupportMaster();
+    // supportMaster = this.SupportMasters.find(x => x.ReasonCode === SupportTicketView.ReasonCode);
+    // if (supportMaster) {
+    //   this.GetFilteredUsers(supportMaster);
+    // }
+    // console.log(this.FilteredUsers);
+    // SupportTicketView.Users = this.FilteredUsers;
     return SupportTicketView;
   }
 
-  GetFilteredUsers(supportMaster: SupportMaster): any {
-    if (supportMaster.Person1 && supportMaster.Person1 != null) {
-      let user = new UserWithRole();
-      user = this.Users.find(x => x.UserName.toLowerCase() === supportMaster.Person1.toLowerCase());
-      this.FilteredUsers.push(user);
-    }
-    else if (supportMaster.Person2 && supportMaster.Person2 != null) {
-      let user = new UserWithRole();
-      user = this.Users.find(x => x.UserName.toLowerCase() === supportMaster.Person2.toLowerCase());
-      this.FilteredUsers.push(user);
-    }
-    else if (supportMaster.Person3 && supportMaster.Person3 != null) {
-      let user = new UserWithRole();
-      user = this.Users.find(x => x.UserName.toLowerCase() === supportMaster.Person3.toLowerCase());
-      this.FilteredUsers.push(user);
-    }
-  }
+  // GetFilteredUsers(supportMaster: SupportMaster): any {
+  //   if (supportMaster.Person1 && supportMaster.Person1 != null) {
+  //     let user = new UserWithRole();
+  //     user = this.Users.find(x => x.UserName.toLowerCase() === supportMaster.Person1.toLowerCase());
+  //     this.FilteredUsers.push(user);
+  //   }
+  //   else if (supportMaster.Person2 && supportMaster.Person2 != null) {
+  //     let user = new UserWithRole();
+  //     user = this.Users.find(x => x.UserName.toLowerCase() === supportMaster.Person2.toLowerCase());
+  //     this.FilteredUsers.push(user);
+  //   }
+  //   else if (supportMaster.Person3 && supportMaster.Person3 != null) {
+  //     let user = new UserWithRole();
+  //     user = this.Users.find(x => x.UserName.toLowerCase() === supportMaster.Person3.toLowerCase());
+  //     this.FilteredUsers.push(user);
+  //   }
+  // }
   CreateSupportTicket(): void {
     this.IsProgressBarVisibile = true;
     const SupportTicketView = this.GetSupportTicket();

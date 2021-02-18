@@ -33,9 +33,9 @@
                     </div>
                     <div fxLayout="row" fxLayoutAlign="start">
                       <div fxFlex="50" fxLayout="row" fxLayoutGap="5px" class=" p-4">
-                        <div fxFlex style="text-align: right;">Assigned To : </div>
+                        <div fxFlex style="text-align: right;">Plant : </div>
                         <div fxFlex style="font-weight: bold;text-align: left;  line-height: 19px;">
-                          {{SupportHeader.AssignTo}}</div>
+                          {{SupportHeader.Plant}}</div>
                       </div>
                       <div fxFlex="50" fxLayout="row" fxLayoutGap="5px" class=" p-4">
                         <div fxFlex style="text-align: right;">Reason Code : </div>
@@ -103,11 +103,11 @@
                   <!-- <div *ngIf="!first" style="margin-top: -42px;"
                     [class]="supportLog.Status==='Closed'?'green-timeline':supportLog.Status==='Open'?'orange-timeline':''">
                   </div> -->
-                  <div class="round" [style.margin-top]="first?'':'-20px'" [style.border-color]="supportLog.Status==='Closed'?'#4FAB6D':supportLog.Status==='Pending'?' #EF8377'
-                    :supportLog.Status==='Open'?'#efb577':''">
+                  <div class="round" [style.margin-top]="first?'':'-20px'" [style.border-color]="supportLog.IsResolved?'#4FAB6D':supportLog.CreatedOn?' #EF8377'
+                    :!supportLog.CreatedOn?'#efb577':''">
                   </div>
-                  <div *ngIf="!last" [class]="supportLog.Status==='Closed'?'green-timeline':supportLog.Status==='Pending'?'red-timeline'
-                    :supportLog.Status==='Open'?'orange-timeline':''">
+                  <div *ngIf="!last" [class]="supportLog.IsResolved?'green-timeline':supportLog.CreatedOn?'red-timeline'
+                    :!supportLog.CreatedOn?'orange-timeline':''">
                   </div>
                   <!-- <div class="round" *ngIf="!last" [style.border-color]="supportLog.Status==='Closed'?'#4FAB6D':supportLog.Status==='Pending'?'#EF8377':
                     supportLog.Status==='Open'?'#efb577':''">
@@ -115,7 +115,7 @@
                 </div>
               </div>
               <div fxFlex="75" fxLayout="row">
-                <div *ngIf="supportLog.Status==='Open'" [style.margin-top]="first?'':'-71px'" fxFlex>
+                <div *ngIf="!supportLog.CreatedOn" [style.margin-top]="first?'':'-71px'" fxFlex>
                   <form name="form" class="normal" [formGroup]="SupportLogFormGroup">
                     <div fxFlex fxLayout="column" class="comment-container-arrow">
                       <div fxFlex>
@@ -152,7 +152,7 @@
                     </div>
                   </form>
                 </div>
-                <div *ngIf="supportLog.Status==='Pending'" [style.margin-top]="first?'':'-71px'" fxFlex>
+                <div *ngIf="supportLog.CreatedOn" [style.margin-top]="first?'':'-71px'" fxFlex>
                   <div fxFlex fxLayout="column" style="height: 138px;" class="comment-container-arrow">
                     <div fxFlex="100" class="p-4">
                       <div class="pb-12"> <span class="pl-12 pb-12">{{supportLog.Remarks}}</span></div>

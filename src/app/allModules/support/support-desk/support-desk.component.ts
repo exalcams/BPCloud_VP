@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation, AfterViewInit } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
-import { SupportHeader, SupportMaster } from 'app/models/support-desk';
+import { SupportHeader, SupportHeaderView, SupportMaster } from 'app/models/support-desk';
 import { SupportDeskService } from 'app/services/support-desk.service';
 import { AuthenticationDetails } from 'app/models/master';
 import { Guid } from 'guid-typescript';
@@ -29,15 +29,15 @@ export class SupportDeskComponent implements OnInit {
   notificationSnackBarComponent: NotificationSnackBarComponent;
   isProgressBarVisibile: boolean;
   docRefNo: any;
-  supports: SupportHeader[] = [];
+  supports: SupportHeaderView[] = [];
   selectedSupport: SupportHeader = new SupportHeader();
   supportDisplayedColumns: string[] = [
+    'SupportID',
     'Reason',
     'Date',
     'Status',
-    'AssignTo',
   ];
-  supportDataSource: MatTableDataSource<SupportHeader>;
+  supportDataSource: MatTableDataSource<SupportHeaderView>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -119,7 +119,7 @@ export class SupportDeskComponent implements OnInit {
       .GetSupportTicketsByPartnerID(this.authenticationDetails.UserName)
       .subscribe((data) => {
         if (data) {
-          this.supports = <SupportHeader[]>data;
+          this.supports = <SupportHeaderView[]>data;
           if (this.supports && this.supports.length === 0) {
             this.isSupport = true;
           }

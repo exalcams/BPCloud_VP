@@ -70,6 +70,14 @@ export class POService {
       .pipe(catchError(this.errorHandler));
   }
 
+  GetPlantByDocNmber(DocNumber: string, PartnerID: string): Observable<any> {
+    return this._httpClient.get(`${this.baseAddress}poapi/PO/GetPlantByDocNmber?DocNumber=${DocNumber}&PartnerID=${PartnerID}`, { responseType: 'text' })
+      .pipe(catchError(this.errorHandler));
+  }
+  GetPlantByASNNmber(ASNNumber: string, PartnerID: string): Observable<SOItemCount | string> {
+    return this._httpClient.get<SOItemCount>(`${this.baseAddress}poapi/PO/GetPlantByASNNmber?ASNNumber=${ASNNumber}&PartnerID=${PartnerID}`)
+      .pipe(catchError(this.errorHandler));
+  }
   // Data Migration
 
   CreateOFHeaders(OFHeaders: BPCOFHeaderXLSX[]): Observable<any> {
