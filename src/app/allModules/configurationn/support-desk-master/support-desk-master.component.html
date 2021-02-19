@@ -27,7 +27,7 @@
           <div *ngFor="let supportMaster of SupportMasters | filter: searchText">
             <div>
               <div class="mx-8 mb-8 mt-0 p-8 leftCard" (click)="LoadSelectedSupportMaster(supportMaster)"
-                [style.border-left-color]="SelectedID==supportMaster.ID?'#efb577':'#cccccc'">
+                [style.border-left-color]="SelectedReasonCode==supportMaster.ReasonCode?'#efb577':'#cccccc'">
                 <div fxLayout class="pb-4" fxLayoutAlign="space-between center">
                   <div fxFlex><strong>{{supportMaster.ID}}</strong></div>
                   <div fxFlex align="end">{{supportMaster.CreatedOn | date :'dd/MM/yyyy'}}</div>
@@ -121,7 +121,7 @@
 
                 </div>
 
-                <div fxFlex fxLayout="row" fxLayoutGap="40px">
+                <!-- <div fxFlex fxLayout="row" fxLayoutGap="40px">
 
                   <div fxFlex="50">
                     <mat-form-field class="pl-8 pr-12" style="width: 100%;">
@@ -154,7 +154,7 @@
                     </mat-form-field>
                   </div>
 
-                </div>
+                </div> -->
 
               </form>
               <div fxLayout>

@@ -27,7 +27,7 @@
                       <div fxFlex="50" fxLayout="row" fxLayoutGap="5px" class=" p-4">
                         <div fxFlex style="text-align: right;">Created On : </div>
                         <div fxFlex style="font-weight: bold; text-align: left;  line-height: 19px;">
-                          {{SupportHeader.Date |  date : 'dd/MM/yyyy'}}
+                          {{SupportHeader.Date | date : 'dd/MM/yyyy'}}
                         </div>
                       </div>
                     </div>
@@ -77,11 +77,11 @@
               <div fxFlex="20" fxLayout="column">
                 <div fxFlex>
                   <div fxLayout="row" class="left-open-container" [style.margin-top]="first?'20px':'-51px'"
-                    [style.border-color]="supportLog.Status==='Closed'?'#4FAB6D':supportLog.Status==='Pending'?' #EF8377':
-                    supportLog.Status==='Open'?'#efb577':''">
+                    [style.border-color]="supportLog.IsResolved?'#4FAB6D':supportLog.CreatedOn?' #EF8377':
+                    !supportLog.CreatedOn?'#efb577':''">
                     <div fxFlex="10">
-                      <div class="left-status-container" [style.background-color]="supportLog.Status==='Closed'?'#4FAB6D':
-                      supportLog.Status==='Pending'?' #EF8377':supportLog.Status==='Open'?'#efb577':''">
+                      <div class="left-status-container" [style.background-color]="supportLog.IsResolved?'#4FAB6D':
+                      supportLog.CreatedOn?' #EF8377':!supportLog.CreatedOn?'#efb577':''">
                         {{supportLog.Status | uppercase}}</div>
                     </div>
                     <div fxFlex="75" fxLayout="column" fxLayoutAlign="space-evenly end" style="padding: 10px;">
@@ -141,9 +141,11 @@
                         </div>
                         <div fxFlex>
                           <div fxLayoutAlign="end">
-                            <button mat-stroked-button class="mark-as-resolved mr-12"
-                              (click)="MarkAsResolvedClicked()">Mark as
+                            <button *ngIf="SupportHeader.CreatedBy!==currentUserName" mat-stroked-button
+                              class="mark-as-resolved mr-12" (click)="MarkAsResolvedClicked()">Mark as
                               resolved</button>
+                            <button *ngIf="SupportHeader.CreatedBy===currentUserName && IsReOpen" mat-stroked-button
+                              class="mark-as-resolved mr-12" (click)="ReOpenClicked()">Re-Open</button>
                             <img class="textAreaIcon" style="padding-right: 20px;" src="assets/images/send.png"
                               (click)="SendResponseClicked()">
                           </div>
@@ -172,7 +174,7 @@
                     </div>
                   </div>
                 </div>
-                <div *ngIf="supportLog.Status==='Closed'" [style.margin-top]="first?'':'-71px'" fxFlex>
+                <!-- <div *ngIf="supportLog.IsResolved" [style.margin-top]="first?'':'-71px'" fxFlex>
                   <div fxFlex fxLayout="column" style="height: 138px;" class="comment-container-arrow">
                     <div fxFlex="100" class="p-4">
                       <div class="pb-12"> <span class="pl-12 pb-12">{{supportLog.Remarks}}</span></div>
@@ -185,22 +187,32 @@
                           <span
                             style="font-size: 12px;color: #3380d7;cursor: pointer !important;">{{supportAttachment?.AttachmentName}}</span>
                         </div>
-                        <!-- <div fxFlex (click)="GetSupportAttachment(supportAttachment?.name)" class="pdfLinkClass pl-8">
-                        <span style="font-weight: bold;font-size: 20px;">{{supportAttachment?.size}}</span>
-                      </div> -->
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> -->
               </div>
 
             </div>
 
             <div fxLayout class="px-32 mt-4">
               <div fxFlex fxLayoutAlign="end">
-                <button class="float-add-button" mat-fab style="background-color: #f6b570"
-                  (click)="AddCommentClicked()">
+                <button *ngIf="!SupportHeader.IsResolved" class="float-add-button" mat-fab
+                  style="background-color: #f6b570" (click)="AddCommentClicked()">
                   <mat-icon style="color: white;">add</mat-icon>
+                </button>
+
+                <button
+                  *ngIf="SupportHeader.IsResolved && SupportHeader.Status!=='Closed'&& SupportHeader.CreatedBy===currentUserName"
+                  class="float-add-button" mat-fab style="background-color: #f6b570" (click)="ReOpenRequestClicked()">
+                  <!-- <mat-icon style="color: white;">close</mat-icon> -->
+                  <img class="unLockImg" src="assets/images/Unlock.png">
+                </button>
+
+                <button
+                  *ngIf="SupportHeader.IsResolved && SupportHeader.Status!=='Closed' && SupportHeader.CreatedBy!==currentUserName"
+                  class="float-add-button" mat-fab style="background-color: #f6b570" (click)="CloseClicked()">
+                  <mat-icon style="color: white;">close</mat-icon>
                 </button>
               </div>
             </div>

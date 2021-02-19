@@ -39,7 +39,7 @@ export class SupportDeskMasterComponent implements OnInit {
     SupportMasters: SupportMaster[] = [];
     SupportMasterFormGroup: FormGroup;
     SelectedSupportMaster: SupportMaster;
-    SelectedID: number;
+    SelectedReasonCode: string;
     SelectedSupportMasterView: SupportMasterView;
     SupportDeskUsers: UserWithRole[] = [];
     Reasons: Reason[] = [];
@@ -57,7 +57,7 @@ export class SupportDeskMasterComponent implements OnInit {
         this.IsProgressBarVisibile = false;
         this.SelectedSupportMaster = new SupportMaster();
         this.SelectedSupportMasterView = new SupportMasterView();
-        this.SelectedID = null;
+        this.SelectedReasonCode = null;
         this.Reasons = [{
             'ReasonCode': '1234',
             'ReasonText': 'Test1'
@@ -96,16 +96,16 @@ export class SupportDeskMasterComponent implements OnInit {
             ReasonCode: ['', Validators.required],
             ReasonText: ['', Validators.required],
             Client: ['', Validators.required],
-            PatnerID: ['', Validators.required],
-            Person1: ['', Validators.required],
-            Person2: ['', Validators.required]
+            // PatnerID: ['', Validators.required],
+            // Person1: ['', Validators.required],
+            // Person2: ['', Validators.required]
         });
     }
 
     ResetControl(): void {
         this.SelectedSupportMaster = new SupportMaster();
         this.SelectedSupportMasterView = new SupportMasterView();
-        this.SelectedID = null;
+        this.SelectedReasonCode = null;
         this.ResetSupportMasterFormGroup();
     }
 
@@ -165,8 +165,8 @@ export class SupportDeskMasterComponent implements OnInit {
 
     LoadSelectedSupportMaster(seletedSupportMaster: SupportMaster): void {
         this.SelectedSupportMaster = seletedSupportMaster;
-        this.SelectedSupportMasterView.ID = this.SelectedSupportMaster.ID;
-        this.SelectedID = this.SelectedSupportMaster.ID;
+        this.SelectedSupportMasterView.ReasonCode = this.SelectedSupportMaster.ReasonCode;
+        this.SelectedReasonCode = this.SelectedSupportMaster.ReasonCode;
         this.SetSupportMasterValues();
     }
 
@@ -174,18 +174,18 @@ export class SupportDeskMasterComponent implements OnInit {
         this.SupportMasterFormGroup.get('ReasonCode').patchValue(this.SelectedSupportMaster.ReasonCode);
         this.SupportMasterFormGroup.get('ReasonText').patchValue(this.SelectedSupportMaster.ReasonText);
         this.SupportMasterFormGroup.get('Client').patchValue(this.SelectedSupportMaster.Client);
-        this.SupportMasterFormGroup.get('PatnerID').patchValue(this.SelectedSupportMaster.PatnerID);
-        this.SupportMasterFormGroup.get('Person1').patchValue(this.SelectedSupportMaster.Person1);
-        this.SupportMasterFormGroup.get('Person2').patchValue(this.SelectedSupportMaster.Person2);
+        // this.SupportMasterFormGroup.get('PatnerID').patchValue(this.SelectedSupportMaster.PatnerID);
+        // this.SupportMasterFormGroup.get('Person1').patchValue(this.SelectedSupportMaster.Person1);
+        // this.SupportMasterFormGroup.get('Person2').patchValue(this.SelectedSupportMaster.Person2);
     }
 
     GetSupportMasterValues(): void {
         this.SelectedSupportMaster.ReasonCode = this.SelectedSupportMasterView.ReasonCode = this.SupportMasterFormGroup.get('ReasonCode').value;
         this.SelectedSupportMaster.ReasonText = this.SelectedSupportMasterView.ReasonText = this.SupportMasterFormGroup.get('ReasonText').value;
         this.SelectedSupportMaster.Client = this.SelectedSupportMasterView.Client = this.SupportMasterFormGroup.get('Client').value;
-        this.SelectedSupportMaster.PatnerID = this.SelectedSupportMasterView.PatnerID = this.SupportMasterFormGroup.get('PatnerID').value;
-        this.SelectedSupportMaster.Person1 = this.SelectedSupportMasterView.Person1 = this.SupportMasterFormGroup.get('Person1').value;
-        this.SelectedSupportMaster.Person2 = this.SelectedSupportMasterView.Person2 = this.SupportMasterFormGroup.get('Person2').value;
+        // this.SelectedSupportMaster.PatnerID = this.SelectedSupportMasterView.PatnerID = this.SupportMasterFormGroup.get('PatnerID').value;
+        // this.SelectedSupportMaster.Person1 = this.SelectedSupportMasterView.Person1 = this.SupportMasterFormGroup.get('Person1').value;
+        // this.SelectedSupportMaster.Person2 = this.SelectedSupportMasterView.Person2 = this.SupportMasterFormGroup.get('Person2').value;
     }
 
     SaveClicked(): void {
@@ -207,7 +207,7 @@ export class SupportDeskMasterComponent implements OnInit {
     }
 
     DeleteClicked(): void {
-        if (this.SelectedSupportMaster.ID) {
+        if (this.SelectedSupportMaster.ReasonCode) {
             const Actiontype = 'Delete';
             const Catagory = 'SupportMaster';
             this.OpenConfirmationDialog(Actiontype, Catagory);
@@ -235,7 +235,7 @@ export class SupportDeskMasterComponent implements OnInit {
                         this.CreateSupportMaster(Actiontype);
                     }
                     else if (Actiontype === 'Update') {
-                        if (this.SelectedSupportMaster.ID) {
+                        if (this.SelectedSupportMaster.ReasonCode) {
                             this.UpdateSupportMaster(Actiontype);
                         }
                     } else if (Actiontype === 'Delete') {

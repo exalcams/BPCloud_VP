@@ -49,17 +49,17 @@
         
         <ng-container matColumnDef="SupportID">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Support ID</th>
-          <td mat-cell *matCellDef="let element"> {{element.SupportID}} </td>
+          <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
+            <div fxLayout>
+              <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
+              <div fxFlex class="pl-4">{{element.SupportID}} </div>
+            </div>
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="Reason">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Reason </th>
-          <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
-            <div fxLayout>
-              <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
-              <div fxFlex class="pl-4">{{element.Reason}} </div>
-            </div>
-          </td>
+          <td mat-cell *matCellDef="let element"> {{element.Reason}} </td>
         </ng-container>
 
         <ng-container matColumnDef="Date">

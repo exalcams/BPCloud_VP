@@ -148,6 +148,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
         mdIconRegistry.addSvgIcon('rfxIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/rfx.svg'));
 
+        mdIconRegistry.addSvgIcon('unlockIcon', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/custom/whiteUnlock.svg'));
+
         /**
          * ------------------------------------------------------------------
          * ngxTranslate Fix Start

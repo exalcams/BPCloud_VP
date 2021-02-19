@@ -45,6 +45,7 @@ export class SupportChatComponent implements OnInit {
   Status: string;
   TicketResolved: boolean;
   notificationSnackBarComponent: NotificationSnackBarComponent;
+  IsReOpen: boolean;
   constructor(
     private route: ActivatedRoute,
     public _supportDeskService: SupportDeskService,
@@ -59,6 +60,7 @@ export class SupportChatComponent implements OnInit {
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.SelectedSupportLog = new SupportLog();
     this.SelectedSupportLogView = new SupportLog();
+    this.IsReOpen = false;
   }
 
   ngOnInit(): void {
@@ -86,7 +88,7 @@ export class SupportChatComponent implements OnInit {
     });
     this.GetUsers();
     this.GetFactByPartnerID();
-    this.GetSupportDetailsByPartnerAndSupportIDAndType();
+    this.GetSupportDetailsBySupportID();
     this.InitializeSupportLogFormGroup();
   }
 
@@ -120,9 +122,10 @@ export class SupportChatComponent implements OnInit {
       }
     );
   }
-  GetSupportDetailsByPartnerAndSupportIDAndType(): void {
+  GetSupportDetailsBySupportID(): void {
+    this.IsReOpen = false;
     this.IsProgressBarVisibile = true;
-    this._supportDeskService.GetSupportDetailsByPartnerAndSupportIDAndType(this.SupportID, this.PartnerID, 'B').subscribe(
+    this._supportDeskService.GetSupportDetailsBySupportID(this.SupportID).subscribe(
       data => {
         if (data) {
           this.SupportDetails = data as SupportDetails;
@@ -210,6 +213,27 @@ export class SupportChatComponent implements OnInit {
     }
   }
 
+
+  ReOpenRequestClicked(): void {
+    if (this.SupportLogFormGroup.valid) {
+      const Actiontype = 'Re-open';
+      const Catagory = 'Support Ticket';
+      this.OpenConfirmationDialog(Actiontype, Catagory);
+    } else {
+      this.ShowFormValidationErrors(this.SupportLogFormGroup);
+    }
+  }
+
+  ReOpenClicked(): void {
+    if (this.SupportLogFormGroup.valid) {
+      const Actiontype = 'Re-Open';
+      const Catagory = 'Support Ticket';
+      this.OpenConfirmationDialog(Actiontype, Catagory);
+    } else {
+      this.ShowFormValidationErrors(this.SupportLogFormGroup);
+    }
+  }
+
   MarkAsResolvedClicked(): void {
     if (this.SupportLogFormGroup.valid) {
       const Actiontype = 'Mark As Resolved';
@@ -219,15 +243,29 @@ export class SupportChatComponent implements OnInit {
       this.ShowFormValidationErrors(this.SupportLogFormGroup);
     }
   }
+  CloseClicked(): void {
+    const Actiontype = 'Close';
+    const Catagory = 'Support Ticket';
+    this.OpenConfirmationDialog(Actiontype, Catagory);
+  }
 
   AddCommentClicked(): void {
     const supportLog = new SupportLog();
     supportLog.PatnerID = this.PartnerID;
     supportLog.IsResolved = false;
-    supportLog.CreatedOn = new Date();
+    // supportLog.CreatedOn = new Date();
     this.SupportLogs.push(supportLog);
+    this.IsReOpen = false;
   }
-
+  AddReOpenCommentClicked(): void {
+    const supportLog = new SupportLog();
+    supportLog.PatnerID = this.PartnerID;
+    //supportLog.Status = "Open";
+    supportLog.IsResolved = false;
+    // supportLog.CreatedOn = new Date();
+    this.SupportLogs.push(supportLog);
+    this.IsReOpen = true;
+  }
   OnFileClicked(evt): void {
     if (evt.target.files && evt.target.files.length > 0) {
       this.fileToUpload = evt.target.files[0];
@@ -264,8 +302,45 @@ export class SupportChatComponent implements OnInit {
           this.ResetControl();
           this.notificationSnackBarComponent.openSnackBar(`Support Log created successfully`, SnackBarStatus.success);
           this.IsProgressBarVisibile = false;
-          this.GetSupportDetailsByPartnerAndSupportIDAndType();
+          this.GetSupportDetailsBySupportID();
         }
+      },
+      (err) => {
+        this.ShowErrorNotificationSnackBar(err);
+      }
+    );
+  }
+  ReOpenSupportTicket(): void {
+    this.IsProgressBarVisibile = true;
+    this.GetSupportLogValues();
+    console.log("SelectedSupportLogView", this.SelectedSupportLogView);
+    this._supportDeskService.ReOpenSupportTicket(this.SelectedSupportLogView).subscribe(
+      (data) => {
+        this.SelectedSupportLog = (data as SupportLog);
+        console.log("SelectedSupportLog", this.SelectedSupportLog);
+        if (this.fileToUploadList && this.fileToUploadList.length) {
+          this.AddSupportLogAttachment();
+        }
+        else {
+          this.ResetControl();
+          this.notificationSnackBarComponent.openSnackBar(`Support ticket reopened successfully`, SnackBarStatus.success);
+          this.IsProgressBarVisibile = false;
+          this.GetSupportDetailsBySupportID();
+        }
+      },
+      (err) => {
+        this.ShowErrorNotificationSnackBar(err);
+      }
+    );
+  }
+
+  CloseSupportTicket(): void {
+    this.IsProgressBarVisibile = true;
+    this._supportDeskService.CloseSupportTicket(this.SupportHeader).subscribe(
+      (data) => {
+        this.notificationSnackBarComponent.openSnackBar(`Support ticket closed successfully`, SnackBarStatus.success);
+        this.IsProgressBarVisibile = false;
+        this.GetSupportDetailsBySupportID();
       },
       (err) => {
         this.ShowErrorNotificationSnackBar(err);
@@ -285,7 +360,7 @@ export class SupportChatComponent implements OnInit {
           this.ResetControl();
           this.notificationSnackBarComponent.openSnackBar(`Support Log updated successfully`, SnackBarStatus.success);
           this.IsProgressBarVisibile = false;
-          this.GetSupportDetailsByPartnerAndSupportIDAndType();
+          this.GetSupportDetailsBySupportID();
         }
       },
       (err) => {
@@ -301,7 +376,7 @@ export class SupportChatComponent implements OnInit {
           this.notificationSnackBarComponent.openSnackBar('Support Log created successfully', SnackBarStatus.success);
           this.IsProgressBarVisibile = false;
           this.ResetControl();
-          this.GetSupportDetailsByPartnerAndSupportIDAndType();
+          this.GetSupportDetailsBySupportID();
         },
         (err) => {
           this.ShowErrorNotificationSnackBar(err);
@@ -326,6 +401,15 @@ export class SupportChatComponent implements OnInit {
           }
           else if (Actiontype === 'Mark As Resolved') {
             this.UpdateSupportLog();
+          }
+          else if (Actiontype === 'Close') {
+            this.CloseSupportTicket();
+          }
+          else if (Actiontype === 'Re-open') {
+            this.AddReOpenCommentClicked();
+          }
+          else if (Actiontype === 'Re-Open') {
+            this.ReOpenSupportTicket();
           }
         }
       });

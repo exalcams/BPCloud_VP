@@ -35,6 +35,19 @@ export class SupportLog extends CommonClass {
     AttachmentID: string;
     IsResolved: boolean;
 }
+
+// export class SupportLogView extends CommonClass {
+//     Client: string;
+//     Company: string;
+//     Type: string;
+//     PatnerID: string;
+//     SupportID: string;
+//     SupportLogID: string;
+//     Remarks: string;
+//     AttachmentID: string;
+//     IsResolved: boolean;
+// }
+
 export class SupportDetails extends CommonClass {
     supportHeader: SupportHeader;
     supportLogs: SupportLog[];

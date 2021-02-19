@@ -71,7 +71,7 @@ export class SupportDeskService {
             .pipe(catchError(this.errorHandler));
     }
 
-    DeleteSupportMaster(supportMaster: SupportMasterView): Observable<any> {
+    DeleteSupportMaster(supportMaster: SupportMaster): Observable<any> {
         return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/DeleteSupportMaster`,
             supportMaster,
             {
@@ -84,6 +84,12 @@ export class SupportDeskService {
 
     GetSupportDetailsByPartnerAndSupportID(SupportID: any, PartnerID: any): Observable<any | string> {
         return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetSupportDetailsByPartnerAndSupportID?SupportID=${SupportID}&PartnerID=${PartnerID}`)
+            .pipe(catchError(this.errorHandler));
+    }
+
+    GetSupportDetailsBySupportID(SupportID: any): Observable<any | string> {
+        return this._httpClient.get<any>
+            (`${this.baseAddress}supportapi/SupportDesk/GetSupportDetailsBySupportID?SupportID=${SupportID}`)
             .pipe(catchError(this.errorHandler));
     }
 
@@ -106,7 +112,7 @@ export class SupportDeskService {
     }
 
     GetBuyerSupportTickets(PartnerID: any, Plant: string): Observable<any | string> {
-        return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetBuyerSupportTickets?PartnerID=${PartnerID}&Type=${Plant}`)
+        return this._httpClient.get<any>(`${this.baseAddress}supportapi/SupportDesk/GetBuyerSupportTickets?PartnerID=${PartnerID}&Plant=${Plant}`)
             .pipe(catchError(this.errorHandler));
     }
 
@@ -148,6 +154,28 @@ export class SupportDeskService {
     UpdateSupportLog(supportLog: SupportLog): Observable<any> {
         return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/UpdateSupportLog`,
             supportLog,
+            {
+                headers: new HttpHeaders({
+                    'Content-Type': 'application/json'
+                })
+            })
+            .pipe(catchError(this.errorHandler));
+    }
+
+    ReOpenSupportTicket(supportLog: SupportLog): Observable<any> {
+        return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/ReOpenSupportTicket`,
+            supportLog,
+            {
+                headers: new HttpHeaders({
+                    'Content-Type': 'application/json'
+                })
+            })
+            .pipe(catchError(this.errorHandler));
+    }
+
+    CloseSupportTicket(header: SupportHeader): Observable<any> {
+        return this._httpClient.post<any>(`${this.baseAddress}supportapi/SupportDesk/CloseSupportTicket`,
+            header,
             {
                 headers: new HttpHeaders({
                     'Content-Type': 'application/json'
