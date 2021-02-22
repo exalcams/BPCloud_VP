@@ -6,6 +6,7 @@ import { catchError } from 'rxjs/operators';
 import { BPCOFHeader, BPCOFItem, BPCOFHeaderXLSX, BPCOFItemXLSX, BPCOFScheduleLineXLSX, BPCOFGRGIXLSX, BPCOFQMXLSX, BPCOFGRGI, SOItemCount, BPCOFItemView } from 'app/models/OrderFulFilment';
 import { BPCCEOMessage, BPCSCOCMessage } from 'app/models/Message.model';
 import { BPCFact } from 'app/models/fact';
+import { OverviewReportOption } from 'app/models/ReportModel';
 
 @Injectable({
   providedIn: 'root'
@@ -127,6 +128,42 @@ export class POService {
   CreateOFQMs(OFQMs: BPCOFQMXLSX[]): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}poapi/PO/CreateOFQMs`,
       OFQMs,
+      // {
+      //   headers: new HttpHeaders({
+      //     'Content-Type': 'application/json'
+      //   })
+      // }
+    ).pipe(catchError(this.errorHandler));
+  }
+
+  GetBPCQMByPartnerID(PartnerID: string): Observable<any> {
+    return this._httpClient.get<any>(`${this.baseAddress}poapi/PO/GetBPCQMByPartnerID?PartnerID=${PartnerID}`
+    ).pipe(catchError(this.errorHandler));
+  }
+
+  GetQMReportByDate(overViewData: OverviewReportOption): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}poapi/PO/GetQMReportByDate`,
+    overViewData,
+      // {
+      //   headers: new HttpHeaders({
+      //     'Content-Type': 'application/json'
+      //   })
+      // }
+    ).pipe(catchError(this.errorHandler));
+  }
+  GetQMReportByOption(overViewData: OverviewReportOption): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}poapi/PO/GetQMReportByOption`,
+    overViewData,
+      // {
+      //   headers: new HttpHeaders({
+      //     'Content-Type': 'application/json'
+      //   })
+      // }
+    ).pipe(catchError(this.errorHandler));
+  }
+  GetQMReportByStatus(overViewData: OverviewReportOption): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}poapi/PO/GetQMReportByStatus`,
+    overViewData,
       // {
       //   headers: new HttpHeaders({
       //     'Content-Type': 'application/json'

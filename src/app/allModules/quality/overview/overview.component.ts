@@ -18,6 +18,8 @@ import { MasterService } from 'app/services/master.service';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseConfigService } from '@fuse/services/config.service';
+import { BPCOFQM } from 'app/models/OrderFulFilment';
+import { POService } from 'app/services/po.service';
 @Component({
   selector: 'app-overview',
   templateUrl: './overview.component.html',
@@ -43,9 +45,12 @@ export class OverviewComponent implements OnInit {
   isExpanded: boolean;
   defaultFromDate: Date;
   defaultToDate: Date;
-  overviewReportDisplayedColumns: string[] = ['Material', 'MaterialText', 'InputQty', 'AccQty', 'RejQty', 'RejPercentage'];
-  overviewReportDataSource: MatTableDataSource<BPCReportOV>;
-  overviewReports: BPCReportOV[] = [];
+  // overviewReportDisplayedColumns: string[] = ['Material', 'MaterialText', 'InputQty', 'AccQty', 'RejQty', 'RejPercentage'];
+  // overviewReportDataSource: MatTableDataSource<BPCReportOV>;
+  // overviewReports: BPCReportOV[] = [];
+  overviewReportDisplayedColumns: string[] = ['DocNumber', 'Item', 'Material', 'MaterialText', 'GRGIQty', 'LotQty', 'RejQty', 'RejReason'];
+  overviewReportDataSource: MatTableDataSource<BPCOFQM>;
+  overviewReports: BPCOFQM[] = [];
   @ViewChild(MatPaginator) overviewPaginator: MatPaginator;
   @ViewChild(MatSort) overviewSort: MatSort;
   @ViewChild(MatMenuTrigger) matMenuTrigger: MatMenuTrigger;
@@ -115,6 +120,7 @@ export class OverviewComponent implements OnInit {
     public snackBar: MatSnackBar,
     private dialog: MatDialog,
     private _masterService: MasterService,
+    private _POService: POService,
     private _datePipe: DatePipe,
     private _excelService: ExcelService) {
     this.authenticationDetails = new AuthenticationDetails();
@@ -171,9 +177,9 @@ export class OverviewComponent implements OnInit {
 
   GetOverviewReports(): void {
     this.isProgressBarVisibile = true;
-    this._reportService.GetOverviewReports(this.currentUserName).subscribe(
+    this._POService.GetBPCQMByPartnerID(this.currentUserName).subscribe(
       (data) => {
-        this.overviewReports = data as BPCReportOV[];
+        this.overviewReports = data as BPCOFQM[];
         this.overviewReportDataSource = new MatTableDataSource(this.overviewReports);
         this.overviewReportDataSource.paginator = this.overviewPaginator;
         this.overviewReportDataSource.sort = this.overviewSort;
@@ -186,11 +192,12 @@ export class OverviewComponent implements OnInit {
     );
   }
 
+
   GetOverviewReportByOption(overviewReportOption: OverviewReportOption): void {
     this.isProgressBarVisibile = true;
-    this._reportService.GetOverviewReportByOption(overviewReportOption).subscribe(
+    this._POService.GetQMReportByOption(overviewReportOption).subscribe(
       (data) => {
-        this.overviewReports = data as BPCReportOV[];
+        this.overviewReports = data as BPCOFQM[];
         this.overviewReportDataSource = new MatTableDataSource(this.overviewReports);
         this.overviewReportDataSource.paginator = this.overviewPaginator;
         this.overviewReportDataSource.sort = this.overviewSort;
@@ -205,9 +212,9 @@ export class OverviewComponent implements OnInit {
 
   GetOverviewReportByStatus(overviewReportOption: OverviewReportOption): void {
     this.isProgressBarVisibile = true;
-    this._reportService.GetOverviewReportByStatus(overviewReportOption).subscribe(
+    this._POService.GetQMReportByStatus(overviewReportOption).subscribe(
       (data) => {
-        this.overviewReports = data as BPCReportOV[];
+        this.overviewReports = data as BPCOFQM[];
         this.overviewReportDataSource = new MatTableDataSource(this.overviewReports);
         this.overviewReportDataSource.paginator = this.overviewPaginator;
         this.overviewReportDataSource.sort = this.overviewSort;
@@ -222,9 +229,9 @@ export class OverviewComponent implements OnInit {
 
   GetOverviewReportByDate(overviewReportOption: OverviewReportOption): void {
     this.isProgressBarVisibile = true;
-    this._reportService.GetOverviewReportByDate(overviewReportOption).subscribe(
+    this._POService.GetQMReportByDate(overviewReportOption).subscribe(
       (data) => {
-        this.overviewReports = data as BPCReportOV[];
+        this.overviewReports = data as BPCOFQM[];
         this.overviewReportDataSource = new MatTableDataSource(this.overviewReports);
         this.overviewReportDataSource.paginator = this.overviewPaginator;
         this.overviewReportDataSource.sort = this.overviewSort;
@@ -236,6 +243,74 @@ export class OverviewComponent implements OnInit {
       }
     );
   }
+
+  // GetOverviewReports(): void {
+  //   this.isProgressBarVisibile = true;
+  //   this._reportService.GetOverviewReports(this.currentUserName).subscribe(
+  //     (data) => {
+  //       this.overviewReports = data as BPCReportOV[];
+  //       this.overviewReportDataSource = new MatTableDataSource(this.overviewReports);
+  //       this.overviewReportDataSource.paginator = this.overviewPaginator;
+  //       this.overviewReportDataSource.sort = this.overviewSort;
+  //       this.isProgressBarVisibile = false;
+  //     },
+  //     (err) => {
+  //       console.error(err);
+  //       this.isProgressBarVisibile = false;
+  //     }
+  //   );
+  // }
+
+  // GetOverviewReportByOption(overviewReportOption: OverviewReportOption): void {
+  //   this.isProgressBarVisibile = true;
+  //   this._reportService.GetOverviewReportByOption(overviewReportOption).subscribe(
+  //     (data) => {
+  //       this.overviewReports = data as BPCReportOV[];
+  //       this.overviewReportDataSource = new MatTableDataSource(this.overviewReports);
+  //       this.overviewReportDataSource.paginator = this.overviewPaginator;
+  //       this.overviewReportDataSource.sort = this.overviewSort;
+  //       this.isProgressBarVisibile = false;
+  //     },
+  //     (err) => {
+  //       console.error(err);
+  //       this.isProgressBarVisibile = false;
+  //     }
+  //   );
+  // }
+
+  // GetOverviewReportByStatus(overviewReportOption: OverviewReportOption): void {
+  //   this.isProgressBarVisibile = true;
+  //   this._reportService.GetOverviewReportByStatus(overviewReportOption).subscribe(
+  //     (data) => {
+  //       this.overviewReports = data as BPCReportOV[];
+  //       this.overviewReportDataSource = new MatTableDataSource(this.overviewReports);
+  //       this.overviewReportDataSource.paginator = this.overviewPaginator;
+  //       this.overviewReportDataSource.sort = this.overviewSort;
+  //       this.isProgressBarVisibile = false;
+  //     },
+  //     (err) => {
+  //       console.error(err);
+  //       this.isProgressBarVisibile = false;
+  //     }
+  //   );
+  // }
+
+  // GetOverviewReportByDate(overviewReportOption: OverviewReportOption): void {
+  //   this.isProgressBarVisibile = true;
+  //   this._reportService.GetOverviewReportByDate(overviewReportOption).subscribe(
+  //     (data) => {
+  //       this.overviewReports = data as BPCReportOV[];
+  //       this.overviewReportDataSource = new MatTableDataSource(this.overviewReports);
+  //       this.overviewReportDataSource.paginator = this.overviewPaginator;
+  //       this.overviewReportDataSource.sort = this.overviewSort;
+  //       this.isProgressBarVisibile = false;
+  //     },
+  //     (err) => {
+  //       console.error(err);
+  //       this.isProgressBarVisibile = false;
+  //     }
+  //   );
+  // }
 
   initializeSearchForm(): void {
     this.searchFormGroup = this.formBuilder.group({
@@ -335,14 +410,16 @@ export class OverviewComponent implements OnInit {
     const itemsShowedd = [];
     itemsShowed.forEach(x => {
       const item = {
+        'Doc Number': x.DocNumber,
+        'Item': x.Item,
         'Material': x.Material,
         // 'Material': x.InvoiceDate ? this._datePipe.transform(x.InvoiceDate, 'dd-MM-yyyy') : '',
         // 'Posted on': x.PostedOn ? this._datePipe.transform(x.PostedOn, 'dd-MM-yyyy') : '',
         'Material Text': x.MaterialText,
-        'Input Quantity': x.InputQty,
-        'Accepted Quantity': x.AccQty,
+        'GRGI Quantity': x.GRGIQty,
+        'Lot Quantity': x.LotQty,
         'Rejected Quantity': x.RejQty,
-        'Rejected Percentage': x.RejPercentage,
+        'Rejected Reason': x.RejReason,
       };
       itemsShowedd.push(item);
     });

@@ -215,7 +215,11 @@ export class SupportTicketComponent implements OnInit {
     this._POService.GetPlantByDocNmber(docRefNo, this.currentUserName).subscribe(
       (data) => {
         const plant = data as string;
-        this.SupportTicketFormGroup.get('Plant').patchValue(plant);
+        if (plant) {
+          this.SupportTicketFormGroup.get('Plant').patchValue(plant);
+        } else {
+          this.SupportTicketFormGroup.get('Plant').patchValue('1000');
+        }
       },
       (err) => {
         console.error(err);
@@ -226,7 +230,11 @@ export class SupportTicketComponent implements OnInit {
     this._POService.GetPlantByASNNmber(docRefNo, this.currentUserName).subscribe(
       (data) => {
         const plant = data as string;
-        this.SupportTicketFormGroup.get('Plant').patchValue(plant);
+        if (plant) {
+          this.SupportTicketFormGroup.get('Plant').patchValue(plant);
+        } else {
+          this.SupportTicketFormGroup.get('Plant').patchValue('1000');
+        }
       },
       (err) => {
         console.error(err);

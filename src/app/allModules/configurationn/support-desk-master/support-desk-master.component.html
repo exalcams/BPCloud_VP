@@ -169,11 +169,11 @@
         </div>
         <mat-card-actions class="m-0 pl-12 pr-16 cardActions">
           <div fxLayout fxFlex fxLayoutAlign="end">
-            <button *ngIf="SelectedSupportMaster?.ID" mat-stroked-button class="DeleteBtn mr-4 mb-8"
+            <button *ngIf="SelectedSupportMaster?.CreatedOn" mat-stroked-button class="DeleteBtn mr-4 mb-8"
               (click)="DeleteClicked()">Delete</button>
-            <button *ngIf="!SelectedSupportMaster?.ID" mat-raised-button class="SaveBtn"
+            <button *ngIf="!SelectedSupportMaster?.CreatedOn" mat-raised-button class="SaveBtn"
               (click)="SaveClicked()">Save</button>
-            <button *ngIf="SelectedSupportMaster?.ID" mat-raised-button class="SaveBtn"
+            <button *ngIf="SelectedSupportMaster?.CreatedOn" mat-raised-button class="SaveBtn"
               (click)="UpdateClicked()">Update</button>
           </div>
         </mat-card-actions>

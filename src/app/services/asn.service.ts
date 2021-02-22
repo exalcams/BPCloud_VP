@@ -128,7 +128,7 @@ export class ASNService {
         return this._httpClient.get<BPCASNFieldMaster[]>(`${this.baseAddress}poapi/ASN/GetAllASNFieldMaster`)
             .pipe(catchError(this.errorHandler));
     }
-    GetASNFieldMasterByType(type:string): Observable<BPCASNFieldMaster[] | string> {
+    GetASNFieldMasterByType(type: string): Observable<BPCASNFieldMaster[] | string> {
         return this._httpClient.get<BPCASNFieldMaster[]>(`${this.baseAddress}poapi/ASN/GetASNFieldMasterByType?DocType=${type}`)
             .pipe(catchError(this.errorHandler));
     }

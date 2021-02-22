@@ -229,13 +229,16 @@ export class SupportChatComponent implements OnInit {
   }
 
   ReOpenRequestClicked(): void {
-    if (this.SupportLogFormGroup.valid) {
-      const Actiontype = 'Re-open';
-      const Catagory = 'Support Ticket';
-      this.OpenConfirmationDialog(Actiontype, Catagory);
-    } else {
-      this.ShowFormValidationErrors(this.SupportLogFormGroup);
-    }
+    // if (this.SupportLogFormGroup.valid) {
+    //   const Actiontype = 'Re-open';
+    //   const Catagory = 'Support Ticket';
+    //   this.OpenConfirmationDialog(Actiontype, Catagory);
+    // } else {
+    //   this.ShowFormValidationErrors(this.SupportLogFormGroup);
+    // }
+    const Actiontype = 'Re-open';
+    const Catagory = 'Support Ticket';
+    this.OpenConfirmationDialog(Actiontype, Catagory);
   }
 
   ReOpenClicked(): void {

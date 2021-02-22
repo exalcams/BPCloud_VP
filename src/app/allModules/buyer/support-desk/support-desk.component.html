@@ -46,7 +46,7 @@
 
       <table *ngIf="supports?.length" style="width: 100% !important;" class="table" mat-table
         [dataSource]="supportDataSource" matSort>
-        
+
         <ng-container matColumnDef="SupportID">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Support ID</th>
           <td mat-cell *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
@@ -71,8 +71,9 @@
         <ng-container matColumnDef="Status">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
           <td mat-cell *matCellDef="let element" style="text-align: center;">
-            <img width="50" class="element-image" *ngIf="element.Status" style="cursor: pointer;" [src]="element.Status==='Open' ?'assets/images/open3.png':
-                 element.Status==='Closed' ?'assets/images/close.png':''" />
+            {{element.Status}}
+            <!-- <img width="50" class="element-image" *ngIf="element.Status" style="cursor: pointer;" [src]="element.Status==='Open' ?'assets/images/open3.png':
+                 element.Status==='Closed' ?'assets/images/close.png':''" /> -->
           </td>
         </ng-container>
 
