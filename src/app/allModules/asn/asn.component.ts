@@ -148,6 +148,7 @@ export class ASNComponent implements OnInit {
     IsShipmentNotRelevant: boolean = false;
     IsPriceNotMatched = false;
     DocumentType: string;
+    SelectedDocType:string;
 
     constructor(
         private _fuseConfigService: FuseConfigService,
@@ -205,6 +206,7 @@ export class ASNComponent implements OnInit {
         }
         this._route.queryParams.subscribe(params => {
             this.SelectedDocNumber = params['id'];
+            this.SelectedDocType=params['type'];
         });
         this.CreateAppUsage();
         this.InitializeASNFormGroup();
@@ -690,6 +692,7 @@ export class ASNComponent implements OnInit {
     GetPOItemsByDocAndPartnerID(): void {
         this._POService.GetPOItemViewsByDocAndPartnerID(this.SelectedDocNumber, this.currentUserName).subscribe(
             (data) => {
+                console.log("items",data);
                 this.POItems = data as BPCOFItemView[];
                 this.ClearFormArray(this.ASNItemFormArray);
                 if (this.POItems && this.POItems.length) {
@@ -1641,6 +1644,8 @@ export class ASNComponent implements OnInit {
         }
     }
     DeleteClicked(): void {
+        //console.log("delete clicked");
+        //console.log("asn",this.SelectedASNHeader);
         if (this.SelectedASNHeader.ASNNumber) {
             const Actiontype = 'Delete';
             const Catagory = 'ASN';
@@ -1826,9 +1831,10 @@ export class ASNComponent implements OnInit {
         this.GetASNValues();
         // this.SelectedBPASN.ModifiedBy = this.authenticationDetails.userID.toString();
         this.IsProgressBarVisibile = true;
+        //console.log("asnHeader",this.SelectedASNHeader);
         this._ASNService.DeleteASN(this.SelectedASNHeader).subscribe(
             (data) => {
-                // console.log(data);
+                 console.log(data);
                 this.ResetControl();
                 this.notificationSnackBarComponent.openSnackBar('ASN deleted successfully', SnackBarStatus.success);
                 this.IsProgressBarVisibile = false;
@@ -2080,7 +2086,7 @@ export class ASNComponent implements OnInit {
 
     // ASN Field related
     GetAllASNFieldMaster(): void {
-        this._ASNService.GetAllASNFieldMaster().subscribe(
+        this._ASNService.GetASNFieldMasterByType(this.SelectedDocType).subscribe(
             (data) => {
                 this.AllASNFieldMaster = data as BPCASNFieldMaster[];
                 this.InitializeASNFormGroupByFieldMaster();

@@ -51,8 +51,8 @@ export class ASNListComponent implements OnInit {
   //ASNPackFormGroup: FormGroup;
   SelectedASNNumber: string;
   ASNPackFormArray: FormArray = this._formBuilder.array([]);
-  displayColumn: string[] = ['ASNNumber', 'ASNDate', 'DocNumber', 'AWBNumber', 'VessleNumber', 'DepartureDate',
-    'ArrivalDate', 'Status', 'Action'];
+  displayColumn: string[] = ['ASNNumber', 'ASNDate', 'DocNumber', 'AWBNumber', 'VessleNumber','Material','ASNQty', 'DepartureDate',
+  'ArrivalDate', 'Status', 'Action'];
   TableDetailsDataSource: MatTableDataSource<ASNListView>;
   @ViewChild(MatPaginator) tablePaginator: MatPaginator;
   @ViewChild(MatSort) tableSort: MatSort;

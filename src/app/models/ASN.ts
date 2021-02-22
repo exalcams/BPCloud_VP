@@ -170,6 +170,7 @@ export class BPCASNFieldMaster extends CommonClass {
     DefaultValue: string;
     Mandatory: boolean;
     Invisible: boolean;
+    DocType:string;
 }
 export class BPCFLIPHeader extends CommonClass {
     ID: number;

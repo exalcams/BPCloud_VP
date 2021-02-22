@@ -25,14 +25,14 @@ export class DiscountDialogueComponent implements OnInit {
   ) {
     this.discountFormGroup=this.fb.group({
       RemainingDays:[null],
-      EPRD:[null,[Validators.required,Validators.max(90),Validators.min(5)]],
+      EPRD:[null,[Validators.required,Validators.max(this.CalculateRmDays()),Validators.min(5)]],
       DiscountProposed:[null],
       PostDiscountAmount:[null]
     });
   }
 
   ngOnInit(): void {
-    // console.log("dialogData",this.dialogData);
+    console.log("dialogData",this.dialogData);
     if(this.dialogData.isBuyer){
       this.discountData=this.dialogData;
       this.discountFormGroup.get('RemainingDays').setValue(this.CalculateRmDays());
@@ -104,12 +104,15 @@ export class DiscountDialogueComponent implements OnInit {
     return result;
   }
   CalculateDiscountPercentage(days:number):number{
+    if(days<this.discountMaster[0].Days){
+      return 0;
+    }
     for (let i = this.discountMaster.length-1; i >=0; i--) {
       if(days>=this.discountMaster[i].Days){
         return this.discountMaster[i].Discount;
       }
     }
-    return this.discountMaster[this.discountMaster.length-1].Discount;
+    return 0;
   }
   addDays(days: number): Date {
     var date=new Date();

@@ -65,7 +65,7 @@
                 *ngIf="discountFormGroup.get('EPRD').touched && discountFormGroup.get('EPRD').hasError('required')">
                 Earliest Payment Request Days</mat-error>
                 <mat-error *ngIf="discountFormGroup.get('EPRD').hasError('min')">Minimum should be 5 days</mat-error>
-                <mat-error *ngIf="discountFormGroup.get('EPRD').hasError('max')">Maximum should be 90 days</mat-error>
+                <mat-error *ngIf="discountFormGroup.get('EPRD').hasError('max')">Please enter less than remaining days</mat-error>
             </mat-form-field>
             <mat-form-field class="px-12 form_field">
               <mat-label>Discount Proposed in %</mat-label>
@@ -81,11 +81,14 @@
     </div>
   </mat-dialog-content>
   <mat-dialog-actions class="m-0 p-16" fxLayoutAlign="center center" fxLayoutGap="1rem" align="end">
-    <label class="approve_txt" *ngIf="discountData.Status=='Approved'">**Approved**</label>
-    <label class="reject_txt" *ngIf="discountData.Status=='Rejected'">**Rejected**</label>
-    <button *ngIf="!discountData.Status && !isChange" mat-raised-button type="button" (click)="CloseClicked()">{{dialogData.isBuyer?'Reject':'Cancel'}}</button>
-    <button *ngIf="!discountData.Status && !isChange" mat-raised-button type="button" class="btnBg"
-      (click)="YesClicked()">{{dialogData.isBuyer?'Approve':'Save'}}</button>
+    <label class="approve_txt" *ngIf="dialogData.Status=='Approved' && dialogData.isBuyer">**Approved**</label>
+    <label class="reject_txt" *ngIf="dialogData.Status=='Rejected' && dialogData.isBuyer">**Rejected**</label>
+    <button *ngIf="!isChange && !dialogData.isBuyer" mat-raised-button type="button" (click)="CloseClicked()">Cancel</button>
+    <button *ngIf="!isChange && !dialogData.isBuyer" mat-raised-button type="button" class="btnBg"
+      (click)="YesClicked()">Save</button>
+      <button *ngIf="dialogData.isBuyer && !dialogData.Status" mat-raised-button type="button" (click)="CloseClicked()">Reject</button>
+      <button *ngIf="dialogData.isBuyer && !dialogData.Status" mat-raised-button type="button" class="btnBg"
+        (click)="YesClicked()">Approve</button>
     <button *ngIf="isChange" mat-raised-button type="button" class="btnBg" (click)="ChangeClicked()">Change</button>
   </mat-dialog-actions>
 </div>

@@ -12,7 +12,7 @@ import {
 import { BPCPIHeader, SODetails } from 'app/models/customer';
 import { BPCKRA, CustomerBarChartData } from 'app/models/fact';
 import { BPCOFHeader, BPCOFAIACT, BPCPlantMaster } from 'app/models/OrderFulFilment';
-import { BPCInvoiceAttachment } from 'app/models/ASN';
+import { BPCASNItemSES, BPCInvoiceAttachment } from 'app/models/ASN';
 
 @Injectable({
   providedIn: 'root'
@@ -163,6 +163,10 @@ export class DashboardService {
   }
   GetBPCOFHeader(PartnerID: string, refNo: string): Observable<BPCOFHeader | string> {
     return this._httpClient.get<BPCOFHeader>(`${this.baseAddress}poapi/Dashboard/GetBPCOFHeader?PartnerID=${PartnerID}&ReferenceNo=${refNo}`)
+      .pipe(catchError(this.errorHandler));
+  }
+  GetOFItemSESByItem(item:string): Observable<BPCASNItemSES | string> {
+    return this._httpClient.get<BPCASNItemSES>(`${this.baseAddress}poapi/PO/GetOFItemSESByItem?item=${item}`)
       .pipe(catchError(this.errorHandler));
   }
   GetNotificationsByPartnerID(PartnerID: string): Observable<BPCOFAIACT[] | string> {

@@ -380,7 +380,7 @@
                       </mat-error>
                     </mat-form-field>
                   </div>
-                  <div fxFlex="33" [style.display]="GetASNFieldVisibility('Field1')">
+                  <!-- <div fxFlex="33" [style.display]="GetASNFieldVisibility('Field1')">
                     <mat-form-field class="pl-8 pr-12" style="width: 100%;">
                       <input matInput [placeholder]="GetASNFieldLabel('Field1')" formControlName="Field1">
                       <mat-error
@@ -469,7 +469,7 @@
                         {{GetASNFieldLabel('Field10')}} is required
                       </mat-error>
                     </mat-form-field>
-                  </div>
+                  </div> -->
                 </div>
               </form>
               <!-- <form autocomplete="off" fxLayout="row" fxLayoutAlign="start" fxLayoutGap="20px" fxFlex="1 0 auto"
@@ -1427,7 +1427,7 @@
         <mat-card-actions class="m-0 pl-12 pr-16 cardActions">
           <div fxLayout fxLayoutAlign="space-between center">
             <div fxFlex>
-              <button *ngIf="SelectedASNHeader?.ASNNumber && !SelectedASNHeader?.IsSubmitted" mat-stroked-button
+              <button *ngIf="( SelectedASNHeader?.ASNNumber) && !SelectedASNHeader?.IsSubmitted" mat-stroked-button
                 class="DeleteBtn mr-4 mb-8" (click)="DeleteClicked()">Delete</button>
             </div>
             <div fxFlex align="end">

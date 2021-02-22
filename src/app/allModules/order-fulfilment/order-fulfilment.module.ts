@@ -26,6 +26,7 @@ import { AsnlistPrintDialogComponent } from './asnlist/asnlist-print-dialogue/as
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { ChatModule } from '../chat/chat.module';
 import { SharedModule } from 'app/shared/shared-module';
+import { SerListComponent } from './ser-list/ser-list.component';
 const route: Routes = [
   {
     path: "orderfulfilmentCenter",
@@ -46,6 +47,10 @@ const route: Routes = [
   {
     path: 'invoicelist',
     component: InvoiceListComponent
+  },
+  {
+    path:'serlist',
+    component:SerListComponent
   }
 ];
 @NgModule({
@@ -55,7 +60,9 @@ const route: Routes = [
     ASNListComponent,
     GRReceiptsComponent,
     InvoiceListComponent ,
-    AsnlistPrintDialogComponent ],
+    AsnlistPrintDialogComponent,
+    SerListComponent
+   ],
   imports: [
     CommonModule,
     RouterModule.forChild(route),

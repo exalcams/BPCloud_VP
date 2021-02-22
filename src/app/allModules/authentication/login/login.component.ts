@@ -594,6 +594,15 @@ export class LoginComponent implements OnInit {
         //         url: "/invoice",
         //     });
         // }
+        if (this.menuItems.indexOf("SERList") >= 0) {
+            this.orderFulfilmentSubChildren.push({
+                id: "serlist",
+                title: "SER List",
+                translate: "NAV.VENDOR.FULFILMENT_CENTER",
+                type: "item",
+                url: "/orderfulfilment/serlist",
+            });
+        }
 
         if (this.menuItems.indexOf("OrderFulFilmentCenter") >= 0) {
             this.children.push({
