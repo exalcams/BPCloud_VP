@@ -919,8 +919,8 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         });
     }
 
-    goToASNClicked(po: string): void {
-        this._router.navigate(["/asn"], { queryParams: { id: po } });
+    goToASNClicked(po: string,type:string): void {
+        this._router.navigate(["/asn"], { queryParams: { id: po,type:type } });
     }
 
     goToSubconClicked(po: string): void {

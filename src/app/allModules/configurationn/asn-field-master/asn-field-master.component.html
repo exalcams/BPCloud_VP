@@ -70,6 +70,21 @@
 
                   <div fxFlex="50">
                     <mat-form-field class="pl-8 pr-12" style="width: 100%;">
+                      <input matInput placeholder="Type" formControlName="Type">
+                      <mat-error
+                        *ngIf="ASNFieldMasterFormGroup.get('Type').touched &&  ASNFieldMasterFormGroup.get('Type').hasError('required')">
+                        Type is required</mat-error>
+                    </mat-form-field>
+                  </div>
+
+                  
+
+                </div>
+
+                <div fxFlex fxLayout="row" fxLayoutGap="40px">
+
+                  <div fxFlex="50">
+                    <mat-form-field class="pl-8 pr-12" style="width: 100%;">
                       <input matInput placeholder="Text" formControlName="Text">
                       <mat-error
                         *ngIf="ASNFieldMasterFormGroup.get('Text').touched && ASNFieldMasterFormGroup.get('Text').hasError('required')">
@@ -77,10 +92,6 @@
                       </mat-error>
                     </mat-form-field>
                   </div>
-
-                </div>
-
-                <div fxFlex fxLayout="row" fxLayoutGap="40px">
 
                   <div fxFlex="50">
                     <mat-form-field class="pl-8 pr-12" style="width: 100%;">
@@ -92,6 +103,11 @@
                     </mat-form-field>
                   </div>
 
+                  
+
+                </div>
+
+                <div fxFlex fxLayout="row" fxLayoutGap="40px">
                   <div fxFlex="50">
                     <mat-form-field class="pl-8 pr-12" style="width: 100%;">
                       <mat-select placeholder="Mandatory" formControlName="Mandatory">
@@ -104,10 +120,6 @@
                         Mandatory is required</mat-error>
                     </mat-form-field>
                   </div>
-
-                </div>
-
-                <div fxFlex fxLayout="row" fxLayoutGap="40px">
                   <div fxFlex="50">
                     <mat-form-field class="pl-8 pr-12" style="width: 100%;">
                       <mat-select placeholder="Invisible" formControlName="Invisible">

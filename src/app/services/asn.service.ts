@@ -66,6 +66,12 @@ export class ASNService {
             .pipe(catchError(this.errorHandler));
     }
 
+    FilterASNListBySER(PartnerID: string, ASNNumber: string, DocNumber: string, Material: string, Status: string, ASNFromDate: string, ASNToDate: string): Observable<ASNListView[] | string> {
+        return this._httpClient.get<ASNListView[]>
+            (`${this.baseAddress}poapi/ASN/FilterASNListBySER?PartnerID=${PartnerID}&ASNNumber=${ASNNumber}&DocNumber=${DocNumber}&Material=${Material}&Status=${Status}&ASNFromDate=${ASNFromDate}&ASNToDate=${ASNToDate}`)
+            .pipe(catchError(this.errorHandler));
+    }
+
     GetASNByPartnerID(PartnerID: string): Observable<BPCASNHeader | string> {
         return this._httpClient.get<BPCASNHeader>(`${this.baseAddress}poapi/ASN/GetASNByPartnerID?PartnerID=${PartnerID}`)
             .pipe(catchError(this.errorHandler));
@@ -120,6 +126,10 @@ export class ASNService {
     }
     GetAllASNFieldMaster(): Observable<BPCASNFieldMaster[] | string> {
         return this._httpClient.get<BPCASNFieldMaster[]>(`${this.baseAddress}poapi/ASN/GetAllASNFieldMaster`)
+            .pipe(catchError(this.errorHandler));
+    }
+    GetASNFieldMasterByType(type:string): Observable<BPCASNFieldMaster[] | string> {
+        return this._httpClient.get<BPCASNFieldMaster[]>(`${this.baseAddress}poapi/ASN/GetASNFieldMasterByType?DocType=${type}`)
             .pipe(catchError(this.errorHandler));
     }
     UpdateASNFieldMaster(ASNField: BPCASNFieldMaster): Observable<any> {

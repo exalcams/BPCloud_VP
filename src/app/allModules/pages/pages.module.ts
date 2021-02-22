@@ -71,6 +71,7 @@ import { ChatModule } from '../chat/chat.module';
 // import 'chart.piecelabel.js';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { ActionCenterComponent } from './action-center/action-center.component'; 
+import {PoFactServiceDialogComponent} from './po-fact-service-dialog/po-fact-service-dialog.component';
 // npm install apexcharts ng-apexcharts — save
 
 const routes = [
@@ -182,8 +183,9 @@ const routes = [
         TourComponent,
         DashboardComponent,
         ActionCenterComponent,
+        PoFactServiceDialogComponent
     ],
     providers: [DecimalPipe],
-    entryComponents: [TourComponent],
+    entryComponents: [TourComponent,PoFactServiceDialogComponent],
 })
 export class PagesModule { }

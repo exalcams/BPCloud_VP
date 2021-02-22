@@ -14,10 +14,11 @@ import { MasterService } from 'app/services/master.service';
 import { BPCOFHeader, BPCPlantMaster, OfAttachmentData } from 'app/models/OrderFulFilment';
 import { BPCPIHeader } from 'app/models/customer';
 import { CustomerService } from 'app/services/customer.service';
-import { BPCInvoiceAttachment } from 'app/models/ASN';
+import { BPCASNItemSES, BPCInvoiceAttachment } from 'app/models/ASN';
 import { AttachmentViewDialogComponent } from 'app/notifications/attachment-view-dialog/attachment-view-dialog.component';
 import { NotificationDialog1Component } from 'app/notifications/notification-dialog1/notification-dialog1.component';
 import {Location} from '@angular/common';
+import { PoFactServiceDialogComponent } from '../po-fact-service-dialog/po-fact-service-dialog.component';
 @Component({
     selector: 'app-po-factsheet',
     templateUrl: './po-factsheet.component.html',
@@ -33,7 +34,8 @@ export class PoFactsheetComponent implements OnInit {
     currentUserRole: string;
     partnerID: string;
     isProgressBarVisibile: boolean;
-
+    DocumentType:string;
+    DocumentNumber:string;
     isDeliveryDateMismatched: boolean;
 
     public tab1: boolean;
@@ -81,6 +83,7 @@ export class PoFactsheetComponent implements OnInit {
         'Value',
         // 'TaxAmount',
         // 'TaxCode'
+        'Service'
     ];
     asnDisplayedColumns: string[] = [
         'ASN',
@@ -229,6 +232,7 @@ export class PoFactsheetComponent implements OnInit {
         this.GetOfDetailsByPartnerIDAndDocNumber();
         this.initializeACKFormGroup();
         this.initializePOItemFormGroup();
+        this.GetBPCHeaderDocType();
     }
 
     CreateAppUsage(): void {
@@ -251,6 +255,7 @@ export class PoFactsheetComponent implements OnInit {
         this.isProgressBarVisibile = true;
         this._dashboardService.GetOrderFulfilmentDetails(this.PO, this.partnerID).subscribe(
             data => {
+                console.log("details",data);
                 if (data) {
                     this.orderFulfilmentDetails = <OrderFulfilmentDetails>data;
                     this.poStatus = this.orderFulfilmentDetails.Status;
@@ -321,6 +326,20 @@ export class PoFactsheetComponent implements OnInit {
     viewOfAttachmentClicked(data: DocumentDetails): void {
         // const attachments = this.ofAttachments.filter(x => x.AttachmentID.toString() === element.RefDoc);
         this.GetOfAttachmentsByPartnerIDAndDocNumber(data);
+    }
+    GetBPCHeaderDocType(){
+        this.route.queryParams.subscribe(params => {
+            this.DocumentNumber = params['id'];
+            console.log("docNo",this.DocumentNumber);
+          });
+        this._dashboardService.GetBPCOFHeader(this.authenticationDetails.UserName, this.DocumentNumber).subscribe((header)=>{
+            const data=header as BPCOFHeader;
+            console.log("header",data);
+            this.DocumentType=data.DocType;
+        },
+        err=>{
+            console.log(err);
+        });
     }
     GetOfAttachmentsByPartnerIDAndDocNumber(Document: DocumentDetails): void {
         this._dashboardService.GetBPCOFHeader(this.authenticationDetails.UserName, Document.ReferenceNo).subscribe(
@@ -981,4 +1000,22 @@ export class PoFactsheetComponent implements OnInit {
                 return "";
         }
     }
+    POFactSerClicked(item){
+        item.enable();
+        const Item=item.value;
+        this._dashboardService.GetOFItemSESByItem(Item.Item).subscribe((data)=>{
+            const ItemSES=data;
+            this.OpenPOFactServiceDialog(data);
+            console.log("ses",ItemSES);
+        },err=>{
+            console.log(err);
+        })
+    }
+    OpenPOFactServiceDialog(Data:any){
+        const dialogConfig: MatDialogConfig = {
+          panelClass: 'po-fact-item-ses-dialog',
+          data:Data
+      };
+        const dialogRef = this.dialog.open(PoFactServiceDialogComponent,dialogConfig);
+      }
 }

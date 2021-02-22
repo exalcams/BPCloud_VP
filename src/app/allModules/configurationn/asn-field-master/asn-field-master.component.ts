@@ -66,6 +66,7 @@ export class AsnFieldMasterComponent implements OnInit {
       DefaultValue: [''],
       Mandatory: ['', [Validators.required]],
       Invisible: ['', [Validators.required]],
+      Type:['',[Validators.required]]
     });
     this.ASNFieldMasterFormGroup.get('Field').disable();
   }
@@ -115,7 +116,9 @@ export class AsnFieldMasterComponent implements OnInit {
     this.ASNFieldMasterFormGroup.get('DefaultValue').patchValue(this.selectedASNFieldMaster.DefaultValue);
     this.ASNFieldMasterFormGroup.get('Mandatory').patchValue(this.selectedASNFieldMaster.Mandatory);
     this.ASNFieldMasterFormGroup.get('Invisible').patchValue(this.selectedASNFieldMaster.Invisible);
+    this.ASNFieldMasterFormGroup.get('Type').patchValue(this.selectedASNFieldMaster.DocType);
     this.ASNFieldMasterFormGroup.get('Field').disable();
+    this.ASNFieldMasterFormGroup.get('Type').disable();
   }
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
@@ -158,6 +161,7 @@ export class AsnFieldMasterComponent implements OnInit {
     this.selectedASNFieldMaster.DefaultValue = this.ASNFieldMasterFormGroup.get('DefaultValue').value;
     this.selectedASNFieldMaster.Mandatory = this.ASNFieldMasterFormGroup.get('Mandatory').value;
     this.selectedASNFieldMaster.Invisible = this.ASNFieldMasterFormGroup.get('Invisible').value;
+    this.selectedASNFieldMaster.DocType = this.ASNFieldMasterFormGroup.get('Type').value;
   }
 
   // CreateASNFieldMaster(): void {
