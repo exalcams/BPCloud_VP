@@ -35,16 +35,20 @@
 
 </div>
 <div class="navbar-down" [ngClass]="fuseConfig.layout.navbar.secondaryBackground">
-    <!-- <div fxLayout fxLayoutAlign="center" class="mx-8">
+    <div fxLayout fxLayoutAlign="center" class="mx-8">
         <div fxFlex fxLayoutAlign="center">
             <img style="height: 14px" src="assets/images/dashboard/man-user.png">
             <div class="buttons">
-                <div class="mx-12 username" fxHide.lt-lg>
+                <div class="mx-12 username" fxHide.lt-lg style="color: white !important">
                     {{CurrentLoggedInUser | removeLeadingZero}}</div>
             </div>
         </div>
-    </div> -->
+    </div>
     <mat-divider class="borderTop my-8"></mat-divider>
+    <div fxLayout fxLayoutAlign="center" class="mb-8">
+        <img src="assets/images/dashboard/edit.png" matTooltip="Change Password"
+        matTooltipPosition="right" (click)="ChangePasswordClick()" class="powerClass px-13" style="width: 19px;">
+    </div>
     <div fxLayout fxLayoutAlign="center" class="mb-8">
         <img src="assets/images/dashboard/power.png" (click)="logOutClick()" class="powerClass px-16">
     </div>

@@ -59,6 +59,7 @@ fuse-sidebar {
                             .username,
                             .email {
                                 display: none;
+                                color:white !important;
                             }
                         }
 
@@ -206,7 +207,7 @@ navbar {
 .powerClass {
     cursor: pointer !important;
     color: white;
-    //height: 25px;
+    // height: 24px !important;
 }
 .log-text{
     font-size: 12px;
