@@ -68,13 +68,13 @@
             <mat-icon style="color: white;">arrow_back</mat-icon>
           </button>
         </div>
-        <div fxLayout style="margin-left: -12px !important;width: 130% !important;">
+        <div fxLayout style="margin-left: -12px !important;">
           <div fxFlex="25" style="margin-left: 15px;;" fxLayout>ACK</div>
           <div fxFlex="25" fxLayout>ASN</div>
           <div fxFlex="25" fxLayout>GATE</div>
           <div fxFlex="25" style="margin-right: 7% !important;" fxLayout>GRN</div>
         </div>
-        <div fxLayout class="mt-4 mr-40 ml-8" style="width: 115% !important;">
+        <div fxLayout class="mt-4 mr-40 ml-8">
           <div fxFlex="25" fxLayout>
             <div class="round" [style.border-color]="poStatus==='DueForACK'?'#efb577':'#34ad65'"></div>
             <div style="width: 10px;margin-left: -1px;"
@@ -713,12 +713,12 @@
 
             <ng-container matColumnDef="Material">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Material</th>
-              <td mat-cell *matCellDef="let element" style="text-align: left"> {{element.MaterialText}} </td>
+              <td mat-cell *matCellDef="let element" style="text-align: left"> {{element.Material}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="Description">
+            <ng-container matColumnDef="MaterialText">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
-              <td mat-cell *matCellDef="let element" style="text-align: left"> {{element.Description}} </td>
+              <td mat-cell *matCellDef="let element" style="text-align: left"> {{element.MaterialText}} </td>
             </ng-container>
 
             <ng-container matColumnDef="Date">

@@ -17,7 +17,7 @@ import { CustomerService } from 'app/services/customer.service';
 import { BPCASNItemSES, BPCInvoiceAttachment } from 'app/models/ASN';
 import { AttachmentViewDialogComponent } from 'app/notifications/attachment-view-dialog/attachment-view-dialog.component';
 import { NotificationDialog1Component } from 'app/notifications/notification-dialog1/notification-dialog1.component';
-import {Location} from '@angular/common';
+import { Location } from '@angular/common';
 import { PoFactServiceDialogComponent } from '../po-fact-service-dialog/po-fact-service-dialog.component';
 @Component({
     selector: 'app-po-factsheet',
@@ -34,8 +34,8 @@ export class PoFactsheetComponent implements OnInit {
     currentUserRole: string;
     partnerID: string;
     isProgressBarVisibile: boolean;
-    DocumentType:string;
-    DocumentNumber:string;
+    DocumentType: string;
+    DocumentNumber: string;
     isDeliveryDateMismatched: boolean;
 
     public tab1: boolean;
@@ -113,7 +113,7 @@ export class PoFactsheetComponent implements OnInit {
     qaDisplayedColumns: string[] = [
         'Item',
         'Material',
-        'Description',
+        'MaterialText',
         'Date',
         // 'LotQty',
         'RejQty',
@@ -191,7 +191,7 @@ export class PoFactsheetComponent implements OnInit {
         private datepipe: DatePipe,
         private dialog: MatDialog,
         private _location: Location
-        
+
     ) {
         this.tab1 = true;
         this.tab2 = false;
@@ -255,7 +255,7 @@ export class PoFactsheetComponent implements OnInit {
         this.isProgressBarVisibile = true;
         this._dashboardService.GetOrderFulfilmentDetails(this.PO, this.partnerID).subscribe(
             data => {
-                console.log("details",data);
+                console.log("details", data);
                 if (data) {
                     this.orderFulfilmentDetails = <OrderFulfilmentDetails>data;
                     this.poStatus = this.orderFulfilmentDetails.Status;
@@ -327,19 +327,19 @@ export class PoFactsheetComponent implements OnInit {
         // const attachments = this.ofAttachments.filter(x => x.AttachmentID.toString() === element.RefDoc);
         this.GetOfAttachmentsByPartnerIDAndDocNumber(data);
     }
-    GetBPCHeaderDocType(){
+    GetBPCHeaderDocType() {
         this.route.queryParams.subscribe(params => {
             this.DocumentNumber = params['id'];
-            console.log("docNo",this.DocumentNumber);
-          });
-        this._dashboardService.GetBPCOFHeader(this.authenticationDetails.UserName, this.DocumentNumber).subscribe((header)=>{
-            const data=header as BPCOFHeader;
-            console.log("header",data);
-            this.DocumentType=data.DocType;
-        },
-        err=>{
-            console.log(err);
+            console.log("docNo", this.DocumentNumber);
         });
+        this._dashboardService.GetBPCOFHeader(this.authenticationDetails.UserName, this.DocumentNumber).subscribe((header) => {
+            const data = header as BPCOFHeader;
+            console.log("header", data);
+            this.DocumentType = data.DocType;
+        },
+            err => {
+                console.log(err);
+            });
     }
     GetOfAttachmentsByPartnerIDAndDocNumber(Document: DocumentDetails): void {
         this._dashboardService.GetBPCOFHeader(this.authenticationDetails.UserName, Document.ReferenceNo).subscribe(
@@ -1000,22 +1000,22 @@ export class PoFactsheetComponent implements OnInit {
                 return "";
         }
     }
-    POFactSerClicked(item){
+    POFactSerClicked(item) {
         item.enable();
-        const Item=item.value;
-        this._dashboardService.GetOFItemSESByItem(Item.Item).subscribe((data)=>{
-            const ItemSES=data;
+        const Item = item.value;
+        this._dashboardService.GetOFItemSESByItem(Item.Item).subscribe((data) => {
+            const ItemSES = data;
             this.OpenPOFactServiceDialog(data);
-            console.log("ses",ItemSES);
-        },err=>{
+            console.log("ses", ItemSES);
+        }, err => {
             console.log(err);
         })
     }
-    OpenPOFactServiceDialog(Data:any){
+    OpenPOFactServiceDialog(Data: any) {
         const dialogConfig: MatDialogConfig = {
-          panelClass: 'po-fact-item-ses-dialog',
-          data:Data
-      };
-        const dialogRef = this.dialog.open(PoFactServiceDialogComponent,dialogConfig);
-      }
+            panelClass: 'po-fact-item-ses-dialog',
+            data: Data
+        };
+        const dialogRef = this.dialog.open(PoFactServiceDialogComponent, dialogConfig);
+    }
 }
