@@ -55,10 +55,10 @@ export class RETURNDetails {
 export class QADetails {
     Item: string;
     Material: string;
-    Description: string;
-    Date: Date;
-    LotQty: number;
-    RejQty: number;
+    MaterialText: string;
+    Date: Date | string | null;
+    LotQty: number | null;
+    RejQty: number | null;
     RejReason: string;
 }
 

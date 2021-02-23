@@ -930,7 +930,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
 
     goToPrintPOClicked(po: string): void {
         this.isProgressBarVisibile = true;
-        this._dashboardService.CreatePOPdf(po).subscribe(
+        this._dashboardService.PrintPO(po).subscribe(
             (data) => {
                 if (data) {
                     const fileType = "application/pdf";
@@ -983,7 +983,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
 
     formatSubtitle = (): string => {
         return "Effiency";
-    };
+    }
 
     pieChartLabel(Fulfilments: any[], name: string): string {
         const item = Fulfilments.filter((data) => data.name === name);
