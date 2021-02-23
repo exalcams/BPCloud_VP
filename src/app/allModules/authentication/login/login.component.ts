@@ -190,7 +190,7 @@ export class LoginComponent implements OnInit {
                             });
                         this.isProgressBarVisibile = false;
                         const dat = data as AuthenticationDetails;
-                        if (data.IsChangePasswordRequired === "Yes") {
+                        if (data.isChangePasswordRequired === "Yes") {
                             this.notificationSnackBarComponent.openSnackBar(data.ReasonForReset,SnackBarStatus.danger);
                             this.openChangePasswordDialog(dat);
                         } else {
