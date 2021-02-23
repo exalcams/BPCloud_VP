@@ -218,6 +218,65 @@
     padding-right: 16px;
     cursor: pointer !important;
   }
+  @mixin TableBorderRight($color) {
+    border-right: 1px solid $color;
+  }
+
+  .TableCommon {
+    padding: 5px;
+    font-size: 12px;
+    min-width: 100px !important;
+  }
+
+  table {
+    width: 100%;
+
+    th {
+      @include TableBorderRight(gray);
+      @extend .TableCommon;
+      text-align: left;
+      color: white;
+      background-color: #121214;
+    }
+
+    td {
+      @include TableBorderRight(rgba(0, 0, 0, 0.12));
+      @extend .TableCommon;
+      // font-size: 12px;
+      padding: 7px 5px !important;
+      &.AmountClass {
+        text-align: center;
+      }
+      &.Selectoption {
+        text-align: center;
+      }
+      min-width: max-content !important;
+    }
+
+    tr {
+      height: 40px;
+    }
+
+    .mat-sort-header-container {
+      padding-left: 5px;
+      display: flex;
+      justify-content: flex-start;
+    }
+  }
+  .tableCellBorder {
+    height: 20px;
+    vertical-align: middle;
+    width: 10px;
+    background-color: #d87e39;
+    opacity: 0.7;
+    margin-left: -5px;
+  }
+  .tableLeftBorder {
+    border-left: 1px solid rgba(0, 0, 0, 0.12);
+  }
+  .TableSelect .mat-form-field-wrapper {
+    padding-bottom: 0px !important;
+  }
   .mat-input-element:disabled {
     color: rgba(0, 0, 0, 0.87) !important;
     // background: whitesmoke !important;
@@ -282,89 +341,6 @@
   //   }
   // }
 
-  @mixin TableBorderRight($color) {
-    border-right: 1px solid $color;
-  }
-
-  .TableCommon {
-    padding: 5px;
-    font-size: 12px;
-    min-width: 100px !important;
-  }
-
-  table {
-    width: 100%;
-
-    th {
-      @include TableBorderRight(gray);
-      @extend .TableCommon;
-      text-align: left;
-      color: white;
-      background-color: #121214;
-    }
-
-    td {
-      @include TableBorderRight(rgba(0, 0, 0, 0.12));
-      @extend .TableCommon;
-      // font-size: 12px;
-      padding: 7px 5px !important;
-      &.AmountClass {
-        text-align: center;
-      }
-      &.Selectoption{
-        text-align: center;
-      }
-      &.QtyClass {
-        text-align: right;
-      }
-      min-width: max-content !important;
-    }
-
-    tr {
-      height: 40px;
-    }
-
-    .mat-sort-header-container {
-      padding-left: 5px;
-      display: flex;
-      justify-content: flex-start;
-    }
-  }
-
-    
-  .mat-form-field-flex > .mat-form-field-infix {
-    padding: 0em 0px 0.6em !important;
-  }
-  .mat-form-field-appearance-outline {
-    .mat-form-field-suffix,
-    .mat-form-field-prefix {
-      top: 0.5em;
-      .mat-icon-button {
-        width: 1.5em;
-        height: 1.5em;
-      }
-    }
-  }
-  .mat-form-field-infix {
-    width: auto;
-  }
-  .mat-form-field-label-wrapper {
-    top: -1.5em;
-  }
-  .mat-form-field-wrapper {
-    margin: 0 0 0 0;
-    padding-bottom: 1em;
-  }
-
-  .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
-    transform: translateY(-1.1em) scale(0.75);
-    width: 133.33333%;
-  }
-  .mat-form-field-outline-start,
-  .mat-form-field-outline-end {
-    border-radius: 0 !important;
-  }
-  
   // td.mat-cell {
   //   /* row padding */
   //   padding: 16px 0;
@@ -507,59 +483,6 @@
     }
   }
 
-  // .mat-form-field-appearance-outline {
-  //   .mat-form-field-outline {
-  //     color: rgba(0, 0, 0, 0.5) !important;
-  //   }
-  // }
-  // .mat-form-field-appearance-outline.ng-invalid.ng-touched {
-  //     .mat-form-field-outline {
-  //         color: red !important;
-  //     }
-  // }
-
-  // .mat-form-field-appearance-outline.ng-valid {
-  //     .mat-form-field-outline {
-  //         color: rgba(0, 0, 0, 0.5) !important;
-  //     }
-  // }
-
-  // .mat-form-field-appearance-outline .mat-form-field-outline {
-  //   top: 0.4em !important;
-  // }
-  // .mat-form-field-flex > .mat-form-field-infix {
-  //   padding: 0.002em 0px !important;
-  // }
-  // .normal .mat-form-field-flex > .mat-form-field-infix {
-  //   padding: 0.4375em 0 !important;
-  // }
-  // .mat-form-field-label-wrapper {
-  //   top: -1em;
-  // }
-
-  // .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
-  //   transform: translateY(-0.5em) scale(0.75);
-  // }
-
-  // .mat-form-field-suffix .mat-icon-button {
-  //   width: 2.5em;
-  //   height: 1.5em !important;
-  // }
-
-  // .mat-form-field-appearance-outline .mat-form-field-outline-start {
-  //   border-radius: 0px 0 0 0px !important;
-  // }
-  // .mat-form-field-appearance-outline .mat-form-field-outline-end {
-  //   border-radius: 0px 0 0 0px !important;
-  // }
-
-  // .mat-form-field-outline-gap {
-  //   border: 1px solid #1b56ca;
-  //   border-radius: 1e-6px;
-  // }
-  // .mat-form-field-wrapper {
-  //   padding-bottom: 0.7em !important;
-  // }
   .tableLeftBorder {
     border-left: 1px solid rgba(0, 0, 0, 0.12);
   }
@@ -616,34 +539,48 @@
     border-radius: 2px;
     background-color: #f9d2a8;
   }
-  .tableCellBorder {
-    height: 20px;
-    vertical-align: middle;
-    width: 10px;
-    background-color: #d87e39;
-    opacity: 0.7;
-  }
+
   .next {
     background-color: #e8ffeb;
     padding: 4px 2px;
   }
 
   .mat-form-field-flex > .mat-form-field-infix {
-    padding: 0.3em 0px !important;
+    padding: 0em 0px 0.6em !important;
+  }
+  .mat-form-field-appearance-outline {
+    .mat-form-field-suffix,
+    .mat-form-field-prefix {
+      top: 0.5em;
+      .mat-icon-button {
+        width: 1.5em;
+        height: 1.5em;
+      }
+    }
+  }
+  .mat-form-field-infix {
+    width: auto;
   }
   .mat-form-field-label-wrapper {
     top: -1.5em;
   }
   .mat-form-field-wrapper {
     margin: 0 0 0 0;
-    padding-bottom: 0;
+    padding-bottom: 1em;
   }
 
   .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
     transform: translateY(-1.1em) scale(0.75);
     width: 133.33333%;
   }
-
+  .mat-form-field-outline-start,
+  .mat-form-field-outline-end {
+    border-radius: 0 !important;
+  }
+  .SearchBtn {
+    height: 36px;
+    min-width: 107px !important;
+  }
   .progress__svg {
     transform: rotate(-90deg);
   }
@@ -814,9 +751,7 @@
       font-weight: 400;
       margin-top: 15px;
     }
-    .table_responsive {
-      overflow-x: auto !important;
-    }
+
     .selectInput_table {
       width: 85px !important;
       height: 25px !important;
@@ -829,22 +764,6 @@
       background-position-y: 9px !important;
       border: 1px solid #c3c3c3 !important;
       border-radius: 0.4px !important;
-    }
-    .tableHeader {
-      color: white;
-      font-size: 11px !important;
-      font-weight: 500;
-      opacity: 0.9;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    .tableElement {
-      line-height: 55px;
-      font-size: 10.5px !important;
-      font-weight: 500;
-      height: 50px;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      opacity: 0.9;
     }
   }
 
@@ -905,16 +824,6 @@
     margin-top: 15px;
   }
 
-  .cl_table {
-    margin-left: 20px;
-    margin-right: 20px;
-    margin-top: 11px;
-
-    box-shadow: none;
-    border-left: 1px solid #e0d7d7;
-    border-right: 1.5px solid #d4d1d1;
-    /* overflow-x:auto; */
-  }
   /* .table_responsive {
    
     overflow-x:auto !important;
@@ -933,22 +842,6 @@
     margin-left: -24px;
     opacity: 0.7;
     margin-top: 5px;
-  }
-  .tableHeader {
-    color: white;
-    font-size: 12px;
-    font-weight: 500;
-    opacity: 0.9;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  }
-
-  .tableElement {
-    line-height: 55px;
-    font-size: 12px;
-    font-weight: 500;
-    height: 50px;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    opacity: 0.9;
   }
 
   .selectInput_table {
@@ -972,7 +865,7 @@
     flex: 1 1 auto;
   }
   .excelBtn {
-    // margin-top: -16px;
+    margin-top: -16px;
     min-width: 0px;
     background-color: white;
     color: rgb(46, 125, 50);
@@ -981,24 +874,29 @@
       padding: 0px 8px;
     }
   }
+  .expandImg {
+    height: 36px;
+    margin-top: -16px;
+    cursor: pointer;
+  }
   .excelImg {
     // margin: 4px 6px 4px 4px;
     height: 24px;
   }
-  .selectbox  {
+  .selectbox {
     background: white;
     margin-left: 20px;
     margin-top: 10px;
     // width: 101px;
-}
-.arraow.mat-select-arrow {
-  width: 0;
-  height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 5px solid;
-  margin: 0 4px;
-  margin-left: 36px;
-  margin-top:5px
-}
+  }
+  .arraow.mat-select-arrow {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid;
+    margin: 0 4px;
+    margin-left: 36px;
+    margin-top: 5px;
+  }
 }

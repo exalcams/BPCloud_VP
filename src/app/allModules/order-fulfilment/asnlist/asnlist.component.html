@@ -11,107 +11,85 @@
     </div>
     <div fxLayout="column" class="content-card1">
 
-      <div *ngIf="!isExpanded" @expandCollapse
-        style="height:160px;margin-left: 20px;margin-right: 20px;margin-top: 15px;" fxLayout fxLayoutGap="60px">
-        <form fxFlex="100" fxLayout autocomplete="off" name="form" novalidate [formGroup]="SearchFormGroup">
-          <div fxFlex="33">
-
-            <div>
-              <img src="assets/images/search.png" width="17px" height="17px" class="searchImg_po">
-              <input type="text" placeholder="ASN" class="search-input_po" formControlName="ASNNumber">
+      <div *ngIf="!isExpanded" @expandCollapse  style="margin-left: 20px;margin-right: 20px;margin-top: 15px;">
+        <form autocomplete="off" name="form" novalidate [formGroup]="SearchFormGroup" fxLayout="column"
+          fxLayoutAlign="start" fxFlex="100">
+          <!-- First Row -->
+          <div fxFlex="100" fxLayout="row" fxLayoutGap="20px">
+            <div fxFlex="30">
+              <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-icon class="mr-12" matPrefix>search</mat-icon>
+                <input type="text" matInput placeholder="ASN" formControlName="ASNNumber">
+              </mat-form-field>
             </div>
-            <div fxLayout="row" fxLayoutGap="20px" style="width:100%;margin-top: 20px !important; ">
-              <div style="width:100%;">
-                <p class="leftDivider" fxFlex="49.5"></p>
-                <div fxFlex="1">
-                  <p class="cl_circle"></p>
-                </div>
-                <p class="rightDivider" fxFlex="49.5"></p>
-              </div>
+            <div fxFlex="30">
+              <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-icon class="mr-12" matPrefix>search</mat-icon>
+                <input type="text" matInput placeholder="Material" formControlName="Material">
+              </mat-form-field>
             </div>
-
-            <img src="assets/images/search.png" width="17px" height="17px" class="searchImg_po">
-            <input type="text" placeholder="PO" class="search-input_po" formControlName="DocNumber">
-
-          </div>
-          <div fxFlex="33">
-
-            <div>
-              <img src="assets/images/search.png" width="17px" height="17px" class="searchImg_po">
-              <input type="text" placeholder="Material" class="search-input_po" formControlName="Material">
+            <div fxFlex="20">
+              <mat-form-field style="width: 100%;" appearance="outline">
+                <input matInput placeholder="ASN FromDate" [matDatepicker]="picker1" formControlName="ASNFromDate"
+                  (dateChange)="DateSelected()">
+                <mat-datepicker-toggle matSuffix [for]="picker1">
+                  <mat-icon matDatepickerToggleIcon svgIcon="calendarIcon"></mat-icon>
+                </mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+              </mat-form-field>
             </div>
-            <div fxLayout="row" fxLayoutGap="20px" style="width:100%;margin-top: 20px !important; ">
-              <div style="width:100%;">
-                <p class="leftDivider" fxFlex="49.5"></p>
-                <div fxFlex="1">
-                  <p class="cl_circle"></p>
-                </div>
-                <p class="rightDivider" fxFlex="49.5"></p>
-              </div>
+            <div fxFlex="20">
+              <mat-form-field appearance="outline" style="width: 100%;">
+                <input matInput placeholder="ASN ToDate" [matDatepicker]="picker2" formControlName="ASNToDate"
+                  (dateChange)="DateSelected()">
+                <mat-datepicker-toggle matSuffix [for]="picker2">
+                  <mat-icon matDatepickerToggleIcon svgIcon="calendarIcon"></mat-icon>
+                </mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+              </mat-form-field>
             </div>
-
-            <img src="assets/images/search.png" width="17px" height="17px" class="searchImg_po">
-            <input type="text" placeholder="Status" class="search-input_po" formControlName="Status">
-
           </div>
 
-
-          <div fxFlex="33">
-
-            <div fxLayout fxLayoutGap="10px" style="margin-top: 15px;max-width: 100%;">
-              <div fxFlex="50" style="text-align: end;">
-                <input type="text" placeholder="ASN From Dt" class="input_date" [matDatepicker]="picker"
-                  formControlName="ASNFromDate" (dateChange)="DateSelected()">
-                <mat-datepicker #picker>
-                </mat-datepicker>
-                <img src="assets/images/calendar.png" width="15px" height="15px" (click)="picker.open()"
-                  class="inp_Img_date">
-              </div>
-              <div fxFlex="50" style="text-align: end">
-
-                <input type="text" placeholder="ASN To Dt" class="input_date" [matDatepicker]="picker1"
-                  formControlName="ASNToDate" (dateChange)="DateSelected()">
-                <mat-datepicker #picker1>
-                </mat-datepicker>
-                <img src="assets/images/calendar.png" width="15px" height="15px" (click)="picker1.open()"
-                  class="inp_Img_date">
-              </div>
+          <!-- Second Row -->
+          <div fxFlex="100" fxLayout="row" fxLayoutGap="20px" class="mt-20">
+            <div fxFlex="28">
+              <mat-form-field appearance="outline" style="width: 100%;">
+                <!-- <mat-icon class="mr-12" matPrefix>search</mat-icon> -->
+                <input type="text" matInput placeholder="Vendor" formControlName="VendorCode">
+              </mat-form-field>
             </div>
-            <div style="width:100%;height:100%;text-align: end;margin-top: 57px;">
-              <button mat-flat-button (click)="SearchClicked()" class="cl_searchBtn"
-                [ngClass]="BGClassName?.layout?.navbar?.primaryBackground">
-                Search
-              </button>
+            <div fxFlex="28">
+              <mat-form-field appearance="outline" style="width: 100%;">
+                <!-- <mat-icon class="mr-12" matPrefix>search</mat-icon> -->
+                <input type="text" matInput placeholder="Po" formControlName="DocNumber">
+              </mat-form-field>
             </div>
-
+            <div fxLayoutAlign="end" fxFlex>
+              <button mat-flat-button class="SearchBtn" (click)="SearchClicked()"
+                [ngClass]="BGClassName?.layout?.navbar?.primaryBackground">Search</button>
+            </div>
           </div>
         </form>
-
       </div>
 
 
-      <mat-toolbar class="toolbar" fxLayout="row">
-        <div style="width:50%">
-          <img src="assets/images/search.png" width="17px" height="17px" class="searchImg">
-          <input type="text" placeholder="Search" class="search-input"   >
+      <div fxLayout="row" class="mt-20 ml-20 mr-20" fxLayoutAlign="start center">
+        <mat-form-field appearance="outline" fxFlex="50">
+          <mat-icon class="mr-12" matPrefix>search</mat-icon>
+          <input matInput placeholder="Search">
+        </mat-form-field>
+        <div fxFlex fxLayoutAlign="end center">
+          <mat-form-field appearance="outline" style="min-width: 100px;">
+            <mat-select [(ngModel)]="SelectValue">
+              <mat-option value="All">All</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button (click)="exportAsXLSX()" class="excelBtn mx-24" mat-stroked-button>
+            <img class="excelImg" src="assets/images/excel.png">
+          </button>
+          <img class="expandImg" src="assets/images/expand.png" (click)="expandClicked()">
         </div>
-        <span class="fill"></span>
-
-        <select class="selectInput">
-          <option>All</option>
-          <option>One</option>
-        </select>
-        <!-- <div class="excel">
-          <img src="assets/images/excel.png" width="14px" height="14px">
-        </div> -->
-        <button (click)="exportAsXLSX()" class="excelBtn mx-24" mat-stroked-button>
-          <img class="excelImg" src="assets/images/excel.png">
-        </button>
-        <!-- <div > -->
-        <img src="assets/images/expand.png" (click)="expandClicked()" width="35px" height="35px"
-          style="margin-right: 5px;cursor: pointer;">
-        <!-- </div> -->
-      </mat-toolbar>
+      </div>
 
       <div style="overflow: auto !important;" class="pb-20">
         <table class="table p-20" mat-table [dataSource]="TableDetailsDataSource" matSort>
