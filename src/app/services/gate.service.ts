@@ -7,6 +7,7 @@ import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import { BPCGateHoveringVechicles } from 'app/models/Gate';
+import { ASNListView } from 'app/models/ASN';
 @Injectable({
   providedIn: 'root'
 })
@@ -22,6 +23,17 @@ export class GateService {
     console.log("Gate", HV);
     return this._httpClient.post<any>(`${this.baseAddress}poapi/Gate/CreateAllVechicleTurnAround`,
       HV,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+  CreateGateEntryByAsnList(ASN: ASNListView): Observable<any> {
+    // console.log("Gate", HV);
+    return this._httpClient.post<any>(`${this.baseAddress}poapi/Gate/CreateGateEntryByAsnList`,
+    ASN,
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'

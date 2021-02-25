@@ -25,6 +25,7 @@ import { BehaviorSubject } from 'rxjs';
 import { NumberFormat } from 'xlsx/types';
 import { slice } from 'lodash';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
+import { GateService } from 'app/services/gate.service';
 
 @Component({
   selector: 'app-asnlist',
@@ -106,6 +107,7 @@ export class ASNListComponent implements OnInit {
     private dialog: MatDialog,
     private _subConService: SubconService,
     private _POService: POService,
+    private _GateService: GateService,
     private _formBuilder: FormBuilder
   ) {
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
@@ -242,6 +244,20 @@ export class ASNListComponent implements OnInit {
     });
 
 
+  }
+  GateEntry(Asn:ASNListView):void
+  {
+    this._GateService.CreateGateEntryByAsnList(Asn).subscribe(
+      (data)=>
+      {
+        this.notificationSnackBarComponent.openSnackBar("Gate Entry Successfull",SnackBarStatus.success);
+        this.SearchClicked();
+      },
+      (err)=>
+      {
+        this.notificationSnackBarComponent.openSnackBar(err,SnackBarStatus.danger);
+      }
+    )
   }
   // cancel(asnnumber: any): void {
   //   this.newAllASNList = this.AllASNList;

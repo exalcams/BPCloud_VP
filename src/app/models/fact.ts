@@ -36,6 +36,10 @@ export class BPCFactContactPerson extends CommonClass {
     Name: string;
     ContactNumber: string;
     Email: string;
+    Item: string;
+    Department: string;
+    Title: string;
+    Mobile: string;
 }
 export class BPCFactBank extends CommonClass {
     ID: number;
@@ -43,10 +47,15 @@ export class BPCFactBank extends CommonClass {
     Company: string;
     Type: string;
     PatnerID: string;
-    AccountNumber: string;
-    AccountName: string;
+    AccountNo: string;
+    Name: string;
     BankID: string;
     BankName: string;
+
+    IFSC: string;
+    Branch: string;
+    City: string;
+    Country: string;
 }
 export class BPCKRA extends CommonClass {
     Client: string;
