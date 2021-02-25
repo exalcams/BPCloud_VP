@@ -191,7 +191,7 @@ export class LoginComponent implements OnInit {
                         this.isProgressBarVisibile = false;
                         const dat = data as AuthenticationDetails;
                         if (data.isChangePasswordRequired === "Yes") {
-                            this.notificationSnackBarComponent.openSnackBar(data.ReasonForReset,SnackBarStatus.danger);
+                            this.notificationSnackBarComponent.openSnackBar(data.ReasonForReset, SnackBarStatus.danger);
                             this.openChangePasswordDialog(dat);
                         } else {
                             this.saveUserDetails(dat);
@@ -315,12 +315,10 @@ export class LoginComponent implements OnInit {
                 changePassword.UserName = data.UserName;
                 this._authService.ChangePassword(changePassword).subscribe(
                     (res) => {
-                        if(res != null)
-                        {
-                          this.notificationSnackBarComponent.openSnackBar('Password updated successfully, please log with new password', SnackBarStatus.success);
-                        }else
-                        {
-                          this.notificationSnackBarComponent.openSnackBar('Password Should Not Be Same As Previous 5 Passwords', SnackBarStatus.danger);
+                        if (res != null) {
+                            this.notificationSnackBarComponent.openSnackBar('Password updated successfully, please log with new password', SnackBarStatus.success);
+                        } else {
+                            this.notificationSnackBarComponent.openSnackBar('Password Should Not Be Same As Previous 5 Passwords', SnackBarStatus.danger);
                         }
                         this._router.navigate(["/auth/login"]);
                     },
@@ -578,14 +576,15 @@ export class LoginComponent implements OnInit {
                 url: "/orderfulfilment/grReceipts",
             });
         }
-
-        this.orderFulfilmentSubChildren.push({
-            id: "invoicelist",
-            title: "Invoice List",
-            translate: "NAV.VENDOR.FULFILMENT_CENTER",
-            type: "item",
-            url: "/invoice",
-        });
+        if (this.menuItems.indexOf("Invoice") >= 0) {
+            this.orderFulfilmentSubChildren.push({
+                id: "invoicelist",
+                title: "Invoice List",
+                translate: "NAV.VENDOR.FULFILMENT_CENTER",
+                type: "item",
+                url: "/invoice",
+            });
+        }
         // if (this.menuItems.indexOf("Invoice") >= 0) {
         //     this.paymentSubChildren.push({
         //         id: "invoice",

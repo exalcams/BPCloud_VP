@@ -144,8 +144,10 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         { Value: "All", Name: "All" },
         { Value: "DueForACK", Name: "Due for ACK" },
         { Value: "DueForASN", Name: "Due for ASN" },
+        { Value: "PartialASN", Name: "Partial ASN" },
         { Value: "DueForGate", Name: "Due for Gate" },
         { Value: "DueForGRN", Name: "Due for GRN" },
+        { Value: "PartialGRN", Name: "Partial GRN" },
     ];
     ofTypeOptions: OfType[] = [
         { Value: "All", Name: "All" },
@@ -863,6 +865,14 @@ export class OrderFulFilmentCenterComponent implements OnInit {
 
             this.ofOption.PartnerID = this.partnerID;
             this.GetOfsByOption(this.ofOption);
+        }else if (label === "Partial ASN") {
+            this.ofDetailsDataSource = null;
+            this.ofOption = new OfOption();
+            this.ofOption.Status = "Partial ASN";
+            // this.statusvalue = "Partial ASN";
+
+            this.ofOption.PartnerID = this.partnerID;
+            this.GetOfsByOption(this.ofOption);
         } else if (label === "Due for Gate") {
             this.ofDetailsDataSource = null;
             this.ofOption = new OfOption();
@@ -875,6 +885,13 @@ export class OrderFulFilmentCenterComponent implements OnInit {
             this.ofDetailsDataSource = null;
             this.ofOption = new OfOption();
             this.ofOption.Status = "DueForGRN";
+            this.ofOption.PartnerID = this.partnerID;
+            this.GetOfsByOption(this.ofOption);
+        }
+        else if (label === "Partial GRN") {
+            this.ofDetailsDataSource = null;
+            this.ofOption = new OfOption();
+            this.ofOption.Status = "PartialGRN";
             this.ofOption.PartnerID = this.partnerID;
             this.GetOfsByOption(this.ofOption);
         }
@@ -919,8 +936,8 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         });
     }
 
-    goToASNClicked(po: string,type:string): void {
-        this._router.navigate(["/asn"], { queryParams: { id: po,type:type } });
+    goToASNClicked(po: string, type: string): void {
+        this._router.navigate(["/asn"], { queryParams: { id: po, type: type } });
     }
 
     goToSubconClicked(po: string): void {
