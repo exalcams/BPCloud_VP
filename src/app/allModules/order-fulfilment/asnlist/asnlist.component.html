@@ -55,13 +55,13 @@
             <div fxFlex="28">
               <mat-form-field appearance="outline" style="width: 100%;">
                 <!-- <mat-icon class="mr-12" matPrefix>search</mat-icon> -->
-                <input type="text" matInput placeholder="Vendor" formControlName="VendorCode">
+                <input type="text" matInput placeholder="PO" formControlName="DocNumber">
               </mat-form-field>
             </div>
             <div fxFlex="28">
               <mat-form-field appearance="outline" style="width: 100%;">
                 <!-- <mat-icon class="mr-12" matPrefix>search</mat-icon> -->
-                <input type="text" matInput placeholder="Po" formControlName="DocNumber">
+                <input type="text" matInput placeholder="Status" formControlName="Status">
               </mat-form-field>
             </div>
             <div fxLayoutAlign="end" fxFlex>
@@ -80,7 +80,7 @@
         </mat-form-field>
         <div fxFlex fxLayoutAlign="end center">
           <mat-form-field appearance="outline" style="min-width: 100px;">
-            <mat-select [(ngModel)]="SelectValue">
+            <mat-select >
               <mat-option value="All">All</mat-option>
             </mat-select>
           </mat-form-field>
@@ -178,9 +178,10 @@
                 <mat-form-field style="min-width: 100px;" appearance="outline" class="TableSelect">
                   <!-- <mat-icon matPrefix svgIcon="thunderBlackIcon" height="20px"></mat-icon> -->
                   <mat-label>Actions</mat-label>
-                  <mat-select [(ngModel)]="TableSelectValue">
+                  <mat-select>
                     <mat-option value="Print ASN" (click)="Pdfdownload(element.ASNNumber)">	Print ASN</mat-option>
                     <mat-option value ="Get help" (click)="help(element.DocNumber)">Get Solved</mat-option>
+                    <mat-option value ="Gate Entry" (click)="GateEntry(element)" *ngIf="element.Status === 'Submitted'?true:false">Gate Entry</mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>

@@ -79,7 +79,8 @@ export class FactComponent implements OnInit {
     'AccountName',
     'BankName',
     'BankID',
-    // 'City',
+    'City',
+    'Branch',
     'Action'
   ];
 
@@ -158,7 +159,6 @@ export class FactComponent implements OnInit {
   Bank_ID = '';
   Bank_Name = '';
   bankIndex: any;
-  BankTemp: BPCFactBank;
   CerificateTemp: BPCCertificate;
   PerviousCertificate: number;
   fileStatus: boolean;
@@ -166,6 +166,8 @@ export class FactComponent implements OnInit {
   sub: any;
   id: number;
   renderdata: number;
+  SelectedBankrow: BPCFactBank;
+  SelectedBankRowIndex = null;
   constructor(
     private _fuseConfigService: FuseConfigService,
     private _masterService: MasterService,
@@ -293,7 +295,7 @@ export class FactComponent implements OnInit {
     // this.FactFormGroup.get('Company').disable();
     // this.FactFormGroup.get('LegalName').disable();
     // this.FactFormGroup.get('PinCode').disable();
-    this.FactFormGroup.disable();
+    this.FactFormGroup.enable();
   }
 
   InitializeKRAFormGroup(): void {
@@ -309,9 +311,10 @@ export class FactComponent implements OnInit {
       AccountNumber: ['', Validators.required],
       AccountName: ['', Validators.required],
       BankName: ['', Validators.required],
-      BankID: ['', Validators.required],
+      IFSC: ['', Validators.required],
+      City: ['', Validators.required],
+      Branch: ['', Validators.required],
     });
-    this.bankDetailsFormGroup.disable();
   }
 
   InitializeContactPersonFormGroup(): void {
@@ -321,7 +324,6 @@ export class FactComponent implements OnInit {
       ContactNumber: ['', [Validators.required, Validators.pattern('^(\\+91[\\-\\s]?)?[0]?(91)?[6789]\\d{9}$')]],
       Email: ['', [Validators.required, Validators.email]],
     });
-    this.ContactPersonFormGroup.disable();
   }
 
   InitializeAIACTFormGroup(): void {
@@ -752,55 +754,31 @@ export class FactComponent implements OnInit {
       this.ShowValidationErrors(this.KRAFormGroup);
     }
   }
-  AddInitialBankTable(): void {
-    if (this.BanksByPartnerID.length > 0) {
-      this.BankTemp = Object.assign({}, this.BanksByPartnerID[0]);
-    }
-    else {
-      this.BankTemp = new BPCFactBank();
-      this.BankTemp.Client = this.SelectedBPCFact.Client;
-      this.BankTemp.Company = this.SelectedBPCFact.Company;
-      this.BankTemp.Type = this.SelectedBPCFact.Type;
-      this.BankTemp.PatnerID = this.SelectedBPCFact.PatnerID;
-    }
-    this.Bankrender = true;
-    this.Bankadd = 0;
-    this.Bankadd = this.Bankadd + 1;
-    this.Temp = new BPCFactBank();
-    this.Temp.AccountNumber = '';
-    this.Temp.AccountName = '';
-    this.Temp.BankID = '';
-    this.Temp.BankName = '';
-    this.BanksByPartnerID.push(this.Temp);
 
-    this.bankDetailsDataSource = new MatTableDataSource(this.BanksByPartnerID);
-    this.Bankcount = this.bankDetailsDataSource.data.length;
-    // console.log("AddDataSource", this.bankDetailsDataSource.data);
-  }
-  Change(): void {
-    if (this.change) { // Enable
-      this.change = false;
-      this.FactFormGroup.enable();
-      this.bankDetailsFormGroup.enable();
-      this.CertificateFormGroup.enable();
-      this.snackBar.open('Change Enabled', '', {
-        duration: 2000,
-        horizontalPosition: "right",
-        verticalPosition: "bottom",
-      });
-    }
-    else { // Disbale
-      this.change = true;
-      this.FactFormGroup.disable();
-      this.bankDetailsFormGroup.disable();
-      this.CertificateFormGroup.disable();
-      this.snackBar.open('Change Disabled', '', {
-        duration: 2000,
-        horizontalPosition: "right",
-        verticalPosition: "bottom",
-      });
-    }
-  }
+  // Change(): void {
+  //   if (this.change) { // Enable
+  //     this.change = false;
+  //     this.FactFormGroup.enable();
+  //     this.bankDetailsFormGroup.enable();
+  //     this.CertificateFormGroup.enable();
+  //     this.snackBar.open('Change Enabled', '', {
+  //       duration: 2000,
+  //       horizontalPosition: "right",
+  //       verticalPosition: "bottom",
+  //     });
+  //   }
+  //   else { // Disbale
+  //     this.change = true;
+  //     this.FactFormGroup.disable();
+  //     this.bankDetailsFormGroup.disable();
+  //     this.CertificateFormGroup.disable();
+  //     this.snackBar.open('Change Disabled', '', {
+  //       duration: 2000,
+  //       horizontalPosition: "right",
+  //       verticalPosition: "bottom",
+  //     });
+  //   }
+  // }
   AddInitialCertiticateTable(): void {
     this.fileStatus = false;
     if (this.CertificatesByPartnerID.length > 0) {
@@ -838,7 +816,7 @@ export class FactComponent implements OnInit {
 
       if (this.BankSupport.length > 0) {
         for (let i = 0; i < this.BankSupport.length; i++) {
-          if (this.BankSupport[i].AccountNumber === this.BanksByPartnerID[index].AccountNumber) {
+          if (this.BankSupport[i].AccountNo === this.BanksByPartnerID[index].AccountNo) {
             this.BankSupport.splice(index, 1);
           }
         }
@@ -971,62 +949,53 @@ export class FactComponent implements OnInit {
 
   }
   AddBankToTable(): void {
-    // this.add.push(1);
     if (this.bankDetailsFormGroup.valid) {
-      this.Bankrender = false;
-      // BpcFactBank = this.BanksByPartnerID[0];
-      this.BankTemp.AccountNumber = this.bankDetailsFormGroup.get('AccountNumber').value;
-      this.BankTemp.AccountName = this.bankDetailsFormGroup.get('AccountName').value;
-      this.BankTemp.BankName = this.bankDetailsFormGroup.get('BankName').value;
-      this.BankTemp.BankID = this.bankDetailsFormGroup.get('BankID').value;
-      this.BankTemp.ID = this.Bankcount;
-      // this.BankTemp.CreatedOn = formatDate(new Date(), 'dd-MM-yyyy hh:mm:ss a', 'en-US', '+0530').toString();
-      if (!this.BanksByPartnerID || !this.BanksByPartnerID.length) {
-        this.BanksByPartnerID = [];
+      var BankTemp = new BPCFactBank();
+      BankTemp.AccountNo = this.bankDetailsFormGroup.get('AccountNumber').value;
+      BankTemp.Name = this.bankDetailsFormGroup.get('AccountName').value;
+      BankTemp.BankName = this.bankDetailsFormGroup.get('BankName').value;
+      BankTemp.BankID = this.bankDetailsFormGroup.get('IFSC').value;
+      BankTemp.City = this.bankDetailsFormGroup.get('City').value;
+      BankTemp.Branch = this.bankDetailsFormGroup.get('Branch').value;
+      if (this.SelectedBankRowIndex >= 0 && this.SelectedBankRowIndex !== null) {
+        if (this.BanksByPartnerID.length === 0) {
+          this.BanksByPartnerID.push(BankTemp);
+        }
+        else {
+          this.BanksByPartnerID[this.SelectedBankRowIndex].AccountNo = this.bankDetailsFormGroup.get('AccountNumber').value;
+          this.BanksByPartnerID[this.SelectedBankRowIndex].Name = this.bankDetailsFormGroup.get('AccountName').value;
+          this.BanksByPartnerID[this.SelectedBankRowIndex].BankID = this.bankDetailsFormGroup.get('IFSC').value;
+          this.BanksByPartnerID[this.SelectedBankRowIndex].BankName = this.bankDetailsFormGroup.get('BankName').value;
+          this.BanksByPartnerID[this.SelectedBankRowIndex].Branch = this.bankDetailsFormGroup.get('Branch').value;
+          this.BanksByPartnerID[this.SelectedBankRowIndex].City = this.bankDetailsFormGroup.get('City').value;
+        }
       }
-      this.BanksByPartnerID.pop();
-      this.BanksByPartnerID.push(this.BankTemp);
-      this.BankSupport.push(this.BankTemp);
+      else {
+        if (!this.BanksByPartnerID || !this.BanksByPartnerID.length) {
+          this.BanksByPartnerID = [];
+        }
+        this.BanksByPartnerID.push(BankTemp);
+        this.BankSupport.push(BankTemp);
+        this.bankDetailsDataSource = new MatTableDataSource(this.BanksByPartnerID);
+        this.ClearBankDetailsFormGroup();
+      }
       this.bankDetailsDataSource = new MatTableDataSource(this.BanksByPartnerID);
       this.ClearBankDetailsFormGroup();
-      this.Bankadd = 0;
-      this.Bankcount = this.bankDetailsDataSource.data.length;
-    } else {
+    }
+    else {
       this.ShowValidationErrors(this.bankDetailsFormGroup);
     }
   }
-  changeBankData(data, index, name): void {
-    // console.log("ChangedData", data, "index", index, "name", name);
-    // console.log(this.BanksByPartnerID[index]);
+  SelectBankTableRow(row: BPCFactBank, index: any) {
+    this.SelectedBankrow = row;
+    this.SelectedBankRowIndex = index;
 
-    if (name === "BankID") {
-      this.BanksByPartnerID[index].BankID = data;
-    }
-    if (name === "BankName") {
-      this.BanksByPartnerID[index].BankName = data;
-    }
-    if (name === "AccountNumber") {
-      this.BanksByPartnerID[index].AccountNumber = data;
-    }
-    if (name === "AccountName") {
-      this.BanksByPartnerID[index].AccountName = data;
-    }
-    let count = 0;
-    if (this.BankSupport.length > 0) {
-      for (let i = 0; i < this.BankSupport.length; i++) {
-        if (this.BanksByPartnerID[index].AccountNumber !== this.BankSupport[i].AccountNumber) {
-          count++;
-        }
-        if (count === this.BankSupport.length) {
-          this.BankSupport.push(this.BanksByPartnerID[index]);
-        }
-      }
-    }
-    else {
-      this.BankSupport.push(this.BanksByPartnerID[index]);
-    }
-    this.bankDetailsDataSource = new MatTableDataSource(this.BanksByPartnerID);
-    console.log("AfterChange", this.BankSupport);
+    this.bankDetailsFormGroup.get('AccountNumber').patchValue(row.AccountNo);
+    this.bankDetailsFormGroup.get('AccountName').patchValue(row.Name);
+    this.bankDetailsFormGroup.get('IFSC').patchValue(row.BankID);
+    this.bankDetailsFormGroup.get('BankName').patchValue(row.BankName);
+    this.bankDetailsFormGroup.get('Branch').patchValue(row.Branch);
+    this.bankDetailsFormGroup.get('City').patchValue(row.City);
   }
   changeCertificateData(data, index, name): void {
     // console.log("ChangedData", data, "index", index, "name", name);
@@ -1549,7 +1518,7 @@ export class FactComponent implements OnInit {
             },
             (err) => {
               this.IsProgressBarVisibile = false;
-              console.error("error in upload",err);
+              console.error("error in upload", err);
               this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
             });
         }

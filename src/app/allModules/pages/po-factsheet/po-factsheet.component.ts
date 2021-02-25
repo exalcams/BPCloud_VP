@@ -260,6 +260,7 @@ export class PoFactsheetComponent implements OnInit {
                     this.orderFulfilmentDetails = <OrderFulfilmentDetails>data;
                     this.poStatus = this.orderFulfilmentDetails.Status;
                     this.asn = this.orderFulfilmentDetails.aSNDetails;
+                    console.log("asn",this.asn);
                     this.items = this.orderFulfilmentDetails.itemDetails;
                     if (this.items.length > 0) {
                         this.GetItemPlantDetails(this.items[0].PlantCode);
@@ -326,6 +327,16 @@ export class PoFactsheetComponent implements OnInit {
     viewOfAttachmentClicked(data: DocumentDetails): void {
         // const attachments = this.ofAttachments.filter(x => x.AttachmentID.toString() === element.RefDoc);
         this.GetOfAttachmentsByPartnerIDAndDocNumber(data);
+    }
+    GethighlightColor(element:GRNDetails){
+        if(element.Qty <0)
+        {
+            return {
+                'background-color': 'red',
+                'color':'white',
+                'padding':'5px'
+            };
+        }
     }
     GetBPCHeaderDocType() {
         this.route.queryParams.subscribe(params => {

@@ -342,22 +342,18 @@
               </div>
             </div>
 
+            <!-- BankTable -->
             <div fxFlex fxLayout="column" class="mt-24">
               <div style="margin-left: 7px" fxLayout="row" fxLayoutAlign="space-between center">
                 <div class="SectionTitle">
                   <strong>Bank Table</strong>
                   <div [ngClass]="BGClassName?.layout?.navbar?.secondaryBackground" class="borderbottom"></div>
                 </div>
-                <div *ngIf="!change">
-                  <button (click)="AddInitialBankTable()" [disabled]="Bankrender" [ngStyle]="getOpacityBankAdd()">
-                    <img src="./assets/images/AddBtn.png" class="AddImg">
-                  </button>
-                </div>
               </div>
               <div class="mt-8">
-                <!-- <form autocomplete="off" fxLayout="column" name="form" novalidate [formGroup]="bankDetailsFormGroup">
+                <form autocomplete="off" fxLayout="column" name="form" novalidate [formGroup]="bankDetailsFormGroup">
                   <div fxFlex fxLayout="row">
-                    <div fxFlex="10">
+                    <div fxFlex="15">
                       <mat-form-field class="pl-20 pr-16" style="width: 100%;">
                         <input matInput placeholder="AccountName" formControlName="AccountName" #AccountName
                           (keyup.enter)="keytab('AccountNumber')">
@@ -389,163 +385,121 @@
                     </div>
                     <div fxFlex="15">
                       <mat-form-field class="pr-16" style="width: 100%;">
-                        <input matInput placeholder="BankID" formControlName="BankID" #BankID
+                        <input matInput placeholder="IFSC" formControlName="IFSC" 
                           (keydown.enter)="BankEnterKeyDown()">
                         <mat-error
-                          *ngIf="bankDetailsFormGroup.get('BankID').touched && bankDetailsFormGroup.get('BankID').hasError('required')">
-                          BankID is required
+                          *ngIf="bankDetailsFormGroup.get('IFSC').touched && bankDetailsFormGroup.get('IFSC').hasError('required')">
+                          IFSC is required
                         </mat-error>
                       </mat-form-field>
                     </div>
-                    <div fxFlex="10" fxLayoutAlign="start center">
-                      <img class="addBlueIcon" src="assets/images/addBlue.png" (click)="fileInput2.click()">
-                      <span class="attachClass" (click)="fileInput2.click()">
-                        Add Attachment
-                      </span>
-                      <input hidden type="file" #fileInput2 id="file1" (change)="handleFileInput($event)" />
+                    <div fxFlex="15">
+                      <mat-form-field class="pr-16" style="width: 100%;">
+                        <input matInput placeholder="City" formControlName="City" 
+                          (keydown.enter)="BankEnterKeyDown()">
+                        <mat-error
+                          *ngIf="bankDetailsFormGroup.get('City').touched && bankDetailsFormGroup.get('City').hasError('required')">
+                          City is required
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div fxFlex="15">
+                      <mat-form-field class="pr-16" style="width: 100%;">
+                        <input matInput placeholder="Branch" formControlName="Branch" 
+                          (keydown.enter)="BankEnterKeyDown()">
+                        <mat-error
+                          *ngIf="bankDetailsFormGroup.get('Branch').touched && bankDetailsFormGroup.get('Branch').hasError('required')">
+                          Branch is required
+                        </mat-error>
+                      </mat-form-field>
                     </div>
                     <div fxFlex="5" fxLayoutAlign="center">
                       <img class="addIcon" src="assets/images/logos/add-button.png" (click)="AddBankToTable()">
                     </div>
                   </div>
-                </form> -->
+                </form>
               </div>
               <div style="margin-left: 8px;margin-top: 10px;">
                 <div style="overflow-x:auto;">
-                  <form autocomplete="off" fxLayout="column" name="form" novalidate [formGroup]="bankDetailsFormGroup">
-                    <table *ngIf="BanksByPartnerID?.length" class="table" mat-table [dataSource]="bankDetailsDataSource"
-                      matSort id="BankTable">
-
-                      <ng-container matColumnDef="AccountName">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"
-                          [ngClass]="BGClassName?.layout?.toolbar?.background"> Account Name </th>
-                        <td mat-cell *matCellDef="let element;let i = index " class="tableLeftBorder"
-                          style="width: 10%;">
-                          <span *ngIf="i < Bankcount-Bankadd">
-                            <input type="text" [disabled]="change" class="Input" value="{{element.AccountName}}"
-                              name="AccountName" #input (change)="changeBankData(input.value,i,input.name)">
-                          </span>
-                          <!-- <mat-form-field class="pl-20 pr-16 underline" style="width: 100%;" *ngIf="!render"> -->
-                          <span *ngIf="i==Bankcount-Bankadd">
-                            <input matInput type="text" placeholder="AccountName" formControlName="AccountName"
-                              (keyup.enter)="keytab('AccountNumber')" (mouseenter)="AddBankToTable()">
-                            <mat-error
-                              *ngIf="bankDetailsFormGroup.get('AccountName').touched && bankDetailsFormGroup.get('AccountName').hasError('required')">
-                              AccountName is required
-                            </mat-error>
-                          </span>
-                          <!-- </mat-form-field> -->
-                        </td>
-                      </ng-container>
-                      <ng-container matColumnDef="AccountNumber">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"
-                          [ngClass]="BGClassName?.layout?.toolbar?.background"> Account Number </th>
-                        <td mat-cell *matCellDef="let element;let i = index" style="width: 15%;">
-                          <!-- <span *ngIf="i <= Bankcount ">{{element.AccountNumber}} </span> -->
-                          <span *ngIf="i < Bankcount-Bankadd">
-                            <input type="text" [disabled]="change" class="Input" value="{{element.AccountNumber}}"
-                              name="AccountNumber" #input (change)="changeBankData(input.value,i,input.name)">
-                          </span>
-                          <span *ngIf="i==Bankcount-Bankadd">
-                            <input matInput type="text" placeholder="Acc No" formControlName="AccountNumber"
-                              (keyup.enter)="keytab('accHolderName')" (mouseenter)="AddBankToTable()">
-                            <mat-error
-                              *ngIf="bankDetailsFormGroup.get('AccountNumber').touched && bankDetailsFormGroup.get('AccountNumber').hasError('required')">
-                              Account No is required
-                            </mat-error>
-                          </span>
-                        </td>
-                      </ng-container>
-
-                      <!-- <ng-container matColumnDef="Name">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Acc Holders name </th>
-                      <td mat-cell *matCellDef="let element" style="width: 20%;"> {{element.Name}} </td>
-                    </ng-container> -->
-
-
-                      <ng-container matColumnDef="BankName">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"
-                          [ngClass]="BGClassName?.layout?.toolbar?.background"> Bank Name </th>
-                        <td mat-cell *matCellDef="let element;let i = index" style="width: 15%;">
-                          <!-- <span *ngIf="i <= Bankcount ">{{element.BankName}} </span> -->
-                          <span *ngIf="i < Bankcount-Bankadd">
-                            <input type="text" [disabled]="change" class="Input" value="{{element.BankName}}"
-                              name="BankName" #input (change)="changeBankData(input.value,i,input.name)">
-                          </span>
-                          <span *ngIf="i==Bankcount-Bankadd">
-                            <span>{{bankIndex}}</span>
-                            <input matInput type="text" placeholder="Bank Name" formControlName="BankName"
-                              (mouseenter)="AddBankToTable()">
-                            <mat-error
-                              *ngIf="bankDetailsFormGroup.get('BankName').touched && bankDetailsFormGroup.get('BankName').hasError('required')">
-                              Bank Name is required
-                            </mat-error>
-                          </span>
-                        </td>
-                      </ng-container>
-
-
-                      <!-- <ng-container matColumnDef="City">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> City </th>
-                      <td mat-cell *matCellDef="let element" style="width: 10%;"> {{element.City}} </td>
-                    </ng-container> -->
-
-                      <ng-container matColumnDef="BankID">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"
-                          [ngClass]="BGClassName?.layout?.toolbar?.background"> Bank ID </th>
-                        <td mat-cell *matCellDef="let element;let i = index" style="width: 15%;">
-                          <!-- <span *ngIf="i <= Bankcount ">{{element.BankID}} </span> -->
-                          <span *ngIf="i < Bankcount-Bankadd">
-                            <input type="text" [disabled]="change" class="Input" name="BankID"
-                              value="{{element.BankID}}" #input (change)="changeBankData(input.value,i,input.name)">
-                          </span>
-                          <span *ngIf="i==Bankcount-Bankadd">
-                            <input matInput type="text" placeholder="BankID" formControlName="BankID"
-                              (keydown.enter)="BankEnterKeyDown()" (mouseenter)="AddBankToTable()">
-                            <mat-error
-                              *ngIf="bankDetailsFormGroup.get('BankID').touched && bankDetailsFormGroup.get('BankID').hasError('required')">
-                              BankID is required
-                            </mat-error>
-                          </span>
-                        </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="Action">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 5%;"
-                          [ngClass]="BGClassName?.layout?.toolbar?.background">Actions</th>
-                        <td mat-cell *matCellDef="let element;let i = index" style="width: 5%;">
-                          <!-- <button mat-button>Edit</button> -->
-                          <button (click)="clearBankTable(i)">
-                            <img src="./assets/images/delete.png" class="deleteImg">
-                          </button>
-                        </td>
-                      </ng-container>
-                      <!-- <ng-container matColumnDef="Attachment">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> Attachment </th>
-                      <td mat-cell *matCellDef="let element" style="width: 10%;">
-                        <mat-icon *ngIf="element.AttachmentName">attach_file</mat-icon>
+                  <table *ngIf="BanksByPartnerID?.length" class="table" mat-table [dataSource]="bankDetailsDataSource"
+                    matSort id="BankTable">
+                    <ng-container matColumnDef="AccountName">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"
+                        [ngClass]="BGClassName?.layout?.toolbar?.background"> Account Name </th>
+                      <td mat-cell *matCellDef="let element;let i = index " class="tableLeftBorder" style="width: 10%;">
+                        <span>
+                          {{element.Name}}
+                        </span>
                       </td>
-                      </ng-container> -->
-
-                      <!-- <ng-container matColumnDef="Action">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header> </th>
-                      <td mat-cell *matCellDef="let element" style="text-align: center;">
-                        <img class="removeIcon" src="assets/images/remove-button.png"
-                          (click)="RemoveBankFromTable(element)">
+                    </ng-container>
+                    <ng-container matColumnDef="AccountNumber">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"
+                        [ngClass]="BGClassName?.layout?.toolbar?.background"> Account Number </th>
+                      <td mat-cell *matCellDef="let element;let i = index" style="width: 15%;">
+                        <!-- <span *ngIf="i <= Bankcount ">{{element.AccountNumber}} </span> -->
+                        <span>
+                          {{element.AccountNo}}
+                        </span>
                       </td>
-                      </ng-container> -->
+                    </ng-container>
+                    <ng-container matColumnDef="BankName">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"
+                        [ngClass]="BGClassName?.layout?.toolbar?.background"> Bank Name </th>
+                      <td mat-cell *matCellDef="let element;let i = index" style="width: 15%;">
+                        <!-- <span *ngIf="i <= Bankcount ">{{element.BankName}} </span> -->
+                        <span>{{element.BankName}}
+                        </span>
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="BankID">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"
+                        [ngClass]="BGClassName?.layout?.toolbar?.background"> Bank ID </th>
+                      <td mat-cell *matCellDef="let element;let i = index" style="width: 15%;">
+                        <!-- <span *ngIf="i <= Bankcount ">{{element.BankID}} </span> -->
+                        <span>{{element.BankID}}
+                        </span>
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="City">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"
+                        [ngClass]="BGClassName?.layout?.toolbar?.background"> City </th>
+                      <td mat-cell *matCellDef="let element;let i = index" style="width: 15%;">
+                        <!-- <span *ngIf="i <= Bankcount ">{{element.BankID}} </span> -->
+                        <span>{{element.City}}
+                        </span>
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="Branch">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"
+                        [ngClass]="BGClassName?.layout?.toolbar?.background"> Branch </th>
+                      <td mat-cell *matCellDef="let element;let i = index" style="width: 15%;">
+                        <!-- <span *ngIf="i <= Bankcount ">{{element.BankID}} </span> -->
+                        <span>{{element.Branch}}
+                        </span>
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="Action">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 5%;"
+                        [ngClass]="BGClassName?.layout?.toolbar?.background">Actions</th>
+                      <td mat-cell *matCellDef="let element;let i = index" style="width: 5%;">
+                        <!-- <button mat-button>Edit</button> -->
+                        <button (click)="clearBankTable(i)">
+                          <img src="./assets/images/delete.png" class="deleteImg">
+                        </button>
+                      </td>
+                    </ng-container>
+                    
 
-                      <tr mat-header-row *matHeaderRowDef="bankDetailsDisplayedColumns;sticky: true"></tr>
-                      <tr mat-row *matRowDef="let row; columns: bankDetailsDisplayedColumns;"
-                        (click)="DeleteBankTableRow(row)">
-                      </tr>
-                    </table>
-                    <mat-toolbar *ngIf="BanksByPartnerID?.length === 0">
-                      <span class="example-spacer"></span>
-                      <span>No Records Found</span>
-                      <span class="example-spacer"></span>
-                    </mat-toolbar>
-                  </form>
+                    <tr mat-header-row *matHeaderRowDef="bankDetailsDisplayedColumns;sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: bankDetailsDisplayedColumns;let i=index"
+                      (click)="SelectBankTableRow(row,i)">
+                    </tr>
+                  </table>
+                  <mat-toolbar *ngIf="BanksByPartnerID?.length === 0">
+                    <span class="example-spacer"></span>
+                    <span>No Records Found</span>
+                    <span class="example-spacer"></span>
+                  </mat-toolbar>
                 </div>
                 <!-- <div flex *ngIf="BanksByPartnerID?.length">
                   <mat-paginator [pageSizeOptions]="[10, 20, 30, 50, 75, 100]" showFirstLastButtons>

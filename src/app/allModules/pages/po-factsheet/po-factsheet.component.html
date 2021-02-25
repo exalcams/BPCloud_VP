@@ -625,7 +625,7 @@
 
             <ng-container matColumnDef="Qty">
               <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: right">Qty</th>
-              <td mat-cell style="text-align: right" *matCellDef="let element"> {{element.Qty}} </td>
+              <td mat-cell style="text-align: right" *matCellDef="let element"><span [ngStyle]="GethighlightColor(element)"> {{element.Qty}} </span></td>
             </ng-container>
 
             <ng-container matColumnDef="DeliveryNote">

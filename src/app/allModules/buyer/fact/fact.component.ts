@@ -549,8 +549,8 @@ export class FactComponent implements OnInit {
   AddBankToTable(): void {
     if (this.bankDetailsFormGroup.valid) {
       const bPCFactBank = new BPCFactBank();
-      bPCFactBank.AccountNumber = this.bankDetailsFormGroup.get('AccountNumber').value;
-      bPCFactBank.AccountName = this.bankDetailsFormGroup.get('AccountName').value;
+      bPCFactBank.AccountNo = this.bankDetailsFormGroup.get('AccountNumber').value;
+      bPCFactBank.Name = this.bankDetailsFormGroup.get('AccountName').value;
       bPCFactBank.BankName = this.bankDetailsFormGroup.get('BankName').value;
       bPCFactBank.BankID = this.bankDetailsFormGroup.get('BankID').value;
       if (!this.BanksByPartnerID || !this.BanksByPartnerID.length) {
