@@ -105,6 +105,7 @@ export class BPCCertificateAttachment extends CommonClass {
     patnerID: string;
     CertificateType: string;
     CertificateName: string;
+    // filename:string;
     file: File;
 }
 export class BPCFactView extends CommonClass {

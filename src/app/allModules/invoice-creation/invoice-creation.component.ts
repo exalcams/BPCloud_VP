@@ -489,8 +489,8 @@ export class InvoiceCreationComponent implements OnInit {
       MaterialText: [flipItem.MaterialText],
       // DeliveryDate: [flipItem.DeliveryDate],
       HSN: [flipItem.HSN],
-      OrderedQty: [flipItem.OrderedQty],
-      OpenQty: [flipItem.OpenQty],
+      // OrderedQty: [flipItem.OrderedQty],
+      // OpenQty: [flipItem.OpenQty],
       Price: [flipItem.Price, Validators.required],
       InvoiceQty: [flipItem.InvoiceQty, Validators.required],
       Tax: [flipItem.Tax],
@@ -587,8 +587,8 @@ export class InvoiceCreationComponent implements OnInit {
       item.MaterialText = x.get('MaterialText').value;
       // item.DeliveryDate = x.get('DeliveryDate').value;
       item.HSN = x.get('HSN').value;
-      item.OrderedQty = x.get('OrderedQty').value;
-      item.OpenQty = x.get('OpenQty').value;
+      // item.OrderedQty = x.get('OrderedQty').value;
+      // item.OpenQty = x.get('OpenQty').value;
       item.InvoiceQty = x.get('InvoiceQty').value;
       item.Price = x.get('Price').value;
       item.Tax = x.get('Tax').value;

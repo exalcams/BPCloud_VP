@@ -2,6 +2,7 @@ import { CommonClass } from './common';
 export class BPCFLIPHeader extends CommonClass {
     ID: number;
     FLIPID: string;
+    GSTIN:string;
     InvoiceNumber: number;
     InvoiceDate: Date;
     InvoiceCurrency: string;
@@ -33,6 +34,7 @@ export class BPCFLIPCost extends CommonClass {
 export class BPCFLIPHeaderView extends CommonClass {
     ID: number;
     FLIPID: string;
+    GSTIN:string;
     InvoiceNumber: number;
     InvoiceDate: Date;
     InvoiceCurrency: string;
@@ -67,10 +69,10 @@ export class BPCFLIPItem extends CommonClass {
     Material: string;
     MaterialText: string;
     DeliveryDate?: Date;
-    OrderedQty: number;
+    // OrderedQty: number;
     UOM: string;
     HSN: string;
-    OpenQty: number;
+    // OpenQty: number;
     InvoiceQty: number; // OpenQty 30 means [20 InvoiceQty(EnterFromHTML)*Price(EnterFromHTML)*Tax(from PO Item)]
     Price: number;
     Tax: number;
