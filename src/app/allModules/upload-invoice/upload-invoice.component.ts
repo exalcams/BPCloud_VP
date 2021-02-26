@@ -431,7 +431,7 @@ export class UploadInvoiceComponent implements OnInit {
 
   initializeFlipFormGroup(): void {
     this.flipFormGroup = this._formBuilder.group({
-      DocumentNumber: ['', Validators.required],
+      DocumentNumber: [''],
       GSTIN: ['', [Validators.required,Validators.pattern('^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$')]],
       InvoiceNumber: ['', [Validators.minLength(1), Validators.maxLength(16)]],
       InvoiceDate: ['', Validators.required],

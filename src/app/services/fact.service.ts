@@ -82,7 +82,6 @@ export class FactService {
       .pipe(catchError(this.errorHandler));
   }
   UpdateFactSupportDataToMasterData(partnerId: string): Observable<any> {
-    console.log("this.UpdateFactSupportDataToMasterData Api", this.UpdateFactSupportDataToMasterData);
     return this._httpClient.post<any>(`${this.baseAddress}factapi/Fact/UpdateFactSupportDataToMasterData?partnerId=${partnerId}`,
       {
         headers: new HttpHeaders({
