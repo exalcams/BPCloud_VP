@@ -552,7 +552,6 @@ export class FactComponent implements OnInit {
     this.GetBanksByPartnerID();
     this.GetContactPersonsByPartnerID();
     this.GetAIACTsByPartnerID();
-
   }
 
   GetKRAsByPartnerID(): void {
@@ -1468,25 +1467,21 @@ export class FactComponent implements OnInit {
     
     this._FactService.UpdateFactSupport(this.SelectedBPCFactSupport).subscribe(
       (data) => {
-        console.log(data);
-        // for (let i = 0; i < this.CertificateFileList.length; i++) {
-        //   this._FactService.UploadOfAttachment(this.CertificateFileList[i]).subscribe(
-        //     (data2) => {
-        //       if (data2) {
-        //         console.log("Update Success");
-        //         this.CreateSupportTicket();
-        //         this.IsProgressBarVisibile = false;
-        //       }
-        //     },
-        //     (err) => {
-        //       this.IsProgressBarVisibile = false;
-        //       console.error("error in upload", err);
-        //       this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-        //     });
-        // }
+          this.CertificateFileList.forEach(file => {
+            this._FactService.UploadOfAttachment(file).subscribe(
+              (data2) => {
+                if (data2) {
+                  this.IsProgressBarVisibile = false;
+                }
+              },
+              (err) => {
+                this.IsProgressBarVisibile = false;
+                this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+              });
+          });
+          this.CreateSupportTicket();
         this.CertificateFileList = [];
         this.IsProgressBarVisibile = false;
-
       },
       (err) => {
         this.IsProgressBarVisibile = false;
@@ -1525,6 +1520,7 @@ export class FactComponent implements OnInit {
     SupportTicketView.Type = this.SelectedBPCFactSupport.BPCFact.Type;
     SupportTicketView.PatnerID = this.SelectedBPCFactSupport.BPCFact.PatnerID;
     SupportTicketView.ReasonCode = '1236';
+    SupportTicketView.Plant = '1000';
     SupportTicketView.Reason = 'Master Data Change';
     SupportTicketView.DocumentRefNo = this.SelectedBPCFactSupport.BPCFact.PatnerID;
     SupportTicketView.CreatedBy = this.CurrentUserID.toString();
@@ -1555,7 +1551,7 @@ export class FactComponent implements OnInit {
   //     this.FilteredUsers.push(user);
   //   }
   // }
-  CreateSupportTicket(): void {
+   CreateSupportTicket(): void {
     this.IsProgressBarVisibile = true;
     const SupportTicketView = this.GetSupportTicket();
     this._supportDeskService.CreateSupportTicket(SupportTicketView).subscribe(
@@ -1563,9 +1559,9 @@ export class FactComponent implements OnInit {
         this.ResetControl();
         console.log("Support Ticket Created");
         this.notificationSnackBarComponent.openSnackBar('Support Ticket Created successfully ', SnackBarStatus.success);
-        this.change = true;
+        // this.change = true;
         this.IsProgressBarVisibile = false;
-        this.FactFormGroup.disable();
+        // this.FactFormGroup.disable();
         this.GetFactByPartnerIDAndType();
       },
       (err) => {

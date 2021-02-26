@@ -137,14 +137,15 @@ export class SupportChatComponent implements OnInit {
           this.SupportDetails = data as SupportDetails;
 
           this.SupportHeader = this.SupportDetails.supportHeader;
-          // if (this.SupportHeader.ReasonCode === "1236" && this.SupportHeader.Status === "Closed") {
-          //   console.log("Success", this.SupportHeader.PatnerID);
-          //   this._FactService.UpdateFactSupportDataToMasterData(this.SupportHeader.PatnerID).subscribe(
-          //     (msg) => {
-          //       console.log("Success", msg);
-          //     }
-          //   );
-          // }
+          console.log("GetSupportDetailsBySupportID",this.SupportHeader);
+          if (this.SupportHeader.ReasonCode === "1236" && this.SupportHeader.Status === "Closed") {
+            console.log("Success", this.SupportHeader.PatnerID);
+            this._FactService.UpdateFactSupportDataToMasterData(this.SupportHeader.PatnerID).subscribe(
+              (msg) => {
+                console.log("Success", msg);
+              }
+            );
+          }
           this.Status = this.SupportHeader.Status;
           this.SupportLogs = this.SupportDetails.supportLogs;
           this.SupportAttachments = this.SupportDetails.supportAttachments;
