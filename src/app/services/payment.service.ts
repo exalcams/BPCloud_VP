@@ -58,8 +58,8 @@ export class PaymentService {
       (`${this.baseAddress}poapi/Payment/FilterTDSByPartnerID?PartnerID=${PartnerID}&FromDate=${FromDate}&ToDate=${ToDate}`)
       .pipe(catchError(this.errorHandler));
   }
-  AcceptBC(BPCPayAccountStatement: BPCPayAccountStatement[]): Observable<any> {
-    return this._httpClient.post(`${this.baseAddress}poapi/Payment/AcceptBC`, BPCPayAccountStatement, {
+  AcceptBC(bPCPayAccountStatement: BPCPayAccountStatement[]): Observable<any> {
+    return this._httpClient.post(`${this.baseAddress}poapi/Payment/AcceptBC`, bPCPayAccountStatement, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })
