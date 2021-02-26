@@ -431,8 +431,8 @@ export class UploadInvoiceComponent implements OnInit {
 
   initializeFlipFormGroup(): void {
     this.flipFormGroup = this._formBuilder.group({
-      DocumentNumber: ['', Validators.required],
-      GSTIN: ['', [Validators.required,Validators.pattern('^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$')]],
+      DocumentNumber: [''],
+      GSTIN: ['', [Validators.required, Validators.pattern('^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$')]],
       InvoiceNumber: ['', [Validators.minLength(1), Validators.maxLength(16)]],
       InvoiceDate: ['', Validators.required],
       InvoiceAmount: ['', [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,2})?$')]],
@@ -660,7 +660,7 @@ export class UploadInvoiceComponent implements OnInit {
       this.getFlipItemFormValues();
       this.setActionToOpenConfirmation();
     } else {
-      this.notificationSnackBarComponent.openSnackBar('Please Fill All Requried Fields',SnackBarStatus.danger);
+      this.notificationSnackBarComponent.openSnackBar('Please Fill All Requried Fields', SnackBarStatus.danger);
       this.showValidationErrors(this.flipFormGroup);
     }
   }
