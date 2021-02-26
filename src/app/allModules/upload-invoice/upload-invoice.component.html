@@ -57,12 +57,24 @@
               <form autocomplete="off" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="10px" fxFlex="1 0 auto"
                 name="form" novalidate [formGroup]="flipFormGroup">
                 <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="50px">
-                  <div fxFlex="33">
+                  <div fxFlex="33" style="display: none;">
                     <mat-form-field style="width: 100%;">
                       <input matInput placeholder="Doc Number" formControlName="DocumentNumber">
                       <mat-error
                         *ngIf="flipFormGroup.get('DocumentNumber').touched && flipFormGroup.get('DocumentNumber').hasError('required')">
                         Doc Number is required
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div fxFlex="33">
+                    <mat-form-field style="width: 100%;">
+                      <input matInput placeholder="GSTIN Number" formControlName="GSTIN">
+                      <mat-error
+                        *ngIf="flipFormGroup.get('GSTIN').touched && flipFormGroup.get('GSTIN').hasError('required')">
+                        GSTIN Number is required
+                      </mat-error>
+                      <mat-error *ngIf="flipFormGroup.get('GSTIN').hasError('pattern')">
+                        Please Enter Valid GST Number
                       </mat-error>
                     </mat-form-field>
                   </div>
@@ -407,7 +419,7 @@
                         </mat-error>
                       </mat-form-field>
                     </div>
-                    <div fxFlex="20">
+                    <!-- <div fxFlex="20">
                       <mat-form-field style="width: 100%;">
                         <input matInput placeholder="Ordered Qty" formControlName="OrderedQty">
                         <mat-error
@@ -424,7 +436,7 @@
                           OpenQty is required
                         </mat-error>
                       </mat-form-field>
-                    </div>
+                    </div> -->
                     <div fxFlex="20">
                       <mat-form-field style="width: 100%;">
                         <input matInput placeholder="Invoice Qty" formControlName="InvoiceQty">
@@ -461,7 +473,7 @@
                         </mat-error>
                       </mat-form-field>
                     </div>
-                    <div fxFlex="4" fxLayoutAlign="end">
+                    <div fxFlex="20" fxLayoutAlign="end">
                       <img class="addIcon" src="assets/images/logos/add-button.png" (click)="addTo2ndTable()">
                     </div>
                   </form>
@@ -494,19 +506,19 @@
                         {{element.HSN}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="OrderedQty">
+                    <!-- <ng-container matColumnDef="OrderedQty">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header
                         [ngClass]="BGClassName?.layout?.toolbar?.background"> OrderedQty </th>
                       <td mat-cell *matCellDef="let element">
                         {{element.OrderedQty}} </td>
-                    </ng-container>
+                    </ng-container> -->
 
-                    <ng-container matColumnDef="OpenQty">
+                    <!-- <ng-container matColumnDef="OpenQty">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header
                         [ngClass]="BGClassName?.layout?.toolbar?.background"> OpenQty </th>
                       <td mat-cell *matCellDef="let element">
                         {{element.OpenQty}} </td>
-                    </ng-container>
+                    </ng-container> -->
 
                     <ng-container matColumnDef="InvoiceQty">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header

@@ -62,8 +62,8 @@ export class UploadInvoiceComponent implements OnInit {
     'MaterialText',
     // 'DeliveryDate',
     'HSN',
-    'OrderedQty',
-    'OpenQty',
+    // 'OrderedQty',
+    // 'OpenQty',
     'InvoiceQty',
     'Price',
     'Tax',
@@ -420,8 +420,8 @@ export class UploadInvoiceComponent implements OnInit {
       Item: ['', Validators.required],
       MaterialText: ['', Validators.required],
       HSN: ['', Validators.required],
-      OrderedQty: ['', [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})')]],
-      OpenQty: ['', [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})')]],
+      // OrderedQty: ['', [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})')]],
+      // OpenQty: ['', [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})')]],
       InvoiceQty: ['', [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})')]],
       Price: ['', [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})')]],
       Tax: ['', [Validators.required, Validators.pattern('^([1-9][0-9]{0,9})')]],
@@ -432,6 +432,7 @@ export class UploadInvoiceComponent implements OnInit {
   initializeFlipFormGroup(): void {
     this.flipFormGroup = this._formBuilder.group({
       DocumentNumber: ['', Validators.required],
+      GSTIN: ['', [Validators.required,Validators.pattern('^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$')]],
       InvoiceNumber: ['', [Validators.minLength(1), Validators.maxLength(16)]],
       InvoiceDate: ['', Validators.required],
       InvoiceAmount: ['', [Validators.pattern('^([1-9][0-9]{0,9})([.][0-9]{1,2})?$')]],
@@ -506,6 +507,7 @@ export class UploadInvoiceComponent implements OnInit {
 
   setFlipFormValues(): void {
     this.flipFormGroup.get('DocumentNumber').patchValue(this.selectedFlip.DocNumber);
+    this.flipFormGroup.get('GSTIN').patchValue(this.selectedFlip.GSTIN);
     this.flipFormGroup.get('InvoiceNumber').patchValue(this.selectedFlip.InvoiceNumber);
     this.flipFormGroup.get('InvoiceDate').patchValue(this.selectedFlip.InvoiceDate);
     this.flipFormGroup.get('InvoiceCurrency').patchValue(this.selectedFlip.InvoiceCurrency);
@@ -516,6 +518,8 @@ export class UploadInvoiceComponent implements OnInit {
 
   getFlipFormValues(): void {
     this.selectedFlip.DocNumber = this.selectedFlipView.DocNumber = this.flipFormGroup.get('DocumentNumber').value;
+    this.selectedFlip.GSTIN = this.selectedFlipView.GSTIN = this.flipFormGroup.get('GSTIN').value;
+
     this.selectedFlip.InvoiceNumber = this.selectedFlipView.InvoiceNumber = this.flipFormGroup.get('InvoiceNumber').value;
     this.selectedFlip.InvoiceDate = this.selectedFlipView.InvoiceDate = this.flipFormGroup.get('InvoiceDate').value;
     this.selectedFlip.InvoiceCurrency = this.selectedFlipView.InvoiceCurrency = this.flipFormGroup.get('InvoiceCurrency').value;
@@ -656,6 +660,7 @@ export class UploadInvoiceComponent implements OnInit {
       this.getFlipItemFormValues();
       this.setActionToOpenConfirmation();
     } else {
+      this.notificationSnackBarComponent.openSnackBar('Please Fill All Requried Fields',SnackBarStatus.danger);
       this.showValidationErrors(this.flipFormGroup);
     }
   }
@@ -849,8 +854,8 @@ export class UploadInvoiceComponent implements OnInit {
         this.flipItems[this.ItemTableSelectedIndex].Item = this.SecondTableFormGroup.get('Item').value;
         this.flipItems[this.ItemTableSelectedIndex].MaterialText = this.SecondTableFormGroup.get('MaterialText').value;
         this.flipItems[this.ItemTableSelectedIndex].HSN = this.SecondTableFormGroup.get('HSN').value;
-        this.flipItems[this.ItemTableSelectedIndex].OrderedQty = this.SecondTableFormGroup.get('OrderedQty').value;
-        this.flipItems[this.ItemTableSelectedIndex].OpenQty = this.SecondTableFormGroup.get('OpenQty').value;
+        // this.flipItems[this.ItemTableSelectedIndex].OrderedQty = this.SecondTableFormGroup.get('OrderedQty').value;
+        // this.flipItems[this.ItemTableSelectedIndex].OpenQty = this.SecondTableFormGroup.get('OpenQty').value;
         this.flipItems[this.ItemTableSelectedIndex].InvoiceQty = this.SecondTableFormGroup.get('InvoiceQty').value;
         this.flipItems[this.ItemTableSelectedIndex].Price = this.SecondTableFormGroup.get('Price').value;
         this.flipItems[this.ItemTableSelectedIndex].Tax = this.SecondTableFormGroup.get('Tax').value;
@@ -865,8 +870,8 @@ export class UploadInvoiceComponent implements OnInit {
         items.Item = this.SecondTableFormGroup.get('Item').value;
         items.MaterialText = this.SecondTableFormGroup.get('MaterialText').value;
         items.HSN = this.SecondTableFormGroup.get('HSN').value;
-        items.OrderedQty = this.SecondTableFormGroup.get('OrderedQty').value;
-        items.OpenQty = this.SecondTableFormGroup.get('OpenQty').value;
+        // items.OrderedQty = this.SecondTableFormGroup.get('OrderedQty').value;
+        // items.OpenQty = this.SecondTableFormGroup.get('OpenQty').value;
         items.InvoiceQty = this.SecondTableFormGroup.get('InvoiceQty').value;
         items.Price = this.SecondTableFormGroup.get('Price').value;
         items.Tax = this.SecondTableFormGroup.get('Tax').value;
@@ -886,8 +891,8 @@ export class UploadInvoiceComponent implements OnInit {
     this.SecondTableFormGroup.get('Item').patchValue(this.ItemTableSelectedItem.Item);
     this.SecondTableFormGroup.get('MaterialText').patchValue(this.ItemTableSelectedItem.MaterialText);
     this.SecondTableFormGroup.get('HSN').patchValue(this.ItemTableSelectedItem.HSN);
-    this.SecondTableFormGroup.get('OrderedQty').patchValue(this.ItemTableSelectedItem.OrderedQty);
-    this.SecondTableFormGroup.get('OpenQty').patchValue(this.ItemTableSelectedItem.OpenQty);
+    // this.SecondTableFormGroup.get('OrderedQty').patchValue(this.ItemTableSelectedItem.OrderedQty);
+    // this.SecondTableFormGroup.get('OpenQty').patchValue(this.ItemTableSelectedItem.OpenQty);
     this.SecondTableFormGroup.get('InvoiceQty').patchValue(this.ItemTableSelectedItem.InvoiceQty);
     this.SecondTableFormGroup.get('Price').patchValue(this.ItemTableSelectedItem.Price);
     this.SecondTableFormGroup.get('Tax').patchValue(this.ItemTableSelectedItem.Tax);
