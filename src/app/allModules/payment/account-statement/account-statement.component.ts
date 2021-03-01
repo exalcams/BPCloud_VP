@@ -54,13 +54,13 @@ export class AccountStatementComponent implements OnInit {
   fuseConfig: any;
   BGClassName: any;
   isAccepted: boolean = false;
-  render=false;
+  render = false;
   tableDataSource: MatTableDataSource<BPCPayAccountStatement>;
   @ViewChild(MatPaginator) tablePaginator: MatPaginator;
   @ViewChild(MatMenuTrigger) matMenuTrigger: MatMenuTrigger;
   @ViewChild(MatSort) tableSort: MatSort;
-  BPCPayAccountStatement: BPCPayAccountStatement[]=[];
-  BCHeader:BPCPayAccountStatement;
+  BPCPayAccountStatement: BPCPayAccountStatement[] = [];
+  BCHeader: BPCPayAccountStatement;
   constructor(
     private _fuseConfigService: FuseConfigService,
     private formBuilder: FormBuilder,
@@ -71,7 +71,7 @@ export class AccountStatementComponent implements OnInit {
     private _masterService: MasterService,
     private _datePipe: DatePipe,
     private _excelService: ExcelService,
-    
+
   ) {
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.authenticationDetails = new AuthenticationDetails();
@@ -152,9 +152,9 @@ export class AccountStatementComponent implements OnInit {
     this.paymentService.GetAccountStatementByPartnerID(this.currentUserName).subscribe(
       (data) => {
         this.AccountStatements = data as BPCPayAccountStatement[];
-        this.BPCPayAccountStatement=this.AccountStatements;
+        this.BPCPayAccountStatement = this.AccountStatements;
         this.tableDataSource = new MatTableDataSource<BPCPayAccountStatement>(this.AccountStatements);
-        console.log('AccountStatements Table',this.tableDataSource.data);
+        console.log('AccountStatements Table', this.tableDataSource.data);
         this.tableDataSource.paginator = this.tablePaginator;
         this.tableDataSource.sort = this.tableSort;
         this.IsProgressBarVisibile = false;
@@ -165,7 +165,7 @@ export class AccountStatementComponent implements OnInit {
       }
     );
   }
-  
+
   DateSelected(): void {
     const FROMDATEVAL = this.SearchFormGroup.get('FromDate').value as Date;
     const TODATEVAL = this.SearchFormGroup.get('ToDate').value as Date;
@@ -197,9 +197,9 @@ export class AccountStatementComponent implements OnInit {
             this.tableDataSource = new MatTableDataSource(this.AccountStatements);
             this.tableDataSource.paginator = this.tablePaginator;
             this.tableDataSource.sort = this.tableSort;
-            this.render=true;
+            this.render = true;
             this.IsProgressBarVisibile = false;
-            
+
           },
           (err) => {
             console.error(err);
@@ -273,22 +273,20 @@ export class AccountStatementComponent implements OnInit {
         this.fuseConfig = config;
         this.BGClassName = config;
       });
-      // console.log("Account-statement",this.BGClassName);
+    // console.log("Account-statement",this.BGClassName);
     // this._fuseConfigService.config = this.fuseConfig;
   }
-  handle_accept(element:BPCPayAccountStatement):void{
-    console.log('handle_accept',element);
-    if(this.BPCPayAccountStatement.length >=1 )
-    {
+  handle_accept(element: BPCPayAccountStatement): void {
+    // console.log('handle_accept', element);
+    if (this.BPCPayAccountStatement.length >= 1) {
       this.BPCPayAccountStatement.pop();
     }
     this.BPCPayAccountStatement.push(element);
     this.OpenConfirmationDialog('Confirm', 'Balance');
 
   }
-  handle_getsolved(element:BPCPayAccountStatement):void
-  {
-    this.BCHeader=element;
+  handle_getsolved(element: BPCPayAccountStatement): void {
+    this.BCHeader = element;
     this._router.navigate(["/support/supportticket"], {
       queryParams: { period: this.BCHeader.FiscalYear },
     });
@@ -309,18 +307,18 @@ export class AccountStatementComponent implements OnInit {
         }
       });
   }
-  AccpetAccountStatement():void{
-    this.IsProgressBarVisibile=true;
+  AccpetAccountStatement(): void {
+    this.IsProgressBarVisibile = true;
     this.BPCPayAccountStatement.forEach((Payment) => {
-      Payment.AcceptedBy=this.currentUserName;
+      Payment.AcceptedBy = this.currentUserName;
     });
-    console.log('AccpetAccountStatement',this.BPCPayAccountStatement);
+    // console.log('AccpetAccountStatement', this.BPCPayAccountStatement);
     this.paymentService.AcceptBC(this.BPCPayAccountStatement).subscribe(x => {
-      this.IsProgressBarVisibile=false;
-
+      this.IsProgressBarVisibile = false;
       this.notificationSnackBarComponent.openSnackBar('Account Statement Confirmed', SnackBarStatus.success);
+      this.SearchClicked();
     }, err => {
-      this.IsProgressBarVisibile=false;
+      this.IsProgressBarVisibile = false;
       this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
     });
   }
