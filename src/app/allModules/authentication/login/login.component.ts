@@ -74,7 +74,7 @@ export class LoginComponent implements OnInit {
     fuseConfig: any;
     Username = "";
     messages = [
-        "Partner Collabaration",
+        "Partner Collaboration",
         "Order fulfilment",
         "Payment Tracking",
         "Shipment Tracking",
