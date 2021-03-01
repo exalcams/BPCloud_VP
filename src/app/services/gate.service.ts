@@ -41,4 +41,15 @@ export class GateService {
       })
       .pipe(catchError(this.errorHandler));
   }
+  CancelGateEntryByAsnList(ASN: ASNListView): Observable<any> {
+    // console.log("Gate", HV);
+    return this._httpClient.post<any>(`${this.baseAddress}poapi/Gate/CancelGateEntryByAsnList`,
+    ASN,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
 }

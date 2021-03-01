@@ -11,7 +11,7 @@ import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notific
 import { fuseAnimations } from '@fuse/animations';
 import { ExcelService } from 'app/services/excel.service';
 import { FormGroup, FormBuilder, FormArray, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
-import { DatePipe, SlicePipe } from '@angular/common';
+import { DatePipe, formatDate, SlicePipe } from '@angular/common';
 import { BPCPayAccountStatement } from 'app/models/Payment.model';
 import { AsnFieldMasterComponent } from 'app/allModules/configurationn/asn-field-master/asn-field-master.component';
 import { BPCASNHeader } from 'app/models/ASN';
@@ -26,6 +26,7 @@ import { NumberFormat } from 'xlsx/types';
 import { slice } from 'lodash';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { GateService } from 'app/services/gate.service';
+import { BPCGateHoveringVechicles } from 'app/models/Gate';
 
 @Component({
   selector: 'app-asnlist',
@@ -46,14 +47,15 @@ export class ASNListComponent implements OnInit {
   IsProgressBarVisibile: boolean;
   BGClassName: any;
   fuseConfig: any;
+  Gate: BPCGateHoveringVechicles;
   AllASNHeaders: BPCASNHeader[] = [];
   SelectedASNView: BPCASNView;
   AllASNList: ASNListView[] = [];
   //ASNPackFormGroup: FormGroup;
   SelectedASNNumber: string;
   ASNPackFormArray: FormArray = this._formBuilder.array([]);
-  displayColumn: string[] = ['ASNNumber', 'ASNDate', 'DocNumber', 'AWBNumber', 'VessleNumber','Material','ASNQty', 'DepartureDate',
-  'ArrivalDate', 'Status', 'Action'];
+  displayColumn: string[] = ['ASNNumber', 'ASNDate', 'DocNumber', 'AWBNumber', 'VessleNumber', 'Material', 'ASNQty', 'DepartureDate',
+    'ArrivalDate', 'Status', 'Action'];
   TableDetailsDataSource: MatTableDataSource<ASNListView>;
   @ViewChild(MatPaginator) tablePaginator: MatPaginator;
   @ViewChild(MatSort) tableSort: MatSort;
@@ -72,6 +74,8 @@ export class ASNListComponent implements OnInit {
   // ASNItemFormGroup: FormGroup;
   SubconViews: BPCOFSubconView[] = [];
   maxDate: Date;
+  GateEntryCreatedDate: string;
+  DateTime: Date;
   // InvoiceDetailsFormGroup: FormGroup;
   // ASNPackDataSource = new BehaviorSubject<AbstractControl[]>([]);
   // ASNItemFormArray: FormArray = this._formBuilder.array([]);
@@ -120,6 +124,7 @@ export class ASNListComponent implements OnInit {
     this.DefaultToDate = new Date();
     this.SelectedASNHeader = new BPCASNHeader();
     this.SelectedASNView = new BPCASNView();
+    this.Gate = new BPCGateHoveringVechicles();
   }
 
   ngOnInit(): void {
@@ -242,22 +247,30 @@ export class ASNListComponent implements OnInit {
     this._router.navigate(["/support/supportticket"], {
       queryParams: { id: po, navigator_page: "ASN" },
     });
-
-
   }
-  GateEntry(Asn:ASNListView):void
-  {
+  GateEntry(Asn: ASNListView): void {
     this._GateService.CreateGateEntryByAsnList(Asn).subscribe(
-      (data)=>
-      {
-        this.notificationSnackBarComponent.openSnackBar("Gate Entry Successfull",SnackBarStatus.success);
+      (data) => {
+        // this.Gate = data as BPCGateHoveringVechicles;
+        this.notificationSnackBarComponent.openSnackBar("Gate Entry Successfull", SnackBarStatus.success);
         this.SearchClicked();
       },
-      (err)=>
-      {
-        this.notificationSnackBarComponent.openSnackBar(err,SnackBarStatus.danger);
+      (err) => {
+        this.notificationSnackBarComponent.openSnackBar(err, SnackBarStatus.danger);
       }
-    )
+    );
+  }
+  CancelGateEntry(Asn: ASNListView): void {
+    this._GateService.CancelGateEntryByAsnList(Asn).subscribe(
+      (data) => {
+        // this.Gate = data as BPCGateHoveringVechicles;
+        this.notificationSnackBarComponent.openSnackBar("Cancel Gate Entry Successfull", SnackBarStatus.success);
+        this.SearchClicked();
+      },
+      (err) => {
+        this.notificationSnackBarComponent.openSnackBar(err, SnackBarStatus.danger);
+      }
+    );
   }
   // cancel(asnnumber: any): void {
   //   this.newAllASNList = this.AllASNList;
@@ -751,14 +764,24 @@ export class ASNListComponent implements OnInit {
         this.IsProgressBarVisibile = true;
         this._asnService.FilterASNListByPartnerID(this.currentUserName, ASNNumber, DocNumber, Material, Status, FromDate, ToDate).subscribe(
           (data) => {
-
             this.AllASNList = data as ASNListView[];
             // this.ASN_value[0]=this.AllASNList[0].ASNNumber
             // for (this.i = 0; this.i < this.AllASNList.length; this.i++) {
             //   this.ASN_value[this.i] = this.AllASNList[this.i].ASNNumber
             // }
+            this.AllASNList.forEach(ASN => {
+              ASN.CancelDuration=new Date(ASN.CancelDuration);
+              ASN.Time=new Date(ASN.CancelDuration).getTime();
+            });
+
+            // var temp=new Date().getTime();
+            // console.log(temp,this.AllASNList[19].Time);
+            // console.log(new Date(temp),new Date(this.AllASNList[19].Time));
+
             this.TableDetailsDataSource = new MatTableDataSource(this.AllASNList);
-            console.log(this.TableDetailsDataSource.data);
+            // console.log("AllASNList",this.AllASNList);
+            this.DateTime=new Date();
+            // this.DateTime=this.DateTime.getTime();
             this.TableDetailsDataSource.paginator = this.tablePaginator;
             this.TableDetailsDataSource.sort = this.tableSort;
             this.IsProgressBarVisibile = false;
@@ -769,7 +792,8 @@ export class ASNListComponent implements OnInit {
           }
         );
       }
-    } else {
+    } 
+    else {
       this.ShowValidationErrors(this.SearchFormGroup);
     }
   }
