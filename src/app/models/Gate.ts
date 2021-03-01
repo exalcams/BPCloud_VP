@@ -7,6 +7,7 @@ export class BPCGateHoveringVechicles extends CommonClass {
     patnerID: string;
     date?: Date;
     time?: Date;
+    // CancelDuration?:Date;
     truck: string;
     partner: string;
     docNo: string;

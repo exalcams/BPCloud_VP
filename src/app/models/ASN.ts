@@ -337,6 +337,8 @@ export class ASNListView {
     ASNDate: Date | string | null;
     ArrivalDate: Date | string | null;
     DepartureDate: Date | string | null;
+    CancelDuration: Date;
+    Time:any;
     TurnaroundTime: string;
     TransportMode: string;
     DocNumber: string;
