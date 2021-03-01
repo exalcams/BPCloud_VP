@@ -660,7 +660,7 @@ export class UploadInvoiceComponent implements OnInit {
       this.getFlipItemFormValues();
       this.setActionToOpenConfirmation();
     } else {
-      this.notificationSnackBarComponent.openSnackBar('Please Fill All Requried Fields',SnackBarStatus.danger);
+      this.notificationSnackBarComponent.openSnackBar('Please Fill All Requried Fields', SnackBarStatus.danger);
       this.showValidationErrors(this.flipFormGroup);
     }
   }
