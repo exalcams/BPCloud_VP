@@ -7,6 +7,7 @@ import { BPCOFHeader, BPCOFItem, BPCOFHeaderXLSX, BPCOFItemXLSX, BPCOFScheduleLi
 import { BPCCEOMessage, BPCSCOCMessage } from 'app/models/Message.model';
 import { BPCFact } from 'app/models/fact';
 import { OverviewReportOption } from 'app/models/ReportModel';
+import { BPCInvoicePayment } from 'app/models/customer';
 
 @Injectable({
   providedIn: 'root'
@@ -273,5 +274,15 @@ export class POService {
       )
       .pipe(catchError(this.errorHandler));
   }
+
+
+//invoice payment
+GetAllInvoices(): Observable<BPCInvoicePayment[] | string> {
+  return this._httpClient.get<BPCInvoicePayment[]>(`${this.baseAddress}poapi/Invoice/GetAllInvoices`)
+    .pipe(catchError(this.errorHandler));
+}
+
+
+//invoice payment end
 
 }

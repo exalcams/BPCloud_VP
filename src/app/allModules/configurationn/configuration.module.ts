@@ -20,6 +20,7 @@ import { AsnFieldMasterComponent } from './asn-field-master/asn-field-master.com
 import { CardUpdateComponent } from './card-update/card-update.component';
 import { DataMigrationComponent } from "./data-migration/data-migration.component";
 import { NgxDropzoneModule } from 'ngx-dropzone';
+import { ProductsComponent } from './products/products.component';
 
 const menuRoutes: Routes = [
     {
@@ -54,6 +55,10 @@ const menuRoutes: Routes = [
         path: "datamigration",
         component: DataMigrationComponent,
     },
+    {
+        path: "products",
+        component: ProductsComponent,
+    },
 ];
 @NgModule({
     declarations: [
@@ -64,7 +69,8 @@ const menuRoutes: Routes = [
         SCOCMessageComponent,
         AsnFieldMasterComponent,
         CardUpdateComponent,
-        DataMigrationComponent
+        DataMigrationComponent,
+        ProductsComponent
     ],
     imports: [
         MatButtonModule,

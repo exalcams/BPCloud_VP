@@ -1004,10 +1004,21 @@ export class LoginComponent implements OnInit {
                 icon: "podIcon",
                 isSvgIcon: true,
                 // icon: 'dashboard',
-                url: "/customer/pod",
+                url: "/customer/poddetails",
             });
         }
-
+        if (this.menuItems.indexOf("InvoicePayment") >= 0) {
+            this.children.push({
+                id: "invoicepayment",
+                title: "Invoice Payment",
+                translate: "NAV.CUSTOMER.INVOICE_PAYMENT",
+                type: "item",
+                icon: "podIcon",
+                isSvgIcon: true,
+                // icon: 'dashboard',
+                url: "/customer/invoicepayment",
+            });
+        }
         if (this.menuItems.indexOf("CustomerSupportDesk") >= 0) {
             this.customerSupportSubChildren.push({
                 id: "custsupportdesk",
@@ -1196,6 +1207,15 @@ export class LoginComponent implements OnInit {
                 translate: "NAV.ADMIN.ASN_DOCTYPE",
                 type: "item",
                 url: "/configuration/doctype",
+            });
+        }
+        if (this.menuItems.indexOf("Products") >= 0) {
+            this.configSubChildren.push({
+                id: "products",
+                title: "Products",
+                translate: "NAV.ADMIN.PRODUCTS",
+                type: "item",
+                url: "/configuration/products",
             });
         }
         if (this.menuItems.indexOf("ASNField") >= 0) {

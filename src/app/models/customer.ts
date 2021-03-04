@@ -108,7 +108,7 @@ export class BPCPIView extends CommonClass {
 // }
 
 export class BPCProd extends CommonClass {
-    ID: number;
+    // ID: number;
     Client: string;
     Company: string;
     Type: string;
@@ -118,6 +118,22 @@ export class BPCProd extends CommonClass {
     UOM: string;
     Stock: string;
     StockUpdatedOn: Date | string | null;
+    MaterialGroup:string;
+    Material:string;
+    MaterialText:string;
+    BasePrice:string;
+
+}
+export class BPCProdFav extends CommonClass {
+    // ID: number;
+    Client: string;
+    Company: string;
+    Type: string;
+    ProductID: string;
+    PatnerID:string;
+    Material:string;
+    Rating:number;
+
 }
 export class SODetails {
     ID: number;
@@ -131,4 +147,25 @@ export class SODetails {
     Version: string;
     Currency: string;
     DocCount: number;
+}
+
+export class BPCInvoicePayment extends CommonClass {
+    // ID: number;
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID:string;
+    FiscalYear:string;
+    InvoiceNo:string;
+    Invoicedate:Date;
+    InvoiceAmount:number;
+    PoReference:string;
+    PaidAmount:number;
+    Currency:string;
+    DateofPayment:Date;
+    Status:string;
+    AttID:string;
+    PODDate:Date;
+    PODConfirmedBy:string;
+    
 }
