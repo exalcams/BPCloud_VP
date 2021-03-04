@@ -281,6 +281,7 @@ export class PoFactsheetComponent implements OnInit {
                     this.flipCount = this.orderFulfilmentDetails.FlipCount;
                     this.asnDataSource = new MatTableDataSource(this.asn);
                     this.grnDataSource = new MatTableDataSource(this.grn);
+                    console.log("grnDataSource",this.grnDataSource.data);
                     this.returnDataSource = new MatTableDataSource(this.return);
                     this.qaDataSource = new MatTableDataSource(this.qa);
                     this.slDataSource = new MatTableDataSource(this.sl);
@@ -458,6 +459,7 @@ export class PoFactsheetComponent implements OnInit {
                 if (data) {
                     this.grn = <GRNDetails[]>data;
                     this.grnDataSource = new MatTableDataSource(this.grn);
+                    console.log("GetOfGRGIsByPartnerIDAndDocNumber",this.grnDataSource);
                     this.grnDataSource.paginator = this.grnPaginator;
                     this.grnDataSource.sort = this.grnSort;
                 }
@@ -1013,8 +1015,10 @@ export class PoFactsheetComponent implements OnInit {
     }
     POFactSerClicked(item) {
         item.enable();
+        
         const Item = item.value;
-        this._dashboardService.GetOFItemSESByItem(Item.Item).subscribe((data) => {
+        console.log("POFactSerClicked",Item,this.orderFulfilmentDetails.PONumber,this.currentUserName);
+        this._dashboardService.GetOFItemSESByItem(Item.Item,this.orderFulfilmentDetails.PONumber,this.currentUserName).subscribe((data) => {
             const ItemSES = data;
             this.OpenPOFactServiceDialog(data);
             console.log("ses", ItemSES);

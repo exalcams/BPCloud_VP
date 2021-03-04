@@ -150,8 +150,8 @@ export class ASNListComponent implements OnInit {
       this.SelectedDocNumber = params['id'];
     });
     this.InitializeSearchForm();
-    // this.GetAllASNListByPartnerID();
-    this.SearchClicked();
+    this.GetAllASNListByPartnerID();
+    // this.SearchClicked();
 
     // this.GetASNBasedOnCondition();
 
@@ -253,7 +253,8 @@ export class ASNListComponent implements OnInit {
       (data) => {
         // this.Gate = data as BPCGateHoveringVechicles;
         this.notificationSnackBarComponent.openSnackBar("Gate Entry Successfull", SnackBarStatus.success);
-        this.SearchClicked();
+        this.GetAllASNListByPartnerID();
+        // this.SearchClicked();
       },
       (err) => {
         this.notificationSnackBarComponent.openSnackBar(err, SnackBarStatus.danger);
@@ -701,8 +702,8 @@ export class ASNListComponent implements OnInit {
       DocNumber: [''],
       Material: [''],
       Status: [''],
-      ASNFromDate: [this.DefaultFromDate],
-      ASNToDate: [this.DefaultToDate]
+      ASNFromDate: [],
+      ASNToDate: []
     });
   }
   ResetControl(): void {
@@ -716,24 +717,28 @@ export class ASNListComponent implements OnInit {
       formGroup.get(key).markAsUntouched();
     });
   }
-  // GetAllASNListByPartnerID(): void {
-  //   this._asnService.GetAllASNListByPartnerID(this.currentUserName).subscribe(
-  //     (data) => {
-  //       console.log("data" + data)
+  GetAllASNListByPartnerID(): void {
+    this._asnService.GetAllASNListByPartnerID(this.currentUserName).subscribe(
+      (data) => {
+        // console.log("data" + data)
+        this.DateTime=new Date();
+        this.AllASNList = data as ASNListView[];
+        console.log("asnlist" + this.AllASNList)
+        this.AllASNList.forEach(ASN => {
+          ASN.CancelDuration=new Date(ASN.CancelDuration);
+          ASN.Time=new Date(ASN.CancelDuration).getTime();
+        });
+        this.TableDetailsDataSource = new MatTableDataSource(this.AllASNList);
+        this.TableDetailsDataSource.paginator = this.tablePaginator;
+        this.TableDetailsDataSource.sort = this.tableSort;
+        this.IsProgressBarVisibile = false;
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
 
-  //       this.AllASNList = data as ASNListView[];
-  //       console.log("asnlist" + this.AllASNList)
-  //       this.TableDetailsDataSource = new MatTableDataSource(this.AllASNList);
-  //       this.TableDetailsDataSource.paginator = this.tablePaginator;
-  //       this.TableDetailsDataSource.sort = this.tableSort;
-  //       this.IsProgressBarVisibile = false;
-  //     },
-  //     (err) => {
-  //       console.error(err);
-  //     }
-  //   );
-
-  // }
+  }
 
   DateSelected(): void {
     const FROMDATEVAL = this.SearchFormGroup.get('ASNFromDate').value as Date;

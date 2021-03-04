@@ -81,7 +81,7 @@
         <div fxFlex fxLayoutAlign="end center">
           <mat-form-field appearance="outline" style="min-width: 100px;">
             <mat-select >
-              <mat-option value="All">All</mat-option>
+              <mat-option value="All" (click)="GetAllASNListByPartnerID()">All</mat-option>
             </mat-select>
           </mat-form-field>
           <button (click)="exportAsXLSX()" class="excelBtn mx-24" mat-stroked-button>
@@ -130,7 +130,7 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 8%;"
               [ngClass]="BGClassName?.layout?.toolbar?.background"> Truck </th>
             <td mat-cell *matCellDef="let element">
-              {{element.VessleNumber}} </td>
+              <span style="overflow-wrap: anywhere !important;">{{element.VessleNumber}} </span></td>
           </ng-container>
 
           <ng-container matColumnDef="Material">
@@ -181,8 +181,8 @@
                   <mat-select>
                     <mat-option value="Print ASN" (click)="Pdfdownload(element.ASNNumber)">	Print ASN</mat-option>
                     <mat-option value ="Get help" (click)="help(element.DocNumber)">Get Solved</mat-option>
-                    <mat-option value ="Gate Entry" (click)="GateEntry(element)" *ngIf="element.Status === 'Submitted'?true:false">Gate Entry</mat-option>
-                    <mat-option value ="Cancel Gate Entry" (click)="CancelGateEntry(element)" *ngIf="DateTime.getTime() <= element.Time && element.Status !== 'Submitted'?true:false">Cancel Gate Entry</mat-option>
+                    <mat-option value ="Gate Entry" (click)="GateEntry(element)" *ngIf="element.Status === 'Gate Entry'?true:false">Gate Entry</mat-option>
+                    <mat-option value ="Cancel Gate Entry" (click)="CancelGateEntry(element)" *ngIf="DateTime.getTime() <= element.Time && element.Status !== 'Gate Entry'?true:false">CancelGateEntry</mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>

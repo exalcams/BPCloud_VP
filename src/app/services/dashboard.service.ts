@@ -172,8 +172,8 @@ export class DashboardService {
     return this._httpClient.get<BPCOFHeader>(`${this.baseAddress}poapi/Dashboard/GetBPCOFHeader?PartnerID=${PartnerID}&ReferenceNo=${refNo}`)
       .pipe(catchError(this.errorHandler));
   }
-  GetOFItemSESByItem(item:string): Observable<BPCASNItemSES | string> {
-    return this._httpClient.get<BPCASNItemSES>(`${this.baseAddress}poapi/PO/GetOFItemSESByItem?item=${item}`)
+  GetOFItemSESByItem(item:string,DocumentNo:string,partnerId:string): Observable<BPCASNItemSES | string> {
+    return this._httpClient.get<BPCASNItemSES>(`${this.baseAddress}poapi/PO/GetOFItemSESByItem?item=${item}&DocumentNo=${DocumentNo}&PartnerId=${partnerId}`)
       .pipe(catchError(this.errorHandler));
   }
   GetNotificationsByPartnerID(PartnerID: string): Observable<BPCOFAIACT[] | string> {
