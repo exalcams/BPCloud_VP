@@ -26,6 +26,7 @@ import {
 import { BPCDocumentCenterMaster } from "app/models/ASN";
 import { Guid } from "guid-typescript";
 import { BPCExpenseTypeMaster } from "app/models/POD";
+import { BPCProd } from "app/models/customer";
 
 @Injectable({
     providedIn: "root",
@@ -539,6 +540,60 @@ export class MasterService {
             )
             .pipe(catchError(this.errorHandler));
     }
+
+ // Products
+    GetAllProducts(): Observable<BPCProd[] | string> {
+    return this._httpClient.get<BPCProd[]>(`${this.baseAddress}poapi/Product/GetAllProducts`)
+        .pipe(catchError(this.errorHandler));
+    }
+    CreateProduct(
+        product:BPCProd
+    ): Observable<any> {
+        return this._httpClient
+            .post<any>(
+                `${this.baseAddress}poapi/Product/CreateProduct`,
+                product,
+                {
+                    headers: new HttpHeaders({
+                        "Content-Type": "application/json",
+                    }),
+                }
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+
+    UpdateProduct(
+        product:BPCProd
+    ): Observable<any> {
+        return this._httpClient
+            .post<any>(
+                `${this.baseAddress}poapi/Product/UpdateProduct`,
+                product,
+                {
+                    headers: new HttpHeaders({
+                        "Content-Type": "application/json",
+                    }),
+                }
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+
+    DeleteProduct(
+        product:BPCProd
+    ): Observable<any> {
+        return this._httpClient
+            .post<any>(
+                `${this.baseAddress}poapi/Product/DeleteProduct`,
+                product,
+                {
+                    headers: new HttpHeaders({
+                        "Content-Type": "application/json",
+                    }),
+                }
+            )
+            .pipe(catchError(this.errorHandler));
+    }
+    //product end
     // SessionMaster
 
     GetSessionMasterByProject(

@@ -51,6 +51,7 @@ export const locale = {
                 'INVOICE': 'Invoice',
                 'PAYMENT': 'Payment',
                 'RESOURCE': 'Resource',
+                'INVOICE_PAYMENT':'Invoice Payment'
             },
             'ADMIN': {
                 'REPORT': 'Report',
@@ -62,7 +63,8 @@ export const locale = {
                 'ASN_DOCTYPE': 'ASN Doctype',
                 'SESSION': 'Session',
                 'SUPPORT': 'Support',
-                'LOGIN_HISTORY': 'Login History'
+                'LOGIN_HISTORY': 'Login History',
+                'PRODUCTS':'Products'
             },
         },
         'DASHBOARD': {
