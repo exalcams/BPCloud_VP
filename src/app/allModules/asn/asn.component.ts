@@ -1599,7 +1599,7 @@ export class ASNComponent implements OnInit {
                                                                 this.IsPriceNotMatched = false;
                                                                 this.GetInvoiceDetailValues();
                                                                 this.GetDocumentCenterValues();
-                                                                this.SelectedASNView.Status = 'Gate Entry';
+                                                                this.SelectedASNView.Status = 'GateEntry';
                                                                 this.SelectedASNView.IsSubmitted = true;
                                                                 this.OpenASNReleaseDialog();
                                                             } else {
@@ -1612,7 +1612,7 @@ export class ASNComponent implements OnInit {
                                                 } else {
                                                     this.GetInvoiceDetailValues();
                                                     this.GetDocumentCenterValues();
-                                                    this.SelectedASNView.Status = 'Gate Entry';
+                                                    this.SelectedASNView.Status = 'GateEntry';
                                                     this.SelectedASNView.IsSubmitted = true;
                                                     this.OpenASNReleaseDialog();
                                                 }

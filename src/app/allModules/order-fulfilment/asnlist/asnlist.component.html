@@ -181,8 +181,8 @@
                   <mat-select>
                     <mat-option value="Print ASN" (click)="Pdfdownload(element.ASNNumber)">	Print ASN</mat-option>
                     <mat-option value ="Get help" (click)="help(element.DocNumber)">Get Solved</mat-option>
-                    <mat-option value ="Gate Entry" (click)="GateEntry(element)" *ngIf="element.Status === 'Gate Entry'?true:false">Gate Entry</mat-option>
-                    <mat-option value ="Cancel Gate Entry" (click)="CancelGateEntry(element)" *ngIf="DateTime.getTime() <= element.Time && element.Status !== 'Gate Entry'?true:false">CancelGateEntry</mat-option>
+                    <mat-option value ="Gate Entry" (click)="GateEntry(element)" *ngIf="element.Status === 'GateEntry'?true:false">Gate Entry</mat-option>
+                    <mat-option value ="Cancel Gate Entry" (click)="CancelGateEntry(element)" *ngIf="DateTime.getTime() <= element.Time && element.Status !== 'GateEntry'?true:false">CancelGateEntry</mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
