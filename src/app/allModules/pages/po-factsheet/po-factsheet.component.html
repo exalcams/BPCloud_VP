@@ -614,7 +614,7 @@
 
             <ng-container matColumnDef="Description">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
-              <td mat-cell *matCellDef="let element" style="text-align: left"> {{element.Material}} </td>
+              <td mat-cell *matCellDef="let element" style="text-align: left"> {{element.Material | removeLeadingZero}} </td>
             </ng-container>
 
             <ng-container matColumnDef="GRNDate">

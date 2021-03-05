@@ -3,6 +3,7 @@ import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { FuseSidebarModule } from "@fuse/components";
 import { MatCarouselModule } from "@ngmodule/material-carousel";
+import { SharedModule } from 'app/shared/shared-module';
 
 import {
     MatFormFieldModule,
@@ -151,6 +152,7 @@ const routes = [
         ChartsModule,
         NgApexchartsModule,
         FuseSharedModule,
+        SharedModule,
         FuseSidebarModule,
         FuseCountdownModule,
         FuseHighlightModule,

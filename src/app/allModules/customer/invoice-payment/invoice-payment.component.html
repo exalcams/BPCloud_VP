@@ -165,7 +165,7 @@
                 
                 <div fxFlex="15">
                   <mat-form-field class="px-12" style="width: 100%;">
-                    <input matInput placeholder="Text" formControlName="Text" (keyup)="QtySelected()">
+                    <!-- <input matInput placeholder="Text" formControlName="Text" (keyup)="QtySelected()"> -->
                     <!-- <mat-error
                       *ngIf="ReturnItemFormGroup.get('OrderQty').touched && ReturnItemFormGroup.get('OrderQty').hasError('required')">
                       Order Qty is required
@@ -178,7 +178,7 @@
                 </div>
                 <div fxFlex="15">
                   <mat-form-field class="px-12" style="width: 100%;">
-                    <input matInput placeholder="Qty" formControlName="Qty" (keyup)="QtySelected()">
+                    <!-- <input matInput placeholder="Qty" formControlName="Qty" (keyup)="QtySelected()"> -->
                     <!-- <mat-error
                       *ngIf="ReturnItemFormGroup.get('RetQty').touched && ReturnItemFormGroup.get('RetQty').hasError('required')">
                       RetQty is required
@@ -299,14 +299,14 @@
         <mat-card-actions class="m-0 pl-12 pr-16 cardActions">
           <div fxLayout fxLayoutAlign="space-between center">
             <div fxFlex>
-              <button *ngIf="SelectedReturnHeader?.PIRNumber" mat-stroked-button class="DeleteBtn mr-4 mb-4"
-                (click)="DeleteClicked()">Delete</button>
+              <!-- <button *ngIf="SelectedReturnHeader?.PIRNumber" mat-stroked-button class="DeleteBtn mr-4 mb-4"
+                (click)="DeleteClicked()">Delete</button> -->
             </div>
-            <div *ngIf="!SelectedReturnHeader?.PIRNumber" fxFlex align="end">
+            <!-- <div *ngIf="!SelectedReturnHeader?.PIRNumber" fxFlex align="end">
               <button mat-stroked-button class="SaveBtn mb-4" (click)="SaveClicked()">Save
               </button>
               <button mat-raised-button class="SubmitBtn mb-4" (click)="SubmitClicked()">Submit</button>
-            </div>
+            </div> -->
           </div>
         </mat-card-actions>
       </mat-card>
