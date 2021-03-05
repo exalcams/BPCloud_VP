@@ -37,10 +37,10 @@ export class ASNDetails {
 export class GRNDetails {
     Item: string;
     Material: string;
-    Description: string;
+    MaterialText: string;
     GRNDate: Date;
     Qty: number;
-    DeliveryNote: string;
+    Status: string;  
 }
 export class RETURNDetails {
     Date: Date;
