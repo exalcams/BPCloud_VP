@@ -23,44 +23,43 @@ export class DiscountComponent implements OnInit {
   MenuItems: string[];
   BGClassName: any;
   fuseConfig: any;
-  isProgressBarVisibile:boolean;
-  discountDisplayedColumns = ["DocumentNumber", "DocumentDate", "InvoiceNumber", "InvoiceDate","InvoiceAmount", "PaidAmount", "BalanceAmount",
-   "DueDate", "ProfitCenter", "Discount"];
+  isProgressBarVisibile: boolean;
+  discountDisplayedColumns = ["DocumentNumber", "DocumentDate", "InvoiceNumber", "InvoiceDate", "InvoiceAmount", "PaidAmount", "BalanceAmount",
+    "DueDate", "ProfitCenter", "Discount"];
   discountDataSource: MatTableDataSource<BPCPayAccountStatement>;
   @ViewChild(MatPaginator) discountPaginator: MatPaginator;
   @ViewChild(MatSort) discountSort: MatSort;
   @ViewChild(MatMenuTrigger) matMenuTrigger: MatMenuTrigger;
-  AccountStatements:BPCPayAccountStatement[];
+  AccountStatements: BPCPayAccountStatement[];
   notificationSnackBarComponent: NotificationSnackBarComponent;
 
 
   constructor(private dialog: MatDialog,
-    private _discountService:DiscountService,
-    private _router:Router,
+    private _discountService: DiscountService,
+    private _router: Router,
     private _fuseConfigService: FuseConfigService,
-    public snackBar: MatSnackBar)
-     { 
-      this.isProgressBarVisibile = false;
-      this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
-    }
+    public snackBar: MatSnackBar) {
+    this.isProgressBarVisibile = false;
+    this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
+  }
 
-  OpenCalculateDialogue(Data:any){
-    Data.isBuyer=false;
+  OpenCalculateDialogue(Data: any): void {
+    Data.isBuyer = false;
     const dialogConfig: MatDialogConfig = {
       panelClass: 'discount-dialog',
-      data:Data
-  };
-    const dialogRef = this.dialog.open(DiscountDialogueComponent,dialogConfig);
+      data: Data
+    };
+    const dialogRef = this.dialog.open(DiscountDialogueComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(
       result => {
         if (result) {
           this.SaveBPCPayDiscount(result);
-          //console.log(result);
+          // console.log(result);
         }
       });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     // Retrive authorizationData
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
@@ -90,36 +89,36 @@ export class DiscountComponent implements OnInit {
       });
     // this._fuseConfigService.config = this.fuseConfig;
   }
-  GetTableData(){
-    this.isProgressBarVisibile=true;
-    this._discountService.GetAccountStatementByPartnerID(this.currentUserName).subscribe((data)=>{
-      console.log(data);
-      this.AccountStatements=data;
+  GetTableData(): void {
+    this.isProgressBarVisibile = true;
+    this._discountService.GetAccountStatementByPartnerID(this.currentUserName).subscribe((data) => {
+      // console.log(data);
+      this.AccountStatements = data;
       this.discountDataSource = new MatTableDataSource(this.AccountStatements);
       this.discountDataSource.paginator = this.discountPaginator;
       this.discountDataSource.sort = this.discountSort;
-      this.isProgressBarVisibile=false;
-    },err=>{
-      this.isProgressBarVisibile=false;
+      this.isProgressBarVisibile = false;
+    }, err => {
+      this.isProgressBarVisibile = false;
       this.notificationSnackBarComponent.openSnackBar("something went wrong", SnackBarStatus.danger);
     });
   }
-  handleCalculate(item){
+  handleCalculate(item): void {
     this.OpenCalculateDialogue(item);
   }
 
-  SaveBPCPayDiscount(data:BPCPayDis){
-    this.isProgressBarVisibile=true;
-    data.CreatedBy=this.currentUserName;
-    this._discountService.CreateBPCPayDiscount(data).subscribe(x=>{
-      this.isProgressBarVisibile=false;
+  SaveBPCPayDiscount(data: BPCPayDis): void {
+    this.isProgressBarVisibile = true;
+    data.CreatedBy = this.currentUserName;
+    this._discountService.CreateBPCPayDiscount(data).subscribe(x => {
+      this.isProgressBarVisibile = false;
       this.notificationSnackBarComponent.openSnackBar('Discount details saved', SnackBarStatus.success);
     },
-    err=>{
-      console.log(err);
-      this.isProgressBarVisibile=false;
-      this.notificationSnackBarComponent.openSnackBar("something went wrong", SnackBarStatus.danger);
-    });
+      err => {
+        console.log(err);
+        this.isProgressBarVisibile = false;
+        this.notificationSnackBarComponent.openSnackBar("something went wrong", SnackBarStatus.danger);
+      });
   }
 
 }
