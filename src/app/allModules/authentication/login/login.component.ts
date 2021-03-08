@@ -834,7 +834,7 @@ export class LoginComponent implements OnInit {
             });
         }
 
-        if (true || this.menuItems.indexOf("InvoiceDiscount") >= 0) {
+        if (this.menuItems.indexOf("InvoiceDiscount") >= 0) {
             this.paymentSubChildren.push({
                 id: "InvoiceDiscount",
                 title: "Invoice Discount",
