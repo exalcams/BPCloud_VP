@@ -57,7 +57,7 @@ import {
     OfOption,
 } from "app/models/Dashboard";
 import { DatePipe } from "@angular/common";
-import { BPCOFHeader, OfAttachmentData } from "app/models/OrderFulFilment";
+import { ActionLog, BPCOFHeader, OfAttachmentData } from "app/models/OrderFulFilment";
 import { DashboardService } from "app/services/dashboard.service";
 import { AttachmentViewDialogComponent } from "app/notifications/attachment-view-dialog/attachment-view-dialog.component";
 import { BPCInvoiceAttachment } from "app/models/ASN";
@@ -66,6 +66,7 @@ import * as FileSaver from "file-saver";
 import { FuseConfigService } from "@fuse/services/config.service";
 import { BPCKRA } from 'app/models/fact';
 import { FactService } from 'app/services/fact.service';
+import { AuthService } from "app/services/auth.service";
 export interface ChartOptions {
     series: ApexAxisChartSeries;
     guageseries: ApexNonAxisChartSeries;
@@ -113,6 +114,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     currentUserRole: string;
     partnerID: string;
     menuItems: string[];
+    ActionLog:ActionLog;
     notificationSnackBarComponent: NotificationSnackBarComponent;
     attachmentViewDialogComponent: AttachmentViewDialogComponent;
     isProgressBarVisibile: boolean;
@@ -326,6 +328,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         private _router: Router,
         public snackBar: MatSnackBar,
         public _dashboardService: DashboardService,
+        public _authService: AuthService,
         private _masterService: MasterService,
         private _factService: FactService,
         private datePipe: DatePipe,
@@ -588,8 +591,9 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         };
         this.isProgressBarVisibile = false;
     }
-    ResetClicked(): void {
+    ResetClicked(text): void {
         this.GetOfDetails();
+        this.CreateActionLogvalues(text);
         this.initialiseOfDetailsFormGroup();
         this.TableFooterShow = false;
     }
@@ -610,7 +614,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
         // vertically align text around the specified point (cy)
 
     }
-    GetOfsByOption(ofOption: OfOption): void {
+    GetOfsByOption(ofOption: OfOption,buttonText=null): void {
         this.isProgressBarVisibile = true;
         this._dashboardService.GetOfsByOption(ofOption).subscribe(
             (data) => {
@@ -640,13 +644,34 @@ export class OrderFulFilmentCenterComponent implements OnInit {
                 );
             }
         );
+        if(buttonText != null)
+        {
+            this.CreateActionLogvalues(buttonText);
+        }
         this.clearOfDetailsFormGroup();
     }
 
     // ResetClicked(): void {
     //     this.GetOfDetails();
     // }
-
+    CreateActionLogvalues(text):void{
+        this.ActionLog=new ActionLog();
+        this.ActionLog.UserID=this.currentUserID;
+        this.ActionLog.AppName="OrderFulfilmentCenter";
+        this.ActionLog.ActionText=text+" is Clicked";
+        this.ActionLog.Action=text;
+        this.ActionLog.CreatedBy=this.currentUserName;
+        this._authService.CreateActionLog(this.ActionLog).subscribe(
+            (data)=>
+            {
+                console.log(data);
+            },
+            (err)=>
+            {
+                console.log(err);
+            }
+        );
+    }
     GetOfStatusByPartnerID(): void {
         this.isProgressBarVisibile = true;
         this._dashboardService.GetOfStatusByPartnerID(this.partnerID).subscribe(
@@ -803,7 +828,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
 
     getOfDetailsFormValues(): void { }
 
-    getOfsByOptionClicked(): void {
+    getOfsByOptionClicked(buttonText:string): void {
         if (this.ofDetailsFormGroup.valid) {
             if (!this.isDateError) {
                 this.ofOption = new OfOption();
@@ -823,7 +848,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
                 ).value;
 
                 this.ofOption.PartnerID = this.partnerID;
-                this.GetOfsByOption(this.ofOption);
+                this.GetOfsByOption(this.ofOption,buttonText);
             }
         }
         // this.initialiseOfDetailsFormGroup();
@@ -842,6 +867,8 @@ export class OrderFulFilmentCenterComponent implements OnInit {
                 const value = chart.data.datasets[0].data[clickedElementIndex];
                 console.log(clickedElementIndex, label, value);
                 if (label !== null) {
+                    var string="Chart "+label 
+                    this.CreateActionLogvalues(string);
                     this.loadOfDetailsByOfStatusChartLabel(label);
                 }
             }
@@ -919,10 +946,12 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     }
 
     goToPOFactSheetClicked(po: string): void {
+        this.CreateActionLogvalues("POFactSheet");
         this._router.navigate(["/pages/polookup"], { queryParams: { id: po } });
     }
 
-    acknowledgementClicked(po: string): void {
+    acknowledgementClicked(po: string,text): void {
+        this.CreateActionLogvalues(text);
         this._router.navigate(["/pages/polookup"], { queryParams: { id: po } });
     }
 
@@ -931,12 +960,14 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     }
 
     goToSupportDeskClicked(po: string): void {
+        this.CreateActionLogvalues("SupportDesk");
         this._router.navigate(["/support/supportticket"], {
             queryParams: { id: po, navigator_page: 'PO' },
         });
     }
 
     goToASNClicked(po: string, type: string): void {
+        this.CreateActionLogvalues("ASN");
         this._router.navigate(["/asn"], { queryParams: { id: po, type: type } });
     }
 
@@ -947,6 +978,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
 
     goToPrintPOClicked(po: string): void {
         this.isProgressBarVisibile = true;
+        this.CreateActionLogvalues("PrintPO");
         this._dashboardService.PrintPO(po).subscribe(
             (data) => {
                 if (data) {
@@ -968,6 +1000,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     }
 
     nextProcessClicked(nextProcess: string, po: string): void {
+        this.CreateActionLogvalues("NextProcessClicked");
         if (nextProcess === "ACK") {
             this._router.navigate(["/pages/polookup"], {
                 queryParams: { id: po },
@@ -1148,6 +1181,7 @@ export class OrderFulFilmentCenterComponent implements OnInit {
     }
 
     viewOfAttachmentClicked(element: BPCOFHeader): void {
+        this.CreateActionLogvalues("viewOfAttachmentClicked");
         // const attachments = this.ofAttachments.filter(x => x.AttachmentID.toString() === element.RefDoc);
         this.GetOfAttachmentsByPartnerIDAndDocNumber(element);
     }

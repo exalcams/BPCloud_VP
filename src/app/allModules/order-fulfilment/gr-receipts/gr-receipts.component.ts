@@ -19,6 +19,8 @@ import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notific
 import { fuseAnimations } from '@fuse/animations';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { ThrowStmt } from '@angular/compiler';
+import { ActionLog } from 'app/models/OrderFulFilment';
+import { AuthService } from 'app/services/auth.service';
 @Component({
   selector: 'app-gr-receipts',
   templateUrl: './gr-receipts.component.html',
@@ -183,6 +185,7 @@ export class GRReceiptsComponent implements OnInit {
   formatdate: any;
   Datefrom: any;
   Dateto: any;
+  ActionLog: any;
 
   constructor(
     private _fuseConfigService: FuseConfigService,
@@ -191,6 +194,7 @@ export class GRReceiptsComponent implements OnInit {
     private _router: Router,
     public snackBar: MatSnackBar,
     private dialog: MatDialog,
+    private _authService:AuthService,
     private _masterService: MasterService,
     private _datePipe: DatePipe,
     private _excelService: ExcelService) {
@@ -391,6 +395,7 @@ export class GRReceiptsComponent implements OnInit {
   }
   searchButtonClicked(): void {
     if (this.searchFormGroup.valid) {
+      this.CreateActionLogvalues("Search");
       // if (!this.isDateError) {
       // const FrDate = this.searchFormGroup.get('FromDate').value;
       // let FromDate = '';
@@ -499,6 +504,7 @@ export class GRReceiptsComponent implements OnInit {
   }
 
   exportAsXLSX(): void {
+    this.CreateActionLogvalues("exportAsXLSX");
     const currentPageIndex = this.grReceiptsReportDataSource.paginator.pageIndex;
     const PageSize = this.grReceiptsReportDataSource.paginator.pageSize;
     const startIndex = currentPageIndex * PageSize;
@@ -522,10 +528,29 @@ export class GRReceiptsComponent implements OnInit {
   }
 
   expandClicked(): void {
+    this.CreateActionLogvalues("Expand");
     this.isExpanded = !this.isExpanded;
   }
-
+  CreateActionLogvalues(text):void{
+    this.ActionLog=new ActionLog();
+    this.ActionLog.UserID=this.currentUserID;
+    this.ActionLog.AppName="GRReceipts";
+    this.ActionLog.ActionText=text+" is Clicked";
+    this.ActionLog.Action=text;
+    this.ActionLog.CreatedBy=this.currentUserName;
+    this._authService.CreateActionLog(this.ActionLog).subscribe(
+        (data)=>
+        {
+            console.log(data);
+        },
+        (err)=>
+        {
+            console.log(err);
+        }
+    );
+}
   applyFilter(event: Event): void {
+    this.CreateActionLogvalues("SearchBar Filter");
     const filterValue = (event.target as HTMLInputElement).value;
     this.grReceiptsReportDataSource.filter = filterValue.trim().toLowerCase();
   }

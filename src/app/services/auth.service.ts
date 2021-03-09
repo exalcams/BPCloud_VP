@@ -17,6 +17,7 @@ import {
     UserPreference,
 } from "app/models/master";
 import { environment } from "environments/environment";
+import { ActionLog } from "app/models/OrderFulFilment";
 
 @Injectable({
     providedIn: "root",
@@ -105,7 +106,19 @@ export class AuthService {
             )
             .pipe(catchError(this.errorHandler1));
     }
-
+    CreateActionLog(log:ActionLog): Observable<any> {
+        return this._httpClient
+            .post<any>(
+                `${this.baseAddress}authenticationapi/Master/CreateActionLog`,
+                log,
+                {
+                    headers: new HttpHeaders({
+                        "Content-Type": "application/json",
+                    }),
+                }
+            )
+            .pipe(catchError(this.errorHandler1));
+    }
     GetUserPreferenceByUserID(
         UserID: Guid
     ): Observable<UserPreference | string> {

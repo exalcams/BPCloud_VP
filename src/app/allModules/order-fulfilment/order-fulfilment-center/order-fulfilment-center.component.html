@@ -134,9 +134,9 @@
           <div fxFlex="20%">
             <div fxLayout fxLayoutAlign="start center">
               <button class="mt-12" style="color:white" [ngClass]="BGClassName?.layout?.navbar?.primaryBackground"
-                mat-raised-button (click)="getOfsByOptionClicked()">Search</button>
+                mat-raised-button (click)="getOfsByOptionClicked('Search')">Search</button>
               <button class="ml-12 mt-12" style="color: #efb577;background-color: white;" mat-stroked-button
-                (click)="ResetClicked()">Reset</button>
+                (click)="ResetClicked('Reset')">Reset</button>
             </div>
           </div>
         </div>
@@ -194,7 +194,7 @@
           <td mat-cell *matCellDef="let element" style="min-width: 310px !important;">
             <div fxLayout class="mt-4 mx-8">
               <div fxFlex="30" fxLayout>
-                <div class="round" (click)="acknowledgementClicked(element.DocNumber)"
+                <div class="round" (click)="acknowledgementClicked(element.DocNumber,'DueForACK')"
                   [style.border-color]="element.Status==='DueForACK'?'gray':'#34ad65'"></div>
                 <div style="width: 10px;margin-left: -1px !important"
                   [class]="element.Status==='DueForACK'?'white-timeline':'green-timeline'"></div>
@@ -203,7 +203,7 @@
               <div fxFlex="30" fxLayout>
                 <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline(element,'ASN')">
                 </div>
-                <div class="round" (click)="acknowledgementClicked(element.DocNumber)"
+                <div class="round" (click)="acknowledgementClicked(element.DocNumber,'DueForASN')"
                   [style.border-color]="getStatusColor(element,'ASN')"></div>
                 <div style="width: 10px; margin-left: -1px !important" [class]="getTimeline(element,'ASN')">
                 </div>
@@ -212,7 +212,7 @@
               <div fxFlex="30" fxLayout>
                 <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline(element,'Gate')">
                 </div>
-                <div class="round" (click)="acknowledgementClicked(element.DocNumber)"
+                <div class="round" (click)="acknowledgementClicked(element.DocNumber,'DueForGate')"
                   [style.border-color]="getStatusColor(element,'Gate')"></div>
                 <div style="width: 10px;margin-left: -1px !important" [class]="getTimeline(element,'Gate')">
                 </div>
@@ -221,7 +221,7 @@
               <div fxFlex="10" fxLayout>
                 <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline(element,'GRN')">
                 </div>
-                <div class="round" (click)="acknowledgementClicked(element.DocNumber)"
+                <div class="round" (click)="acknowledgementClicked(element.DocNumber,'DueForGRN')"
                   [style.border-color]="getStatusColor(element,'GRN')"></div>
               </div>
             </div>
@@ -266,7 +266,7 @@
               <mat-icon matPrefix svgIcon="thunderBlackIcon" height="20px"></mat-icon>
               <mat-label ng-mouseenter="$mdMenu.open()">Actions</mat-label>
               <mat-select ng-mouseleave="$mdMenu.close()">
-                <mat-option value="Acknowledge" (click)="acknowledgementClicked(element.DocNumber)">ACK
+                <mat-option value="Acknowledge" (click)="acknowledgementClicked(element.DocNumber,'ACK')">ACK
                 </mat-option>
                 <mat-option value="POLookup" (click)="goToPOFactSheetClicked(element.DocNumber)">PO Factsheet
                 </mat-option>

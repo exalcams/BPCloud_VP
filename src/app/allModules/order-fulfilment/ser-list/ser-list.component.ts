@@ -7,11 +7,12 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { BPCASNHeader, BPCASNView, ASNListView } from 'app/models/ASN';
 import { AuthenticationDetails } from 'app/models/master';
-import { BPCOFHeader, BPCOFItem, BPCOFSubconView } from 'app/models/OrderFulFilment';
+import { ActionLog, BPCOFHeader, BPCOFItem, BPCOFSubconView } from 'app/models/OrderFulFilment';
 import { AttachmentDetails } from 'app/models/task';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { ASNService } from 'app/services/asn.service';
+import { AuthService } from 'app/services/auth.service';
 import { ExcelService } from 'app/services/excel.service';
 import { Guid } from 'guid-typescript';
 import { AsnlistPrintDialogComponent } from '../asnlist/asnlist-print-dialogue/asnlist-print-dialog/asnlist-print-dialog.component';
@@ -49,9 +50,11 @@ export class SerListComponent implements OnInit {
   DefaultToDate: Date;
   SelectValue: string;
   TableSelectValue: string;
+  ActionLog: any;
   constructor(
     private _fuseConfigService: FuseConfigService,
     private formBuilder: FormBuilder,
+    private _authService:AuthService,
     private _asnService: ASNService,
     private _excelService: ExcelService,
     private _router: Router,
@@ -144,6 +147,7 @@ export class SerListComponent implements OnInit {
   }
   SearchClicked(): void {
     if (this.SearchFormGroup.valid) {
+      this.CreateActionLogvalues("Search");
       if (!this.isDateError) {
         const FrDate = this.SearchFormGroup.get('ASNFromDate').value;
         let FromDate = '';
@@ -217,6 +221,7 @@ export class SerListComponent implements OnInit {
     // this._fuseConfigService.config = this.fuseConfig;
   }
   exportAsXLSX(): void {
+    this.CreateActionLogvalues("exportAsXLSX");
     const currentPageIndex = this.TableDetailsDataSource.paginator.pageIndex;
     const PageSize = this.TableDetailsDataSource.paginator.pageSize;
     const startIndex = currentPageIndex * PageSize;
@@ -240,9 +245,11 @@ export class SerListComponent implements OnInit {
     this._excelService.exportAsExcelFile(itemsShowedd, 'accountstatement');
   }
   expandClicked(): void {
+    this.CreateActionLogvalues("Expand");
     this.isExpanded = !this.isExpanded;
   }
   Pdfdownload(no: any): void {
+    this.CreateActionLogvalues("Pdfdownload");
     this.IsProgressBarVisibile = true;
     // this.SelectedASNHeader.ASNNumber=""
     // this.SelectedASNHeader.ASNNumber="no"
@@ -298,4 +305,22 @@ export class SerListComponent implements OnInit {
   ASNnumber(asn: any) {
     this._router.navigate(["/asn"], { queryParams: { id: asn } });
   }
+  CreateActionLogvalues(text):void{
+    this.ActionLog=new ActionLog();
+    this.ActionLog.UserID=this.currentUserID;
+    this.ActionLog.AppName="OrderFulfilmentCenter";
+    this.ActionLog.ActionText=text+" is Clicked";
+    this.ActionLog.Action=text;
+    this.ActionLog.CreatedBy=this.currentUserName;
+    this._authService.CreateActionLog(this.ActionLog).subscribe(
+        (data)=>
+        {
+            console.log(data);
+        },
+        (err)=>
+        {
+            console.log(err);
+        }
+    );
+}
 }
