@@ -21,7 +21,7 @@ import { FactService } from 'app/services/fact.service';
 import { VendorMasterService } from 'app/services/vendor-master.service';
 import { POService } from 'app/services/po.service';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { BPCOFItem, BPCOFHeader, BPCOFSubconView, BPCOFItemView } from 'app/models/OrderFulFilment';
+import { BPCOFItem, BPCOFHeader, BPCOFSubconView, BPCOFItemView, ActionLog } from 'app/models/OrderFulFilment';
 import { AttachmentDetails } from 'app/models/task';
 import { DatePipe } from '@angular/common';
 import { SubconService } from 'app/services/subcon.service';
@@ -34,6 +34,7 @@ import { AttachmentDialogComponent } from 'app/notifications/attachment-dialog/a
 import { ASNItemBatchDialogComponent } from './asnitem-batch-dialog/asnitem-batch-dialog.component';
 import { NotificationDialog1Component } from 'app/notifications/notification-dialog1/notification-dialog1.component';
 import { ASNItemServiceDialogComponent } from './asnitem-service-dialog/asnitem-service-dialog.component';
+import { AuthService } from 'app/services/auth.service';
 @Component({
     selector: 'app-asn',
     templateUrl: './asn.component.html',
@@ -149,6 +150,7 @@ export class ASNComponent implements OnInit {
     IsPriceNotMatched = false;
     DocumentType: string;
     SelectedDocType:string;
+    ActionLog: any;
 
     constructor(
         private _fuseConfigService: FuseConfigService,
@@ -156,6 +158,7 @@ export class ASNComponent implements OnInit {
         private _FactService: FactService,
         private _POService: POService,
         private _ASNService: ASNService,
+        private _authservice: AuthService,
         private _subConService: SubconService,
         private _vendorMasterService: VendorMasterService,
         private _excelService: ExcelService,
@@ -404,6 +407,7 @@ export class ASNComponent implements OnInit {
         }
     }
     ShipmentNotRelevantChecked(completed: boolean): void {
+        this.CreateActionLogvalues("ShipmentNotRelevant");
         this.IsShipmentNotRelevant = completed;
         if (this.IsShipmentNotRelevant) {
             const aSNItemFormArray = this.ASNItemFormGroup.get('ASNItems') as FormArray;
@@ -565,6 +569,7 @@ export class ASNComponent implements OnInit {
 
     AddDocumentCenterToTable(): void {
         if (this.DocumentCenterFormGroup.valid) {
+            this.CreateActionLogvalues("AddDocumentCenter");
             const documentCenter = new DocumentCenter();
             documentCenter.DocumentType = this.DocumentCenterFormGroup.get('DocumentType').value;
             documentCenter.DocumentTitle = this.DocumentCenterFormGroup.get('DocumentTitle').value;
@@ -586,6 +591,7 @@ export class ASNComponent implements OnInit {
     }
 
     RemoveDocumentCenterFromTable(doc: DocumentCenter): void {
+        this.CreateActionLogvalues("Remove DocumentCenter");
         const index: number = this.AllDocumentCenters.indexOf(doc);
         if (index > -1) {
             this.AllDocumentCenters.splice(index, 1);
@@ -1217,6 +1223,7 @@ export class ASNComponent implements OnInit {
         });
     }
     OpenItemBatch(index: number): void {
+        this.CreateActionLogvalues("ItemBatch");
         const fg = this.ASNItemFormArray.controls[index] as FormGroup;
         const asQ = fg.get('ASNQty').value;
         const asBatch = fg.get('Batch').value;
@@ -1422,6 +1429,7 @@ export class ASNComponent implements OnInit {
     }
 
     SaveClicked(): void {
+        this.CreateActionLogvalues("Save");
         this.InvoiceDetailsFormGroup.get('POBasicPrice').disable();
         // if (this.ASNFormGroup.valid) {
         //     if (!this.isWeightError) {
@@ -1516,6 +1524,7 @@ export class ASNComponent implements OnInit {
     }
     SubmitClicked(): void {
         this.EnableAllFormGroup();
+        this.CreateActionLogvalues("Submit");
         this.InvoiceDetailsFormGroup.get('POBasicPrice').disable();
         if (this.IsShipmentNotRelevant) {
             if (!this.isWeightError) {
@@ -1906,6 +1915,7 @@ export class ASNComponent implements OnInit {
     }
 
     GetDocumentCenterAttachment(fileName: string): void {
+        this.CreateActionLogvalues("View DocumentCenter Attachment")
         const file = this.fileToUploadList.filter(x => x.name === fileName)[0];
         if (file && file.size) {
             const blob = new Blob([file], { type: file.type });
@@ -2200,6 +2210,24 @@ export class ASNComponent implements OnInit {
             }
         });
     }
+    CreateActionLogvalues(text):void{
+        this.ActionLog=new ActionLog();
+        this.ActionLog.UserID=this.currentUserID;
+        this.ActionLog.AppName="ASN";
+        this.ActionLog.ActionText=text+" is Clicked";
+        this.ActionLog.Action=text;
+        this.ActionLog.CreatedBy=this.currentUserName;
+        this._authservice.CreateActionLog(this.ActionLog).subscribe(
+            (data)=>
+            {
+                console.log(data);
+            },
+            (err)=>
+            {
+                console.log(err);
+            }
+        );
+    }
 }
 
 export function MustValid(NetWeight: string, GrossWeight: string): ValidationErrors | null {
@@ -2219,6 +2247,6 @@ export function MustValid(NetWeight: string, GrossWeight: string): ValidationErr
             GrossWeightcontrol.setErrors(null);
         }
     };
-
+    
 }
 

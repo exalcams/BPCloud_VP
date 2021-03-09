@@ -19,7 +19,7 @@ import { AttachmentDetails } from 'app/models/task';
 import { AsnlistPrintDialogComponent } from './asnlist-print-dialogue/asnlist-print-dialog/asnlist-print-dialog.component';
 import { ActivatedRoute } from '@angular/router';
 import { POService } from 'app/services/po.service';
-import { BPCOFHeader, BPCOFItem, BPCOFSubconView } from 'app/models/OrderFulFilment';
+import { ActionLog, BPCOFHeader, BPCOFItem, BPCOFSubconView } from 'app/models/OrderFulFilment';
 import { SubconService } from 'app/services/subcon.service';
 import { BehaviorSubject } from 'rxjs';
 import { NumberFormat } from 'xlsx/types';
@@ -27,6 +27,7 @@ import { slice } from 'lodash';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { GateService } from 'app/services/gate.service';
 import { BPCGateHoveringVechicles } from 'app/models/Gate';
+import { AuthService } from 'app/services/auth.service';
 
 @Component({
   selector: 'app-asnlist',
@@ -76,6 +77,7 @@ export class ASNListComponent implements OnInit {
   maxDate: Date;
   GateEntryCreatedDate: string;
   DateTime: Date;
+  ActionLog: any;
   // InvoiceDetailsFormGroup: FormGroup;
   // ASNPackDataSource = new BehaviorSubject<AbstractControl[]>([]);
   // ASNItemFormArray: FormArray = this._formBuilder.array([]);
@@ -111,6 +113,7 @@ export class ASNListComponent implements OnInit {
     private dialog: MatDialog,
     private _subConService: SubconService,
     private _POService: POService,
+    private _authService:AuthService,
     private _GateService: GateService,
     private _formBuilder: FormBuilder
   ) {
@@ -191,6 +194,7 @@ export class ASNListComponent implements OnInit {
 
   // }
   Pdfdownload(no: any): void {
+    this.CreateActionLogvalues("Pdfdownload");
     this.IsProgressBarVisibile = true;
     // this.SelectedASNHeader.ASNNumber=""
     // this.SelectedASNHeader.ASNNumber="no"
@@ -244,11 +248,13 @@ export class ASNListComponent implements OnInit {
   //   );
   // }
   help(po: string): void {
+    this.CreateActionLogvalues("HelpDesk");
     this._router.navigate(["/support/supportticket"], {
       queryParams: { id: po, navigator_page: "ASN" },
     });
   }
   GateEntry(Asn: ASNListView): void {
+    this.CreateActionLogvalues("GateEntry");
     this._GateService.CreateGateEntryByAsnList(Asn).subscribe(
       (data) => {
         // this.Gate = data as BPCGateHoveringVechicles;
@@ -262,6 +268,7 @@ export class ASNListComponent implements OnInit {
     );
   }
   CancelGateEntry(Asn: ASNListView): void {
+    this.CreateActionLogvalues("CancelGateEntry");
     this._GateService.CancelGateEntryByAsnList(Asn).subscribe(
       (data) => {
         // this.Gate = data as BPCGateHoveringVechicles;
@@ -693,6 +700,7 @@ export class ASNListComponent implements OnInit {
   }
 
   ASNnumber(asn: any) {
+    this.CreateActionLogvalues("ASNNumber");
     this._router.navigate(["/asn"], { queryParams: { id: asn } });
   }
 
@@ -718,6 +726,7 @@ export class ASNListComponent implements OnInit {
     });
   }
   GetAllASNListByPartnerID(): void {
+    this.CreateActionLogvalues("Filter-All")
     this._asnService.GetAllASNListByPartnerID(this.currentUserName).subscribe(
       (data) => {
         // console.log("data" + data)
@@ -878,6 +887,7 @@ export class ASNListComponent implements OnInit {
     // this._fuseConfigService.config = this.fuseConfig;
   }
   exportAsXLSX(): void {
+    this.CreateActionLogvalues("exportAsXLSX");
     const currentPageIndex = this.TableDetailsDataSource.paginator.pageIndex;
     const PageSize = this.TableDetailsDataSource.paginator.pageSize;
     const startIndex = currentPageIndex * PageSize;
@@ -902,7 +912,26 @@ export class ASNListComponent implements OnInit {
   }
   expandClicked(): void {
     this.isExpanded = !this.isExpanded;
+    this.CreateActionLogvalues("Expand");
   }
+  CreateActionLogvalues(text):void{
+    this.ActionLog=new ActionLog();
+    this.ActionLog.UserID=this.currentUserID;
+    this.ActionLog.AppName="ASNList";
+    this.ActionLog.ActionText=text+" is Clicked";
+    this.ActionLog.Action=text;
+    this.ActionLog.CreatedBy=this.currentUserName;
+    this._authService.CreateActionLog(this.ActionLog).subscribe(
+        (data)=>
+        {
+            console.log(data);
+        },
+        (err)=>
+        {
+            console.log(err);
+        }
+    );
+}
 }
 export function MustValid(NetWeight: string, GrossWeight: string): ValidationErrors | null {
   return (formGroup: FormGroup) => {

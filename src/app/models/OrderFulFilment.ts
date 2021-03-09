@@ -1,5 +1,6 @@
 import { CommonClass } from './common';
 import { BPCASNItemSES, BPCInvoiceAttachment } from './ASN';
+import { Guid } from 'guid-typescript';
 export class BPCOFHeader extends CommonClass {
     Client: string;
     Company: string;
@@ -325,4 +326,12 @@ export class BPCPlantMaster extends CommonClass {
     State: string;
     Country: string;
     PinCode: string;
+}
+export class ActionLog extends CommonClass{
+    ID: number;
+    UserID: Guid;
+    AppName: string;
+    Action: string;
+    ActionText: string;
+    UsedOn: string;
 }
