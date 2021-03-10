@@ -21,6 +21,7 @@ import { CardUpdateComponent } from './card-update/card-update.component';
 import { DataMigrationComponent } from "./data-migration/data-migration.component";
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { ProductsComponent } from './products/products.component';
+import { CutomerWelcomeMessageComponent } from './cutomer-welcome-message/cutomer-welcome-message.component';
 
 const menuRoutes: Routes = [
     {
@@ -59,6 +60,10 @@ const menuRoutes: Routes = [
         path: "products",
         component: ProductsComponent,
     },
+    {
+        path: "welcomemsg",
+        component: CutomerWelcomeMessageComponent,
+    },
 ];
 @NgModule({
     declarations: [
@@ -70,7 +75,8 @@ const menuRoutes: Routes = [
         AsnFieldMasterComponent,
         CardUpdateComponent,
         DataMigrationComponent,
-        ProductsComponent
+        ProductsComponent,
+        CutomerWelcomeMessageComponent
     ],
     imports: [
         MatButtonModule,

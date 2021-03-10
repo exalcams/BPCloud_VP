@@ -207,10 +207,39 @@
                         PODItemFormGroup.get('PODItems').controls[index]?.get('ReceivedQty').hasError('pattern')">
                           *
                         </mat-error>
+                        <!-- <mat-error *ngIf="
+                        PODItemFormGroup.get('PODItems').controls[index]?.get('MissingQty').hasError('qty') ?   PODItemFormGroup.get('PODItems').controls[index]?.get('MissingQty').
+                       ">
+                          *
+                        </mat-error> -->
+                       <!-- <div *ngIf="PODItemFormGroup.get('PODItems').controls[index]?.get('ReceivedQty').value"></div> -->
                       </mat-form-field>
                     </td>
                   </ng-container>
-
+                  <ng-container matColumnDef="MissingQty">
+                    <th mat-header-cell *matHeaderCellDef style="width: 120px;"> Missing Qty</th>
+                    <td mat-cell class="QtyClass" style="width: 120px;" *matCellDef="let element; let index = index"
+                      [formGroupName]="index">
+                      <mat-form-field appearance="outline" style="width: 100px;">
+                        <input matInput formControlName="MissingQty" (keydown)="decimalOnly($event)">
+                        <mat-error *ngIf="PODItemFormGroup.get('PODItems').controls[index]?.get('MissingQty').touched && 
+                        PODItemFormGroup.get('PODItems').controls[index]?.get('MissingQty').hasError('required')">
+                          *
+                        </mat-error>
+                        <mat-error *ngIf="PODItemFormGroup.get('PODItems').controls[index]?.get('MissingQty').touched && 
+                        !PODItemFormGroup.get('PODItems').controls[index]?.get('MissingQty').hasError('required')&&
+                        PODItemFormGroup.get('PODItems').controls[index]?.get('MissingQty').hasError('pattern')">
+                          *
+                        </mat-error>
+                        <mat-error *ngIf="PODItemFormGroup.get('PODItems').controls[index]?.get('MissingQty').touched && 
+                        !PODItemFormGroup.get('PODItems').controls[index]?.get('MissingQty').hasError('required')&&
+                        PODItemFormGroup.get('PODItems').controls[index]?.get('MissingQty').hasError('min') && 
+                        PODItemFormGroup.get('PODItems').controls[index]?.get('MissingQty').hasError('max')">
+                          *
+                        </mat-error>
+                      </mat-form-field>
+                    </td>
+                  </ng-container>
                   <ng-container matColumnDef="BreakageQty">
                     <th mat-header-cell *matHeaderCellDef style="width: 120px;"> Breakage Qty</th>
                     <td mat-cell class="QtyClass" style="width: 120px;" *matCellDef="let element; let index = index"
@@ -230,24 +259,7 @@
                     </td>
                   </ng-container>
 
-                  <ng-container matColumnDef="MissingQty">
-                    <th mat-header-cell *matHeaderCellDef style="width: 120px;"> Missing Qty</th>
-                    <td mat-cell class="QtyClass" style="width: 120px;" *matCellDef="let element; let index = index"
-                      [formGroupName]="index">
-                      <mat-form-field appearance="outline" style="width: 100px;">
-                        <input matInput formControlName="MissingQty" (keydown)="decimalOnly($event)">
-                        <mat-error *ngIf="PODItemFormGroup.get('PODItems').controls[index]?.get('MissingQty').touched && 
-                        PODItemFormGroup.get('PODItems').controls[index]?.get('MissingQty').hasError('required')">
-                          *
-                        </mat-error>
-                        <mat-error *ngIf="PODItemFormGroup.get('PODItems').controls[index]?.get('MissingQty').touched && 
-                        !PODItemFormGroup.get('PODItems').controls[index]?.get('MissingQty').hasError('required')&&
-                        PODItemFormGroup.get('PODItems').controls[index]?.get('MissingQty').hasError('pattern')">
-                          *
-                        </mat-error>
-                      </mat-form-field>
-                    </td>
-                  </ng-container>
+                
 
                   <ng-container matColumnDef="AcceptedQty">
                     <th mat-header-cell *matHeaderCellDef style="width: 120px;"> POD Qty</th>

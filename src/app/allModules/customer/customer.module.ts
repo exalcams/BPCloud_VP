@@ -70,6 +70,11 @@ import { SupportTicketComponent } from './support-ticket/support-ticket.componen
 import { NotesDialogComponent } from './notes-dialog/notes-dialog.component';
 import { PODItemAttachmentDialogComponent } from './poditem-attachment-dialog/poditem-attachment-dialog.component';
 import { InvoicePaymentComponent } from './invoice-payment/invoice-payment.component';
+import { CustomerHomeComponent } from './customer-home/customer-home.component';
+import { HomeComponent } from '../pages/home/home.component';
+import { CustomerPurchaseListComponent } from './customer-purchase-list/customer-purchase-list.component';
+import { CustomerReturnListComponent } from './customer-return-list/customer-return-list.component';
+import { CustomerReturnComponent } from './customer-return/customer-return.component';
 
 const routes = [
     {
@@ -119,6 +124,22 @@ const routes = [
     {
         path: 'supportticket',
         component: SupportTicketComponent
+    },
+    {
+        path: 'home',
+        component: CustomerHomeComponent
+    },
+    {
+        path: 'purchaseindentList',
+        component: CustomerPurchaseListComponent
+    },
+    {
+        path: 'customerreturnlist',
+        component: CustomerReturnListComponent
+    },
+    {
+        path: 'customerreturn',
+        component: CustomerReturnComponent
     },
     {
         path: '**',
@@ -185,7 +206,8 @@ const routes = [
     declarations: [CustomerDashboardComponent, CustomerFactComponent,
         CustomerOrderfulfilmentComponent, CustomerPolookupComponent,
         PurchaseIndentComponent, ReturnComponent, PODComponent, PODDetailsComponent,
-        SupportChatComponent, SupportDeskComponent, SupportTicketComponent, NotesDialogComponent, PODItemAttachmentDialogComponent, InvoicePaymentComponent],
+        SupportChatComponent, SupportDeskComponent, SupportTicketComponent, NotesDialogComponent, PODItemAttachmentDialogComponent, InvoicePaymentComponent,
+        CustomerHomeComponent, CustomerPurchaseListComponent, CustomerReturnListComponent, CustomerReturnComponent],
     providers: [
         DecimalPipe
     ],

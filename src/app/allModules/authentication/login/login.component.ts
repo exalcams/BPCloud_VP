@@ -47,6 +47,8 @@ export class LoginComponent implements OnInit {
     children: FuseNavigation[] = [];
     subChildren: FuseNavigation[] = [];
     orderFulfilmentSubChildren: FuseNavigation[] = [];
+    PurchaseSubChildren:FuseNavigation[] = [];
+    ReturnSubChildren:FuseNavigation[] = [];
     gateSubChildren: FuseNavigation[] = [];
     qualitySubChildren: FuseNavigation[] = [];
     subconSubChildren: FuseNavigation[] = [];
@@ -284,7 +286,7 @@ export class LoginComponent implements OnInit {
         //   this._router.navigate(['pages/dashboard']);
         // }
         if (data.UserRole === "Customer") {
-            this._router.navigate(["customer/dashboard"]);
+            this._router.navigate(["customer/home"]);
         } else if (data.UserRole === "Administrator") {
             this._router.navigate(["configuration/datamigration"]);
         } else if (data.UserRole === "HelpDeskAdmin") {
@@ -933,8 +935,22 @@ export class LoginComponent implements OnInit {
         this.GetRFQMenus();
         this.GetSupportMenus();
     }
-
+//
     GetCustomerMenus(): void {
+
+        if (this.menuItems.indexOf("customerhome") >= 0) {
+            this.children.push({
+                id: "custhome",
+                title: "Home",
+                translate: "NAV.CUSTOMER.DASHBOARD",
+                type: "item",
+                icon: "home",
+                // isSvgIcon: true,
+                // icon: 'dashboard',
+                url: "/customer/home",
+            });
+        }
+
         if (this.menuItems.indexOf("CustomerDashboard") >= 0) {
             this.children.push({
                 id: "custdashboard",
@@ -947,6 +963,7 @@ export class LoginComponent implements OnInit {
                 url: "/customer/dashboard",
             });
         }
+
 
         if (this.menuItems.indexOf("CustomerOrderFulFilmentCenter") >= 0) {
             this.customerOrderFulfilmentSubChildren.push({
@@ -970,29 +987,86 @@ export class LoginComponent implements OnInit {
                 children: this.customerOrderFulfilmentSubChildren,
             });
         }
-
-        if (this.menuItems.indexOf("PurchaseIndent") >= 0) {
-            this.children.push({
-                id: "fact",
-                title: "Purchase Indent",
+        if (this.menuItems.indexOf("CustomerPurchaseList") >= 0) {
+            this.PurchaseSubChildren.push({
+                id: "PurchaseList",
+                title: "List",
                 translate: "NAV.CUSTOMER.PURCHASE_INDENT",
                 type: "item",
-                icon: "purchaseIntentIcon",
-                isSvgIcon: true,
+                // icon: "purchaseIntentIcon",
+                // isSvgIcon: true,
+                // icon: 'dashboard',
+                url: "/customer/purchaseindentList",
+            });
+        }
+        if (this.menuItems.indexOf("PurchaseIndent") >= 0) {
+            this.PurchaseSubChildren.push({
+                id: "fact",
+                title: "Create",
+                translate: "NAV.CUSTOMER.PURCHASE_INDENT",
+                type: "item",
+                // icon: "purchaseIntentIcon",
+                // isSvgIcon: true,
                 // icon: 'dashboard',
                 url: "/customer/purchaseindent",
             });
         }
-        if (this.menuItems.indexOf("Return") >= 0) {
+       
+        if (this.menuItems.indexOf("PurchaseIndent") >= 0) {
             this.children.push({
-                id: "fact",
-                title: "Return",
-                translate: "NAV.CUSTOMER.RETURN",
-                type: "item",
-                icon: "returnIcon",
+                id: "Purchase",
+                title: "Purchase",
+                translate: "NAV.CUSTOMER.PURCHASE_INDENT",
+                type: "collapsable",
+                icon: "purchaseIntentIcon",
                 isSvgIcon: true,
                 // icon: 'dashboard',
-                url: "/customer/return",
+                // url: "/customer/purchaseindent",
+                children: this.PurchaseSubChildren,
+            });
+        }
+        if (this.menuItems.indexOf("Return") >= 0) {
+            this.ReturnSubChildren.push({
+                id: "ReturnList",
+                title: "List",
+                translate: "NAV.CUSTOMER.RETURN",
+                type: "item",
+                // icon: "returnIcon",
+                // isSvgIcon: true,
+                // icon: 'dashboard',
+                url: "/customer/customerreturnlist",
+                // customerreturnlist
+                // return
+            });
+        }
+        if (this.menuItems.indexOf("Return") >= 0) {
+            this.ReturnSubChildren.push({
+                id: "fact",
+                title: "create",
+                translate: "NAV.CUSTOMER.RETURN",
+                type: "item",
+                // icon: "returnIcon",
+                // isSvgIcon: true,
+                // icon: 'dashboard',
+                url: "/customer/customerreturn",
+                // customerreturnlist
+                // return
+            });
+        }
+        if (this.menuItems.indexOf("Return") >= 0) {
+            this.children.push({
+                id: "return",
+                title: "Return",
+                translate: "NAV.CUSTOMER.RETURN",
+                // type: "item",
+                type: "collapsable",
+                icon: "returnIcon",
+                isSvgIcon: true,
+                children: this.ReturnSubChildren,
+                // icon: 'dashboard',
+                // url: "/customer/customerreturnlist",
+                // customerreturnlist
+                // return
             });
         }
         if (this.menuItems.indexOf("POD") >= 0) {
@@ -1255,12 +1329,20 @@ export class LoginComponent implements OnInit {
             });
         }
         this.configSubChildren.push({
+            id: "welcomemsg",
+            title: "Welcome Message",
+            translate: "NAV.ADMIN.SUPPORT",
+            type: "item",
+            url: "/configuration/welcomemsg",
+        });
+        this.configSubChildren.push({
             id: "ceomsg",
             title: "CEO Message",
             translate: "NAV.ADMIN.SUPPORT",
             type: "item",
             url: "/configuration/ceomsg",
         });
+
         this.configSubChildren.push({
             id: "scocmsg",
             title: "SCOC Message",

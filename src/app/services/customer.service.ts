@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { Observable, throwError } from 'rxjs';
 import { Guid } from 'guid-typescript';
 import { catchError } from 'rxjs/operators';
-import { BPCPIView, BPCPIHeader, BPCProd, BPCPIItem } from 'app/models/customer';
+import { BPCPIView, BPCPIHeader, BPCProd, BPCPIItem, BPCRetHeader, BPCRetView_new, BPCRetItem } from 'app/models/customer';
 
 @Injectable({
     providedIn: 'root'
@@ -60,8 +60,8 @@ export class CustomerService {
             .pipe(catchError(this.errorHandler));
     }
 
-    GetAllPurchaseIndentsByPartnerID(PartnerID: string): Observable<BPCPIHeader[] | string> {
-        return this._httpClient.get<BPCPIHeader[]>(`${this.baseAddress}poapi/PurchaseIndent/GetAllPurchaseIndentsByPartnerID?PartnerID=${PartnerID}`)
+    GetAllPurchaseIndentsByPartnerID(Client:string,Company:string,Type: string, PatnerID: string): Observable<BPCPIHeader[] | string> {
+        return this._httpClient.get<BPCPIHeader[]>(`${this.baseAddress}poapi/PurchaseIndent/GetAllPurchaseIndentsByPartnerID?Client=${Client}&Company=${Company}&Type=${Type}&PatnerID=${PatnerID}`)
             .pipe(catchError(this.errorHandler));
     }
 
@@ -152,10 +152,58 @@ export class CustomerService {
         return this._httpClient.get<BPCPIItem[]>(`${this.baseAddress}poapi/Return/GetReturnItemsByRet?RetReqID=${RetReqID}`)
             .pipe(catchError(this.errorHandler));
     }
+    //joe
+    GetReturnList(Client:string,Company:string,Type: string, PatnerID: string): Observable<BPCRetHeader[] | string> {
+        return this._httpClient.get<BPCRetHeader[]>(`${this.baseAddress}poapi/Return/GetReturnList?Client=${Client}&Company=${Company}&Type=${Type}&PatnerID=${PatnerID}`)
+            .pipe(catchError(this.errorHandler));
+    }
+    
     // Products
     GetAllProducts(): Observable<BPCProd[] | string> {
         return this._httpClient.get<BPCProd[]>(`${this.baseAddress}poapi/Product/GetAllProducts`)
             .pipe(catchError(this.errorHandler));
     }
+
+// Return Header table
+GetReturnItemsByRet_RetI(RetReqID: string): Observable<BPCRetItem[] | string> {
+    return this._httpClient.get<BPCRetItem[]>(`${this.baseAddress}poapi/Return/GetReturnItemsByRet_RetI?RetReqID=${RetReqID}`)
+        .pipe(catchError(this.errorHandler));
+}
+CreateReturnHeader(Return: BPCRetView_new): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}poapi/Return/CreateReturnHeader`,
+        Return,
+        {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        })
+        .pipe(catchError(this.errorHandler));
+}
+
+UpdateReturnHeader(Return: BPCRetView_new): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}poapi/Return/UpdateReturnHeader`,
+        Return,
+        {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        })
+        .pipe(catchError(this.errorHandler));
+}
+
+DeleteReturnHeader(Return: BPCRetHeader): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}poapi/Return/DeleteReturnHeader`,
+        Return,
+        {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        })
+        .pipe(catchError(this.errorHandler));
+}
+GetReturnByRetAndPartnerID_RetH(RetReqID: string, PartnerID: string): Observable<BPCRetHeader | string> {
+    return this._httpClient.get<BPCRetHeader>(`${this.baseAddress}poapi/Return/GetReturnByRetAndPartnerID_RetH?RetReqID=${RetReqID}&PartnerID=${PartnerID}`)
+        .pipe(catchError(this.errorHandler));
+}
 
 }

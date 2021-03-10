@@ -43,11 +43,12 @@ import { SnackBarStatus } from "app/notifications/notification-snack-bar/notific
 import { ChartType } from "chart.js";
 import { fuseAnimations } from "@fuse/animations";
 import { SODetails } from "app/models/customer";
-import { BPCKRA, CustomerBarChartData } from "app/models/fact";
+import { BPCFact, BPCKRA, CustomerBarChartData } from "app/models/fact";
 import { MasterService } from "app/services/master.service";
 import { OfAttachmentData } from "app/models/OrderFulFilment";
 import { BPCInvoiceAttachment } from "app/models/ASN";
 import { AttachmentViewDialogComponent } from 'app/notifications/attachment-view-dialog/attachment-view-dialog.component';
+import { FactService } from "app/services/fact.service";
 
 @Component({
     selector: "app-customer-orderfulfilment",
@@ -77,10 +78,10 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
     AllEscalatedTasksCount: number;
     AllReworkTasksCount: number;
     SODisplayedColumns: string[] = [
-        "PIRNumber",
+        // "PIRNumber",
         "SO",
         // 'Version',
-        "PIRType",
+        // "PIRType",
         "SODate",
         "Status",
         "Document",
@@ -242,11 +243,17 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
         { backgroundColor: "#40a8e2" },
         { backgroundColor: "#fb863a" },
     ];
+    SelectedBPCFact: any;
+    client: any;
+    type: any;
+    company: any;
+    patnerid: any;
 
     constructor(
         private _fuseConfigService: FuseConfigService,
         private _formBuilder: FormBuilder,
         private _router: Router,
+        private _FactService: FactService,
         public snackBar: MatSnackBar,
         public _dashboardService: DashboardService,
         private _masterService: MasterService,
@@ -267,6 +274,7 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
     }
 
     ngOnInit(): void {
+    
         this.SetUserPreference();
         // Retrive authorizationData
         const retrievedObject = localStorage.getItem("authorizationData");
@@ -292,12 +300,15 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
         } else {
             this._router.navigate(["/auth/login"]);
         }
+        this.GetFactByPartnerID();
         this.CreateAppUsage();
-        this.GetSODetails();
+       
+        // this.GetSODetails();
         this.GetCustomerOpenProcessCircle();
         this.GetCustomerCreditLimitProcessCircle();
         this.GetCustomerDoughnutChartData();
         this.GetCustomerBarChartData();
+     
         this.Fulfilments = [
             {
                 name: "Open",
@@ -411,9 +422,28 @@ export class CustomerOrderfulfilmentComponent implements OnInit {
             }
         );
     }
+    GetFactByPartnerID(): void {
+        this._FactService.GetFactByPartnerID(this.currentUserName).subscribe(
+            (data) => {
+                this.SelectedBPCFact = data as BPCFact;
+                this.client=data.Client, 
+                this.company= data.Company,
+                this.type=data.Type,
+                this.patnerid=data.PatnerID
+                if(data)
+                this.GetSODetails();
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
     GetSODetails(): void {
         this.IsProgressBarVisibile = true;
-        this._dashboardService.GetSODetails("C", this.PartnerID).subscribe(
+     
+        this._dashboardService.GetSODetails(this.client,this.company,this.type,this.patnerid).subscribe(
+            // this.type
+            // "C", this.PartnerID
             (data) => {
                 if (data) {
                     this.AllSOs = data as SODetails[];
