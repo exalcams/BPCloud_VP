@@ -1004,7 +1004,7 @@ export class LoginComponent implements OnInit {
                 icon: "podIcon",
                 isSvgIcon: true,
                 // icon: 'dashboard',
-                url: "/customer/poddetails",
+                url: "/customer/pod",
             });
         }
         if (this.menuItems.indexOf("InvoicePayment") >= 0) {

@@ -1,16 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material';
-import { BPCInvoicePayment } from 'app/models/customer';
+import { MatDialog, MatTableDataSource } from '@angular/material';
+import {MatPaginator} from '@angular/material/paginator';
+import { BPCInvoicePayment, BPCPayRecord } from 'app/models/customer';
 import { POService } from 'app/services/po.service';
 import { ReportService } from 'app/services/report.service';
-export interface Invoice {
-  Invoice: number;
-  Date: Date;
-  Amount: number;
-  AWB: number;
+import { PaymentDailogComponent } from '../payment-dailog/payment-dailog.component';
+import { PaymentHistoryDialogComponent } from '../payment-history-dialog/payment-history-dialog.component';
 
-}
 
 @Component({
   selector: 'app-invoice-payment',
@@ -20,76 +17,131 @@ export interface Invoice {
 export class InvoicePaymentComponent implements OnInit {
   InvoiceFormGroup: FormGroup;
   InvoiceItemFormGroup:FormGroup;
-  AllReturnItems:any[]=[];
-  AllProducts:any[]=[];
+
+  // AllReturnItems:any[]=[];
+  // AllProducts:any[]=[];
   IsProgressBarVisibile:boolean=false;
   InvoiceFormdata:any[]=[];
-  InvoiceItemDisplayedColumns: string[] = [
-    'Invoice',
-    'Date',
+  InvoicePaymentDataArray:BPCInvoicePayment[]=[]
+  InvoiceDisplayedColumns: string[] = [
+    'InvoiceNo',
+    'Invoicedate',
     'PaidAmount',
-    'AWB',
+    'AWBNumber',
     'PODStatus',
-    'Balance'
+    'BalanceAmount',
+    'Payment'
    
   ];
-  InvoiceItemDataSource: MatTableDataSource<any>;
-  InvoiceDisplayedColumns: string[] = [
-    'Material',
-    'Text',
-    'Qty',
-    'UOM'
-  ];
-  InvoiceDataSource: MatTableDataSource<any>;
+ 
+  InvoiceDataSource: MatTableDataSource<BPCInvoicePayment>;
+  @ViewChild(MatPaginator) InvoicePaginator: MatPaginator;
+
+  ispayment: boolean;
+  InvoicePaymentRecordArray: BPCPayRecord[];
+  PayDataSource: MatTableDataSource<BPCPayRecord>;
   constructor(
     private _formBuilder: FormBuilder,
-    private poservice:POService
-  ) { }
+    private poservice:POService,
+    public dialog: MatDialog
+  ) {
+    this.ispayment=false;
+   }
 
   ngOnInit() {
-    this.InitializeReturnFormGroup();
+    //this.InitializeReturnFormGroup();
     this.GetAllInvoices();
+    this.GetAllRecords();
   }
-  InitializeReturnFormGroup(): void {
-    this.InvoiceFormGroup = this._formBuilder.group({
-      Invoice: ['', Validators.required],
-      Date: [new Date(), Validators.required],
-      Amount: ['', Validators.required],
-      AWB: ['', Validators.required]
-     
-    });
-    this.InvoiceItemFormGroup = this._formBuilder.group({
-      Material: ['', Validators.required],
-      Text: ['', Validators.required],
-      Qty: [ Validators.required],
-      UOM: ['', Validators.required],
-  
-    });
-  }
+ 
   GetAllInvoices(){
     this.poservice.GetAllInvoices().subscribe(
-      (data)=>{console.log(data)},
+      (data)=>{
+        this.InvoicePaymentDataArray=data as BPCInvoicePayment[],
+        this.InvoiceDataSource=new MatTableDataSource( this.InvoicePaymentDataArray);
+        this.InvoiceDataSource.paginator=this.InvoicePaginator;
+        console.log(this.InvoicePaymentDataArray)},
       (err)=>{console.log(err)}
     )
   }
-  AddInvoiceDetails(){
-    var Invoicedata:Invoice;
-    Invoicedata.AWB=parseInt(this.InvoiceFormGroup.get('AWB').value());
-    Invoicedata.Amount=parseInt(this.InvoiceFormGroup.get('Amount').value());
-    Invoicedata.Date=this.InvoiceFormGroup.get('Date').value();
-    Invoicedata.Invoice=parseInt(this.InvoiceFormGroup.get('Invoice').value());
-    this.InvoiceFormdata.push(Invoicedata);
- console.log(this.InvoiceFormdata);
+  GetAllRecords(){
+    this.poservice.GetAllPaymentRecord().subscribe(
+      (data)=>{
+        this.InvoicePaymentRecordArray=data as BPCPayRecord[],
+        // this.PayDataSource=new MatTableDataSource( this.InvoicePaymentRecordArray);
+        // this.PayDataSource.paginator=this.InvoicePaginator;
+        console.log(this.InvoicePaymentRecordArray)},
+      (err)=>{console.log(err)}
+    )
+  }
+  openPaymentdialog(data){
+var Invoicedata=new BPCInvoicePayment();
+console.log(data);
+
+Invoicedata=data as BPCInvoicePayment;
+console.log(Invoicedata);
+    const dialogRef = this.dialog.open(PaymentDailogComponent,{
+      width: '400px',
+      height:'200px',
+      data:Invoicedata
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result!=null){
+        var amount= result;
+        Invoicedata.PaidAmount=Invoicedata.PaidAmount+parseInt(amount);
+        console.log(Invoicedata.PaidAmount,Invoicedata);
+        this.CreateInvoice(Invoicedata,amount);
+        
+      }
+     
+    });
+  
+  }
+  CreateInvoice(Invoicedata:BPCInvoicePayment,amount){
+    console.log(Invoicedata);
+    
+    this.poservice.UpdateInvoice(Invoicedata).subscribe(
+    
+      (data)=>{console.log(data)
+        this.CreatePayRecord(Invoicedata,amount);},
+      (err)=>console.log(err)
+      
+    )
+  }
+  CreatePayRecord(Invoicedata:BPCInvoicePayment,amount){
+var PayRecord= new BPCPayRecord();
+PayRecord.Client=Invoicedata.Client;
+PayRecord.Company=Invoicedata.Company;
+PayRecord.DocumentNumber=Invoicedata.PoReference;
+PayRecord.InvoiceNumber=Invoicedata.InvoiceNo;
+PayRecord.Type=Invoicedata.Type;
+PayRecord.PartnerID=Invoicedata.PatnerID;
+PayRecord.PayRecordNo="002";
+PayRecord.PaidAmount=amount;
+PayRecord.PaymentDate=new Date();
+this.poservice.CreatePaymentRecord(PayRecord).subscribe(
+    
+  (data)=>console.log(data),
+  (err)=>console.log(err)
+  
+)
+  }
+  openPaidAmount(data){
+    var Invoicedata=new BPCInvoicePayment();
+// console.log(data);
+
+Invoicedata=data as BPCInvoicePayment;
+// var PayRecord = new BPCPayRecord();
+  
+var paymemtdata= this.InvoicePaymentRecordArray.filter(x=>x.InvoiceNumber==Invoicedata.InvoiceNo);
+console.log(paymemtdata);
+
+    const dialogRef = this.dialog.open(PaymentHistoryDialogComponent,{
+      width: '700px',
+      height:'300px',
+      data:paymemtdata
+    });
+  
+  }
  
-  }
-  DeleteClicked(){
-
-  }
-  SaveClicked()
-  {
-
-  }
-  SubmitClicked(){
-
-  }
 }

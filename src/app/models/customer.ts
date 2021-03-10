@@ -157,7 +157,7 @@ export class BPCInvoicePayment extends CommonClass {
     PatnerID:string;
     FiscalYear:string;
     InvoiceNo:string;
-    Invoicedate:Date;
+    InvoiceDate:Date;
     InvoiceAmount:number;
     PoReference:string;
     PaidAmount:number;
@@ -167,5 +167,26 @@ export class BPCInvoicePayment extends CommonClass {
     AttID:string;
     PODDate:Date;
     PODConfirmedBy:string;
+    AWBNumber:string;
+    BalanceAmount:number;
     
+}
+
+export class BPCPayRecord extends CommonClass{
+    Client: string;
+    Company: string;
+    Type: string;
+    PartnerID:string;
+    InvoiceNumber:string;
+   DocumentNumber:string;
+    PaymentDate:Date;
+    PayRecordNo:string;
+    UOM:string;
+    PaidAmount:number;
+    Medium:string;
+    Time:string;
+    Remarks:string;
+    RefNumber:string;
+    PayDoc:string;
+
 }

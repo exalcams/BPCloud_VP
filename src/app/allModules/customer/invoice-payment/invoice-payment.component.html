@@ -3,7 +3,7 @@
     <div class="outer" fxLayout>
       <div class="bg"></div>
       <div>
-        <h3 style="margin: 0px;padding-left: 10px;"><b>Return</b></h3>
+        <h3 style="margin: 0px;padding-left: 10px;"><b>Invoice Payment</b></h3>
       </div>
       <div fxFlex align="end">
         <span><img src="assets/images/logo.svg" style="height: 40px;padding: 4px 15px 2px 0px;"></span>
@@ -13,74 +13,11 @@
      
       <mat-card fxFlex="100" class="side-bar p-0">
         <div class="sidenav-content" fxFlex fxLayout="column">
-          <div fxFlex fxLayout class="p-0 pt-8">
-            <div fxFlex class="px-12 mt-4">
-              <form autocomplete="off" class="normal" fxLayout="column" fxLayoutAlign="start" name="form" novalidate
-                [formGroup]="InvoiceFormGroup" (ngSubmit)="AddInvoiceDetails()">
-                <div fxFlex fxLayout="row wrap" fxLayoutAlign="space-between">
-                  <div  fxFlex="30" class="px-12">
-                    <mat-form-field style="width: 100%;">
-                      <input matInput placeholder="Invoice" formControlName="Invoice">
-                      <!-- <mat-error
-                        *ngIf="ReturnFormGroup.get('PIRNumber').touched && ReturnFormGroup.get('PIRNumber').hasError('required')">
-                        PIRNumber is required
-                      </mat-error> -->
-                    </mat-form-field>
-                  </div>
-                  <div fxFlex="30" class="px-12">
-                    <mat-form-field style="width: 100%;">
-                      <input matInput placeholder="Amount" formControlName="Amount">
-                      <!-- <mat-error
-                        *ngIf="ReturnFormGroup.get('Text').touched && ReturnFormGroup.get('Text').hasError('required')">
-                        Text is required
-                      </mat-error> -->
-                    </mat-form-field>
-                  </div>
-                  <div fxFlex="30" class="px-12">
-                    <mat-form-field style="width: 100%;">
-                      <input matInput placeholder="Date" [matDatepicker]="picker0" formControlName="Date">
-                      <mat-datepicker-toggle matSuffix [for]="picker0">
-                        <mat-icon matDatepickerToggleIcon svgIcon="calendarIcon" class="mb-12"></mat-icon>
-                      </mat-datepicker-toggle>
-                      <mat-datepicker #picker0></mat-datepicker>
-                      <!-- <mat-error
-                        *ngIf="ReturnFormGroup.get('Date').touched && ReturnFormGroup.get('Date').hasError('required')">
-                        Doc Date is required
-                      </mat-error> -->
-                    </mat-form-field>
-                  </div>
-                  <div fxFlex="30" class="px-12">
-                    <mat-form-field style="width: 100%;">
-                      <input matInput placeholder="AWB" formControlName="AWB">
-                      <!-- <mat-error
-                        *ngIf="ReturnFormGroup.get('ReferenceDoc').touched && ReturnFormGroup.get('ReferenceDoc').hasError('required')">
-                        Reference Doc is required
-                      </mat-error> -->
-                    </mat-form-field>
-                  </div>
-                  <!-- <div  fxFlex="30" class="px-12">
-                    <mat-form-field style="width: 100%;">
-                      <input matInput placeholder="POD Status" formControlName="Status">
-                      
-                    </mat-form-field>
-                  </div> -->
-                  <div  fxFlex="30" class="px-12">
-                    <button type="submit" mat-raised-button style="color:white;background-color: rgb(27, 172, 27);">Payment</button>
-                  </div>
-                </div>
-              </form>
-            </div>
-           
-          </div>
-
-
-
-
-<!-- 
+          
           <div fxFlex fxLayout="column" class="table mx-20 my-12">
-            <table  mat-table [dataSource]="InvoiceDataSource">
-              <ng-container matColumnDef="Item">
-                <th mat-header-cell *matHeaderCellDef style="width: 10%;"> Item </th>
+            <table mat-table [dataSource]="InvoiceDataSource">
+              <ng-container matColumnDef="InvoiceNo">
+                <th mat-header-cell *matHeaderCellDef style="width: 10%;"> InvoiceNo</th>
                 <td mat-cell style="width: 10%;" *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
                   <div fxLayout>
                     <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
@@ -89,226 +26,71 @@
                 </td>
               </ng-container>
 
-              <ng-container matColumnDef="ProdcutID">
-                <th mat-header-cell *matHeaderCellDef style="width: 10%;"> Material </th>
+              <ng-container matColumnDef="Invoicedate">
+                <th mat-header-cell *matHeaderCellDef style="width: 10%;"> Invoice Date </th>
                 <td mat-cell style="width: 10%;" *matCellDef="let element">
-                  {{ element.ProdcutID}} </td>
+                  {{ element.InvoiceDate |date: 'dd/MM/yyyy'}} </td>
               </ng-container>
 
 
-              <ng-container matColumnDef="OrderQty">
-                <th mat-header-cell *matHeaderCellDef style="width: 15%;"> Order Qty </th>
+              <ng-container matColumnDef="PaidAmount">
+                <th mat-header-cell *matHeaderCellDef style="width: 15%;"> PaidAmount</th>
                 <td mat-cell style="width: 15%;" *matCellDef="let element">
-                 {{ element.OrderQty}}</td>
+               <span class="paidLinkClass" (click)="openPaidAmount(element)">  {{ element.PaidAmount}} </span>
+                </td>
               </ng-container>
 
-              <ng-container matColumnDef="RetQty">
-                <th mat-header-cell *matHeaderCellDef style="width: 15%;"> RetQty </th>
+              <ng-container matColumnDef="AWBNumber">
+                <th mat-header-cell *matHeaderCellDef style="width: 15%;"> AWB Number </th>
                 <td mat-cell style="width: 15%;" *matCellDef="let element">
-                  {{element.RetQty}}</td>
+                  {{element.AWBNumber}}</td>
               </ng-container>
 
             
 
-              <ng-container matColumnDef="ReasonText">
-                <th mat-header-cell *matHeaderCellDef style="width: 20%;"> ReasonText </th>
-                <td mat-cell style="width: 20%;" *matCellDef="let element">
-                  {{element.ReasonText}} </td>
+              <ng-container matColumnDef="PODStatus">
+                <th mat-header-cell *matHeaderCellDef style="width: 20%;"> PODStatus </th>
+                <td mat-cell style="width: 20%;" *matCellDef="let element;">
+                <p *ngIf="element.PODDate && element.PODConfirmedBy">Confirmed</p> 
+              <p *ngIf="!element.PODDate && !element.PODConfirmedBy">Open</p>
+            </td>
               </ng-container>
 
 
-              <ng-container matColumnDef="FileName">
-                <th mat-header-cell *matHeaderCellDef style="width: 20%;"> FileName </th>
-                <td mat-cell style="width: 20%;" *matCellDef="let element">
-                  <span class="pdfLinkClass" (click)="GetReturnItemAttachment(element.FileName)">
-                    {{element.FileName}}
-                  </span>
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="Action">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%"> </th>
-                <td mat-cell *matCellDef="let element" style="text-align: center;width: 10%">
-                  <img class="removeIcon" src="assets/images/remove-button.png"
-                    >
-                </td>
-              </ng-container>
-
-              <tr mat-header-row *matHeaderRowDef="ReturnItemDisplayedColumns;sticky: true"></tr>
-              <tr mat-row *matRowDef="let row; columns: ReturnItemDisplayedColumns;let even=even">
-              </tr>
-            </table>
-          
-          </div>
-
- -->
-
-
-
-
-          <div class="px-12 mt-20">
-            <div>
-              <span class="Shipment-Proposal">Item</span>
-            </div>
-            <div>
-              <form autocomplete="off" class="normal" fxLayout="row" fxLayoutAlign="start" name="form" novalidate
-              [formGroup]="InvoiceItemFormGroup">
-                <div fxFlex="15">
-                  <mat-form-field class="px-12" style="width: 100%;">
-                    <input matInput placeholder="Material" formControlName="Material">
-                    <!-- <mat-error
-                      *ngIf="ReturnItemFormGroup.get('Item').touched && ReturnItemFormGroup.get('Item').hasError('required')">
-                      Item is required
-                    </mat-error> -->
-                  </mat-form-field>
-                </div>
-                
-                <div fxFlex="15">
-                  <mat-form-field class="px-12" style="width: 100%;">
-                    <!-- <input matInput placeholder="Text" formControlName="Text" (keyup)="QtySelected()"> -->
-                    <!-- <mat-error
-                      *ngIf="ReturnItemFormGroup.get('OrderQty').touched && ReturnItemFormGroup.get('OrderQty').hasError('required')">
-                      Order Qty is required
-                    </mat-error> -->
-                    <!-- <mat-error *ngIf="ReturnItemFormGroup.get('OrderQty').touched && !ReturnItemFormGroup.get('OrderQty').hasError('required')
-                    &&ReturnItemFormGroup.get('OrderQty').hasError('pattern')">
-                      Enter valid Quantity
-                    </mat-error> -->
-                  </mat-form-field>
-                </div>
-                <div fxFlex="15">
-                  <mat-form-field class="px-12" style="width: 100%;">
-                    <!-- <input matInput placeholder="Qty" formControlName="Qty" (keyup)="QtySelected()"> -->
-                    <!-- <mat-error
-                      *ngIf="ReturnItemFormGroup.get('RetQty').touched && ReturnItemFormGroup.get('RetQty').hasError('required')">
-                      RetQty is required
-                    </mat-error>
-                    <mat-error
-                    *ngIf="ReturnItemFormGroup.get('RetQty').touched && !ReturnItemFormGroup.get('RetQty').hasError('required')
-                    &&ReturnItemFormGroup.get('RetQty').hasError('pattern')">
-                    Enter valid Quantity
-                  </mat-error> -->
-                  </mat-form-field>
-                  <!-- <div *ngIf="isQtyError" class="WeightError">
-                    Return Qty should not greater than Order Qty
-                  </div> -->
-                </div>
-                <!-- <div fxFlex="5">
-                  <mat-form-field class="px-12" style="width: 100%;">
-                    <input matInput placeholder="UOM" formControlName="UOM">
-                    <mat-error
-                      *ngIf="ReturnItemFormGroup.get('UOM').touched && ReturnItemFormGroup.get('UOM').hasError('required')">
-                      UOM is required
-                    </mat-error>
-                  </mat-form-field>
-                </div> -->
-                <div fxFlex="15">
-                  <mat-form-field class="px-12" style="width: 100%;">
-                    <input matInput placeholder="UOM" formControlName="UOM">
-                    <!-- <mat-error
-                      *ngIf="ReturnItemFormGroup.get('ReasonText').touched && ReturnItemFormGroup.get('ReasonText').hasError('required')">
-                      ReasonText is required
-                    </mat-error> -->
-                  </mat-form-field>
-                </div>
-                <!-- <div fxFlex="20" fxLayoutAlign="start center" class="mt-16">
-                  <img class="addBlueIcon" src="assets/images/addBlue.png" (click)="fileInput1.click()">
-                  <span class="attachClass" (click)="fileInput1.click()">
-                    Add Attachment
-                  </span>
-                  <input hidden type="file" #fileInput1 (change)="handleFileInput($event)"
-                    accept="image/x-png,image/gif,image/jpeg,image/jpg,application/pdf" />
-                </div> -->
-                <div fxFlex="10" fxLayoutAlign="center start">
-                  <img class="addIcon" src="assets/images/logos/add-button.png" >
-                  <!-- <button class="SaveBtn" mat-raised-button (click)="AddDocumentCenterToTable()">Add</button> -->
-                </div>
-              </form>
-            </div>
-          </div>
-          
-          <!-- <div fxFlex fxLayout="column" class="table mx-20 my-12">
-            <table  mat-table [dataSource]="InvoiceItemDataSource">
-              <ng-container matColumnDef="Item">
-                <th mat-header-cell *matHeaderCellDef style="width: 10%;"> Item </th>
-                <td mat-cell style="width: 10%;" *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
-                  <div fxLayout>
-                    <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
-                    <div fxFlex class="pl-4">{{element.Item}}</div>
-                  </div>
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="ProdcutID">
-                <th mat-header-cell *matHeaderCellDef style="width: 10%;"> Material </th>
+              <ng-container matColumnDef="BalanceAmount">
+                <th mat-header-cell *matHeaderCellDef style="width: 20%;"> BalanceAmount </th>
                 <td mat-cell style="width: 10%;" *matCellDef="let element">
-                  {{element.ProdcutID}}</td>
-              </ng-container>
-
-
-              <ng-container matColumnDef="OrderQty">
-                <th mat-header-cell *matHeaderCellDef style="width: 15%;"> Order Qty </th>
-                <td mat-cell style="width: 15%;" *matCellDef="let element">
-                  {{element.OrderQty}}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="RetQty">
-                <th mat-header-cell *matHeaderCellDef style="width: 15%;"> RetQty </th>
-                <td mat-cell style="width: 15%;" *matCellDef="let element">
-                  {{element.RetQty}}</td>
-              </ng-container>
-
-              
-
-              <ng-container matColumnDef="ReasonText">
-                <th mat-header-cell *matHeaderCellDef style="width: 20%;"> ReasonText </th>
-                <td mat-cell style="width: 20%;" *matCellDef="let element">
-                  {{element.ReasonText}}</td>
-              </ng-container>
-
-
-              <ng-container matColumnDef="FileName">
-                <th mat-header-cell *matHeaderCellDef style="width: 20%;"> FileName </th>
-                <td mat-cell style="width: 20%;" *matCellDef="let element">
-                  <span class="pdfLinkClass" (click)="GetReturnItemAttachment(element.FileName)">
-                    {{element.FileName}}
+                  <span *ngIf="element.InvoiceAmount >0">
+                    {{element.InvoiceAmount-element.PaidAmount}}
+                  </span>
+                  <span *ngIf="!element.InvoiceAmount >0">
+                    {{element.BalanceAmount}}
                   </span>
                 </td>
               </ng-container>
-
-              <ng-container matColumnDef="Action">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%"> </th>
-                <td mat-cell *matCellDef="let element" style="text-align: center;width: 10%">
-                  <img class="removeIcon" src="assets/images/remove-button.png"
-                    >
+              <ng-container matColumnDef="Payment">
+                <th mat-header-cell *matHeaderCellDef style="width: 20%;"> Payment </th>
+                <td mat-cell style="width: 20%;" *matCellDef="let element">
+                 <button  [disabled]="element.InvoiceAmount ==0" [ngStyle]="{'background-color':element.InvoiceAmount ==0?'rgb(185 191 185)':'rgb(38, 180, 38)'}" mat-raised-button (click)="openPaymentdialog(element)" style="color:white;">Payment</button>
                 </td>
               </ng-container>
-
-              <tr mat-header-row *matHeaderRowDef="ReturnItemDisplayedColumns;sticky: true"></tr>
-              <tr mat-row *matRowDef="let row; columns: ReturnItemDisplayedColumns;let even=even">
+             
+              <tr mat-header-row *matHeaderRowDef="InvoiceDisplayedColumns;"></tr>
+              <tr mat-row *matRowDef="let row; columns: InvoiceDisplayedColumns;let even=even">
               </tr>
             </table>
-          
-          </div> -->
+      
+                <mat-paginator [pageSizeOptions]="[7, 10, 20, 50, 75, 100]" showFirstLastButtons>
+                </mat-paginator>
+             
+          </div>
+
+       
+
+
+
         </div>
-        <!-- <div fxLayout id="footerCard">
-          <div fxLayout fxFlex class="my-8 px-12" fxLayoutAlign="end">
-            <button mat-stroked-button class="SaveBtn" (click)="SaveClicked()">Save</button>
-          </div>
-        </div> -->
-        <mat-card-actions class="m-0 pl-12 pr-16 cardActions">
-          <div fxLayout fxLayoutAlign="space-between center">
-            <div fxFlex>
-              <!-- <button *ngIf="SelectedReturnHeader?.PIRNumber" mat-stroked-button class="DeleteBtn mr-4 mb-4"
-                (click)="DeleteClicked()">Delete</button> -->
-            </div>
-            <!-- <div *ngIf="!SelectedReturnHeader?.PIRNumber" fxFlex align="end">
-              <button mat-stroked-button class="SaveBtn mb-4" (click)="SaveClicked()">Save
-              </button>
-              <button mat-raised-button class="SubmitBtn mb-4" (click)="SubmitClicked()">Submit</button>
-            </div> -->
-          </div>
-        </mat-card-actions>
+      
       </mat-card>
     </div>
     <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="progressBarPostion" color="accent" mode="indeterminate">
