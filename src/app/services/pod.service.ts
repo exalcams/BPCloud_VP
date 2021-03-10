@@ -56,6 +56,13 @@ export class PODService {
         return this._httpClient.get<BPCPODHeader[]>(`${this.baseAddress}poapi/POD/GetPODsByDocAndPartnerID?DocNumber=${DocNumber}&PartnerID=${PartnerID}`)
             .pipe(catchError(this.errorHandler));
     }
+    //madhu
+    GetPODByPartnerIDAndDocument(DocNumber: string, PartnerID: string): Observable<BPCPODItem[] | string> {
+        return this._httpClient.get<BPCPODItem[]>(`${this.baseAddress}poapi/POD/GetPODByPartnerIDAndDocument?DocNumber=${DocNumber}&PartnerID=${PartnerID}`)
+            .pipe(catchError(this.errorHandler));
+    }
+   
+    //madhuend
     GetPODByInvAndPartnerID(InvoiceNumber: string, PartnerID: string): Observable<BPCPODHeader | string> {
         return this._httpClient.get<BPCPODHeader>
             (`${this.baseAddress}poapi/POD/GetPODByInvAndPartnerID?InvoiceNumber=${InvoiceNumber}&PartnerID=${PartnerID}`)

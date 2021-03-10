@@ -10,10 +10,10 @@ import { DashboardService } from 'app/services/dashboard.service';
 import { DatePipe } from '@angular/common';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { fuseAnimations } from '@fuse/animations';
-import { BPCOFItem, BPCOFGRGI, SOItemCount } from 'app/models/OrderFulFilment';
+import { BPCOFItem, BPCOFGRGI, SOItemCount, BPCInvoice, BPCRetNew } from 'app/models/OrderFulFilment';
 import { POService } from 'app/services/po.service';
 import { MasterService } from 'app/services/master.service';
-import { BPCPODHeader } from 'app/models/POD';
+import { BPCPODHeader,BPCPODItem } from 'app/models/POD';
 import { PODService } from 'app/services/pod.service';
 
 @Component({
@@ -28,9 +28,15 @@ export class CustomerPolookupComponent implements OnInit {
   public tab1: boolean;
   public tab2: boolean;
   public tab3: boolean;
+  public tab4: boolean;
+  public tab5: boolean;
+  // public tab3: boolean;
   public ItemCount: number;
   public GRGICount: number;
   public PODCount: number;
+  public InvCount:number;
+  public ReturnCount:number;
+// public DocumentCount :number;
   public DocumentCount: number;
   public FlipCount: number;
 
@@ -41,10 +47,11 @@ export class CustomerPolookupComponent implements OnInit {
     'Item',
     'Material',
     'MaterialText',
+    'HSN',
     'OrderedQty',
     'CompletedQty',
     'OpenQty',
-    'UOM'
+    'DeliveryDate'
   ];
   SOItemDataSource: MatTableDataSource<BPCOFItem>;
   SOGRGIs: BPCOFGRGI[] = [];
@@ -58,18 +65,25 @@ export class CustomerPolookupComponent implements OnInit {
     'ShippingDoc'
   ];
   SOGRGIDataSource: MatTableDataSource<BPCOFGRGI>;
-  AllPODHeaders: BPCPODHeader[] = [];
+  AllPODI: BPCPODItem[] = [];
+  AllReturn:BPCRetNew[]=[];
+  AllBPCInv:BPCInvoice[]=[];
   PODDisplayedColumns: string[] = [
     'InvoiceNumber',
-    'InvoiceDate',
-    'Amount',
-    'Currency',
-    'TruckNumber',
-    'Transporter',
-    'VessleNumber',
-    'Status',
+    'Item',
+    'Material',
+    'MaterialText',
+    'Qty',
+    'AttachmentName',
+    
   ];
-  PODataSource = new MatTableDataSource<BPCPODHeader>([]);
+  InvoiceDisplayedColumns:string[]=['InvoiceNo','InvoiceDate','InvoiceAmount','Currency']
+  ReturnDisplayedColumns:string[]=['ReturnOrder','Date','Material','Text','Qty','Status','Document']
+  // PODataSource = new MatTableDataSource<BPCPODHeader>([]);
+  PODDataSource = new MatTableDataSource<BPCPODItem>([]);
+  ReturnDataSource = new MatTableDataSource<BPCRetNew>([]);
+  // InvoiceDataSource = new MatTableDataSource<BPCPODItem>([]);
+  InvoiceDDataSource = new MatTableDataSource<BPCInvoice>([]);
   OrderFulfilmentDetails: OrderFulfilmentDetails = new OrderFulfilmentDetails();
   DocNumber: string;
   ACKFormGroup: FormGroup;
@@ -133,6 +147,8 @@ export class CustomerPolookupComponent implements OnInit {
     this.tab1 = true;
     this.tab2 = false;
     this.tab3 = false;
+    this.tab4=false;
+    this.tab5=false;
     // this.tabCount = 1;
   }
 
@@ -160,6 +176,8 @@ export class CustomerPolookupComponent implements OnInit {
     this.tab1 = true;
     this.tab2 = false;
     this.tab3 = false;
+    this.tab4 = false;
+    this.tab5=false;
     this.GetPOItemsByDocAndPartnerID();
     // this.ResetControl();
   }
@@ -167,7 +185,10 @@ export class CustomerPolookupComponent implements OnInit {
     this.tab1 = false;
     this.tab2 = true;
     this.tab3 = false;
-    this.GetPOGRGIByDocAndPartnerID();
+    this.tab4 = false;
+    this.tab5=false;
+    this.GetPODByPartnerIDAndDocument();
+    // this.GetPOGRGIByDocAndPartnerID();
     // this.getallasn();
     // this.ResetControl();
   }
@@ -175,13 +196,33 @@ export class CustomerPolookupComponent implements OnInit {
     this.tab1 = false;
     this.tab2 = false;
     this.tab3 = true;
-    this.GetPODsByDocAndPartnerID();
+    this.tab4 = false;
+    this.tab5=false;
+    this.GetInvoiceByPartnerIdAnDocumentNo();
     // this.getallgrn();
     // this.ResetControl();
+  }
+  tabfour():void{
+    this.tab1 = false;
+    this.tab2 = false;
+    this.tab3 = false;
+    this.tab4 = true;
+    this.tab5=false;
+    // this.GetPODsByDocAndPartnerID();
+    this.GetPartnerAndRequestIDByPartnerId();
+  }
+  tabfive():void{
+    this.tab1 = false;
+    this.tab2 = false;
+    this.tab3 = false;
+    this.tab4 = false;
+    this.tab5=true;
+    // this.GetPODsByDocAndPartnerID();
   }
 
 
   GetSOItemCountByDocAndPartnerID(): void {
+    
     this._POService.GetSOItemCountByDocAndPartnerID(this.DocNumber, this.PartnerID).subscribe(
       (data) => {
         this.sOItemCount = data as SOItemCount;
@@ -191,8 +232,10 @@ export class CustomerPolookupComponent implements OnInit {
       }
     );
   }
+ 
 
   GetPOItemsByDocAndPartnerID(): void {
+    //chng madhu
     this._POService.GetPOItemsByDocAndPartnerID(this.DocNumber, this.PartnerID).subscribe(
       (data) => {
         this.SOtems = data as BPCOFItem[];
@@ -216,13 +259,29 @@ export class CustomerPolookupComponent implements OnInit {
       }
     );
   }
-  GetPODsByDocAndPartnerID(): void {
+  // GetPODsByDocAndPartnerID(): void {
+  //   this.IsProgressBarVisibile = true;
+  //   this._PODService.GetPODsByDocAndPartnerID(this.DocNumber, this.PartnerID).subscribe(
+  //     (data) => {
+  //       this.AllPODHeaders = data as BPCPODHeader[];
+  //       this.sOItemCount.PODCount = this.AllPODHeaders.length;
+  //       this.PODataSource = new MatTableDataSource(this.AllPODHeaders);
+  //       this.IsProgressBarVisibile = false;
+  //     },
+  //     (err) => {
+  //       this.IsProgressBarVisibile = false;
+  //       console.error(err);
+  //     }
+  //   );
+  // }
+
+  GetPODByPartnerIDAndDocument():void{
     this.IsProgressBarVisibile = true;
-    this._PODService.GetPODsByDocAndPartnerID(this.DocNumber, this.PartnerID).subscribe(
+    this._PODService.GetPODByPartnerIDAndDocument(this.DocNumber, this.PartnerID).subscribe(
       (data) => {
-        this.AllPODHeaders = data as BPCPODHeader[];
-        this.sOItemCount.PODCount = this.AllPODHeaders.length;
-        this.PODataSource = new MatTableDataSource(this.AllPODHeaders);
+        this.AllPODI = data as BPCPODItem[];
+        this.sOItemCount.PODCount = this.AllPODI.length;
+        this.PODDataSource = new MatTableDataSource(this.AllPODI);
         this.IsProgressBarVisibile = false;
       },
       (err) => {
@@ -231,6 +290,40 @@ export class CustomerPolookupComponent implements OnInit {
       }
     );
   }
+  GetPartnerAndRequestIDByPartnerId():void{
+    this._POService.GetPartnerAndRequestIDByPartnerId( this.PartnerID).subscribe(
+      (data) => {
+        this.AllReturn =data as BPCRetNew[];
+        this.sOItemCount.ReturnCount = this.AllReturn.length;
+this.ReturnDataSource= new MatTableDataSource(this.AllReturn);
+this.IsProgressBarVisibile = false;
+      console.log("return:"+data)
+      console.log("return1:"+this.ReturnDataSource)
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+
+  GetInvoiceByPartnerIdAnDocumentNo():void{
+    this.IsProgressBarVisibile = true;
+    this._POService.GetInvoiceByPartnerIdAnDocumentNo( this.PartnerID).subscribe(
+      // this.PartnerID
+      (data) => {
+        this.AllBPCInv = data as BPCInvoice[];
+        this.sOItemCount.InvCount = this.AllBPCInv.length;
+        this.InvoiceDDataSource = new MatTableDataSource(this.AllBPCInv);
+        this.IsProgressBarVisibile = false;
+      },
+      (err) => {
+        this.IsProgressBarVisibile = false;
+        console.error(err);
+      }
+    );
+  }
+  
+
   SaveClicked(): void {
 
   }
