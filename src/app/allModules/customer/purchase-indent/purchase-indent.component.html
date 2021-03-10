@@ -57,9 +57,10 @@
               <form autocomplete="off" class="normal" fxLayout="column" fxLayoutAlign="start" name="form" novalidate
                 [formGroup]="PurchaseIndentFormGroup">
                 <div fxFlex fxLayout="row wrap">
-                  <div *ngIf="SelectedPIRNumber" fxFlex="50" class="px-12">
+                  <div fxFlex="50" class="px-12"  *ngIf="SelectedPIRNumber" >
+                    <!-- *ngIf="SelectedPIRNumber"  -->
                     <mat-form-field style="width: 100%;">
-                      <input matInput placeholder="PI Number" formControlName="PIRNumber">
+                      <input matInput placeholder="Order" formControlName="PIRNumber">
                       <mat-error
                         *ngIf="PurchaseIndentFormGroup.get('PIRNumber').touched && PurchaseIndentFormGroup.get('PIRNumber').hasError('required')">
                         PIRNumber is required
@@ -68,7 +69,7 @@
                   </div>
                   <div fxFlex="50" class="px-12">
                     <mat-form-field style="width: 100%;">
-                      <input matInput placeholder="Doc Date" [matDatepicker]="picker0" formControlName="Date">
+                      <input matInput placeholder="Order Date" [matDatepicker]="picker0" formControlName="Date">
                       <mat-datepicker-toggle matSuffix [for]="picker0">
                         <mat-icon matDatepickerToggleIcon svgIcon="calendarIcon" class="mb-12"></mat-icon>
                       </mat-datepicker-toggle>
@@ -88,7 +89,8 @@
                       </mat-error>
                     </mat-form-field>
                   </div>
-                  <div *ngIf="SelectedPIRNumber" fxFlex="50" class="px-12">
+                  <div  fxFlex="50" class="px-12"   *ngIf="SelectedPIRNumber">
+                  
                     <mat-form-field style="width: 100%;">
                       <input matInput placeholder="Status" formControlName="Status">
                       <mat-error
@@ -97,50 +99,9 @@
                       </mat-error>
                     </mat-form-field>
                   </div>
-                  <div fxFlex="18" class="pl-12 pr-8">
-                    <mat-form-field style="width: 100%;">
-                      <input matInput placeholder="Net Amount" formControlName="NetAmount"
-                        (keydown)="decimalOnly($event)" (keyup)="AmountSelected()">
-                      <mat-error
-                        *ngIf="PurchaseIndentFormGroup.get('NetAmount').touched && PurchaseIndentFormGroup.get('NetAmount').hasError('required')">
-                        Net Amount is required
-                      </mat-error>
-                      <mat-error *ngIf="PurchaseIndentFormGroup.get('NetAmount').touched && !PurchaseIndentFormGroup.get('NetAmount').hasError('required')
-        &&PurchaseIndentFormGroup.get('NetAmount').hasError('pattern')">
-                        Enter a valid number
-                      </mat-error>
-                    </mat-form-field>
-                  </div>
-                  <div fxFlex="18" class="pr-8">
-                    <mat-form-field style="width: 100%;">
-                      <input matInput placeholder="Gross Amount" formControlName="GrossAmount"
-                        (keydown)="decimalOnly($event)" (keyup)="AmountSelected()">
-                      <mat-error
-                        *ngIf="PurchaseIndentFormGroup.get('GrossAmount').touched && PurchaseIndentFormGroup.get('GrossAmount').hasError('required')">
-                        Gross Amount is required
-                      </mat-error>
-                      <mat-error *ngIf="PurchaseIndentFormGroup.get('GrossAmount').touched && !PurchaseIndentFormGroup.get('GrossAmount').hasError('required')
-        &&PurchaseIndentFormGroup.get('GrossAmount').hasError('pattern')">
-                        Enter a valid number
-                      </mat-error>
-                    </mat-form-field>
-                    <div *ngIf="isWeightError" class="WeightError">
-                      Gross Weight should be greater than NetWeight
-                    </div>
-                  </div>
-                  <div fxFlex="14" class="pr-12">
-                    <mat-form-field style="width: 100%;">
-                      <mat-select formControlName="Currency">
-                        <mat-option *ngFor="let count of AllCurrencies" [value]="count.CurrencyCode">
-                          {{count.CurrencyCode}}
-                        </mat-option>
-                      </mat-select>
-                      <mat-error
-                        *ngIf="PurchaseIndentFormGroup.get('Currency').touched && PurchaseIndentFormGroup.get('Currency').hasError('required')">
-                        Currency is required
-                      </mat-error>
-                    </mat-form-field>
-                  </div>
+                
+                
+      
                 </div>
               </form>
             </div>
@@ -201,8 +162,27 @@
                       Item is required
                     </mat-error>
                   </mat-form-field>
+                  
                 </div>
                 <div fxFlex="15">
+                  <mat-form-field class="px-12" style="width: 100%;">
+                    <input matInput placeholder="Material" formControlName="Material">
+                    <mat-error
+                      *ngIf="PurchaseIndentItemFormGroup.get('Material').touched && PurchaseIndentItemFormGroup.get('Material').hasError('required')">
+                      Material is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="15">
+                  <mat-form-field class="px-12" style="width: 100%;">
+                    <input matInput placeholder="Material Text" formControlName="MaterialText">
+                    <mat-error
+                      *ngIf="PurchaseIndentItemFormGroup.get('MaterialText').touched && PurchaseIndentItemFormGroup.get('MaterialText').hasError('required')">
+                      MaterialText is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <!-- <div fxFlex="15">
                   <mat-form-field class="px-12" style="width: 100%;">
                     <mat-select (selectionChange)="ProductSelected($event)" placeholder="Prodcut ID"
                       formControlName="ProdcutID">
@@ -215,7 +195,7 @@
                       Prodcut ID is required
                     </mat-error>
                   </mat-form-field>
-                </div>
+                </div> -->
                 <!-- <div fxFlex="15">
                   <mat-form-field class="px-12" style="width: 100%;">
                     <input matInput placeholder="HSN" formControlName="HSN">
@@ -247,9 +227,9 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
-                <div fxFlex="15">
+                <!-- <div fxFlex="15">
                   <mat-form-field class="px-12" style="width: 100%;">
-                    <!-- <input matInput placeholder="UOM" formControlName="UOM"> -->
+                  
                     <mat-select formControlName="UOM">
                       <mat-option value="KG">KG</mat-option>
                       <mat-option value="ML">ML</mat-option>
@@ -261,7 +241,7 @@
                       UOM is required
                     </mat-error>
                   </mat-form-field>
-                </div>
+                </div> -->
                 <div fxFlex="15">
                   <mat-form-field class="px-12" style="width: 100%;">
                     <!-- <input matInput placeholder="Delivery Date" formControlName="DeliveryDate"> -->
@@ -278,8 +258,8 @@
                   </mat-form-field>
                 </div>
                 <div fxFlex="10" fxLayoutAlign="center start">
-                  <img class="addIcon" src="assets/images/logos/add-button.png"
-                    (click)="AddPurchaseIndentItemToTable()">
+                  <img class="addIcon"  (click)="AddPurchaseIndentItemToTable()" src="assets/images/logos/add-button.png"
+                >
                   <!-- <button class="SaveBtn" mat-raised-button (click)="AddDocumentCenterToTable()">Add</button> -->
                 </div>
               </form>
@@ -298,10 +278,15 @@
                 </td>
               </ng-container>
 
-              <ng-container matColumnDef="ProdcutID">
+              <ng-container matColumnDef="Material">
                 <th mat-header-cell *matHeaderCellDef style="width: 15%;"> Material </th>
                 <td mat-cell style="width: 15%;" *matCellDef="let element">
-                  {{element.ProdcutID}} </td>
+                  {{element.Material}} </td>
+              </ng-container>
+              <ng-container matColumnDef="MaterialText">
+                <th mat-header-cell *matHeaderCellDef style="width: 15%;"> MaterialText </th>
+                <td mat-cell style="width: 15%;" *matCellDef="let element">
+                  {{element.MaterialText}} </td>
               </ng-container>
 
               <ng-container matColumnDef="HSN">
@@ -316,11 +301,11 @@
                   {{element.OrderQty}} </td>
               </ng-container>
 
-              <ng-container matColumnDef="UOM">
+              <!-- <ng-container matColumnDef="UOM">
                 <th mat-header-cell *matHeaderCellDef style="width: 15%;"> UOM </th>
                 <td mat-cell style="width: 15%;" *matCellDef="let element">
                   {{element.UOM}} </td>
-              </ng-container>
+              </ng-container> -->
 
               <ng-container matColumnDef="DeliveryDate">
                 <th mat-header-cell *matHeaderCellDef style="width: 15%;"> Delivery Date </th>
@@ -354,11 +339,13 @@
         <mat-card-actions class="m-0 pl-12 pr-16 cardActions">
           <div fxLayout fxLayoutAlign="space-between center">
             <div fxFlex>
-              <button *ngIf="SelectedPurchaseIndentHeader?.PIRNumber" mat-stroked-button class="DeleteBtn mr-4 mb-4"
+              <button *ngIf="SelectedPurchaseIndentHeader?.PIRNumber && SelectedPurchaseIndentHeader?.Status=='saved'" mat-stroked-button class="DeleteBtn mr-4 mb-4"
                 (click)="DeleteClicked()">Delete</button>
+                <!-- *ngIf="SelectedPurchaseIndentHeader?.PIRNumber" -->
             </div>
-            <div *ngIf="!SelectedPurchaseIndentHeader?.PIRNumber" fxFlex align="end">
-              <button mat-stroked-button class="SaveBtn mb-4" (click)="SaveClicked()">Save
+            <div  fxFlex align="end">
+              <!-- *ngIf="!SelectedPurchaseIndentHeader?.PIRNumber" -->
+              <button mat-stroked-button class="SaveBtn mb-4" (click)="SaveClicked()" *ngIf="SelectedPurchaseIndentHeader?.Status!='Open'" >Save
               </button>
               <button mat-raised-button class="SubmitBtn mb-4" (click)="SubmitClicked()">Submit</button>
             </div>

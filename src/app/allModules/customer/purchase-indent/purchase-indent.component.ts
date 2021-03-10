@@ -58,11 +58,11 @@ export class PurchaseIndentComponent implements OnInit {
     AllPurchaseIndentItems: BPCPIItem[] = [];
     PurchaseIndentItemDisplayedColumns: string[] = [
         'Item',
-        'ProdcutID',
-        // 'MaterialText',
+        'Material',
+        'MaterialText',
         'HSN',
         'OrderQty',
-        'UOM',
+        // 'UOM',
         'DeliveryDate',
         'Action'
     ];
@@ -87,6 +87,7 @@ export class PurchaseIndentComponent implements OnInit {
     @ViewChild('fileInput1') fileInput: ElementRef<HTMLElement>;
     selectedDocCenterMaster: BPCDocumentCenterMaster;
     ArrivalDateInterval: number;
+    status_show: any;
 
     constructor(
         private _fuseConfigService: FuseConfigService,
@@ -107,7 +108,9 @@ export class PurchaseIndentComponent implements OnInit {
         this.IsProgressBarVisibile = false;
         this.PO = new BPCOFHeader();
         this.SelectedPurchaseIndentHeader = new BPCPIHeader();
-        this.SelectedPurchaseIndentHeader.Status = 'Open';
+        //mchng
+        // this.SelectedPurchaseIndentHeader.Status = 'Open';
+        //mchng
         this.SelectedPurchaseIndentView = new BPCPIView();
         this.SelectedPurchaseIndentNumber = '';
         this.invAttach = new BPCInvoiceAttachment();
@@ -168,9 +171,9 @@ export class PurchaseIndentComponent implements OnInit {
             PIRNumber: [''],
             Date: [new Date(), Validators.required],
             ReferenceDoc: ['', Validators.required],
-            NetAmount: ['', [Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
-            GrossAmount: ['', [Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
-            Currency: ['', Validators.required],
+            // NetAmount: ['', [Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
+            // GrossAmount: ['', [Validators.required, Validators.pattern('^([0-9]*[1-9][0-9]*(\\.[0-9]+)?|[0]*\\.[0-9]*[1-9][0-9]*)$')]],
+            // Currency: ['', Validators.required],
             Status: [''],
         });
     }
@@ -186,18 +189,23 @@ export class PurchaseIndentComponent implements OnInit {
     InitializePurchaseIndentItemFormGroup(): void {
         this.PurchaseIndentItemFormGroup = this._formBuilder.group({
             Item: ['', Validators.required],
-            ProdcutID: ['', Validators.required],
-            MaterialText: [''],
+            // ProdcutID: ['', Validators.required],
+            MaterialText: ['', Validators.required],
             HSN: ['', Validators.required],
             OrderQty: ['', [Validators.required, Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,2})?$')]],
+           
             DeliveryDate: ['', Validators.required],
-            UOM: [''],
+            // UOM: [''],
+            Material: ['', Validators.required],
+            
         });
     }
 
     ResetControl(): void {
         this.SelectedPurchaseIndentHeader = new BPCPIHeader();
-        this.SelectedPurchaseIndentHeader.Status = 'Open';
+        //mchng
+        // this.SelectedPurchaseIndentHeader.Status = 'Open';
+        //mchng
         this.SelectedPurchaseIndentView = new BPCPIView();
         this.SelectedPurchaseIndentNumber = '';
         this.ResetPurchaseIndentFormGroup();
@@ -334,12 +342,14 @@ export class PurchaseIndentComponent implements OnInit {
         if (this.PurchaseIndentItemFormGroup.valid) {
             const PIItem = new BPCPIItem();
             PIItem.Item = this.PurchaseIndentItemFormGroup.get('Item').value;
-            PIItem.ProdcutID = this.PurchaseIndentItemFormGroup.get('ProdcutID').value;
+            // PIItem.ProdcutID = this.PurchaseIndentItemFormGroup.get('ProdcutID').value;
             PIItem.MaterialText = this.PurchaseIndentItemFormGroup.get('MaterialText').value;
             PIItem.HSN = this.PurchaseIndentItemFormGroup.get('HSN').value;
             PIItem.OrderQty = this.PurchaseIndentItemFormGroup.get('OrderQty').value;
             PIItem.DeliveryDate = this.PurchaseIndentItemFormGroup.get('DeliveryDate').value;
-            PIItem.UOM = this.PurchaseIndentItemFormGroup.get('UOM').value;
+            // PIItem.UOM = this.PurchaseIndentItemFormGroup.get('UOM').value;
+            PIItem.Material=this.PurchaseIndentItemFormGroup.get('Material').value;
+            
             if (!this.AllPurchaseIndentItems || !this.AllPurchaseIndentItems.length) {
                 this.AllPurchaseIndentItems = [];
             }
@@ -411,6 +421,9 @@ export class PurchaseIndentComponent implements OnInit {
         this._CustomerService.GetPurchaseIndentByPIAndPartnerID(this.SelectedPIRNumber, this.currentUserName).subscribe(
             (data) => {
                 this.SelectedPurchaseIndentHeader = data as BPCPIHeader;
+                this.status_show=this.SelectedPurchaseIndentHeader.Status
+                console.log("status",  this.status_show);
+                
                 if (this.SelectedPurchaseIndentHeader) {
                     this.LoadSelectedPurchaseIndent(this.SelectedPurchaseIndentHeader);
                 }
@@ -448,14 +461,15 @@ export class PurchaseIndentComponent implements OnInit {
         this.PurchaseIndentFormGroup.get('PIRNumber').patchValue(this.SelectedPurchaseIndentHeader.PIRNumber);
         this.PurchaseIndentFormGroup.get('Date').patchValue(this.SelectedPurchaseIndentHeader.Date);
         this.PurchaseIndentFormGroup.get('ReferenceDoc').patchValue(this.SelectedPurchaseIndentHeader.ReferenceDoc);
-        this.PurchaseIndentFormGroup.get('GrossAmount').patchValue(this.SelectedPurchaseIndentHeader.GrossAmount);
-        this.PurchaseIndentFormGroup.get('NetAmount').patchValue(this.SelectedPurchaseIndentHeader.NetAmount);
+        // this.PurchaseIndentFormGroup.get('GrossAmount').patchValue(this.SelectedPurchaseIndentHeader.GrossAmount);
+        // this.PurchaseIndentFormGroup.get('NetAmount').patchValue(this.SelectedPurchaseIndentHeader.NetAmount);
         this.PurchaseIndentFormGroup.get('PIRNumber').patchValue(this.SelectedPurchaseIndentHeader.PIRNumber);
-        this.PurchaseIndentFormGroup.get('Currency').patchValue(this.SelectedPurchaseIndentHeader.Currency);
+        // this.PurchaseIndentFormGroup.get('Currency').patchValue(this.SelectedPurchaseIndentHeader.Currency);
         this.PurchaseIndentFormGroup.get('Status').patchValue(this.SelectedPurchaseIndentHeader.Status);
+        
     }
 
-    GetPurchaseIndentValues(): void {
+    GetPurchaseIndentValues(action): void {
         if (this.SelectedBPCFact) {
             this.SelectedPurchaseIndentHeader.Client = this.SelectedPurchaseIndentView.Client = this.SelectedBPCFact.Client;
             this.SelectedPurchaseIndentHeader.Company = this.SelectedPurchaseIndentView.Company = this.SelectedBPCFact.Company;
@@ -469,9 +483,9 @@ export class PurchaseIndentComponent implements OnInit {
             this.SelectedPurchaseIndentHeader.Date = this.SelectedPurchaseIndentView.Date = this.PurchaseIndentFormGroup.get('Date').value;
         }
         this.SelectedPurchaseIndentHeader.ReferenceDoc = this.SelectedPurchaseIndentView.ReferenceDoc = this.PurchaseIndentFormGroup.get('ReferenceDoc').value;
-        this.SelectedPurchaseIndentHeader.GrossAmount = this.SelectedPurchaseIndentView.GrossAmount = this.PurchaseIndentFormGroup.get('GrossAmount').value;
-        this.SelectedPurchaseIndentHeader.NetAmount = this.SelectedPurchaseIndentView.NetAmount = this.PurchaseIndentFormGroup.get('NetAmount').value;
-        this.SelectedPurchaseIndentHeader.Currency = this.SelectedPurchaseIndentView.Currency = this.PurchaseIndentFormGroup.get('Currency').value;
+        // this.SelectedPurchaseIndentHeader.GrossAmount = this.SelectedPurchaseIndentView.GrossAmount = this.PurchaseIndentFormGroup.get('GrossAmount').value;
+        // this.SelectedPurchaseIndentHeader.NetAmount = this.SelectedPurchaseIndentView.NetAmount = this.PurchaseIndentFormGroup.get('NetAmount').value;
+        // this.SelectedPurchaseIndentHeader.Currency = this.SelectedPurchaseIndentView.Currency = this.PurchaseIndentFormGroup.get('Currency').value;
         if (this.SelectedPIRNumber) {
             // this.SelectedPurchaseIndentHeader.Client = this.SelectedPurchaseIndentView.Client = this.PO.Client;
             // this.SelectedPurchaseIndentHeader.Company = this.SelectedPurchaseIndentView.Company = this.PO.Company;
@@ -482,7 +496,7 @@ export class PurchaseIndentComponent implements OnInit {
         else {
             // this.SelectedPurchaseIndentHeader.Client = this.SelectedPurchaseIndentView.Client = this.SelectedPurchaseIndentHeader.Client;
             // this.SelectedPurchaseIndentHeader.Company = this.SelectedPurchaseIndentView.Company = this.SelectedPurchaseIndentHeader.Company;
-            this.SelectedPurchaseIndentHeader.Status = this.SelectedPurchaseIndentView.Status = 'Open';
+            this.SelectedPurchaseIndentHeader.Status = this.SelectedPurchaseIndentView.Status =action;
         }
     }
 
@@ -507,11 +521,11 @@ export class PurchaseIndentComponent implements OnInit {
     }
 
     SaveClicked(): void {
-        if (this.PurchaseIndentFormGroup.valid) {
+        if (  this.PurchaseIndentFormGroup.valid) {
             if (!this.isWeightError) {
                 // if (this.PurchaseIndentItemFormGroup.valid) {
                 //     if (this.InvoiceDetailsFormGroup.valid) {
-                this.GetPurchaseIndentValues();
+                this.GetPurchaseIndentValues("saved");
                 this.GetPurchaseIndentItemValues();
                 // this.GetInvoiceDetailValues();
                 // this.GetDocumentCenterValues();
@@ -531,11 +545,12 @@ export class PurchaseIndentComponent implements OnInit {
         }
     }
     SubmitClicked(): void {
-        if (this.PurchaseIndentFormGroup.valid) {
+        if ( (this.PurchaseIndentFormGroup.valid)) {
+            // if(this.PurchaseIndentFormGroup.valid) {
             if (!this.isWeightError) {
                 // if (this.PurchaseIndentItemFormGroup.valid) {
                 //     if (this.InvoiceDetailsFormGroup.valid) {
-                this.GetPurchaseIndentValues();
+                this.GetPurchaseIndentValues("submitted");
                 this.GetPurchaseIndentItemValues();
                 // this.GetInvoiceDetailValues();
                 // this.GetDocumentCenterValues();
@@ -549,8 +564,14 @@ export class PurchaseIndentComponent implements OnInit {
                 //     this.ShowValidationErrors(this.PurchaseIndentItemFormGroup);
                 // }
             }
+        // }
+        // else {
+        //     this.ShowValidationErrors(this.PurchaseIndentFormGroup);
 
-        } else {
+        // }
+    }
+         else {
+            // this.ShowValidationErrors(this.PurchaseIndentItemFormGroup);
             this.ShowValidationErrors(this.PurchaseIndentFormGroup);
         }
     }
@@ -603,7 +624,9 @@ export class PurchaseIndentComponent implements OnInit {
         // this.GetPurchaseIndentValues();
         // this.GetBPPurchaseIndentSubItemValues();
         // this.SelectedPurchaseIndentView.CreatedBy = this.authenticationDetails.UserID.toString();
-        this.IsProgressBarVisibile = true;
+        this.IsProgressBarVisibile = false;
+        console.log("SelectedPurchaseIndentView"+this.SelectedPurchaseIndentView)
+     //mchng
         this._CustomerService.CreatePurchaseIndent(this.SelectedPurchaseIndentView).subscribe(
             (data) => {
                 this.SelectedPurchaseIndentHeader.PIRNumber = (data as BPCPIHeader).PIRNumber;
@@ -611,23 +634,13 @@ export class PurchaseIndentComponent implements OnInit {
                 this.notificationSnackBarComponent.openSnackBar(`PurchaseIndent ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
                 this.IsProgressBarVisibile = false;
 
-                // if (this.invoiceAttachment) {
-                //     this.AddInvoiceAttachment(Actiontype);
-                // } else {
-                //     if (this.fileToUploadList && this.fileToUploadList.length) {
-                //         this.AddDocumentCenterAttachment(Actiontype);
-                //     } else {
-                //         this.ResetControl();
-                //         this.notificationSnackBarComponent.openSnackBar(`PurchaseIndent ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
-                //         this.IsProgressBarVisibile = false;
-                //         // this.GetPurchaseIndentBasedOnCondition();
-                //     }
-                // }
+               
             },
             (err) => {
                 this.showErrorNotificationSnackBar(err);
             }
         );
+    // mchng
     }
 
     // AddInvoiceAttachment(Actiontype: string): void {
@@ -671,7 +684,9 @@ export class PurchaseIndentComponent implements OnInit {
         // this.GetBPPurchaseIndentSubItemValues();
         // this.SelectedBPPurchaseIndentView.TransID = this.SelectedBPPurchaseIndent.TransID;
         // this.SelectedPurchaseIndentView.ModifiedBy = this.authenticationDetails.UserID.toString();
-        this.IsProgressBarVisibile = true;
+        this.IsProgressBarVisibile = false;
+        console.log("SelectedPurchaseIndentView"+this.SelectedPurchaseIndentView)
+     // mchng
         this._CustomerService.UpdatePurchaseIndent(this.SelectedPurchaseIndentView).subscribe(
             (data) => {
                 this.SelectedPurchaseIndentHeader.PIRNumber = (data as BPCPIHeader).PIRNumber;
@@ -679,18 +694,7 @@ export class PurchaseIndentComponent implements OnInit {
                 this.notificationSnackBarComponent.openSnackBar(`PurchaseIndent ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
                 this.IsProgressBarVisibile = false;
 
-                // if (this.invoiceAttachment) {
-                //     this.AddInvoiceAttachment(Actiontype);
-                // } else {
-                //     if (this.fileToUploadList && this.fileToUploadList.length) {
-                //         this.AddDocumentCenterAttachment(Actiontype);
-                //     } else {
-                //         this.ResetControl();
-                //         this.notificationSnackBarComponent.openSnackBar(`PurchaseIndent ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
-                //         this.IsProgressBarVisibile = false;
-                //         this.GetPurchaseIndentBasedOnCondition();
-                //     }
-                // }
+               
             },
             (err) => {
                 console.error(err);
@@ -698,10 +702,13 @@ export class PurchaseIndentComponent implements OnInit {
                 this.IsProgressBarVisibile = false;
             }
         );
+     // mchng
     }
 
     DeletePurchaseIndent(): void {
-        this.GetPurchaseIndentValues();
+        // mchng
+        // this.GetPurchaseIndentValues();
+        // mchng
         // this.SelectedBPPurchaseIndent.ModifiedBy = this.authenticationDetails.userID.toString();
         this.IsProgressBarVisibile = true;
         this._CustomerService.DeletePurchaseIndent(this.SelectedPurchaseIndentHeader).subscribe(

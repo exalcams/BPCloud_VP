@@ -3,8 +3,8 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { AuthService } from './auth.service';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { BPCOFHeader, BPCOFItem, BPCOFHeaderXLSX, BPCOFItemXLSX, BPCOFScheduleLineXLSX, BPCOFGRGIXLSX, BPCOFQMXLSX, BPCOFGRGI, SOItemCount, BPCOFItemView } from 'app/models/OrderFulFilment';
-import { BPCCEOMessage, BPCSCOCMessage } from 'app/models/Message.model';
+import { BPCOFHeader, BPCOFItem, BPCOFHeaderXLSX, BPCOFItemXLSX, BPCOFScheduleLineXLSX, BPCOFGRGIXLSX, BPCOFQMXLSX, BPCOFGRGI, SOItemCount, BPCOFItemView, BPCInvoice, BPCRetNew } from 'app/models/OrderFulFilment';
+import { BPCCEOMessage, BPCSCOCMessage ,BPCWelcomeMessage} from 'app/models/Message.model';
 import { BPCFact } from 'app/models/fact';
 import { OverviewReportOption } from 'app/models/ReportModel';
 import { BPCInvoicePayment, BPCPayRecord } from 'app/models/customer';
@@ -81,7 +81,17 @@ export class POService {
       .pipe(catchError(this.errorHandler));
   }
   // Data Migration
+//madhu
+GetInvoiceByPartnerIdAnDocumentNo( PatnerID: string): Observable<BPCInvoice | any> {
+  return this._httpClient.get<BPCInvoice>(`${this.baseAddress}poapi/Invoice/GetInvoiceByPartnerIdAnDocumentNo?PatnerID=${PatnerID}`)
+    .pipe(catchError(this.errorHandler));
+}
+GetPartnerAndRequestIDByPartnerId( PatnerID: string): Observable<BPCRetNew | any> {
+  return this._httpClient.get<BPCRetNew>(`${this.baseAddress}poapi/Return/GetPartnerAndRequestIDByPartnerId?PatnerID=${PatnerID}`)
+    .pipe(catchError(this.errorHandler));
+}
 
+//
   CreateOFHeaders(OFHeaders: BPCOFHeaderXLSX[]): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}poapi/PO/CreateOFHeaders`,
       OFHeaders,
@@ -260,6 +270,7 @@ export class POService {
       )
       .pipe(catchError(this.errorHandler));
   }
+  
 
   DeleteSCOCMessage(SCOCMessage: BPCSCOCMessage): Observable<any> {
     return this._httpClient
@@ -274,6 +285,56 @@ export class POService {
       )
       .pipe(catchError(this.errorHandler));
   }
+//Welcome Message
+CreateWelcomeMessage(WelcomeMessage: BPCWelcomeMessage): Observable<any> {
+  return this._httpClient
+    .post<any>(
+      `${this.baseAddress}poapi/Message/CreateWelcomeMessage`,
+      WelcomeMessage,
+      {
+        headers: new HttpHeaders({
+          "Content-Type": "application/json",
+        }),
+      }
+    )
+    .pipe(catchError(this.errorHandler));
+}
+
+GetWelcomeMessage(): Observable<BPCWelcomeMessage | string> {
+  return this._httpClient
+    .get<BPCWelcomeMessage>(
+      `${this.baseAddress}poapi/Message/GetWelcomeMessage`
+    )
+    .pipe(catchError(this.errorHandler));
+}
+
+UpdateWelcomeMessage(WelcomeMessage: BPCWelcomeMessage): Observable<any> {
+  return this._httpClient
+    .post<any>(
+      `${this.baseAddress}poapi/Message/UpdateWelcomeMessage`,
+      WelcomeMessage,
+      {
+        headers: new HttpHeaders({
+          "Content-Type": "application/json",
+        }),
+      }
+    )
+    .pipe(catchError(this.errorHandler));
+}
+
+DeleteWelcomeMessage(WelcomeMessage: BPCWelcomeMessage): Observable<any> {
+  return this._httpClient
+    .post<any>(
+      `${this.baseAddress}poapi/Message/DeleteCEOMessage`,
+      WelcomeMessage,
+      {
+        headers: new HttpHeaders({
+          "Content-Type": "application/json",
+        }),
+      }
+    )
+    .pipe(catchError(this.errorHandler));
+}
 
 
 //invoice payment
@@ -316,4 +377,5 @@ CreatePaymentRecord(InvoicePaymentRcrd: BPCPayRecord): Observable<any> {
     .pipe(catchError(this.errorHandler));
 }
 
+//end
 }

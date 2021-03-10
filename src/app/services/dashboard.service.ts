@@ -284,8 +284,8 @@ export class DashboardService {
 
   // Customer
 
-  GetSODetails(Type: string, PatnerID: string): Observable<SODetails[] | string> {
-    return this._httpClient.get<SODetails[]>(`${this.baseAddress}poapi/Dashboard/GetSODetails?Type=${Type}&PartnerID=${PatnerID}`)
+  GetSODetails(Client:string,Company:string,Type: string, PatnerID: string): Observable<SODetails[] | string> {
+    return this._httpClient.get<SODetails[]>(`${this.baseAddress}poapi/Dashboard/GetSODetails?Client=${Client}&Company=${Company}&Type=${Type}&PatnerID=${PatnerID}`)
       .pipe(catchError(this.errorHandler));
   }
 

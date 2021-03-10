@@ -72,6 +72,11 @@ import { PODItemAttachmentDialogComponent } from './poditem-attachment-dialog/po
 import { InvoicePaymentComponent } from './invoice-payment/invoice-payment.component';
 import { PaymentDailogComponent } from './payment-dailog/payment-dailog.component';
 import { PaymentHistoryDialogComponent } from './payment-history-dialog/payment-history-dialog.component';
+import { CustomerHomeComponent } from './customer-home/customer-home.component';
+import { HomeComponent } from '../pages/home/home.component';
+import { CustomerPurchaseListComponent } from './customer-purchase-list/customer-purchase-list.component';
+import { CustomerReturnListComponent } from './customer-return-list/customer-return-list.component';
+import { CustomerReturnComponent } from './customer-return/customer-return.component';
 
 const routes = [
     {
@@ -121,6 +126,22 @@ const routes = [
     {
         path: 'supportticket',
         component: SupportTicketComponent
+    },
+    {
+        path: 'home',
+        component: CustomerHomeComponent
+    },
+    {
+        path: 'purchaseindentList',
+        component: CustomerPurchaseListComponent
+    },
+    {
+        path: 'customerreturnlist',
+        component: CustomerReturnListComponent
+    },
+    {
+        path: 'customerreturn',
+        component: CustomerReturnComponent
     },
     {
         path: '**',
@@ -187,7 +208,8 @@ const routes = [
     declarations: [CustomerDashboardComponent, CustomerFactComponent,
         CustomerOrderfulfilmentComponent, CustomerPolookupComponent,
         PurchaseIndentComponent, ReturnComponent, PODComponent, PODDetailsComponent,
-        SupportChatComponent, SupportDeskComponent, SupportTicketComponent, NotesDialogComponent, PODItemAttachmentDialogComponent, InvoicePaymentComponent, PaymentDailogComponent, PaymentHistoryDialogComponent],
+        SupportChatComponent, SupportDeskComponent, SupportTicketComponent, NotesDialogComponent, PODItemAttachmentDialogComponent, InvoicePaymentComponent, PaymentDailogComponent, PaymentHistoryDialogComponent
+        CustomerHomeComponent, CustomerPurchaseListComponent, CustomerReturnListComponent, CustomerReturnComponent],
     providers: [
         DecimalPipe
     ],

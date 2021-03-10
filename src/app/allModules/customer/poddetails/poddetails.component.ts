@@ -56,8 +56,9 @@ export class PODDetailsComponent implements OnInit {
     'MaterialText',
     'Qty',
     'ReceivedQty',
-    'BreakageQty',
     'MissingQty',
+    'BreakageQty',
+  
     'AcceptedQty',
     'Reason',
     'AttachmentName',
@@ -84,6 +85,15 @@ export class PODDetailsComponent implements OnInit {
   isWeightError: boolean;
   @ViewChild('fileInput1') fileInput1: ElementRef<HTMLElement>;
   ArrivalDateInterval: number;
+  a: any;
+  b: any;
+  recive: any;
+  item: AbstractControl;
+  c: any;
+  d: any;
+  e: number;
+  f: any;
+  Qtty: any;
 
   constructor(
     private _fuseConfigService: FuseConfigService,
@@ -413,7 +423,7 @@ export class PODDetailsComponent implements OnInit {
       Material: [PODItem.Material],
       MaterialText: [PODItem.MaterialText],
       Qty: [PODItem.Qty],
-      ReceivedQty: [PODItem.ReceivedQty, [Validators.required, Validators.max(PODItem.Qty), Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,3})?$')]],
+      ReceivedQty: [PODItem.ReceivedQty, [Validators.required, Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,3})?$')]],
       BreakageQty: [PODItem.BreakageQty, [Validators.required, Validators.max(PODItem.Qty), Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,3})?$')]],
       MissingQty: [PODItem.MissingQty, [Validators.required, Validators.max(PODItem.Qty), Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,3})?$')]],
       AcceptedQty: [PODItem.AcceptedQty, [Validators.required, Validators.max(PODItem.Qty), Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,3})?$')]],
@@ -479,18 +489,45 @@ export class PODDetailsComponent implements OnInit {
       item.MaterialText = x.get('MaterialText').value;
       item.Qty = x.get('Qty').value;
       item.ReceivedQty = x.get('ReceivedQty').value;
+
       item.BreakageQty = x.get('BreakageQty').value;
       item.MissingQty = x.get('MissingQty').value;
       item.AcceptedQty = x.get('AcceptedQty').value;
       item.Reason = x.get('Reason').value;
       item.Remarks = x.get('Remarks').value;
       item.AttachmentName = x.get('AttachmentName').value;
+     
       item.Client = this.SelectedPODHeader.Client;
       item.Company = this.SelectedPODHeader.Company;
       item.Type = this.SelectedPODHeader.Type;
       item.PatnerID = this.SelectedPODHeader.PatnerID;
       this.SelectedPODView.PODItems.push(item);
     });
+     //Qty checking
+      // for()
+      this.b = this.PODItemFormGroup.get("PODItems") as FormArray
+ this.item = (<FormArray>this.PODItemFormGroup.get('PODItems')).at(0);
+ PODItemFormArray.controls.forEach((x, i) => {
+  // this.PODItemFormGroup.get('PODItems').get('ReceivedQty').hasError;
+ (<FormArray>this.PODItemFormGroup.get('PODItems')).controls[i].markAsTouched();
+ })
+//  this.item.value.forEach(element => {
+//       this.c=element;
+//       });
+      console.log("c" + this.c);
+
+      // this.PODItemFormArray.controls.forEach((element,index) => {
+      //   this.a= Number(element.ReceivedQty)+Number(element.MissingQty);
+      //   if(this.a!=element.Qty){
+      //     this.PODItemFormGroup.controls[index].get('ReceivedQty').markAsTouched
+      // this.b= this.PODItemFormGroup.get('ReceivedQty').value
+      //     console.log("b"+this.b)
+      //         }
+      // });
+      // this.recive=Number(item.ReceivedQty)
+
+
+      //
   }
   GetPODItemAttachments(): void {
     if (this.fileToUploadList.length && this.SelectedPODView.PODItems.length) {
@@ -530,6 +567,50 @@ export class PODDetailsComponent implements OnInit {
     }
   }
   SubmitClicked(): void {
+    const PODItemFormArray = this.PODItemFormGroup.get('PODItems') as FormArray;
+    
+   PODItemFormArray.controls.forEach((x, i) => {
+      // this.PODItemFormGroup.get('PODItems').get('ReceivedQty').hasError;
+    //  (<FormArray>this.PODItemFormGroup.get('PODItems')).controls[i].markAsTouched();
+    //  (<FormArray>this.PODItemFormGroup.get('PODItems')).controls[i].setErrors;
+    //  this.PODItemFormArray.controls[i].get('ReceivedQty').markAsTouched();
+     this.a=Number(this.PODItemFormArray.controls[i].get('ReceivedQty').value);
+     this.b=Number(this.PODItemFormArray.controls[i].get('MissingQty').value);
+     this.c=this.a+this.b;
+     this.Qtty=this.PODItemFormArray.controls[i].get('Qty').value
+     if( this.Qtty!=this.c){
+     if( this.Qtty!=this.c)
+     { this.PODItemFormArray.controls[i].get('ReceivedQty').setErrors({qty1:true})
+     this.PODItemFormArray.controls[i].get('MissingQty').setErrors({out:true})}
+     
+    
+     console.log(this.PODItemFormArray)
+     if(this.PODItemFormArray.controls[i].get('Qty').value ==this.c)
+     this.PODItemFormArray.controls[i].get('MissingQty').setErrors({miss:true})
+     this.PODItemFormArray.controls[i].get('ReceivedQty').setErrors({recive:true})
+     }
+
+    //  .setValidators( [Validators.max(this.a+this.b),Validators.min(this.a+this.b)])
+     console.log(this.PODItemFormArray)
+     this.d=Number(this.PODItemFormArray.controls[i].get('BreakageQty').value);
+     this.e=Number(this.PODItemFormArray.controls[i].get('AcceptedQty').value);
+     this.f=this.d+this.e;
+     this.recive=this.PODItemFormArray.controls[i].get('ReceivedQty').value 
+     if(this.recive!=this.f)
+     {
+     if(this.recive!=this.f)
+     this.PODItemFormArray.controls[i].get('BreakageQty').setErrors({invalid:true})
+     console.log(this.PODItemFormArray)
+     this.PODItemFormArray.controls[i].get('AcceptedQty').setErrors({invalid:true})
+
+     if(this.PODItemFormArray.controls[i].get('ReceivedQty').value ==this.f)
+   
+     console.log(this.PODItemFormArray)
+     this.PODItemFormArray.controls[i].get('AcceptedQty').setErrors({invalid:true})
+     this.PODItemFormArray.controls[i].get('BreakageQty').setErrors({invalid:true})
+    //  this.PODItemFormArray.controls[i].get('ReceivedQty').('required');
+     }
+     })
     this.PODFormGroup.enable();
     if (this.PODFormGroup.valid) {
       if (!this.isWeightError) {

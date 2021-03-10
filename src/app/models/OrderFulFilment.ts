@@ -316,6 +316,8 @@ export class SOItemCount {
     ItemCount: number;
     GRGICount: number;
     PODCount: number;
+     InvCount:number;
+   ReturnCount:number;
 }
 export class BPCPlantMaster extends CommonClass {
     PlantCode: string;
@@ -334,4 +336,20 @@ export class ActionLog extends CommonClass{
     Action: string;
     ActionText: string;
     UsedOn: string;
+}
+export class BPCInvoice extends CommonClass {
+    InvoiceNo:string;
+    InvoiceDate:Date | string | null;
+    InvoiceAmount:number
+    Currency:string
+
+}
+export class BPCRetNew extends CommonClass {
+    ReturnOrder:string;
+    Date: Date | string | null;
+    Material:string;
+    Text:string;
+    Qty:number;
+    Status:string;
+    Document:string;
 }

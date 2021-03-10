@@ -317,9 +317,9 @@
   }
   .org-round1 {
     @extend .tab-round1;
-    border-color: #edb084;
+    border-color: #f8d68f;
     .mat-badge-content {
-      background-color: #edb084 !important;
+      background-color: #f8d68f !important;
     }
   }
   .org-round2 {
@@ -337,6 +337,8 @@
     @extend .tab-round2;
     border-color: #e7f9e3;
   }
+
+
   .unSelected{
     border-color: white;
   }
@@ -445,5 +447,29 @@
   .cursorPointer {
     color: #0000ee;
     cursor: pointer;
+  }
+  .pink-round1 {
+    @extend .tab-round1;
+    border-color: #edb084;
+    .mat-badge-content {
+      background-color: #edb084 !important;
+    }
+  }
+  .pink-round2 {
+    @extend .tab-round2;
+    border-color: #e7f9e3;
+  }
+  
+
+  .document-round1 {
+    @extend .tab-round1;
+    border-color: #f98bb5;
+    .mat-badge-content {
+      background-color: #f98bb5 !important;
+    }
+  }
+  .document-round2 {
+    @extend .tab-round2;
+    border-color: #e7f9e3;
   }
 }

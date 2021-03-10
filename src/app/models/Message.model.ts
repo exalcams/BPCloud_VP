@@ -10,4 +10,8 @@ export class BPCSCOCMessage extends CommonClass {
     SCOCMessage: string;
     IsReleased: boolean;
 }
-
+export class BPCWelcomeMessage extends CommonClass {
+    MessageID: number;
+    WelcomeMessage: string;
+    IsReleased: boolean;
+}
