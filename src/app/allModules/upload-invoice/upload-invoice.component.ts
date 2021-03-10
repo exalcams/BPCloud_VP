@@ -13,7 +13,7 @@ import { AttachmentDetails } from 'app/models/task';
 import { fuseAnimations } from '@fuse/animations';
 import { BPCFLIPHeader, BPCFLIPHeaderView, BPCFLIPCost, BPCFLIPItem, BPCExpenseTypeMaster } from 'app/models/po-flip';
 import { POFlipService } from 'app/services/po-flip.service';
-import { BPCOFHeader, BPCOFItem } from 'app/models/OrderFulFilment';
+import { ActionLog, BPCOFHeader, BPCOFItem } from 'app/models/OrderFulFilment';
 import { POService } from 'app/services/po.service';
 import { BehaviorSubject } from 'rxjs';
 import { BPCInvoiceAttachment, BPCCurrencyMaster, BPCCountryMaster } from 'app/models/ASN';
@@ -22,6 +22,7 @@ import { MasterService } from 'app/services/master.service';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { BPCFact } from 'app/models/fact';
 import { FactService } from 'app/services/fact.service';
+import { AuthService } from 'app/services/auth.service';
 
 @Component({
   selector: 'app-upload-invoice',
@@ -93,6 +94,7 @@ export class UploadInvoiceComponent implements OnInit {
   ItemTableSelectedItem: BPCFLIPItem;
   SelectedFlipCostTableIndex = -1;
   SelectFlipCostTableRow: BPCFLIPCost;
+  ActionLog: any;
 
 
   constructor(
@@ -101,6 +103,7 @@ export class UploadInvoiceComponent implements OnInit {
     private _poService: POService,
     private _ASNService: ASNService,
     private _masterService: MasterService,
+    private _authService:AuthService,
     private _router: Router,
     private _route: ActivatedRoute,
     public snackBar: MatSnackBar,
@@ -182,7 +185,11 @@ export class UploadInvoiceComponent implements OnInit {
       }
     );
   }
-  loadSelectedFlip(selectedFLIP: BPCFLIPHeader): void {
+  loadSelectedFlip(selectedFLIP: BPCFLIPHeader,Text=null): void {
+    if(Text != null)
+    {
+      this.CreateActionLogvalues("Side-bar-Filp");
+    }
     this.selectedFlip = selectedFLIP;
     console.log("selectedFlip", this.selectedFlip);
     this.selectedFlipView.FLIPID = this.selectedFlip.FLIPID;
@@ -322,6 +329,7 @@ export class UploadInvoiceComponent implements OnInit {
     );
   }
   CreateUploadInvoice(): void {
+    this.CreateActionLogvalues("CreateUploadInvoice");
     this.resetControl();
     this.selectedFlip = new BPCFLIPHeader;
     this.selectedFlipView = new BPCFLIPHeaderView;
@@ -593,6 +601,7 @@ export class UploadInvoiceComponent implements OnInit {
 
   addFlipCostToTable(): void {
     if (this.flipCostFormGroup.valid) {
+      this.CreateActionLogvalues("AddFlipCostToTable");
       if (this.SelectedFlipCostTableIndex >= 0) {
         this.flipCosts[this.SelectedFlipCostTableIndex].Amount = this.flipCostFormGroup.get('Amount').value;
         this.flipCosts[this.SelectedFlipCostTableIndex].Remarks = this.flipCostFormGroup.get('Remarks').value;
@@ -617,6 +626,7 @@ export class UploadInvoiceComponent implements OnInit {
   }
 
   removeFlipCostFromTable(bPCFlipCost: BPCFLIPCost): void {
+    this.CreateActionLogvalues("RemoveFlipCostFromTable");
     const index: number = this.flipCosts.indexOf(bPCFlipCost);
     if (index > -1) {
       this.flipCosts.splice(index, 1);
@@ -655,6 +665,7 @@ export class UploadInvoiceComponent implements OnInit {
 
   saveClicked(): void {
     if (this.flipFormGroup.valid) {
+      
       this.getFlipFormValues();
       this.getFlipCostFormValues();
       this.getFlipItemFormValues();
@@ -676,6 +687,7 @@ export class UploadInvoiceComponent implements OnInit {
   }
   deleteClicked(): void {
     if (this.selectedFlip.FLIPID) {
+      this.CreateActionLogvalues("Delete");
       const Actiontype = 'Delete';
       const Catagory = 'PO Flip';
       this.openConfirmationDialog(Actiontype, Catagory);
@@ -686,10 +698,12 @@ export class UploadInvoiceComponent implements OnInit {
     if (this.selectedFlip.FLIPID) {
       const Actiontype = 'Update';
       const Catagory = 'Invoice';
+      // this.CreateActionLogvalues("Update");
       this.openConfirmationDialog(Actiontype, Catagory);
-    } else {
+    } else {  
       const Actiontype = 'Save';
       const Catagory = 'Invoice';
+      // this.CreateActionLogvalues("Save");
       this.openConfirmationDialog(Actiontype, Catagory);
     }
   }
@@ -706,6 +720,7 @@ export class UploadInvoiceComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       result => {
         if (result) {
+          this.CreateActionLogvalues(Actiontype);
           if (Actiontype === 'Save') {
             this.CreateFlip();
           } else if (Actiontype === 'Update') {
@@ -849,6 +864,7 @@ export class UploadInvoiceComponent implements OnInit {
 
   addTo2ndTable(): void {
     if (this.SecondTableFormGroup.valid) {
+      this.CreateActionLogvalues("AddItemToTable");
       if (this.ItemTableSelectedIndex >= 0) {
         const itemIndex = this.flipItems.findIndex(x => x.Item === this.ItemTableSelectedItem.Item && x.MaterialText === this.ItemTableSelectedItem.MaterialText);
         this.flipItems[this.ItemTableSelectedIndex].Item = this.SecondTableFormGroup.get('Item').value;
@@ -886,6 +902,7 @@ export class UploadInvoiceComponent implements OnInit {
     }
   }
   ItemTableClicked(index: any, row: BPCFLIPItem): void {
+    this.CreateActionLogvalues("ItemTableRow");
     this.ItemTableSelectedIndex = index;
     this.ItemTableSelectedItem = row;
     this.SecondTableFormGroup.get('Item').patchValue(this.ItemTableSelectedItem.Item);
@@ -899,6 +916,7 @@ export class UploadInvoiceComponent implements OnInit {
     this.SecondTableFormGroup.get('Amount').patchValue(this.ItemTableSelectedItem.Amount);
   }
   SelectFlipCostTable(index: any, row: BPCFLIPCost): void {
+    this.CreateActionLogvalues("FlipCost TableRow");
     this.SelectedFlipCostTableIndex = index;
     this.SelectFlipCostTableRow = row;
     this.flipCostFormGroup.get('Amount').patchValue(this.SelectFlipCostTableRow.Amount);
@@ -906,5 +924,20 @@ export class UploadInvoiceComponent implements OnInit {
     this.flipCostFormGroup.get('ExpenceType').patchValue(this.SelectFlipCostTableRow.ExpenceType);
 
   }
-
-}
+  CreateActionLogvalues(text): void {
+    this.ActionLog = new ActionLog();
+    this.ActionLog.UserID = this.currentUserID;
+    this.ActionLog.AppName = "UploadInvoice";
+    this.ActionLog.ActionText = text + " is Clicked";
+    this.ActionLog.Action = text;
+    this.ActionLog.CreatedBy = this.currentUserName;
+    this._authService.CreateActionLog(this.ActionLog).subscribe(
+      (data) => {
+        console.log(data);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+} 

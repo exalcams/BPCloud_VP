@@ -2,7 +2,10 @@ import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { fuseAnimations } from '@fuse/animations';
+import { AuthenticationDetails } from 'app/models/master';
+import { ActionLog } from 'app/models/OrderFulFilment';
 import { BPCDiscountMaster, BPCPayDis } from 'app/models/Payment.model';
+import { AuthService } from 'app/services/auth.service';
 import { DiscountService } from 'app/services/discount.service';
 
 @Component({
@@ -17,10 +20,16 @@ export class DiscountDialogueComponent implements OnInit {
   discountData:BPCPayDis=new BPCPayDis();
   discountMaster:BPCDiscountMaster[];
   isChange:boolean=false;
+  ActionLog: any;
+  authenticationDetails: any;
+  currentUserID: any;
+  currentUserName: any;
+  currentUserRole: any;
   constructor(
     @Inject(MAT_DIALOG_DATA) public dialogData: any,
     public dialogRef: MatDialogRef<DiscountDialogueComponent>,
     public fb:FormBuilder,
+    private _authService:AuthService,
     private _discountService:DiscountService
   ) {
     this.discountFormGroup=this.fb.group({
@@ -32,6 +41,19 @@ export class DiscountDialogueComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const retrievedObject = localStorage.getItem('authorizationData');
+    if (retrievedObject) {
+      this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+      this.currentUserID = this.authenticationDetails.UserID;
+      this.currentUserName = this.authenticationDetails.UserName;
+      this.currentUserRole = this.authenticationDetails.UserRole;
+      // if (this.MenuItems.indexOf('ASN') < 0) {
+      //     this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
+      //     );
+      //     this._router.navigate(['/auth/login']);
+      // }
+
+    }
     console.log("dialogData",this.dialogData);
     if(this.dialogData.isBuyer){
       this.discountData=this.dialogData;
@@ -128,6 +150,7 @@ export class DiscountDialogueComponent implements OnInit {
     }
   }
   YesClicked(): void {
+    this.CreateActionLogvalues("Save");
     if(this.dialogData.isBuyer){
       this.discountData.Status="Accepted";
       this.dialogRef.close(this.discountData);
@@ -147,6 +170,7 @@ export class DiscountDialogueComponent implements OnInit {
   }
 
   CloseClicked(): void {
+    this.CreateActionLogvalues("Close");
     if(this.dialogData.isBuyer){
       this.discountData.Status="Rejected";
       this.dialogRef.close(this.discountData);
@@ -164,8 +188,24 @@ export class DiscountDialogueComponent implements OnInit {
   }
 
   ChangeClicked(){
+    this.CreateActionLogvalues("Change")
     this.isChange=false;
     this.discountFormGroup.get('EPRD').enable();
   }
-
+  CreateActionLogvalues(text): void {
+    this.ActionLog = new ActionLog();
+    this.ActionLog.UserID = this.currentUserID;
+    this.ActionLog.AppName = "DiscountCalculation";
+    this.ActionLog.ActionText = text + " is Clicked";
+    this.ActionLog.Action = text;
+    this.ActionLog.CreatedBy = this.currentUserName;
+    this._authService.CreateActionLog(this.ActionLog).subscribe(
+      (data) => {
+        console.log(data);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
 }

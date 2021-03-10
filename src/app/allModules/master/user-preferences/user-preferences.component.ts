@@ -9,6 +9,8 @@ import { Router } from '@angular/router';
 import { MatSnackBar, MatDialog, MatDialogConfig } from '@angular/material';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
+import { ActionLog } from 'app/models/OrderFulFilment';
+import { AuthService } from 'app/services/auth.service';
 
 @Component({
   selector: 'app-user-preferences',
@@ -26,9 +28,13 @@ export class UserPreferencesComponent implements OnInit {
   IsProgressBarVisibile: boolean;
   fuseConfig: any;
   private _unsubscribeAll: Subject<any>;
+  ActionLog: any;
+  CurrentUserId: any;
+  CurrentUserName: string;
   constructor(private _fuseConfigService: FuseConfigService,
     private _masterService: MasterService,
     private _formBuilder: FormBuilder,
+    private _authService:AuthService,
     private _router: Router,
     public snackBar: MatSnackBar,
     private dialog: MatDialog) {
@@ -49,6 +55,8 @@ export class UserPreferencesComponent implements OnInit {
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+      this.CurrentUserName=this.authenticationDetails.UserName;
+      this.CurrentUserId=this.authenticationDetails.UserID;
       this.MenuItems = this.authenticationDetails.MenuItemNames.split(',');
       if (this.MenuItems.indexOf('UserPreferences') < 0) {
         this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
@@ -93,6 +101,7 @@ export class UserPreferencesComponent implements OnInit {
   }
   SaveClicked(): void {
     if (this.userPreferenceFormGroup.valid) {
+      this.CreateActionLogvalues("Update/Create");
       const NavbarPrimaryBackground = this.userPreferenceFormGroup.get('navbarPrimaryBackground').value;
       const NavbarSecondaryBackground = this.userPreferenceFormGroup.get('navbarSecondaryBackground').value;
       const ToolbarBackground = this.userPreferenceFormGroup.get('toolbarBackground').value;
@@ -265,5 +274,20 @@ export class UserPreferencesComponent implements OnInit {
       });
     this._fuseConfigService.config = this.fuseConfig;
   }
-
+  CreateActionLogvalues(text): void {
+    this.ActionLog = new ActionLog();
+    this.ActionLog.UserID = this.CurrentUserId;
+    this.ActionLog.AppName = "OrderFulfilmentCenter";
+    this.ActionLog.ActionText = text + " is Clicked";
+    this.ActionLog.Action = text;
+    this.ActionLog.CreatedBy = this.CurrentUserName;
+    this._authService.CreateActionLog(this.ActionLog).subscribe(
+      (data) => {
+        console.log(data);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
 }

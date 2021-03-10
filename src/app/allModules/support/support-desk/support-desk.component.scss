@@ -15,7 +15,9 @@
   @mixin TableBorderRight($color) {
     border-right: 1px solid $color;
   }
-
+  .highlight{
+    background-color: red !important;
+  }
   .outer {
     border-bottom: 1px solid rgba(255, 85, 0, 0.1);
     position: relative;

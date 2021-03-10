@@ -16,6 +16,8 @@ import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notific
 import { MasterService } from 'app/services/master.service';
 import { FactService } from 'app/services/fact.service';
 import { BPCFact } from 'app/models/fact';
+import { ActionLog } from 'app/models/OrderFulFilment';
+import { AuthService } from 'app/services/auth.service';
 
 @Component({
   selector: 'app-support-chat',
@@ -50,11 +52,13 @@ export class SupportChatComponent implements OnInit {
   TicketResolved: boolean;
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsReOpen: boolean;
+  ActionLog: any;
   constructor(
     private route: ActivatedRoute,
     public _supportDeskService: SupportDeskService,
     private _masterService: MasterService,
     private _FactService: FactService,
+    private _authService:AuthService,
     private _router: Router,
     public snackBar: MatSnackBar,
     private _dialog: MatDialog,
@@ -177,6 +181,7 @@ export class SupportChatComponent implements OnInit {
   }
 
   GetSupportAttachment(fileName: string, file?: File): void {
+    this.CreateActionLogvalues("GetSupportAttachment");
     if (file && file.size) {
       const blob = new Blob([file], { type: file.type });
       this.OpenAttachmentDialog(fileName, blob);
@@ -237,6 +242,7 @@ export class SupportChatComponent implements OnInit {
     // } else {
     //   this.ShowFormValidationErrors(this.SupportLogFormGroup);
     // }
+    // this.CreateActionLogvalues("ReOpenRequest");
     const Actiontype = 'Re-open';
     const Catagory = 'Support Ticket';
     this.OpenConfirmationDialog(Actiontype, Catagory);
@@ -269,6 +275,7 @@ export class SupportChatComponent implements OnInit {
   }
 
   AddCommentClicked(): void {
+    this.CreateActionLogvalues("AddComment");
     const supportLog = new SupportLog();
     supportLog.PatnerID = this.PartnerID;
     //supportLog.Status = "Open";
@@ -427,18 +434,26 @@ export class SupportChatComponent implements OnInit {
       result => {
         if (result) {
           if (Actiontype === 'Reply') {
+            this.CreateActionLogvalues("Reply");
+
             this.CreateSupportLog();
           }
           else if (Actiontype === 'Mark As Resolved') {
+            this.CreateActionLogvalues("Mark As Resolved");
             this.UpdateSupportLog();
           }
           else if (Actiontype === 'Close') {
+            this.CreateActionLogvalues("Close");
             this.CloseSupportTicket();
           }
           else if (Actiontype === 'Re-open') {
+            this.CreateActionLogvalues("Re-OpenComment");
+
             this.AddReOpenCommentClicked();
           }
           else if (Actiontype === 'Re-Open') {
+            this.CreateActionLogvalues("Re-OpenSupportTicket");
+
             this.ReOpenSupportTicket();
           }
         }
@@ -509,5 +524,21 @@ export class SupportChatComponent implements OnInit {
       default:
         return '';
     }
+  }
+  CreateActionLogvalues(text): void {
+    this.ActionLog = new ActionLog();
+    this.ActionLog.UserID = this.currentUserID;
+    this.ActionLog.AppName = "SupportChat";
+    this.ActionLog.ActionText = text + " is Clicked";
+    this.ActionLog.Action = text;
+    this.ActionLog.CreatedBy = this.currentUserName;
+    this._authService.CreateActionLog(this.ActionLog).subscribe(
+      (data) => {
+        console.log(data);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
 }

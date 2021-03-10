@@ -16,6 +16,8 @@ import { ExcelService } from 'app/services/excel.service';
 import { MasterService } from 'app/services/master.service';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
+import { ActionLog } from 'app/models/OrderFulFilment';
+import { AuthService } from 'app/services/auth.service';
 
 @Component({
   selector: 'app-account-statement',
@@ -61,11 +63,13 @@ export class AccountStatementComponent implements OnInit {
   @ViewChild(MatSort) tableSort: MatSort;
   BPCPayAccountStatement: BPCPayAccountStatement[] = [];
   BCHeader: BPCPayAccountStatement;
+  ActionLog: any;
   constructor(
     private _fuseConfigService: FuseConfigService,
     private formBuilder: FormBuilder,
     private _router: Router,
     public snackBar: MatSnackBar,
+    private _authService:AuthService,
     private dialog: MatDialog,
     private paymentService: PaymentService,
     private _masterService: MasterService,
@@ -175,8 +179,12 @@ export class AccountStatementComponent implements OnInit {
       this.isDateError = false;
     }
   }
-  SearchClicked(): void {
+  SearchClicked(text=null): void {
     if (this.SearchFormGroup.valid) {
+      if(text != null)
+      {
+        this.CreateActionLogvalues(text);
+      }
       if (!this.isDateError) {
         const FrDate = this.SearchFormGroup.get('FromDate').value;
         let FromDate = '';
@@ -240,6 +248,7 @@ export class AccountStatementComponent implements OnInit {
 
   }
   exportAsXLSX(): void {
+    this.CreateActionLogvalues("ExportAsXLSX");
     const currentPageIndex = this.tableDataSource.paginator.pageIndex;
     const PageSize = this.tableDataSource.paginator.pageSize;
     const startIndex = currentPageIndex * PageSize;
@@ -261,9 +270,11 @@ export class AccountStatementComponent implements OnInit {
     this._excelService.exportAsExcelFile(itemsShowedd, 'accountstatement');
   }
   expandClicked(): void {
+    this.CreateActionLogvalues("Expand");
     this.isExpanded = !this.isExpanded;
   }
   applyFilter(event: Event): void {
+    this.CreateActionLogvalues("SearchBarFilter");
     const filterValue = (event.target as HTMLInputElement).value;
     this.tableDataSource.filter = filterValue.trim().toLowerCase();
   }
@@ -277,6 +288,7 @@ export class AccountStatementComponent implements OnInit {
     // this._fuseConfigService.config = this.fuseConfig;
   }
   handle_accept(element: BPCPayAccountStatement): void {
+    this.CreateActionLogvalues("GetSolved");
     // console.log('handle_accept', element);
     if (this.BPCPayAccountStatement.length >= 1) {
       this.BPCPayAccountStatement.pop();
@@ -321,6 +333,22 @@ export class AccountStatementComponent implements OnInit {
       this.IsProgressBarVisibile = false;
       this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
     });
+  }
+  CreateActionLogvalues(text): void {
+    this.ActionLog = new ActionLog();
+    this.ActionLog.UserID = this.currentUserID;
+    this.ActionLog.AppName = "OrderFulfilmentCenter";
+    this.ActionLog.ActionText = text + " is Clicked";
+    this.ActionLog.Action = text;
+    this.ActionLog.CreatedBy = this.currentUserName;
+    this._authService.CreateActionLog(this.ActionLog).subscribe(
+      (data) => {
+        console.log(data);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
 }
 

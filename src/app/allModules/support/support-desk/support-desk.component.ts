@@ -9,6 +9,8 @@ import { NotificationSnackBarComponent } from 'app/notifications/notification-sn
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FuseConfigService } from '@fuse/services/config.service';
+import { ActionLog } from 'app/models/OrderFulFilment';
+import { AuthService } from 'app/services/auth.service';
 @Component({
   selector: 'app-support-desk',
   templateUrl: './support-desk.component.html',
@@ -43,10 +45,13 @@ export class SupportDeskComponent implements OnInit {
 
   supportMasters: SupportMaster[] = [];
   isSupport: boolean;
+  ActionLog: any;
+  currentUserName: string;
 
   constructor(
     private _fuseConfigService: FuseConfigService,
     public _supportdeskService: SupportDeskService,
+    private _authService:AuthService,
     private _router: Router,
     private _activatedRoute: ActivatedRoute) {
     this.partnerID = '';
@@ -61,6 +66,7 @@ export class SupportDeskComponent implements OnInit {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
       this.currentUserID = this.authenticationDetails.UserID;
       this.currentUserRole = this.authenticationDetails.UserRole;
+      this.currentUserName = this.authenticationDetails.UserName;
       this.menuItems = this.authenticationDetails.MenuItemNames.split(',');
       if (this.menuItems.indexOf('SupportDesk') < 0) {
         this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger
@@ -152,10 +158,28 @@ export class SupportDeskComponent implements OnInit {
   }
 
   addSupportTicketClicked(): void {
+    this.CreateActionLogvalues("AddSupportTicketClicked");
     this._router.navigate(['/support/supportticket']);
   }
 
   onSupportRowClicked(row: any): void {
+    this.CreateActionLogvalues("SupportRow");
     this._router.navigate(['/support/supportchat'], { queryParams: { SupportID: row.SupportID } });
+  }
+  CreateActionLogvalues(text): void {
+    this.ActionLog = new ActionLog();
+    this.ActionLog.UserID = this.currentUserID;
+    this.ActionLog.AppName = "SupportDesk";
+    this.ActionLog.ActionText = text + " is Clicked";
+    this.ActionLog.Action = text;
+    this.ActionLog.CreatedBy = this.currentUserName;
+    this._authService.CreateActionLog(this.ActionLog).subscribe(
+      (data) => {
+        console.log(data);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
 }
