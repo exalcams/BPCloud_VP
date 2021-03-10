@@ -14,6 +14,8 @@ import { NotificationDialogComponent } from 'app/notifications/notification-dial
 import { TourComponent } from '../tour/tour.component';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
+import { ActionLog } from 'app/models/OrderFulFilment';
+import { AuthService } from 'app/services/auth.service';
 
 @Component({
   selector: 'app-action-center',
@@ -50,6 +52,7 @@ export class ActionCenterComponent implements OnInit {
   fileToUploadList: File[] = [];
   AttachmentData1: SafeUrl;
   AttachmentData2: SafeUrl;
+  ActionLog: any;
   // TempActionData = [
   //   {
   //     PoNumber: '12345',
@@ -86,6 +89,7 @@ export class ActionCenterComponent implements OnInit {
     private _factService: FactService,
     private _masterService: MasterService,
     private _dashboardService: DashboardService,
+    private _authService:AuthService,
     private _router: Router,
     public snackBar: MatSnackBar,
     private dialog: MatDialog,
@@ -330,12 +334,17 @@ export class ActionCenterComponent implements OnInit {
   }
 
   YesClicked(selectedNotification: BPCAIACT): void {
+    this.CreateActionLogvalues("Yes");
     this.UpdateAction(selectedNotification, 'Yes');
   }
   NoClicked(selectedNotification: BPCAIACT): void {
+    this.CreateActionLogvalues("NO");
+
     this.UpdateAction(selectedNotification, 'No');
   }
   ActionClicked(selectedNotification: BPCAIACT): void {
+    this.CreateActionLogvalues("Action");
+
     this.UpdateAction(selectedNotification, selectedNotification.Action);
   }
   // AcceptAIACT(): void {
@@ -515,6 +524,7 @@ export class ActionCenterComponent implements OnInit {
   }
 
   onFactSheetButtonClicked(): void {
+    this.CreateActionLogvalues("onFactSheetButton");
     this._router.navigate(["/fact"], { queryParams: { render: 1 } });
     // this._router.navigate(["/fact"]);
   }
@@ -596,5 +606,20 @@ export class ActionCenterComponent implements OnInit {
       });
     // this._fuseConfigService.config = this.fuseConfig;
   }
-
+  CreateActionLogvalues(text): void {
+    this.ActionLog = new ActionLog();
+    this.ActionLog.UserID = this.currentUserID;
+    this.ActionLog.AppName = "ActionCenter";
+    this.ActionLog.ActionText = text + " is Clicked";
+    this.ActionLog.Action = text;
+    this.ActionLog.CreatedBy = this.currentUserName;
+    this._authService.CreateActionLog(this.ActionLog).subscribe(
+      (data) => {
+        console.log(data);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
 }

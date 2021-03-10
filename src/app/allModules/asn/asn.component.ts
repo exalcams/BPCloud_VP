@@ -149,7 +149,7 @@ export class ASNComponent implements OnInit {
     IsShipmentNotRelevant: boolean = false;
     IsPriceNotMatched = false;
     DocumentType: string;
-    SelectedDocType:string;
+    SelectedDocType: string;
     ActionLog: any;
 
     constructor(
@@ -209,7 +209,7 @@ export class ASNComponent implements OnInit {
         }
         this._route.queryParams.subscribe(params => {
             this.SelectedDocNumber = params['id'];
-            this.SelectedDocType=params['type'];
+            this.SelectedDocType = params['type'];
         });
         this.CreateAppUsage();
         this.InitializeASNFormGroup();
@@ -698,7 +698,7 @@ export class ASNComponent implements OnInit {
     GetPOItemsByDocAndPartnerID(): void {
         this._POService.GetPOItemViewsByDocAndPartnerID(this.SelectedDocNumber, this.currentUserName).subscribe(
             (data) => {
-                console.log("items",data);
+                console.log("items", data);
                 this.POItems = data as BPCOFItemView[];
                 this.ClearFormArray(this.ASNItemFormArray);
                 if (this.POItems && this.POItems.length) {
@@ -1223,7 +1223,7 @@ export class ASNComponent implements OnInit {
         });
     }
     OpenItemBatch(index: number): void {
-        this.CreateActionLogvalues("ItemBatch");
+        
         const fg = this.ASNItemFormArray.controls[index] as FormGroup;
         const asQ = fg.get('ASNQty').value;
         const asBatch = fg.get('Batch').value;
@@ -1249,6 +1249,7 @@ export class ASNComponent implements OnInit {
         dialogRef.afterClosed().subscribe(
             result => {
                 if (result) {
+                    this.CreateActionLogvalues("ItemBatch");
                     const fg = this.ASNItemFormArray.controls[index] as FormGroup;
                     fg.get('Batch').patchValue(result);
                 } else {
@@ -1429,7 +1430,6 @@ export class ASNComponent implements OnInit {
     }
 
     SaveClicked(): void {
-        this.CreateActionLogvalues("Save");
         this.InvoiceDetailsFormGroup.get('POBasicPrice').disable();
         // if (this.ASNFormGroup.valid) {
         //     if (!this.isWeightError) {
@@ -1669,6 +1669,7 @@ export class ASNComponent implements OnInit {
         //     const Catagory = 'ASN';
         //     this.OpenConfirmationDialog(Actiontype, Catagory);
         // }
+        // this.CreateActionLogvalues("Save");
         const Catagory = 'ASN';
         this.OpenConfirmationDialog(Actiontype, Catagory);
     }
@@ -1712,6 +1713,7 @@ export class ASNComponent implements OnInit {
         dialogRef.afterClosed().subscribe(
             result => {
                 if (result) {
+                    this.CreateActionLogvalues(Actiontype)
                     if (Actiontype === 'Save' || Actiontype === 'Submit') {
                         if (this.SelectedASNHeader.ASNNumber) {
                             this.UpdateASN(Actiontype);
@@ -1843,7 +1845,7 @@ export class ASNComponent implements OnInit {
         //console.log("asnHeader",this.SelectedASNHeader);
         this._ASNService.DeleteASN(this.SelectedASNHeader).subscribe(
             (data) => {
-                 console.log(data);
+                console.log(data);
                 this.ResetControl();
                 this.notificationSnackBarComponent.openSnackBar('ASN deleted successfully', SnackBarStatus.success);
                 this.IsProgressBarVisibile = false;
@@ -2210,20 +2212,18 @@ export class ASNComponent implements OnInit {
             }
         });
     }
-    CreateActionLogvalues(text):void{
-        this.ActionLog=new ActionLog();
-        this.ActionLog.UserID=this.currentUserID;
-        this.ActionLog.AppName="ASN";
-        this.ActionLog.ActionText=text+" is Clicked";
-        this.ActionLog.Action=text;
-        this.ActionLog.CreatedBy=this.currentUserName;
+    CreateActionLogvalues(text): void {
+        this.ActionLog = new ActionLog();
+        this.ActionLog.UserID = this.currentUserID;
+        this.ActionLog.AppName = "ASN";
+        this.ActionLog.ActionText = text + " is Clicked";
+        this.ActionLog.Action = text;
+        this.ActionLog.CreatedBy = this.currentUserName;
         this._authservice.CreateActionLog(this.ActionLog).subscribe(
-            (data)=>
-            {
+            (data) => {
                 console.log(data);
             },
-            (err)=>
-            {
+            (err) => {
                 console.log(err);
             }
         );
@@ -2247,6 +2247,6 @@ export function MustValid(NetWeight: string, GrossWeight: string): ValidationErr
             GrossWeightcontrol.setErrors(null);
         }
     };
-    
+
 }
 

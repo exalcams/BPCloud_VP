@@ -18,8 +18,9 @@ import { MasterService } from 'app/services/master.service';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseConfigService } from '@fuse/services/config.service';
-import { BPCOFQM } from 'app/models/OrderFulFilment';
+import { ActionLog, BPCOFQM } from 'app/models/OrderFulFilment';
 import { POService } from 'app/services/po.service';
+import { AuthService } from 'app/services/auth.service';
 @Component({
   selector: 'app-overview',
   templateUrl: './overview.component.html',
@@ -110,10 +111,11 @@ export class OverviewComponent implements OnInit {
     }
 
   ];
+  ActionLog: any;
 
   constructor(
     private _fuseConfigService: FuseConfigService,
-
+    private _authService:AuthService,
     private _reportService: ReportService,
     private formBuilder: FormBuilder,
     private _router: Router,
@@ -357,6 +359,7 @@ export class OverviewComponent implements OnInit {
       // if (TDate) {
       //   ToDate = this._datePipe.transform(TDate, 'yyyy-MM-dd');
       // }
+      this.CreateActionLogvalues("Search");
       const poNumber = this.searchFormGroup.get('PONumber').value;
       const material = this.searchFormGroup.get('Material').value;
       const overviewReportOption = new OverviewReportOption();
@@ -402,6 +405,7 @@ export class OverviewComponent implements OnInit {
   }
 
   exportAsXLSX(): void {
+    this.CreateActionLogvalues("ExportAsXLSX");
     const currentPageIndex = this.overviewReportDataSource.paginator.pageIndex;
     const PageSize = this.overviewReportDataSource.paginator.pageSize;
     const startIndex = currentPageIndex * PageSize;
@@ -427,10 +431,12 @@ export class OverviewComponent implements OnInit {
   }
 
   expandClicked(): void {
+    this.CreateActionLogvalues("Expand");
     this.isExpanded = !this.isExpanded;
   }
 
   applyFilter(event: Event): void {
+    this.CreateActionLogvalues("SearchFilter");
     const filterValue = (event.target as HTMLInputElement).value;
     this.overviewReportDataSource.filter = filterValue.trim().toLowerCase();
   }
@@ -442,5 +448,21 @@ export class OverviewComponent implements OnInit {
         this.BGClassName = config;
       });
     // this._fuseConfigService.config = this.fuseConfig;
+  }
+  CreateActionLogvalues(text): void {
+    this.ActionLog = new ActionLog();
+    this.ActionLog.UserID = this.currentUserID;
+    this.ActionLog.AppName = "Overview";
+    this.ActionLog.ActionText = text + " is Clicked";
+    this.ActionLog.Action = text;
+    this.ActionLog.CreatedBy = this.currentUserName;
+    this._authService.CreateActionLog(this.ActionLog).subscribe(
+      (data) => {
+        console.log(data);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
 }

@@ -35,8 +35,8 @@ export class SerListComponent implements OnInit {
   BGClassName: any;
   fuseConfig: any;
   AllASNList: ASNListView[] = [];
-  displayColumn: string[] = ['ASNNumber', 'ASNDate', 'DocNumber', 'AWBNumber', 'VessleNumber','Material','ASNQty', 'DepartureDate',
-  'ArrivalDate', 'Status', 'Action'];
+  displayColumn: string[] = ['ASNNumber', 'ASNDate', 'DocNumber', 'AWBNumber', 'VessleNumber', 'Material', 'ASNQty', 'DepartureDate',
+    'ArrivalDate', 'Status', 'Action'];
   TableDetailsDataSource: MatTableDataSource<ASNListView>;
   @ViewChild(MatPaginator) tablePaginator: MatPaginator;
   @ViewChild(MatSort) tableSort: MatSort;
@@ -54,7 +54,7 @@ export class SerListComponent implements OnInit {
   constructor(
     private _fuseConfigService: FuseConfigService,
     private formBuilder: FormBuilder,
-    private _authService:AuthService,
+    private _authService: AuthService,
     private _asnService: ASNService,
     private _excelService: ExcelService,
     private _router: Router,
@@ -71,7 +71,7 @@ export class SerListComponent implements OnInit {
     this.DefaultFromDate.setDate(this.DefaultFromDate.getDate() - 30);
     this.DefaultToDate = new Date();
     this.SelectValue = 'All';
-    this.TableSelectValue='Action'
+    this.TableSelectValue = 'Action'
   }
 
   ngOnInit(): void {
@@ -106,7 +106,7 @@ export class SerListComponent implements OnInit {
       ASNFromDate: [this.DefaultFromDate],
       ASNToDate: [this.DefaultToDate]
     });
-    
+
 
   }
   ResetControl(): void {
@@ -165,7 +165,7 @@ export class SerListComponent implements OnInit {
         const Material = this.SearchFormGroup.get('Material').value;
         // const Status = this.SearchFormGroup.get('Status').value;
         this.IsProgressBarVisibile = true;
-        this._asnService.FilterASNListBySER(this.currentUserName, ASNNumber, DocNumber, Material,Status, FromDate, ToDate).subscribe(
+        this._asnService.FilterASNListBySER(this.currentUserName, ASNNumber, DocNumber, Material, Status, FromDate, ToDate).subscribe(
           (data) => {
             this.AllASNList = data as ASNListView[];
             this.TableDetailsDataSource = new MatTableDataSource(this.AllASNList);
@@ -280,6 +280,7 @@ export class SerListComponent implements OnInit {
 
   }
   help(po: string): void {
+    this.CreateActionLogvalues("SupportDesk");
     this._router.navigate(["/support/supportticket"], {
       queryParams: { id: po, navigator_page: "asnlist" },
     });
@@ -305,22 +306,20 @@ export class SerListComponent implements OnInit {
   ASNnumber(asn: any) {
     this._router.navigate(["/asn"], { queryParams: { id: asn } });
   }
-  CreateActionLogvalues(text):void{
-    this.ActionLog=new ActionLog();
-    this.ActionLog.UserID=this.currentUserID;
-    this.ActionLog.AppName="OrderFulfilmentCenter";
-    this.ActionLog.ActionText=text+" is Clicked";
-    this.ActionLog.Action=text;
-    this.ActionLog.CreatedBy=this.currentUserName;
+  CreateActionLogvalues(text): void {
+    this.ActionLog = new ActionLog();
+    this.ActionLog.UserID = this.currentUserID;
+    this.ActionLog.AppName = "SER List";
+    this.ActionLog.ActionText = text + " is Clicked";
+    this.ActionLog.Action = text;
+    this.ActionLog.CreatedBy = this.currentUserName;
     this._authService.CreateActionLog(this.ActionLog).subscribe(
-        (data)=>
-        {
-            console.log(data);
-        },
-        (err)=>
-        {
-            console.log(err);
-        }
+      (data) => {
+        console.log(data);
+      },
+      (err) => {
+        console.log(err);
+      }
     );
-}
+  }
 }

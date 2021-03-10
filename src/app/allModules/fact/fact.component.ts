@@ -21,7 +21,7 @@ import { forEach } from 'lodash';
 import { InformationDialogComponent } from 'app/notifications/information-dialog/information-dialog.component';
 import { AttachmentDetails } from 'app/models/task';
 import { AttachmentDialogComponent } from 'app/notifications/attachment-dialog/attachment-dialog.component';
-import { OfAttachmentData } from 'app/models/OrderFulFilment';
+import { ActionLog, OfAttachmentData } from 'app/models/OrderFulFilment';
 import { UpdateAttachmentComponent } from './update-attachment/update-attachment.component';
 import { fuseAnimations } from '@fuse/animations';
 import FileSaver from 'file-saver';
@@ -809,6 +809,7 @@ export class FactComponent implements OnInit {
     //   this.openInformationDialog("bank");
     // }
     // else 
+    this.CreateActionLogvalues("clearBankTable");
     if (index < this.BankPrevious) {
       this.openDialog(index, "Bank");
     }
@@ -913,6 +914,7 @@ export class FactComponent implements OnInit {
     //   this.openInformationDialog("certificate");
     // }
     // else 
+    this.CreateActionLogvalues("ClearCertificateTable");
     if (index < this.PerviousCertificate) {
       this.openDialog(index, "Certificate");
     }
@@ -949,6 +951,7 @@ export class FactComponent implements OnInit {
   }
   AddBankToTable(): void {
     if (this.bankDetailsFormGroup.valid) {
+      this.CreateActionLogvalues("AddBankToTable");
       var BankTemp = new BPCFactBank();
       BankTemp.Client=this.SelectedBPCFact.Client;
       BankTemp.Type=this.SelectedBPCFact.Type;
@@ -991,6 +994,7 @@ export class FactComponent implements OnInit {
     }
   }
   SelectBankTableRow(row: BPCFactBank, index: any) {
+    this.CreateActionLogvalues("SelectBankTableRow");
     this.SelectedBankrow = row;
     this.SelectedBankRowIndex = index;
 
@@ -1005,7 +1009,7 @@ export class FactComponent implements OnInit {
   AddCertificateToTable(): void {
     // this.add.push(1);
     if (this.CertificateFormGroup.valid) {
-
+      this.CreateActionLogvalues("AddCertificateToTable");
       const attachment = new BPCCertificateAttachment();
       const bpcCertificate = new BPCCertificate();
       bpcCertificate.Client=this.SelectedBPCFact.Client;
@@ -1069,6 +1073,7 @@ export class FactComponent implements OnInit {
     }
   }
   SelectCertificateTableRow(row: BPCCertificate, index: any): void {
+    this.CreateActionLogvalues("SelectCertificateTableRow");
     this.SelectedCertificateTableRow = row;
     this.SelectedCertificateTableRowIndex = index;
     // var date=this.datePipe.transform(row.Validity,"dd/MM/yyyy")
@@ -1330,6 +1335,7 @@ export class FactComponent implements OnInit {
       result => {
         if (result) {
           if (Actiontype === 'Update') {
+            this.CreateActionLogvalues("UpdateFact");
             this.UpdateFact();
           }
           else if (Actiontype === 'Approve') {
@@ -1416,8 +1422,8 @@ export class FactComponent implements OnInit {
     if (this.FactFormGroup.valid && this.Bankadd === 0 && this.Certificateadd === 0) {
       const Actiontype = 'Update';
       const Catagory = 'Fact';
-      this.UpdateFact();
-      // this.OpenConfirmationDialog(Actiontype, Catagory);
+      // this.UpdateFact();
+      this.OpenConfirmationDialog(Actiontype, Catagory);
     } else {
       this.ShowValidationErrors(this.FactFormGroup);
       this.ShowValidationErrors(this.bankDetailsFormGroup);
@@ -1701,5 +1707,21 @@ export class FactComponent implements OnInit {
   //     }
   //   });
   // }
+  CreateActionLogvalues(text): void {
+    this.ActionLog = new ActionLog();
+    this.ActionLog.UserID = this.currentUserID;
+    this.ActionLog.AppName = "Fact";
+    this.ActionLog.ActionText = text + " is Clicked";
+    this.ActionLog.Action = text;
+    this.ActionLog.CreatedBy = this.currentUserName;
+    this._authService.CreateActionLog(this.ActionLog).subscribe(
+      (data) => {
+        console.log(data);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
 }
 

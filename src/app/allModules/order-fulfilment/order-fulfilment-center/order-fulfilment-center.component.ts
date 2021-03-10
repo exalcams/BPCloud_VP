@@ -528,8 +528,8 @@ export class OrderFulFilmentCenterComponent implements OnInit {
                 });
                 console.log("barChartData", this.barChartData);
                 console.log("barChartLabels", this.barChartLabels);
-                this.LoadBarChart();
-
+                // this.LoadBarChart();
+                this.isProgressBarVisibile = false;
             },
             (err) => {
                 this.isProgressBarVisibile = false;

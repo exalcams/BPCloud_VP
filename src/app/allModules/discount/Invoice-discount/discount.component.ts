@@ -3,9 +3,11 @@ import { MatDialog, MatDialogConfig, MatMenuTrigger, MatPaginator, MatSnackBar, 
 import { Router } from '@angular/router';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { AuthenticationDetails } from 'app/models/master';
+import { ActionLog } from 'app/models/OrderFulFilment';
 import { BPCPayAccountStatement, BPCPayDis } from 'app/models/Payment.model';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
+import { AuthService } from 'app/services/auth.service';
 import { DiscountService } from 'app/services/discount.service';
 import { Guid } from 'guid-typescript';
 import { DiscountDialogueComponent } from '../discount-dialogue/discount-dialogue.component';
@@ -32,11 +34,13 @@ export class DiscountComponent implements OnInit {
   @ViewChild(MatMenuTrigger) matMenuTrigger: MatMenuTrigger;
   AccountStatements: BPCPayAccountStatement[];
   notificationSnackBarComponent: NotificationSnackBarComponent;
+  ActionLog: any;
 
 
   constructor(private dialog: MatDialog,
     private _discountService: DiscountService,
     private _router: Router,
+    private _authService:AuthService,
     private _fuseConfigService: FuseConfigService,
     public snackBar: MatSnackBar) {
     this.isProgressBarVisibile = false;
@@ -104,6 +108,7 @@ export class DiscountComponent implements OnInit {
     });
   }
   handleCalculate(item): void {
+    this.CreateActionLogvalues("Calculate");
     this.OpenCalculateDialogue(item);
   }
 
@@ -120,5 +125,20 @@ export class DiscountComponent implements OnInit {
         this.notificationSnackBarComponent.openSnackBar("something went wrong", SnackBarStatus.danger);
       });
   }
-
+  CreateActionLogvalues(text): void {
+    this.ActionLog = new ActionLog();
+    this.ActionLog.UserID = this.currentUserID;
+    this.ActionLog.AppName = "Invoice-discount";
+    this.ActionLog.ActionText = text + " is Clicked";
+    this.ActionLog.Action = text;
+    this.ActionLog.CreatedBy = this.currentUserName;
+    this._authService.CreateActionLog(this.ActionLog).subscribe(
+      (data) => {
+        console.log(data);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
 }

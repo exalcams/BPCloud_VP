@@ -15,8 +15,9 @@ import { MasterService } from 'app/services/master.service';
 import { BPCFact } from 'app/models/fact';
 import { FactService } from 'app/services/fact.service';
 import { POService } from 'app/services/po.service';
-import { BPCOFItem } from 'app/models/OrderFulFilment';
+import { ActionLog, BPCOFItem } from 'app/models/OrderFulFilment';
 import { DatePipe, Location } from '@angular/common';
+import { AuthService } from 'app/services/auth.service';
 
 @Component({
   selector: 'app-support-ticket',
@@ -49,12 +50,14 @@ export class SupportTicketComponent implements OnInit {
   navigator_page: any;
   OFItems: BPCOFItem[] = [];
   SupportAppMasters: SupportAppMaster[] = [];
+  ActionLog: any;
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _router: Router,
     public snackBar: MatSnackBar,
     private dialog: MatDialog,
     private _formBuilder: FormBuilder,
+    private _authService:AuthService,
     public _supportDeskService: SupportDeskService,
     private _masterService: MasterService,
     private _FactService: FactService,
@@ -304,6 +307,7 @@ export class SupportTicketComponent implements OnInit {
 
   SaveClicked(): void {
     if (this.SupportTicketFormGroup.valid) {
+      this.CreateActionLogvalues("Create");
       this.GetSupportTicket();
       this.OpenNotificationDialog();
     } else {
@@ -325,6 +329,7 @@ export class SupportTicketComponent implements OnInit {
       this.fileToUpload = evt.target.files[0];
       this.fileToUploadList.push(this.fileToUpload);
       console.log(this.fileToUploadList);
+      this.CreateActionLogvalues("SupportTicketFile");
     }
   }
 
@@ -469,7 +474,22 @@ export class SupportTicketComponent implements OnInit {
       }
     });
   }
-
+  CreateActionLogvalues(text): void {
+    this.ActionLog = new ActionLog();
+    this.ActionLog.UserID = this.currentUserID;
+    this.ActionLog.AppName = "SupportTicket";
+    this.ActionLog.ActionText = text + " is Clicked";
+    this.ActionLog.Action = text;
+    this.ActionLog.CreatedBy = this.currentUserName;
+    this._authService.CreateActionLog(this.ActionLog).subscribe(
+      (data) => {
+        console.log(data);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
 
 }
 
