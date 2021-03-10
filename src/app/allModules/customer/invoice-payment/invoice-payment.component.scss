@@ -74,35 +74,6 @@
 
     }
   }
-  .search {
-    height: 36px;
-    line-height: 36px;
-    padding: 8px;
-    font-size: 13px;
-    // border-radius: 18px;
-    border: 1px solid;
-    overflow: hidden;
-    background-color: #ffffff;
-    border-color: #ffffff;
-    // border-color: rgba(0, 0, 0, 0.12);
-    @include mat-elevation(1);
-
-    mat-icon.s-16 {
-      color: rgba(0, 0, 0, 0.54) !important;
-    }
-
-    .icon {
-      margin: 0;
-      color: rgba(0, 0, 0, 0.54);
-    }
-
-    input {
-      padding: 0 12px 0 8px;
-      background-color: #ffffff;
-      height: 36px;
-      border: none;
-    }
-  }
   .side-bar {
     display: flex;
     flex: 1;
@@ -125,206 +96,7 @@
     border-radius: 0 25px 25px 0;
     margin-right: 7px;
   }
-  .Advanced-Shipment-Notification {
-    font-size: 20px;
-    font-weight: bold;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 0.6;
-    letter-spacing: 0.64px;
-    text-align: left;
-    color: #3e3e3e;
-  }
-  .SubmitBtn {
-    background-color: #efb577;
-    color: white;
-  }
-  .SaveBtn {
-    background-color: white;
-    color: #efb577;
-  }
-  .DeleteBtn {
-    background-color: white;
-    color: #e03b3b;
-  }
-  .Rectangle-721 {
-    // height: 115px;
-    // border-radius: 7px;
-    border: solid 2px #e0e0e0;
-    background-color: #ffffff;
-    border-left: solid 8px #3380d7;
-  }
-  .PO-No {
-    // width: 90px;
-    // height: 33px;
-    // font-family: SegoeUI;
-    font-size: 16px;
-    font-weight: 600;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 0.77;
-    letter-spacing: 0.5px;
-    text-align: left;
-    color: #3e3e3e;
-    // padding: 20px;
-  }
-  .Date {
-    // width: 59px;
-    // height: 33px;
-    //font-family: SegoeUI;
-    font-size: 16px;
-    font-weight: normal;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 0.77;
-    letter-spacing: 0.5px;
-    text-align: left;
-    color: #3e3e3e;
-    // padding: 20px;
-  }
-  .calendarImg {
-    height: 20px;
-    margin-bottom: 12px;
-  }
-  .alert {
-    width: 31.5px;
-    height: 27.4px;
-    object-fit: contain;
-  }
-  .No-Invoice-Created-for-this-PO {
-   
-    font-size: 16px;
-    font-weight: normal;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 0.77;
-    letter-spacing: 0.5px;
-    text-align: left;
-    color: #3e3e3e;
-  }
-  .Shipment-Proposal {
-    font-size: 20px;
-    font-weight: bold;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 0.6;
-    letter-spacing: 0.64px;
-    text-align: left;
-    color: #3e3e3e;
-    margin-bottom: 10px;
-    
-    border-bottom: 2px solid #efb577;
-  }
-  .Rectangle-708 {
-    padding-top: 12px;
-    width: 105px;
-    height: 42px;
-    border-radius: 5px;
-    background-color: #d8f0ff;
-  }
-  .Batch-2 {
-    width: 65px;
-    height: 26px;
-    // font-size: 19px;
-    font-weight: 600;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 0.84;
-    letter-spacing: 0.19px;
-    text-align: left;
-    color: #3e3e3e;
-  }
-  .Rectangle {
-    width: 300px;
-    min-height: 50px;
-    border-radius: 9px;
-    border: solid 1px #cccccc;
-    border-left: solid 8px #abf7b9 !important;
-    background-color: #ffffff;
-    cursor: pointer !important;
-  }
-  .Rectangle-106 {
-    width: 36px;
-    height: 33px;
-    opacity: 0.2;
-    border-radius: 2px;
-    background-color: #f9d2a8;
-  }
-  .Rectangle-199 {
-    //width: 230px;
-    font-weight: 600;
-    height: 50px;
-    border-radius: 5px;
-    border: solid 3px #f4cda4;
-    background-color: #ffffff;
-    cursor: pointer !important;
-  }
-  .addAttachmentClass {
-    padding-left: 70px;
-    font-weight: 600;
-    cursor: pointer !important;
-    color: #74a2f9;
-  }
-  .cardHeader {
-    background-color: #fffdf9;
-    height: 45px;
-  }
-  .boldClass {
-    font-weight: bold;
-  }
-  .boldItalicClass {
-    @extend .boldClass;
-    font-style: italic;
-  }
-  .semiBoldClass {
-    font-weight: 500;
-  }
-  .leftCard {
-    @include mat-elevation(2);
-    background: white;
-    border-left: 5px solid #efb577;
-    margin-left: 20px;
-    cursor: pointer !important;
-  }
-  .subTitle {
-    @extend .semiBoldClass;
-    font-size: 12px;
-    color: #d87060;
-  }
-  .addIcon {
-    height: 20px;
-    margin-top: 24px;
-    padding-left: 4px;
-    cursor: pointer !important;
-  }
-  .addAttachmentClass {
-    margin-top: 25px;
-    color: #4784f7;
-    cursor: pointer !important;
-  }
-  .addBlueIcon {
-    @extend .addIcon;
-    margin-top: 0px;
-    height: 15px;
-  }
-  .attachClass {
-    // margin-top: 25px;
-    padding-left: 8px;
-    cursor: pointer !important;
-    color: #4784f7;
-  }
-  .removeIcon {
-    height: 20px;
-    padding-left: 16px;
-    cursor: pointer !important;
-  }
-  .mat-input-element:disabled {
-    color: rgba(0, 0, 0, 0.87) !important;
-    // background: whitesmoke !important;
-    // cursor: not-allowed !important;
-  }
   
-
   @mixin TableBorderRight($color) {
     border-right: 1px solid $color;
   }
@@ -443,7 +215,7 @@
   }
   .intervalclass {
     @extend .italicClass;
-    @extend .semiBoldClass;
+  
     font-size: small;
   }
   .subHeader {
@@ -465,35 +237,7 @@
   .chart-legend .legend-labels {
     width: 100px;
   }
-  .search {
-    height: 36px;
-    line-height: 36px;
-    padding: 8px;
-    font-size: 13px;
-    // border-radius: 18px;
-    border: 1px solid;
-    overflow: hidden;
-    background-color: #ffffff;
-    border-color: #ffffff;
-    // border-color: rgba(0, 0, 0, 0.12);
-    @include mat-elevation(1);
-    border: 1px solid #c3c3c3;
-    mat-icon.s-16 {
-      color: rgba(0, 0, 0, 0.54) !important;
-    }
-
-    .icon {
-      margin: 0;
-      color: rgba(0, 0, 0, 0.54);
-    }
-
-    input {
-      padding: 0 12px 0 8px;
-      background-color: #ffffff;
-      height: 36px;
-      border: none;
-    }
-  }
+  
   .doughnutChartPosition {
     margin-bottom: 8px;
     position: relative;
@@ -624,33 +368,9 @@
   .progressSubtitle {
     fill: #f3705a !important;
   }
-  .pdfLinkClass {
+  .paidLinkClass {
     color: #1e8bed;
     cursor: pointer;
   }
-  #footerCard {
-    position: fixed;
-    height: 50px;
-    box-shadow: 0 -5px 10px 0 rgba(0, 0, 0, 0.16);
-    background-color: #ffffff;
-    bottom: 40px;
-    left: 0px;
-    right: 0px;
-    margin-bottom: 0px;
-    z-index: 100;
-  }
-  .cardActions {
-    box-shadow: 0 -5px 10px 0 rgba(0, 0, 0, 0.16);
-  }
-  .WeightError {
-    color: #f44336;
-    font-size: 12px;
-    margin-top: -16px;
-    margin-left: 12px
-    // margin-left: 32px;
-  }
-  .AttError {
-    color: #f44336;
-    font-size: 12px;
-  }
+ 
 }

@@ -1,0 +1,71 @@
+<div>
+  <mat-toolbar >
+    <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+      <span class="title dialog-title">Payment Record</span>
+      <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+<div mat-dialog-content class="m-4">
+  <div fxFlex fxLayout="column" class="table mx-20 my-12">
+    <table mat-table [dataSource]="PayDataSource">
+      <ng-container matColumnDef="InvoiceNumber">
+        <th mat-header-cell *matHeaderCellDef style="width: 10%;"> InvoiceNo</th>
+        <td mat-cell style="width: 10%;" *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
+          <div fxLayout>
+            <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
+            <div fxFlex class="pl-4">{{element.InvoiceNumber}}</div>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Paymentdate">
+        <th mat-header-cell *matHeaderCellDef style="width: 10%;"> Invoice Date </th>
+        <td mat-cell style="width: 10%;" *matCellDef="let element">
+          {{ element.PaymentDate |date: 'dd/MM/yyyy'}} </td>
+      </ng-container>
+
+
+      <ng-container matColumnDef="PaidAmount">
+        <th mat-header-cell *matHeaderCellDef style="width: 15%;"> PaidAmount</th>
+        <td mat-cell style="width: 15%;" *matCellDef="let element">
+       <span >  {{ element.PaidAmount}} </span>
+        </td>
+      </ng-container>
+
+     
+     
+      <tr mat-header-row *matHeaderRowDef="PayDisplayedColumns;"></tr>
+      <tr mat-row *matRowDef="let row; columns: PayDisplayedColumns;let even=even">
+      </tr>
+    </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10]" showFirstLastButtons>
+        </mat-paginator>
+     </div>
+
+  <!-- <div fxFlex fxLayout="column" >
+    <strong>Invoice Number </strong>
+    <br>
+    <strong>Date </strong>
+    <br>
+    <strong>Paid Amount</strong>
+    <br>
+  
+</div>
+<div fxFlex fxLayout="column">
+  <span >{{data.InvoiceNo}}</span>
+  <br>
+  <span>{{data.InvoiceDate |date: 'dd/MM/yyyy'}}</span>
+  <br>
+  <span>{{data.PaidAmount}}</span>
+  <br>
+
+</div> -->
+</div>
+
+<!-- <div mat-dialog-actions>
+  <button mat-button class="btnBg" mat-dialog-close>Close</button>
+</div> -->
+</div>

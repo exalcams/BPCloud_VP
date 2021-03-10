@@ -7,7 +7,7 @@ import { BPCOFHeader, BPCOFItem, BPCOFHeaderXLSX, BPCOFItemXLSX, BPCOFScheduleLi
 import { BPCCEOMessage, BPCSCOCMessage ,BPCWelcomeMessage} from 'app/models/Message.model';
 import { BPCFact } from 'app/models/fact';
 import { OverviewReportOption } from 'app/models/ReportModel';
-import { BPCInvoicePayment } from 'app/models/customer';
+import { BPCInvoicePayment, BPCPayRecord } from 'app/models/customer';
 
 @Injectable({
   providedIn: 'root'
@@ -343,8 +343,39 @@ GetAllInvoices(): Observable<BPCInvoicePayment[] | string> {
     .pipe(catchError(this.errorHandler));
 }
 
-
+UpdateInvoice(InvoicePayment: BPCInvoicePayment): Observable<any> {
+  return this._httpClient
+    .post<any>(
+      `${this.baseAddress}poapi/Invoice/UpdateInvoice`,
+      InvoicePayment,
+      {
+        headers: new HttpHeaders({
+          "Content-Type": "application/json",
+        }),
+      }
+    )
+    .pipe(catchError(this.errorHandler));
+}
 //invoice payment end
+//payment history
+GetAllPaymentRecord(): Observable<BPCPayRecord[] | string> {
+  return this._httpClient.get<BPCPayRecord[]>(`${this.baseAddress}poapi/Invoice/GetAllPaymentRecord`)
+    .pipe(catchError(this.errorHandler));
+}
+
+CreatePaymentRecord(InvoicePaymentRcrd: BPCPayRecord): Observable<any> {
+  return this._httpClient
+    .post<any>(
+      `${this.baseAddress}poapi/Invoice/CreatePaymentRecord`,
+      InvoicePaymentRcrd,
+      {
+        headers: new HttpHeaders({
+          "Content-Type": "application/json",
+        }),
+      }
+    )
+    .pipe(catchError(this.errorHandler));
+}
 
 //end
 }
