@@ -51,7 +51,7 @@ export class SupportDeskComponent implements OnInit {
   constructor(
     private _fuseConfigService: FuseConfigService,
     public _supportdeskService: SupportDeskService,
-    private _authService:AuthService,
+    private _authService: AuthService,
     private _router: Router,
     private _activatedRoute: ActivatedRoute) {
     this.partnerID = '';
@@ -181,5 +181,22 @@ export class SupportDeskComponent implements OnInit {
         console.log(err);
       }
     );
+  }
+  getStatusColor(status): string {
+    if (status) {
+      switch (status) {
+        case 'Open':
+          return '#000000';
+        case 'Resolved':
+          return '#2605a8';
+        case 'ReOpen':
+          return '#efb577';
+        case 'Closed':
+          return '#34ad65';
+        default:
+          return '#000000';
+      }
+    }
+    return '#000000';
   }
 }
