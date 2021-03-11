@@ -208,7 +208,7 @@ const routes = [
     declarations: [CustomerDashboardComponent, CustomerFactComponent,
         CustomerOrderfulfilmentComponent, CustomerPolookupComponent,
         PurchaseIndentComponent, ReturnComponent, PODComponent, PODDetailsComponent,
-        SupportChatComponent, SupportDeskComponent, SupportTicketComponent, NotesDialogComponent, PODItemAttachmentDialogComponent, InvoicePaymentComponent, PaymentDailogComponent, PaymentHistoryDialogComponent
+        SupportChatComponent, SupportDeskComponent, SupportTicketComponent, NotesDialogComponent, PODItemAttachmentDialogComponent, InvoicePaymentComponent, PaymentDailogComponent, PaymentHistoryDialogComponent,
         CustomerHomeComponent, CustomerPurchaseListComponent, CustomerReturnListComponent, CustomerReturnComponent],
     providers: [
         DecimalPipe
