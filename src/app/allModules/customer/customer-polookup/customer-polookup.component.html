@@ -338,6 +338,51 @@
                 </table>
               </div>
               </div>
+
+<!-- tab 5 start-->
+<div class="content" fxLayout="column" *ngIf="tab5">
+  <div class="p-12 mt-24">
+    <table class="table" mat-table [dataSource]="SODocDataSource" matSort>
+
+      <ng-container matColumnDef="AttachmentName">
+        <th mat-header-cell *matHeaderCellDef>AttachmentName</th>
+        <td mat-cell *matCellDef="let element;let odd=odd; let i = index" class="tableLeftBorder pl-0">
+          <div fxLayout>
+            <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
+            <div fxFlex class="cursorPointer pl-4" (click)="AttachmentName_clk(element.AttachmentName,i,element.ReferenceNo)">
+              {{element.AttachmentName}}
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="ReferenceNo">
+        <th mat-header-cell *matHeaderCellDef>ReferenceNo</th>
+        <td mat-cell *matCellDef="let element">{{element.ReferenceNo}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="ContentType">
+        <th mat-header-cell *matHeaderCellDef>ContentType</th>
+        <td mat-cell *matCellDef="let element">{{element.ContentType}}</td>
+      </ng-container>
+
+      <!-- <ng-container matColumnDef="ContentType">
+        <th mat-header-cell *matHeaderCellDef>ContentType</th>
+        <td mat-cell *matCellDef="let element">{{element.ContentType}}</td>
+      </ng-container> -->
+
+
+
+   
+      <tr mat-header-row *matHeaderRowDef="SODocDisplayedColumns;sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: SODocDisplayedColumns;let even=even">
+      </tr>
+    </table>
+  </div>
+  </div>
+
+<!-- tab 5 end -->
+              
             </div>
 <!-- mmchng -->
           </div>

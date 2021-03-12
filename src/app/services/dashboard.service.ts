@@ -288,6 +288,7 @@ export class DashboardService {
     return this._httpClient.get<SODetails[]>(`${this.baseAddress}poapi/Dashboard/GetSODetails?Client=${Client}&Company=${Company}&Type=${Type}&PatnerID=${PatnerID}`)
       .pipe(catchError(this.errorHandler));
   }
+  
 
   GetFilteredSODetailsByPartnerID(Type: string, PatnerID: string, FromDate: string, ToDate: string, Status: string): Observable<SODetails[] | string> {
     return this._httpClient.get<SODetails[]>

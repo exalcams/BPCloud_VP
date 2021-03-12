@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { AbstractControl, FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, MatSort, MatDialog, MatDialogConfig } from '@angular/material';
-import { ASNDetails, GRNDetails, QADetails, ItemDetails, OrderFulfilmentDetails, Acknowledgement } from 'app/models/Dashboard';
+import { ASNDetails, GRNDetails, QADetails, ItemDetails, OrderFulfilmentDetails, Acknowledgement, DocumentDetails } from 'app/models/Dashboard';
 import { AuthenticationDetails, AppUsage } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,11 +10,14 @@ import { DashboardService } from 'app/services/dashboard.service';
 import { DatePipe } from '@angular/common';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { fuseAnimations } from '@fuse/animations';
-import { BPCOFItem, BPCOFGRGI, SOItemCount, BPCInvoice, BPCRetNew } from 'app/models/OrderFulFilment';
+import { BPCOFItem, BPCOFGRGI, SOItemCount, BPCInvoice, BPCRetNew, OfAttachmentData } from 'app/models/OrderFulFilment';
 import { POService } from 'app/services/po.service';
 import { MasterService } from 'app/services/master.service';
 import { BPCPODHeader,BPCPODItem } from 'app/models/POD';
 import { PODService } from 'app/services/pod.service';
+import { AttachmentDetails } from 'app/models/task';
+import { AttachmentDialogComponent } from 'app/notifications/attachment-dialog/attachment-dialog.component';
+import { AttachmentViewDialogComponent } from 'app/notifications/attachment-view-dialog/attachment-view-dialog.component';
 
 @Component({
   selector: 'app-customer-polookup',
@@ -43,6 +46,7 @@ export class CustomerPolookupComponent implements OnInit {
   IsProgressBarVisibile: boolean;
   sOItemCount: SOItemCount;
   SOtems: BPCOFItem[] = [];
+
   SOItemDisplayedColumns: string[] = [
     'Item',
     'Material',
@@ -54,6 +58,16 @@ export class CustomerPolookupComponent implements OnInit {
     'DeliveryDate'
   ];
   SOItemDataSource: MatTableDataSource<BPCOFItem>;
+  SODocDataSource: MatTableDataSource<DocumentDetails>;
+  DocNumberCount:SOItemCount;
+  SODoc:DocumentDetails[]=[]
+  SODocDisplayedColumns: string[] = [
+  
+    'AttachmentName',
+    'ReferenceNo',
+    'ContentType',
+    
+  ];
   SOGRGIs: BPCOFGRGI[] = [];
   SOGRGIDisplayedColumns: string[] = [
     'Item',
@@ -105,6 +119,9 @@ export class CustomerPolookupComponent implements OnInit {
   currentUserName: string;
   currentUserRole: string;
   PartnerID: string;
+  attachmentDetails: string;
+  file: string;
+  filetype: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -217,9 +234,49 @@ export class CustomerPolookupComponent implements OnInit {
     this.tab3 = false;
     this.tab4 = false;
     this.tab5=true;
-    // this.GetPODsByDocAndPartnerID();
+    this.GetAttachmentByPatnerIdAndDocNum();
   }
 
+  AttachmentName_clk(AttachmentName,index,ref){
+    this.file=this.SODoc[index].AttachmentFile;
+    this.filetype=this.SODoc[index].ContentType;
+    const blob = new Blob([this.file], { type: this.filetype });
+       const ofAttachmentData = new OfAttachmentData();
+                        ofAttachmentData.DocNumber = ref;
+                        ofAttachmentData.OfAttachments =   this.SODoc;
+                        ofAttachmentData.Type = "C";
+    this.openAttachmentViewDialog(ofAttachmentData);
+  }
+  // OpenAttachmentDialog(FileName: string, blob: Blob): void {
+  //   const attachmentDetails: AttachmentDetails = {
+  //     FileName: FileName,
+  //     blob: blob
+  //   };
+  //   const dialogConfig: MatDialogConfig = {
+  //     data: attachmentDetails,
+  //     panelClass: 'attachment-dialog'
+  //   };
+  //   const dialogRef = this.dialog.open(AttachmentDialogComponent, dialogConfig);
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     if (result) {
+  //     }
+  //   });
+  // }
+  openAttachmentViewDialog(ofAttachmentData: OfAttachmentData): void {
+    const dialogConfig: MatDialogConfig = {
+        data: ofAttachmentData,
+        panelClass: "attachment-view-dialog",
+    };
+    const dialogRef = this.dialog.open(
+        AttachmentViewDialogComponent,
+        dialogConfig
+    );
+    dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+            // this.GetSODetails();
+        }
+    });
+}
 
   GetSOItemCountByDocAndPartnerID(): void {
     
@@ -232,7 +289,31 @@ export class CustomerPolookupComponent implements OnInit {
       }
     );
   }
- 
+  GetAttachmentByPatnerIdAndDocNum():void{
+    this._POService.GetAttachmentByPatnerIdAndDocNum(this.DocNumber, this.PartnerID).subscribe(
+      (data) => {
+        // DocNumberCount:SOItemCount;
+        // SODoc:DocumentDetails[]=[]
+        // SODocDisplayedColumns: string[] = [
+        
+        //   'AttachmentName',
+        //   'ReferenceNo',
+        //   'ContentType',
+          
+        // ];
+        // this.blob=data.Attachment
+        
+        this.SODoc = data as DocumentDetails[];
+        this.sOItemCount.ItemCount = this.SODoc.length;
+        
+        this.SODocDataSource = new MatTableDataSource(this.SODoc);
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+
+  }
 
   GetPOItemsByDocAndPartnerID(): void {
     //chng madhu

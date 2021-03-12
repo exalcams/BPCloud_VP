@@ -83,6 +83,7 @@ export class DocumentDetails extends CommonClass {
     ReferenceNo: string;
     ContentType: string;
     ContentLength: number;
+    AttachmentFile:string;
 }
 
 export class FlipDetails {
