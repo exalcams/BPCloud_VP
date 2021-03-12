@@ -102,6 +102,30 @@ export class BPCRetItem extends CommonClass {
     FileName: string;
     AttachmentReferenceNo:string;
 }
+export class BPCRetItemBatch extends CommonClass {
+    // ID: number;
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
+    RetReqID: string;
+    Item: string;
+   Batch:string;
+    RetQty: number;
+  
+}
+export class BPCRetItemSerial extends CommonClass {
+    // ID: number;
+    Client: string;
+    Company: string;
+    Type: string;
+    PatnerID: string;
+    RetReqID: string;
+    Item: string;
+   Serial:string;
+    RetQty: number;
+  
+}
 
 // export class BPCRetView extends CommonClass {
 //     ID: number;

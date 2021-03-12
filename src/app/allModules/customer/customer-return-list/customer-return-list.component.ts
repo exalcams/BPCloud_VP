@@ -93,6 +93,7 @@ export class CustomerReturnListComponent implements OnInit {
     );
 }
 GetReturnList(){
+  this.IsProgressBarVisibile = true;
   this.customerService.GetReturnList(this.client,this.company,this.type,this.patnerid).subscribe(
     (data)=>{
       this.AllReturns=data as BPCRetHeader[];

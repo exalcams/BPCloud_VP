@@ -21,8 +21,10 @@ import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notific
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { AttachmentDetails } from 'app/models/task';
 import { AttachmentDialogComponent } from 'app/notifications/attachment-dialog/attachment-dialog.component';
-import { BPCPIHeader, BPCPIView, BPCPIItem, BPCProd, BPCRetHeader, BPCRetView_new, BPCRetItem } from 'app/models/customer';
+import { BPCPIHeader, BPCPIView, BPCPIItem, BPCProd, BPCRetHeader, BPCRetView_new, BPCRetItem, BPCInvoicePayment } from 'app/models/customer';
 import { BPCFact } from 'app/models/fact';
+import { BatchDialogComponent } from '../batch-dialog/batch-dialog.component';
+import { SerialDialogComponent } from '../serial-dialog/serial-dialog.component';
 
 @Component({
   selector: 'app-customer-return',
@@ -53,10 +55,14 @@ export class CustomerReturnComponent implements OnInit {
   SelectedReturnView: BPCRetView_new;
   AllReturnItems: BPCRetItem[] = [];
   ReturnItemDisplayedColumns: string[] = [
+    'Item',
     'Material',
-    'Qty',
+    'OrderQty',
+    'RetQty',
     'Invoice',
-    'Item'
+    'Batch',
+    'Serial'
+    
     
   ];
   ReturnItemDataSource: MatTableDataSource<BPCRetItem>;
@@ -72,7 +78,7 @@ export class CustomerReturnComponent implements OnInit {
 
   selection = new SelectionModel<any>(true, []);
   searchText = '';
-
+InvoiceData:BPCInvoicePayment[]=[];
   AllCountries: BPCCountryMaster[] = [];
   AllCurrencies: BPCCurrencyMaster[] = [];
   AllProducts: BPCProd[] = [];
@@ -141,6 +147,7 @@ export class CustomerReturnComponent implements OnInit {
     this.GetFactByPartnerID();
     this.GetAllProducts();
     this.GetReturnBasedOnCondition();
+    this.GetAllInvoices();
   }
   CreateAppUsage(): void {
     const appUsage: AppUsage = new AppUsage();
@@ -185,7 +192,7 @@ export class CustomerReturnComponent implements OnInit {
       Item: ['', Validators.required],
       Material: ['',Validators.required],
       OrderQty: ['', [Validators.required, Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,2})?$')]],
-      
+      RetQty:['', [Validators.required, Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,2})?$')]],
       // ReasonText: [''],
       // FileName: [''],
       Invoice: ['', Validators.required]
@@ -245,18 +252,48 @@ export class CustomerReturnComponent implements OnInit {
   }
   GetReturnBasedOnCondition(): void {
     if (this.SelectedPIRNumber) {
+      this.ReturnFormGroup.get('RequestID').disable();
+      this.ReturnFormGroup.get('CreditNote').disable();
+      this.ReturnFormGroup.get('SONumber').disable();
+      this.ReturnFormGroup.get('AWBNumber').disable();
+     
       this.GetReturnByRetAndPartnerID();
+
     }
     else{
       this.SelectedReturnHeader.Status="saved"
     }
   }
-
+  
+GetAllInvoices(){
+  this._POService.GetAllInvoices().subscribe(
+    (data)=>{
+    this.InvoiceData=data as BPCInvoicePayment[];
+    // console.log("invd"+  this.InvoiceData);
+    },
+    (err)=>console.log(err)
+    
+  )
+}
   DateSelected(event): void {
     const selectedType = event.value;
     if (event.value) {
       // this.SelectedTask.Type = event.value;
     }
+  }
+  BatchOpen(selecteditem){
+    const dialogRef = this.dialog.open(BatchDialogComponent,{
+      width: '700px',
+     data:selecteditem
+    });
+  }
+ 
+  SerialOpen(selecteditem){
+    const dialogRef = this.dialog.open(SerialDialogComponent,{
+      width: '700px',
+      data:selecteditem
+     
+    });
   }
 
   decimalOnly(event): boolean {
@@ -304,14 +341,24 @@ export class CustomerReturnComponent implements OnInit {
     }
   }
 
-  ProductSelected(event): void {
+  // ProductSelected(event): void {
+  //   if (event.value) {
+  //     // const selectedProd = this.AllProducts.filter(x => x.ProductID === event.value)[0];
+  //     // if (selectedProd) {
+  //       console.log(this.SelectedReturnHeader.InvoiceDoc);
+        
+  //       this.ReturnItemFormGroup.get('InvoiceReference').patchValue(this.SelectedReturnHeader.InvoiceDoc);
+  //     // }
+  //   }
+  // }
+  InvoiceSelected(event): void {
     if (event.value) {
-      const selectedProd = this.AllProducts.filter(x => x.ProductID === event.value)[0];
-      if (selectedProd) {
-        this.ReturnItemFormGroup.get('MaterialText').patchValue(selectedProd.Text);
-      }
+      // console.log(event.value);
+      
+      this.ReturnItemFormGroup.get('Invoice').patchValue(event.value);
     }
   }
+
 
   AddDocumentCenterFileValidator(): void {
     this.ReturnItemFormGroup.get('FileName').setValidators(Validators.required);
@@ -328,7 +375,7 @@ export class CustomerReturnComponent implements OnInit {
       PIItem.Item = this.ReturnItemFormGroup.get('Item').value;
       PIItem.InvoiceNumber = this.ReturnItemFormGroup.get('Invoice').value;
       PIItem.Material = this.ReturnItemFormGroup.get('Material').value;
-      // PIItem.RetQty = this.ReturnItemFormGroup.get('RetQty').value;
+      PIItem.RetQty = this.ReturnItemFormGroup.get('RetQty').value;
       PIItem.OrderQty = this.ReturnItemFormGroup.get('OrderQty').value;
       // PIItem.DeliveryDate = this.ReturnItemFormGroup.get('DeliveryDate').value;
       // PIItem.UOM = this.ReturnItemFormGroup.get('UOM').value;
@@ -577,13 +624,13 @@ console.log(this.ReturnFormGroup);
     }
   }
   // mouni
-  // DeleteClicked(): void {
-  //   if (this.SelectedReturnHeader.PIRNumber) {
-  //     const Actiontype = 'Delete';
-  //     const Catagory = 'Return';
-  //     this.OpenConfirmationDialog(Actiontype, Catagory);
-  //   }
-  // }
+  DeleteClicked(): void {
+    if (this.SelectedReturnHeader.RetReqID) {
+      const Actiontype = 'Delete';
+      const Catagory = 'Return';
+      this.OpenConfirmationDialog(Actiontype, Catagory);
+    }
+  }
   SetActionToOpenConfirmation(Actiontype: string): void {
     // if (this.SelectedReturnHeader.ReturnNumber) {
     //     const Catagory = 'Return';

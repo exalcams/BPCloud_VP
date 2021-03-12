@@ -77,6 +77,8 @@ import { HomeComponent } from '../pages/home/home.component';
 import { CustomerPurchaseListComponent } from './customer-purchase-list/customer-purchase-list.component';
 import { CustomerReturnListComponent } from './customer-return-list/customer-return-list.component';
 import { CustomerReturnComponent } from './customer-return/customer-return.component';
+import { BatchDialogComponent } from './batch-dialog/batch-dialog.component';
+import { SerialDialogComponent } from './serial-dialog/serial-dialog.component';
 
 const routes = [
     {
@@ -209,10 +211,10 @@ const routes = [
         CustomerOrderfulfilmentComponent, CustomerPolookupComponent,
         PurchaseIndentComponent, ReturnComponent, PODComponent, PODDetailsComponent,
         SupportChatComponent, SupportDeskComponent, SupportTicketComponent, NotesDialogComponent, PODItemAttachmentDialogComponent, InvoicePaymentComponent, PaymentDailogComponent, PaymentHistoryDialogComponent,
-        CustomerHomeComponent, CustomerPurchaseListComponent, CustomerReturnListComponent, CustomerReturnComponent],
+        CustomerHomeComponent, CustomerPurchaseListComponent, CustomerReturnListComponent, CustomerReturnComponent, BatchDialogComponent, SerialDialogComponent],
     providers: [
         DecimalPipe
     ],
-    entryComponents: [NotesDialogComponent, PODItemAttachmentDialogComponent,PaymentDailogComponent,PaymentHistoryDialogComponent]
+    entryComponents: [NotesDialogComponent, PODItemAttachmentDialogComponent,PaymentDailogComponent,PaymentHistoryDialogComponent,BatchDialogComponent, SerialDialogComponent]
 })
 export class CustomerModule { }

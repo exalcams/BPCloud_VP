@@ -15,12 +15,12 @@
         <div class="sidenav-content" fxFlex fxLayout="column">
           <div fxFlex fxLayout class="p-0 pt-8">
             <div fxFlex class="px-12 mt-4">
-              <form autocomplete="off" class="normal" fxLayout="column" fxLayoutAlign="start" name="form" novalidate
+              <form autocomplete="off" class="normal" fxLayout="column" fxLayoutAlign="start"  name="form" novalidate
               [formGroup]="ReturnFormGroup" >
-              <div fxFlex fxLayout="row wrap" fxLayoutAlign="space-between" >
-                <div *ngIf="SelectedPIRNumber" fxFlex="30" class="px-12" >
+              <div fxFlex fxLayout="row wrap"  >
+                <div *ngIf="SelectedPIRNumber" fxFlex="33" class="px-12" >
                   <mat-form-field style="width: 100%;">
-                    <input matInput placeholder="Ret Req ID" formControlName="RequestID" [disabled]="SelectedPIRNumber">
+                    <input matInput placeholder="Ret Req ID"  formControlName="RequestID" >
                     <mat-error
                       *ngIf="ReturnFormGroup.get('RequestID').touched && ReturnFormGroup.get('RequestID').hasError('required')">
                       RequestID is required
@@ -28,7 +28,7 @@
                   </mat-form-field>
                 </div>
 
-                <div fxFlex="30" class="px-12">
+                <div fxFlex="33" class="px-12">
                   <mat-form-field style="width: 100%;">
                     <input matInput placeholder="Date" [matDatepicker]="picker0" formControlName="Date">
                     <mat-datepicker-toggle matSuffix [for]="picker0">
@@ -37,20 +37,26 @@
                     <mat-datepicker #picker0></mat-datepicker>
                     <mat-error
                       *ngIf="ReturnFormGroup.get('Date').touched && ReturnFormGroup.get('Date').hasError('required')">
-                      Doc Date is required
+                      Date is required
                     </mat-error>
                   </mat-form-field>
                 </div>
-                <div fxFlex="30" class="px-12">
+                <div fxFlex="33" class="px-12">
                   <mat-form-field style="width: 100%;">
-                    <input matInput placeholder="InvoiceReference" formControlName="InvoiceReference">
+                    <!-- <input matInput placeholder="InvoiceReference" formControlName="InvoiceReference"> -->
+                    <mat-select  placeholder="Invoice Reference"
+                      formControlName="InvoiceReference"  (selectionChange)="InvoiceSelected($event)">
+                      <mat-option *ngFor="let count of  InvoiceData" [value]="count.InvoiceNo">
+                        {{count.InvoiceNo}}
+                      </mat-option>
+                    </mat-select>
                     <mat-error
                       *ngIf="ReturnFormGroup.get('InvoiceReference').touched && ReturnFormGroup.get('InvoiceReference').hasError('required')">
                       InvoiceReference is required
                     </mat-error>
                   </mat-form-field>
                 </div>
-                <div fxFlex="30" class="px-12">
+                <div fxFlex="33" class="px-12">
                   <mat-form-field style="width: 100%;">
                     <input matInput placeholder="SO Number" formControlName="SONumber">
                     <mat-error
@@ -59,7 +65,7 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
-                <div fxFlex="30" class="px-12">
+                <div fxFlex="33" class="px-12">
                   <mat-form-field style="width: 100%;">
                     <input matInput placeholder="Credit Note" formControlName="CreditNote">
                     <mat-error
@@ -68,7 +74,7 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
-                  <div fxFlex="30" class="px-12">
+                  <div fxFlex="33" class="px-12">
                     <mat-form-field style="width: 100%;">
                       <input matInput placeholder="AWBNumber" formControlName="AWBNumber">
                       <mat-error
@@ -77,16 +83,16 @@
                       </mat-error>
                     </mat-form-field>
                   </div>
-                  <div fxFlex="30" class="px-12">
+                  <div fxFlex="33" class="px-12">
                     <mat-form-field style="width: 100%;">
-                      <input matInput placeholder="Transporter" formControlName="Transporter">
+                      <input matInput placeholder="Transporter"  formControlName="Transporter">
                       <mat-error
                         *ngIf="ReturnFormGroup.get('Transporter').touched && ReturnFormGroup.get('Transporter').hasError('required')">
                         Transporter is required
                       </mat-error>
                     </mat-form-field>
                   </div>
-                  <div fxFlex="30" class="px-12">
+                  <div fxFlex="33" class="px-12" >
                     <mat-form-field style="width: 100%;">
                       <input matInput placeholder="TruckNumber" formControlName="TruckNumber">
                       <mat-error
@@ -100,6 +106,43 @@
             </form>
             </div>
            
+            <div fxFlex class="borderleft mb-40 pt-40" [class.pt-60]="SelectedReturnHeader?.RetReqID">
+              <div fxLayout class="mx-40">
+                <div fxFlex="30">SO</div>
+                <div fxFlex="30">Shipped</div>
+                <div fxFlex="30">Invoiced</div>
+                <div fxFlex="10">Receipt</div>
+              </div>
+              <div fxLayout class="mx-40 my-8">
+                <div fxFlex="30" fxLayout>
+                  <div class="round" [style.border-color]="SelectedReturnHeader.Status==='Open'?'#efb577':'#34ad65'">
+                  </div>
+                  <div style="width: 10px;margin-left: -1px !important"
+                    [class]="SelectedReturnHeader.Status==='Open'?'orange-timeline':'green-timeline'"></div>
+                  <div [class]="SelectedReturnHeader.Status==='Open'?'white-timeline':'green-timeline'" fxFlex>
+                  </div>
+                </div>
+                <div fxFlex="30" fxLayout>
+                  <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline('Shipped')"></div>
+                  <div class="round" [style.border-color]="getStatusColor('Shipped')"></div>
+                  <div style="width: 10px; margin-left: -1px !important" [class]="getTimeline('Shipped')"></div>
+                  <div [class]="getRestTimeline('Shipped')" fxFlex></div>
+                </div>
+                <div fxFlex="30" fxLayout>
+                  <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline('Invoiced')"></div>
+                  <div class="round" [style.border-color]="getStatusColor('Invoiced')"></div>
+                  <div style="width: 10px;margin-left: -1px !important" [class]="getTimeline('Invoiced')"></div>
+                  <div [class]="getRestTimeline('Invoiced')" fxFlex></div>
+                </div>
+                <div fxFlex="10" fxLayout>
+                  <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline('Receipt')"></div>
+                  <div class="round" [style.border-color]="getStatusColor('Receipt')"></div>
+                </div>
+              </div>
+              
+            </div>
+
+
           </div>
         
           <div class="px-12 mt-20">
@@ -107,9 +150,9 @@
               <span class="Shipment-Proposal">Item</span>
             </div>
             <div>
-              <form autocomplete="off" class="normal" fxLayout="row" fxLayoutAlign="start" name="form" novalidate
+              <form autocomplete="off" class="normal" fxLayout="row" fxLayoutAlign="start"  name="form" novalidate
                 [formGroup]="ReturnItemFormGroup">
-                <div fxFlex="10">
+                <div fxFlex="20">
                   <mat-form-field class="px-12" style="width: 100%;">
                     <input matInput placeholder="Item" formControlName="Item">
                     <mat-error
@@ -118,7 +161,7 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
-                <div fxFlex="10">
+                <div fxFlex="20">
                   <mat-form-field class="px-12" style="width: 100%;">
                     <input matInput placeholder="Material" formControlName="Material">
                     <mat-error
@@ -141,7 +184,7 @@
                     </mat-error>
                   </mat-form-field>
                 </div> -->
-                <div fxFlex="15">
+                <div fxFlex="20">
                   <mat-form-field class="px-12" style="width: 100%;">
                     <input matInput placeholder="Order Qty" formControlName="OrderQty" (keyup)="QtySelected()">
                     <mat-error
@@ -154,7 +197,7 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
-                <!-- <div fxFlex="15">
+                <div fxFlex="20">
                   <mat-form-field class="px-12" style="width: 100%;">
                     <input matInput placeholder="RetQty" formControlName="RetQty" (keyup)="QtySelected()">
                     <mat-error
@@ -170,7 +213,7 @@
                   <div *ngIf="isQtyError" class="WeightError">
                     Return Qty should not greater than Order Qty
                   </div>
-                </div> -->
+                </div>
                
                 <div fxFlex="20">
                   <mat-form-field class="px-12" style="width: 100%;">
@@ -207,7 +250,7 @@
           <div fxFlex fxLayout="column" class="table mx-20 my-12">
             <table *ngIf="AllReturnItems?.length" mat-table [dataSource]="ReturnItemDataSource" matSort>
               <ng-container matColumnDef="Item">
-                <th mat-header-cell *matHeaderCellDef style="width: 10%;"> Item </th>
+                <th mat-header-cell *matHeaderCellDef style="width: 15%;"> Item </th>
                 <td mat-cell style="width: 10%;" *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
                   <div fxLayout>
                     <div class="tableCellBorder" [style.background-color]="odd?'#6f52ed':'#d87e39'"></div>
@@ -217,23 +260,23 @@
               </ng-container>
 
               <ng-container matColumnDef="Material">
-                <th mat-header-cell *matHeaderCellDef style="width: 10%;"> Material </th>
+                <th mat-header-cell *matHeaderCellDef style="width: 15%;"> Material </th>
                 <td mat-cell style="width: 10%;" *matCellDef="let element">
                   {{element.Material}} </td>
               </ng-container>
 
 
-              <ng-container matColumnDef="Qty">
+              <ng-container matColumnDef="OrderQty">
                 <th mat-header-cell *matHeaderCellDef style="width: 15%;"> Order Qty </th>
                 <td mat-cell style="width: 15%;" *matCellDef="let element">
                   {{element.OrderQty}} </td>
               </ng-container>
 
-              <!-- <ng-container matColumnDef="RetQty">
+              <ng-container matColumnDef="RetQty">
                 <th mat-header-cell *matHeaderCellDef style="width: 15%;"> RetQty </th>
                 <td mat-cell style="width: 15%;" *matCellDef="let element">
                   {{element.RetQty}} </td>
-              </ng-container> -->
+              </ng-container>
 
               <!-- <ng-container matColumnDef="UOM">
                 <th mat-header-cell *matHeaderCellDef style="width: 20%;"> UOM </th>
@@ -248,11 +291,22 @@
               </ng-container> -->
 
               <ng-container matColumnDef="Invoice">
-                <th mat-header-cell *matHeaderCellDef style="width: 20%;"> Invoice </th>
+                <th mat-header-cell *matHeaderCellDef style="width: 15%;"> Invoice </th>
                 <td mat-cell style="width: 20%;" *matCellDef="let element">
                   {{element.InvoiceNumber}} </td>
               </ng-container>
-
+              <ng-container matColumnDef="Batch">
+                <th mat-header-cell *matHeaderCellDef style="width: 10%;"> Batch </th>
+                <td mat-cell style="width: 10%;" *matCellDef="let element">
+              <button mat-raised-button class="SubmitBtn mb-4"  (click)="BatchOpen(element)">Batch</button>
+            </td>
+              </ng-container>
+              <ng-container matColumnDef="Serial">
+                <th mat-header-cell *matHeaderCellDef style="width: 10%;"> Serial </th>
+                <td mat-cell style="width: 10%;" *matCellDef="let element">
+              <button mat-raised-button class="SubmitBtn mb-4" (click)="SerialOpen(element)">Serial</button>
+            </td>
+              </ng-container>
 
               <!-- <ng-container matColumnDef="FileName">
                 <th mat-header-cell *matHeaderCellDef style="width: 20%;"> FileName </th>
