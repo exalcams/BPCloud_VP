@@ -25,6 +25,7 @@ BatchDisplayedColumns:string[]=[
 this.InitialiseBAtchFormGroup();
 // this.BatchDataSource=new MatTableDataSource<BPCRetItemBatch>();
 console.log(this.ReturnItemBatch);
+this.GetBatchByRet();
 
   }
 
@@ -55,17 +56,22 @@ console.log(this.ReturnItemBatch);
   AddBatchToTable(){
    
       if (this.BatchFormGroup.valid) {
-        const RItem = new BPCRetItemBatch();
+        var RItem = new BPCRetItemBatch();
         RItem.Batch = this.BatchFormGroup.get('Batch').value;
         RItem.RetQty = this.BatchFormGroup.get('RetQty').value;
+       RItem.Client=this.ReturnItemBatch.Client;
+       RItem.Company=this.ReturnItemBatch.Company;
+       RItem.Item=this.ReturnItemBatch.Item;
+       RItem.PatnerID=this.ReturnItemBatch.PatnerID;
+       RItem.RetReqID=this.ReturnItemBatch.RetReqID;
+       RItem.Type=this.ReturnItemBatch.Type;
+       RItem.ModifiedOn=RItem.ModifiedBy=RItem.CreatedOn=RItem.CreatedBy=null;
       
-        // PIItem.DeliveryDate = this.ReturnItemFormGroup.get('DeliveryDate').value;
-        // PIItem.UOM = this.ReturnItemFormGroup.get('UOM').value;
-        // PIItem.ReasonText = this.ReturnItemFormGroup.get('ReasonText').value;
-        // PIItem.FileName = this.ReturnItemFormGroup.get('FileName').value;
-    
+       console.log(RItem);
+       
         this.AllReturnItems.push(RItem);
         this.BatchDataSource = new MatTableDataSource(this.AllReturnItems);
+      console.log(this.BatchDataSource);
         // this.ResetReturnItemFormGroup();
         // this.selectedDocCenterMaster = new BPCDocumentCenterMaster();
       } else {
@@ -75,22 +81,25 @@ console.log(this.ReturnItemBatch);
   
    
   }
-  // RemoveReturnItemFromTable(doc: BPCRetItem): void {
-  //   const index: number = this.AllReturnItems.indexOf(doc);
-  //   if (index > -1) {
-  //     this.AllReturnItems.splice(index, 1);
-  //     const indexx = this.fileToUploadList.findIndex(x => x.name === doc.FileName);
-  //     if (indexx > -1) {
-  //       this.fileToUploadList.splice(indexx, 1);
-  //     }
-  //   }
-  //   this.ReturnItemDataSource = new MatTableDataSource(this.AllReturnItems);
-  // }
+  RemoveReturnBatchItemFromTable(item: BPCRetItemBatch): void {
+    const index: number = this.AllReturnItems.indexOf(item);
+    if (index > -1) {
+      this.AllReturnItems.splice(index, 1);
+    }
+    this.BatchDataSource = new MatTableDataSource(this.AllReturnItems);
+  }
 GetBatchByRet(){
   this.customerservice.GetAllReturnbatch(this.ReturnItemBatch.RetReqID).subscribe(
     (data)=>{console.log(data)},
     (err)=>{console.log(err);
     }
   )
+}
+YesClicked(){
+  if(this.AllReturnItems.length){
+    this.dialogRef.close(this.AllReturnItems);
+    
+  }
+  
 }
 }

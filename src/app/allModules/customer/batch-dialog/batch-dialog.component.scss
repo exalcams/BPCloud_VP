@@ -1,7 +1,7 @@
 .btnBg {
     background-color: #efb577 !important;
     // color: #efb577 !important;
-    color:white;
+    color: white !important;;
 
 }
 @mixin TableBorderRight($color) {
@@ -13,8 +13,20 @@
     font-size: 14px;
     min-width: 50px !important;
     white-space: nowrap;
+    text-align: center;
   }
-
+  .addIcon {
+    height: 20px;
+    margin-top: 24px;
+    padding-left: 4px;
+    cursor: pointer !important;
+  }
+  .removeIcon {
+    height: 20px;
+    padding-right: 16px;
+    cursor: pointer !important;
+  
+}
 table {
     width: 100%;
 
@@ -25,7 +37,9 @@ table {
       color: white;
       background-color: #121214;
     }
-
+// .mat-dialog-actions{
+//   margin-bottom:0px !important;
+// }
     td {
       @include TableBorderRight(rgba(0, 0, 0, 0.12));
       @extend .TableCommon;
@@ -46,10 +60,5 @@ table {
       display: flex;
       justify-content: center;
     }
-    .addIcon {
-      height: 20px;
-      margin-top: 24px;
-      padding-left: 4px;
-      cursor: pointer !important;
-    }
+   
   }

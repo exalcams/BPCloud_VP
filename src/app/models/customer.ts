@@ -157,6 +157,8 @@ export class BPCRetView_new extends CommonClass {
     InvoiceDoc: string;
     Status: string;
     Items: BPCRetItem[];
+    Batch:BPCRetItemBatch[];
+    Serial: BPCRetItemSerial[];
 }
 export class BPCProd extends CommonClass {
     // ID: number;

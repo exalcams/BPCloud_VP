@@ -7,7 +7,7 @@
       </button>
     </mat-toolbar-row>
   </mat-toolbar>
-<div mat-dialog-content class="m-4">
+<mat-dialog-content class="m-4" fusePerfectScrollbar>
 
 
 
@@ -33,8 +33,8 @@
     </div>
       </form>
       
-  <!-- <div fxFlex fxLayout="column" class="table mx-20 my-12">
-    <table mat-table [dataSource]="PayDataSource">
+  <div *ngIf="AllReturnItems.length" class="table mx-20 my-12">
+    <table  mat-table [dataSource]="BatchDataSource">
       <ng-container matColumnDef="Batch">
         <th mat-header-cell *matHeaderCellDef style="width: 10%;"> Batch</th>
         <td mat-cell style="width: 10%;" *matCellDef="let element;let odd=odd" class="tableLeftBorder pl-0">
@@ -54,21 +54,30 @@
         </td>
       </ng-container>
 
+      <ng-container matColumnDef="Remove">
+        <th mat-header-cell *matHeaderCellDef style="width: 15%;"> Remove</th>
+        <td mat-cell style="width: 15%;" *matCellDef="let element">
+          <img class="removeIcon" src="assets/images/remove-button.png"
+          (click)="RemoveReturnBatchItemFromTable(element)">
+        </td>
+      </ng-container>
      
-     
-      <tr mat-header-row *matHeaderRowDef="PayDisplayedColumns;"></tr>
-      <tr mat-row *matRowDef="let row; columns: PayDisplayedColumns;let even=even">
+      <tr mat-header-row *matHeaderRowDef="BatchDisplayedColumns;"></tr>
+      <tr mat-row *matRowDef="let row; columns: BatchDisplayedColumns;let even=even">
       </tr>
     </table>
-
+<!-- 
         <mat-paginator [pageSizeOptions]="[5, 10]" showFirstLastButtons>
-        </mat-paginator>
-     </div> -->
+        </mat-paginator> -->
+     </div>
 
   
-</div>
+</mat-dialog-content>
 
-<!-- <div mat-dialog-actions>
-  <button mat-button class="btnBg" mat-dialog-close>Close</button>
-</div> -->
+<mat-dialog-actions >
+  <button mat-button type="button" (click)="CloseClicked()" >No</button>
+  <div fxFlex align="end">
+    <button mat-button type="button" class="btnBg" (click)="YesClicked()" align="end">Yes</button>
+  </div>
+</mat-dialog-actions>
 </div>
