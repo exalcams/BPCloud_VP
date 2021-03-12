@@ -312,7 +312,7 @@ export class SOItemCount {
     Company: string;
     Type: string;
     PatnerID: string;
-    DocNumber: string;
+    DocNumberCount: string;
     ItemCount: number;
     GRGICount: number;
     PODCount: number;

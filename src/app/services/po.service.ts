@@ -8,6 +8,7 @@ import { BPCCEOMessage, BPCSCOCMessage ,BPCWelcomeMessage} from 'app/models/Mess
 import { BPCFact } from 'app/models/fact';
 import { OverviewReportOption } from 'app/models/ReportModel';
 import { BPCInvoicePayment, BPCPayRecord } from 'app/models/customer';
+import { DocumentDetails } from 'app/models/Dashboard';
 
 @Injectable({
   providedIn: 'root'
@@ -88,6 +89,10 @@ GetInvoiceByPartnerIdAnDocumentNo( PatnerID: string): Observable<BPCInvoice | an
 }
 GetPartnerAndRequestIDByPartnerId( PatnerID: string): Observable<BPCRetNew | any> {
   return this._httpClient.get<BPCRetNew>(`${this.baseAddress}poapi/Return/GetPartnerAndRequestIDByPartnerId?PatnerID=${PatnerID}`)
+    .pipe(catchError(this.errorHandler));
+}
+GetAttachmentByPatnerIdAndDocNum( DocNumber:string,PatnerID: string,): Observable<DocumentDetails[] | string> {
+  return this._httpClient.get<DocumentDetails[]>(`${this.baseAddress}poapi/Dashboard/GetAttachmentByPatnerIdAndDocNum?PatnerID=${PatnerID}&DocNumber=${DocNumber}`)
     .pipe(catchError(this.errorHandler));
 }
 
