@@ -841,17 +841,17 @@ export class PurchaseIndentComponent implements OnInit {
 
     getStatusColor(StatusFor: string): string {
         switch (StatusFor) {
-            case 'Shipped':
+            case 'saved':
                 return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'gray' :
                     this.SelectedPurchaseIndentHeader.Status === 'SO' ? '#efb577' : '#34ad65';
             case 'Invoiced':
                 return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'gray' :
                     this.SelectedPurchaseIndentHeader.Status === 'SO' ? 'gray' :
-                        this.SelectedPurchaseIndentHeader.Status === 'Shipped' ? '#efb577' : '#34ad65';
+                        this.SelectedPurchaseIndentHeader.Status === 'saved' ? '#efb577' : '#34ad65';
             case 'Receipt':
                 return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'gray' :
                     this.SelectedPurchaseIndentHeader.Status === 'SO' ? 'gray' :
-                        this.SelectedPurchaseIndentHeader.Status === 'Shipped' ? 'gray' :
+                        this.SelectedPurchaseIndentHeader.Status === 'saved' ? 'gray' :
                             this.SelectedPurchaseIndentHeader.Status === 'Invoiced' ? '#efb577' : '#34ad65';
             default:
                 return '';
@@ -860,17 +860,17 @@ export class PurchaseIndentComponent implements OnInit {
 
     getTimeline(StatusFor: string): string {
         switch (StatusFor) {
-            case 'Shipped':
+            case 'saved':
                 return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'white-timeline' :
                     this.SelectedPurchaseIndentHeader.Status === 'SO' ? 'orange-timeline' : 'green-timeline';
             case 'Invoiced':
                 return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'white-timeline' :
                     this.SelectedPurchaseIndentHeader.Status === 'SO' ? 'white-timeline' :
-                        this.SelectedPurchaseIndentHeader.Status === 'Shipped' ? 'orange-timeline' : 'green-timeline';
+                        this.SelectedPurchaseIndentHeader.Status === 'saved' ? 'orange-timeline' : 'green-timeline';
             case 'Receipt':
                 return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'white-timeline' :
                     this.SelectedPurchaseIndentHeader.Status === 'SO' ? 'white-timeline' :
-                        this.SelectedPurchaseIndentHeader.Status === 'Shipped' ? 'white-timeline' :
+                        this.SelectedPurchaseIndentHeader.Status === 'saved' ? 'white-timeline' :
                             this.SelectedPurchaseIndentHeader.Status === 'Invoiced' ? 'orange-timeline' : 'green-timeline';
             default:
                 return '';
@@ -878,17 +878,17 @@ export class PurchaseIndentComponent implements OnInit {
     }
     getRestTimeline(StatusFor: string): string {
         switch (StatusFor) {
-            case 'Shipped':
+            case 'saved':
                 return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'white-timeline' :
                     this.SelectedPurchaseIndentHeader.Status === 'SO' ? 'white-timeline' : 'green-timeline';
             case 'Invoiced':
                 return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'white-timeline' :
                     this.SelectedPurchaseIndentHeader.Status === 'SO' ? 'white-timeline' :
-                        this.SelectedPurchaseIndentHeader.Status === 'Shipped' ? 'white-timeline' : 'green-timeline';
+                        this.SelectedPurchaseIndentHeader.Status === 'saved' ? 'white-timeline' : 'green-timeline';
             case 'Receipt':
                 return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'white-timeline' :
                     this.SelectedPurchaseIndentHeader.Status === 'SO' ? 'white-timeline' :
-                        this.SelectedPurchaseIndentHeader.Status === 'Shipped' ? 'white-timeline' :
+                        this.SelectedPurchaseIndentHeader.Status === 'saved' ? 'white-timeline' :
                             this.SelectedPurchaseIndentHeader.Status === 'Invoiced' ? 'white-timeline' : 'green-timeline';
             default:
                 return '';

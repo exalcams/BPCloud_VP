@@ -400,6 +400,12 @@
     @extend .hor-timeline;
     background-color: #efb577;
   }
+  // .white-timeline {
+  //   @extend .hor-timeline;
+  //   background-color: white;
+  //   border-top: 2px solid rgba(0, 0, 0, 0.2);
+  //   border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+  // }
   .white-timeline {
     @extend .hor-timeline;
     background-color: white;

@@ -200,6 +200,44 @@
           <td mat-cell *matCellDef="let element" style="width: 400px;">
             <div fxLayout class="mx-20 my-8">
               <div fxFlex="30" fxLayout>
+                <div class="round" [style.border-color]="getStatusColor(element,'order')">
+                </div>
+                <div style="width: 10px;margin-left: -1px !important"
+                [class]="getTimeline(element,'order')"></div>
+                <div [class]="getRestTimeline(element,'order')"  fxFlex>
+                </div>
+              </div>
+              <div fxFlex="30" fxLayout>
+                <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline(element,'Dispatch')"></div>
+                <div class="round" [style.border-color]="getStatusColor(element,'Dispatch')"></div>
+                <div style="width: 10px; margin-left: -1px !important" [class]="getTimeline(element,'Dispatch')"></div>
+                <div [class]="getRestTimeline(element,'Dispatch')" fxFlex></div>
+              </div>
+              <div fxFlex="30" fxLayout>
+                <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline(element,'Recived')"></div>
+                <div class="round" [style.border-color]="getStatusColor(element,'Recived')"></div>
+                <div style="width: 10px;margin-left: -1px !important" [class]="getTimeline(element,'Recived')"></div>
+                <div [class]="getRestTimeline(element,'Recived')" fxFlex></div>
+              </div>
+              <div fxFlex="10" fxLayout>
+                <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline(element,'Paid')"></div>
+                <div class="round" [style.border-color]="getStatusColor(element,'Paid')"></div>
+              </div>
+            </div>
+            <div fxLayout class="mx-20">
+              <div fxFlex="30">Order</div>
+              <div fxFlex="30">Dispatch</div>
+              <div fxFlex="30">Recived</div>
+              <div fxFlex="10">Paid</div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- <ng-container matColumnDef="Status">
+          <th mat-header-cell *matHeaderCellDef style="width: 400px;"> Order Fulfilment Status </th>
+          <td mat-cell *matCellDef="let element" style="width: 400px;">
+            <div fxLayout class="mx-20 my-8">
+              <div fxFlex="30" fxLayout>
                 <div class="round" [style.border-color]="element.Status==='Open'?'#efb577':'#34ad65'">
                 </div>
                 <div style="width: 10px;margin-left: -1px !important"
@@ -231,7 +269,7 @@
               <div fxFlex="10">Paid</div>
             </div>
           </td>
-        </ng-container>
+        </ng-container> -->
 
         <ng-container matColumnDef="Document">
           <th mat-header-cell *matHeaderCellDef style="width: 80px;"> Document </th>

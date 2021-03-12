@@ -108,7 +108,8 @@
             <div fxFlex class="borderleft mb-40 pt-40" [class.pt-60]="SelectedPurchaseIndentHeader?.PIRNumber">
               <div fxLayout class="mx-40">
                 <div fxFlex="30">SO</div>
-                <div fxFlex="30">Shipped</div>
+                <!-- <div fxFlex="30">Shipped</div> -->
+                <div fxFlex="30">Saved</div>
                 <div fxFlex="30">Invoiced</div>
                 <div fxFlex="10">Receipt</div>
               </div>
@@ -121,12 +122,20 @@
                   <div [class]="SelectedPurchaseIndentHeader.Status==='Open'?'white-timeline':'green-timeline'" fxFlex>
                   </div>
                 </div>
-                <div fxFlex="30" fxLayout>
+                <!-- <div fxFlex="30" fxLayout>
                   <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline('Shipped')"></div>
                   <div class="round" [style.border-color]="getStatusColor('Shipped')"></div>
                   <div style="width: 10px; margin-left: -1px !important" [class]="getTimeline('Shipped')"></div>
                   <div [class]="getRestTimeline('Shipped')" fxFlex></div>
+                </div> -->
+                <!-- chng -->
+                <div fxFlex="30" fxLayout>
+                  <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline('saved')"></div>
+                  <div class="round" [style.border-color]="getStatusColor('saved')"></div>
+                  <div style="width: 10px; margin-left: -1px !important" [class]="getTimeline('saved')"></div>
+                  <div [class]="getRestTimeline('Shipped')" fxFlex></div>
                 </div>
+                <!-- chng -->
                 <div fxFlex="30" fxLayout>
                   <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline('Invoiced')"></div>
                   <div class="round" [style.border-color]="getStatusColor('Invoiced')"></div>
