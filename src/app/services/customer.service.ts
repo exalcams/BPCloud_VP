@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { Observable, throwError } from 'rxjs';
 import { Guid } from 'guid-typescript';
 import { catchError } from 'rxjs/operators';
-import { BPCPIView, BPCPIHeader, BPCProd, BPCPIItem, BPCRetHeader, BPCRetView_new, BPCRetItem } from 'app/models/customer';
+import { BPCPIView, BPCPIHeader, BPCProd, BPCPIItem, BPCRetHeader, BPCRetView_new, BPCRetItem, BPCRetItemBatch, BPCRetItemSerial } from 'app/models/customer';
 
 @Injectable({
     providedIn: 'root'
@@ -205,5 +205,37 @@ GetReturnByRetAndPartnerID_RetH(RetReqID: string, PartnerID: string): Observable
     return this._httpClient.get<BPCRetHeader>(`${this.baseAddress}poapi/Return/GetReturnByRetAndPartnerID_RetH?RetReqID=${RetReqID}&PartnerID=${PartnerID}`)
         .pipe(catchError(this.errorHandler));
 }
-
+//return header end
+//return batch table 
+GetAllReturnbatch(RetReqID: string): Observable<BPCRetItemBatch[] | string> {
+    return this._httpClient.get<BPCRetItemBatch[]>(`${this.baseAddress}poapi/Return/GetAllReturnbatch?RetReqID=${RetReqID}`)
+        .pipe(catchError(this.errorHandler));
+}
+CreateReturnBatch(Return: BPCRetItemBatch[]): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}poapi/Return/CreateReturnBatch`,
+        Return,
+        {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        })
+        .pipe(catchError(this.errorHandler));
+}
+//return batch end
+//return Serial table 
+GetAllReturnSerial(RetReqID: string): Observable<BPCRetItemSerial[] | string> {
+    return this._httpClient.get<BPCRetItemSerial[]>(`${this.baseAddress}poapi/Return/GetAllReturnSerial?RetReqID=${RetReqID}`)
+        .pipe(catchError(this.errorHandler));
+}
+CreateReturnSerial(Return: BPCRetItemSerial[]): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}poapi/Return/CreateReturnSerial`,
+        Return,
+        {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        })
+        .pipe(catchError(this.errorHandler));
+}
+//return Serial end
 }
