@@ -211,31 +211,32 @@ GetAllReturnbatch(RetReqID: string): Observable<BPCRetItemBatch[] | string> {
     return this._httpClient.get<BPCRetItemBatch[]>(`${this.baseAddress}poapi/Return/GetAllReturnbatch?RetReqID=${RetReqID}`)
         .pipe(catchError(this.errorHandler));
 }
-CreateReturnBatch(Return: BPCRetItemBatch[]): Observable<any> {
-    return this._httpClient.post<any>(`${this.baseAddress}poapi/Return/CreateReturnBatch`,
-        Return,
-        {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json'
-            })
-        })
-        .pipe(catchError(this.errorHandler));
-}
+
+// CreateReturnBatch(Return: BPCRetItemBatch[]): Observable<any> {
+//     return this._httpClient.post<any>(`${this.baseAddress}poapi/Return/CreateReturnBatch`,
+//         Return,
+//         {
+//             headers: new HttpHeaders({
+//                 'Content-Type': 'application/json'
+//             })
+//         })
+//         .pipe(catchError(this.errorHandler));
+// }
 //return batch end
 //return Serial table 
 GetAllReturnSerial(RetReqID: string): Observable<BPCRetItemSerial[] | string> {
     return this._httpClient.get<BPCRetItemSerial[]>(`${this.baseAddress}poapi/Return/GetAllReturnSerial?RetReqID=${RetReqID}`)
         .pipe(catchError(this.errorHandler));
 }
-CreateReturnSerial(Return: BPCRetItemSerial[]): Observable<any> {
-    return this._httpClient.post<any>(`${this.baseAddress}poapi/Return/CreateReturnSerial`,
-        Return,
-        {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json'
-            })
-        })
-        .pipe(catchError(this.errorHandler));
-}
+// CreateReturnSerial(RetItemBatches: BPCRetItemSerial[]): Observable<any> {
+//     return this._httpClient.post<any>(`${this.baseAddress}poapi/Return/CreateReturnSerial`,
+//     RetItemBatches,
+//         {
+//             headers: new HttpHeaders({
+//                 'Content-Type': 'application/json'
+//             })
+//         })
+//         .pipe(catchError(this.errorHandler));
+// }
 //return Serial end
 }

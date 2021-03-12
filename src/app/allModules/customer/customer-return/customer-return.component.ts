@@ -21,7 +21,7 @@ import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notific
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { AttachmentDetails } from 'app/models/task';
 import { AttachmentDialogComponent } from 'app/notifications/attachment-dialog/attachment-dialog.component';
-import { BPCPIHeader, BPCPIView, BPCPIItem, BPCProd, BPCRetHeader, BPCRetView_new, BPCRetItem, BPCInvoicePayment } from 'app/models/customer';
+import { BPCPIHeader, BPCPIView, BPCPIItem, BPCProd, BPCRetHeader, BPCRetView_new, BPCRetItem, BPCInvoicePayment, BPCRetItemBatch } from 'app/models/customer';
 import { BPCFact } from 'app/models/fact';
 import { BatchDialogComponent } from '../batch-dialog/batch-dialog.component';
 import { SerialDialogComponent } from '../serial-dialog/serial-dialog.component';
@@ -87,6 +87,8 @@ InvoiceData:BPCInvoicePayment[]=[];
   selectedDocCenterMaster: BPCDocumentCenterMaster;
   ArrivalDateInterval: number;
   status_show: string;
+  BatchListNo: number;
+  Batchlist: BPCRetItemBatch[];
 
   constructor(
     private _fuseConfigService: FuseConfigService,
@@ -256,9 +258,7 @@ InvoiceData:BPCInvoicePayment[]=[];
       this.ReturnFormGroup.get('CreditNote').disable();
       this.ReturnFormGroup.get('SONumber').disable();
       this.ReturnFormGroup.get('AWBNumber').disable();
-     
       this.GetReturnByRetAndPartnerID();
-
     }
     else{
       this.SelectedReturnHeader.Status="saved"
@@ -285,6 +285,12 @@ GetAllInvoices(){
     const dialogRef = this.dialog.open(BatchDialogComponent,{
       width: '700px',
      data:selecteditem
+    });
+    dialogRef.afterClosed().subscribe(result => {
+    
+     this.Batchlist= result as BPCRetItemBatch[];
+    this.BatchListNo= this.Batchlist.length;
+    console.log(this.BatchListNo);
     });
   }
  
@@ -571,6 +577,19 @@ console.log(this.ReturnFormGroup);
         
       }
       this.SelectedReturnView.Items.push(x);
+    });
+  }
+  GetReturnBatchItemValues(): void {
+    this.SelectedReturnView.Batch= [];
+    this.Batchlist.forEach(x => {
+      // if (this.Batchlist) {
+      //   x.Client = this.SelectedBPCFact.Client;
+      //   x.Company = this.SelectedBPCFact.Company;
+      //   x.Type = this.SelectedBPCFact.Type;
+      //   x.PatnerID = this.SelectedBPCFact.PatnerID;
+        
+      // }
+      this.SelectedReturnView.Batch.push(x);
     });
   }
 
