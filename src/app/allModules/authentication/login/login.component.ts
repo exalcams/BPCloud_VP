@@ -1042,7 +1042,7 @@ export class LoginComponent implements OnInit {
         if (this.menuItems.indexOf("Return") >= 0) {
             this.ReturnSubChildren.push({
                 id: "fact",
-                title: "create",
+                title: "Create",
                 translate: "NAV.CUSTOMER.RETURN",
                 type: "item",
                 // icon: "returnIcon",
@@ -1087,8 +1087,8 @@ export class LoginComponent implements OnInit {
                 title: "Invoice Payment",
                 translate: "NAV.CUSTOMER.INVOICE_PAYMENT",
                 type: "item",
-                icon: "podIcon",
-                isSvgIcon: true,
+                icon: "payment",
+                isSvgIcon: false,
                 // icon: 'dashboard',
                 url: "/customer/invoicepayment",
             });

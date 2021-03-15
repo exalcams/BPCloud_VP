@@ -33,7 +33,7 @@
     </div>
       </form>
       
-  <div *ngIf="AllReturnItems.length" class="table mx-20 my-12">
+  <div *ngIf="AllReturnItems.length" class="table px-12">
     <table  mat-table [dataSource]="BatchDataSource">
       <ng-container matColumnDef="Batch">
         <th mat-header-cell *matHeaderCellDef style="width: 10%;"> Batch</th>
@@ -74,7 +74,7 @@
   
 </mat-dialog-content>
 
-<mat-dialog-actions >
+<mat-dialog-actions class="m-0 p-16" fxLayoutAlign="center" align="end">
   <button mat-button type="button" (click)="CloseClicked()" >No</button>
   <div fxFlex align="end">
     <button mat-button type="button" class="btnBg" (click)="YesClicked()" align="end">Yes</button>
