@@ -193,11 +193,11 @@ export class PurchaseIndentComponent implements OnInit {
             MaterialText: ['', Validators.required],
             HSN: ['', Validators.required],
             OrderQty: ['', [Validators.required, Validators.pattern('^([1-9][0-9]*)([.][0-9]{1,2})?$')]],
-           
+
             DeliveryDate: ['', Validators.required],
             // UOM: [''],
             Material: ['', Validators.required],
-            
+
         });
     }
 
@@ -348,8 +348,8 @@ export class PurchaseIndentComponent implements OnInit {
             PIItem.OrderQty = this.PurchaseIndentItemFormGroup.get('OrderQty').value;
             PIItem.DeliveryDate = this.PurchaseIndentItemFormGroup.get('DeliveryDate').value;
             // PIItem.UOM = this.PurchaseIndentItemFormGroup.get('UOM').value;
-            PIItem.Material=this.PurchaseIndentItemFormGroup.get('Material').value;
-            
+            PIItem.Material = this.PurchaseIndentItemFormGroup.get('Material').value;
+
             if (!this.AllPurchaseIndentItems || !this.AllPurchaseIndentItems.length) {
                 this.AllPurchaseIndentItems = [];
             }
@@ -421,9 +421,9 @@ export class PurchaseIndentComponent implements OnInit {
         this._CustomerService.GetPurchaseIndentByPIAndPartnerID(this.SelectedPIRNumber, this.currentUserName).subscribe(
             (data) => {
                 this.SelectedPurchaseIndentHeader = data as BPCPIHeader;
-                this.status_show=this.SelectedPurchaseIndentHeader.Status
-                console.log("status",  this.status_show);
-                
+                this.status_show = this.SelectedPurchaseIndentHeader.Status
+                console.log("status", this.status_show);
+
                 if (this.SelectedPurchaseIndentHeader) {
                     this.LoadSelectedPurchaseIndent(this.SelectedPurchaseIndentHeader);
                 }
@@ -466,7 +466,7 @@ export class PurchaseIndentComponent implements OnInit {
         this.PurchaseIndentFormGroup.get('PIRNumber').patchValue(this.SelectedPurchaseIndentHeader.PIRNumber);
         // this.PurchaseIndentFormGroup.get('Currency').patchValue(this.SelectedPurchaseIndentHeader.Currency);
         this.PurchaseIndentFormGroup.get('Status').patchValue(this.SelectedPurchaseIndentHeader.Status);
-        
+
     }
 
     GetPurchaseIndentValues(action): void {
@@ -496,7 +496,12 @@ export class PurchaseIndentComponent implements OnInit {
         else {
             // this.SelectedPurchaseIndentHeader.Client = this.SelectedPurchaseIndentView.Client = this.SelectedPurchaseIndentHeader.Client;
             // this.SelectedPurchaseIndentHeader.Company = this.SelectedPurchaseIndentView.Company = this.SelectedPurchaseIndentHeader.Company;
-            this.SelectedPurchaseIndentHeader.Status = this.SelectedPurchaseIndentView.Status =action;
+            if(action=="submitted")
+            this.SelectedPurchaseIndentHeader.Status = this.SelectedPurchaseIndentView.Status = "20";
+            else if(action=="saved")
+            {
+                this.SelectedPurchaseIndentHeader.Status = this.SelectedPurchaseIndentView.Status = "10";
+            }
         }
     }
 
@@ -521,7 +526,7 @@ export class PurchaseIndentComponent implements OnInit {
     }
 
     SaveClicked(): void {
-        if (  this.PurchaseIndentFormGroup.valid) {
+        if (this.PurchaseIndentFormGroup.valid) {
             if (!this.isWeightError) {
                 // if (this.PurchaseIndentItemFormGroup.valid) {
                 //     if (this.InvoiceDetailsFormGroup.valid) {
@@ -545,7 +550,7 @@ export class PurchaseIndentComponent implements OnInit {
         }
     }
     SubmitClicked(): void {
-        if ( (this.PurchaseIndentFormGroup.valid)) {
+        if ((this.PurchaseIndentFormGroup.valid)) {
             // if(this.PurchaseIndentFormGroup.valid) {
             if (!this.isWeightError) {
                 // if (this.PurchaseIndentItemFormGroup.valid) {
@@ -564,13 +569,13 @@ export class PurchaseIndentComponent implements OnInit {
                 //     this.ShowValidationErrors(this.PurchaseIndentItemFormGroup);
                 // }
             }
-        // }
-        // else {
-        //     this.ShowValidationErrors(this.PurchaseIndentFormGroup);
+            // }
+            // else {
+            //     this.ShowValidationErrors(this.PurchaseIndentFormGroup);
 
-        // }
-    }
-         else {
+            // }
+        }
+        else {
             // this.ShowValidationErrors(this.PurchaseIndentItemFormGroup);
             this.ShowValidationErrors(this.PurchaseIndentFormGroup);
         }
@@ -625,8 +630,8 @@ export class PurchaseIndentComponent implements OnInit {
         // this.GetBPPurchaseIndentSubItemValues();
         // this.SelectedPurchaseIndentView.CreatedBy = this.authenticationDetails.UserID.toString();
         this.IsProgressBarVisibile = false;
-        console.log("SelectedPurchaseIndentView"+this.SelectedPurchaseIndentView)
-     //mchng
+        console.log("SelectedPurchaseIndentView" + this.SelectedPurchaseIndentView)
+        //mchng
         this._CustomerService.CreatePurchaseIndent(this.SelectedPurchaseIndentView).subscribe(
             (data) => {
                 this.SelectedPurchaseIndentHeader.PIRNumber = (data as BPCPIHeader).PIRNumber;
@@ -634,13 +639,13 @@ export class PurchaseIndentComponent implements OnInit {
                 this.notificationSnackBarComponent.openSnackBar(`PurchaseIndent ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
                 this.IsProgressBarVisibile = false;
 
-               
+
             },
             (err) => {
                 this.showErrorNotificationSnackBar(err);
             }
         );
-    // mchng
+        // mchng
     }
 
     // AddInvoiceAttachment(Actiontype: string): void {
@@ -685,8 +690,8 @@ export class PurchaseIndentComponent implements OnInit {
         // this.SelectedBPPurchaseIndentView.TransID = this.SelectedBPPurchaseIndent.TransID;
         // this.SelectedPurchaseIndentView.ModifiedBy = this.authenticationDetails.UserID.toString();
         this.IsProgressBarVisibile = false;
-        console.log("SelectedPurchaseIndentView"+this.SelectedPurchaseIndentView)
-     // mchng
+        console.log("SelectedPurchaseIndentView" + this.SelectedPurchaseIndentView)
+        // mchng
         this._CustomerService.UpdatePurchaseIndent(this.SelectedPurchaseIndentView).subscribe(
             (data) => {
                 this.SelectedPurchaseIndentHeader.PIRNumber = (data as BPCPIHeader).PIRNumber;
@@ -694,7 +699,7 @@ export class PurchaseIndentComponent implements OnInit {
                 this.notificationSnackBarComponent.openSnackBar(`PurchaseIndent ${Actiontype === 'Submit' ? 'submitted' : 'saved'} successfully`, SnackBarStatus.success);
                 this.IsProgressBarVisibile = false;
 
-               
+
             },
             (err) => {
                 console.error(err);
@@ -702,7 +707,7 @@ export class PurchaseIndentComponent implements OnInit {
                 this.IsProgressBarVisibile = false;
             }
         );
-     // mchng
+        // mchng
     }
 
     DeletePurchaseIndent(): void {
@@ -842,17 +847,28 @@ export class PurchaseIndentComponent implements OnInit {
     getStatusColor(StatusFor: string): string {
         switch (StatusFor) {
             case 'saved':
-                return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'gray' :
-                    this.SelectedPurchaseIndentHeader.Status === 'SO' ? '#efb577' : '#34ad65';
-            case 'Invoiced':
-                return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'gray' :
-                    this.SelectedPurchaseIndentHeader.Status === 'SO' ? 'gray' :
-                        this.SelectedPurchaseIndentHeader.Status === 'saved' ? '#efb577' : '#34ad65';
-            case 'Receipt':
-                return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'gray' :
-                    this.SelectedPurchaseIndentHeader.Status === 'SO' ? 'gray' :
-                        this.SelectedPurchaseIndentHeader.Status === 'saved' ? 'gray' :
-                            this.SelectedPurchaseIndentHeader.Status === 'Invoiced' ? '#efb577' : '#34ad65';
+                return this.SelectedPurchaseIndentHeader.Status === 'saved' ? '#34ad65' :
+                    this.SelectedPurchaseIndentHeader.Status === 'submitted' ? '#34ad65' :
+                        this.SelectedPurchaseIndentHeader.Status === 'created' ? '#34ad65' :
+                            this.SelectedPurchaseIndentHeader.Status === 'cancelled' ? '#34ad65' :'#34ad65';
+                  
+
+            case 'submitted':
+                return this.SelectedPurchaseIndentHeader.Status === 'saved' ? 'gray' :
+                this.SelectedPurchaseIndentHeader.Status === 'submitted' ? '#34ad65' :
+                    this.SelectedPurchaseIndentHeader.Status === 'created' ? '#34ad65' :
+                        this.SelectedPurchaseIndentHeader.Status === 'cancelled' ? '#34ad65' :'#34ad65';
+
+            case 'created':
+                return this.SelectedPurchaseIndentHeader.Status === 'saved' ? 'gray' :
+                this.SelectedPurchaseIndentHeader.Status === 'submitted' ? 'gray' :
+                    this.SelectedPurchaseIndentHeader.Status === 'created' ? '#34ad65' :
+                        this.SelectedPurchaseIndentHeader.Status === 'cancelled' ? '#34ad65' :'#34ad65';
+            case 'cancelled':
+                return this.SelectedPurchaseIndentHeader.Status === 'saved' ? 'gray' :
+                this.SelectedPurchaseIndentHeader.Status === 'submitted' ? 'gray' :
+                    this.SelectedPurchaseIndentHeader.Status === 'created' ? 'gray' :
+                        this.SelectedPurchaseIndentHeader.Status === 'cancelled' ? '#34ad65' :'#34ad65';
             default:
                 return '';
         }
@@ -861,17 +877,32 @@ export class PurchaseIndentComponent implements OnInit {
     getTimeline(StatusFor: string): string {
         switch (StatusFor) {
             case 'saved':
-                return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'white-timeline' :
-                    this.SelectedPurchaseIndentHeader.Status === 'SO' ? 'orange-timeline' : 'green-timeline';
-            case 'Invoiced':
-                return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'white-timeline' :
-                    this.SelectedPurchaseIndentHeader.Status === 'SO' ? 'white-timeline' :
-                        this.SelectedPurchaseIndentHeader.Status === 'saved' ? 'orange-timeline' : 'green-timeline';
-            case 'Receipt':
-                return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'white-timeline' :
-                    this.SelectedPurchaseIndentHeader.Status === 'SO' ? 'white-timeline' :
-                        this.SelectedPurchaseIndentHeader.Status === 'saved' ? 'white-timeline' :
-                            this.SelectedPurchaseIndentHeader.Status === 'Invoiced' ? 'orange-timeline' : 'green-timeline';
+                return this.SelectedPurchaseIndentHeader.Status === 'saved' ? 'green-timeline' :
+                    this.SelectedPurchaseIndentHeader.Status === 'submitted' ? 'green-timeline' :
+                        this.SelectedPurchaseIndentHeader.Status === 'created' ? 'green-timeline' :
+                            this.SelectedPurchaseIndentHeader.Status === 'cancelled' ? 'green-timeline' : 'white-timeline';
+            case 'submitted':
+                return this.SelectedPurchaseIndentHeader.Status === 'saved' ? 'white-timeline' :
+                    this.SelectedPurchaseIndentHeader.Status === 'submitted' ? 'green-timeline' :
+                        this.SelectedPurchaseIndentHeader.Status === 'created' ? 'green-timeline' :
+                            this.SelectedPurchaseIndentHeader.Status === 'cancelled' ? 'green-timeline' : 'white-timeline';
+
+
+            case 'created':
+                return this.SelectedPurchaseIndentHeader.Status === 'saved' ? 'white-timeline' :
+                    this.SelectedPurchaseIndentHeader.Status === 'submitted' ? 'white-timeline' :
+                        this.SelectedPurchaseIndentHeader.Status === 'created' ? 'green-timeline' :
+                            this.SelectedPurchaseIndentHeader.Status === 'cancelled' ? 'green-timeline' : 'white-timeline';
+            // case 'created':
+            //     return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'white-timeline' :
+            //         this.SelectedPurchaseIndentHeader.Status === 'SO' ? 'white-timeline' :
+            //             this.SelectedPurchaseIndentHeader.Status === 'saved' ? 'white-timeline' :
+            //                 this.SelectedPurchaseIndentHeader.Status === 'Invoiced' ? 'orange-timeline' : 'green-timeline';
+            case 'cancelled':
+                return this.SelectedPurchaseIndentHeader.Status === 'saved' ? 'white-timeline' :
+                    this.SelectedPurchaseIndentHeader.Status === 'submitted' ? 'white-timeline' :
+                        this.SelectedPurchaseIndentHeader.Status === 'created' ? 'white-timeline' :
+                            this.SelectedPurchaseIndentHeader.Status === 'cancelled' ? 'green-timeline' : 'white-timeline';
             default:
                 return '';
         }
@@ -879,17 +910,32 @@ export class PurchaseIndentComponent implements OnInit {
     getRestTimeline(StatusFor: string): string {
         switch (StatusFor) {
             case 'saved':
-                return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'white-timeline' :
-                    this.SelectedPurchaseIndentHeader.Status === 'SO' ? 'white-timeline' : 'green-timeline';
-            case 'Invoiced':
-                return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'white-timeline' :
-                    this.SelectedPurchaseIndentHeader.Status === 'SO' ? 'white-timeline' :
-                        this.SelectedPurchaseIndentHeader.Status === 'saved' ? 'white-timeline' : 'green-timeline';
-            case 'Receipt':
-                return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'white-timeline' :
-                    this.SelectedPurchaseIndentHeader.Status === 'SO' ? 'white-timeline' :
-                        this.SelectedPurchaseIndentHeader.Status === 'saved' ? 'white-timeline' :
-                            this.SelectedPurchaseIndentHeader.Status === 'Invoiced' ? 'white-timeline' : 'green-timeline';
+                return this.SelectedPurchaseIndentHeader.Status === 'saved' ? 'white-timeline' :
+                    this.SelectedPurchaseIndentHeader.Status === 'submitted' ? 'green-timeline' :
+                        this.SelectedPurchaseIndentHeader.Status === 'created' ? 'green-timeline' :
+                            this.SelectedPurchaseIndentHeader.Status === 'cancelled' ? 'green-timeline' : 'white-timeline';
+            case 'submitted':
+                return this.SelectedPurchaseIndentHeader.Status === 'saved' ? 'white-timeline' :
+                    this.SelectedPurchaseIndentHeader.Status === 'submitted' ? 'white-timeline' :
+                        this.SelectedPurchaseIndentHeader.Status === 'created' ? 'green-timeline' :
+                            this.SelectedPurchaseIndentHeader.Status === 'cancelled' ? 'green-timeline' : 'white-timeline';
+
+
+            case 'created':
+                return this.SelectedPurchaseIndentHeader.Status === 'saved' ? 'white-timeline' :
+                    this.SelectedPurchaseIndentHeader.Status === 'submitted' ? 'white-timeline' :
+                        this.SelectedPurchaseIndentHeader.Status === 'created' ? 'white-timeline' :
+                            this.SelectedPurchaseIndentHeader.Status === 'cancelled' ? 'green-timeline' : 'white-timeline';
+            // case 'created':
+            //     return this.SelectedPurchaseIndentHeader.Status === 'Open' ? 'white-timeline' :
+            //         this.SelectedPurchaseIndentHeader.Status === 'SO' ? 'white-timeline' :
+            //             this.SelectedPurchaseIndentHeader.Status === 'saved' ? 'white-timeline' :
+            //                 this.SelectedPurchaseIndentHeader.Status === 'Invoiced' ? 'orange-timeline' : 'green-timeline';
+            // case 'cancelled':
+            //     return this.SelectedPurchaseIndentHeader.Status === 'saved' ? 'white-timeline' :
+            //     this.SelectedPurchaseIndentHeader.Status === 'submitted' ? 'white-timeline' :
+            //         this.SelectedPurchaseIndentHeader.Status === 'created' ?  'white-timeline' :
+            //             this.SelectedPurchaseIndentHeader.Status === 'cancelled' ? 'green-timeline' : 'white-timeline';
             default:
                 return '';
         }

@@ -211,7 +211,7 @@
                 <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline(element,'Dispatch')"></div>
                 <div class="round" [style.border-color]="getStatusColor(element,'Dispatch')"></div>
                 <div style="width: 10px; margin-left: -1px !important" [class]="getTimeline(element,'Dispatch')"></div>
-                <div [class]="getRestTimeline(element,'Dispatch')" fxFlex></div>
+                <div [class]="getRestTimeline(element,'Dispatch')"  fxFlex></div>
               </div>
               <div fxFlex="30" fxLayout>
                 <div style="width: 10px;margin-right: -1px !important" [class]="getTimeline(element,'Recived')"></div>
@@ -232,7 +232,6 @@
             </div>
           </td>
         </ng-container>
-
         <!-- <ng-container matColumnDef="Status">
           <th mat-header-cell *matHeaderCellDef style="width: 400px;"> Order Fulfilment Status </th>
           <td mat-cell *matCellDef="let element" style="width: 400px;">
