@@ -10,10 +10,11 @@ import { CustomerService } from 'app/services/customer.service';
   styleUrls: ['./batch-dialog.component.scss']
 })
 export class BatchDialogComponent implements OnInit {
-BatchFormGroup:FormGroup;
+  BatchFormGroup:FormGroup;
   AllReturnItems: BPCRetItemBatch[]=[];
+  ReturnItemBatch: BPCRetItemBatch;
   // ReturnItemDataSource: MatTableDataSource<unknown>;
-  constructor(@Inject(MAT_DIALOG_DATA) public ReturnItemBatch: BPCRetItemBatch,
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any,
   public dialogRef: MatDialogRef<BatchDialogComponent> ,private frombuilder:FormBuilder,private customerservice:CustomerService) { }
 BatchDataSource:MatTableDataSource<BPCRetItemBatch>;
 BatchDisplayedColumns:string[]=[
@@ -23,8 +24,14 @@ BatchDisplayedColumns:string[]=[
 ]
   ngOnInit() {
 this.InitialiseBAtchFormGroup();
-// this.BatchDataSource=new MatTableDataSource<BPCRetItemBatch>();
-console.log(this.ReturnItemBatch);
+this.ReturnItemBatch=this.data.selecteditem as BPCRetItemBatch;
+
+this.AllReturnItems=this.data.batchlist as BPCRetItemBatch[];
+console.log("return"+this.AllReturnItems);
+this.BatchDataSource=new MatTableDataSource(this.AllReturnItems);
+
+// console.log(this.ReturnItemBatch);
+if(!this.AllReturnItems)
 this.GetBatchByRet();
 
   }
@@ -37,7 +44,18 @@ this.GetBatchByRet();
 
     )
   }
-
+  GetBatchByRet(){
+    this.customerservice.GetAllReturnbatch(this.ReturnItemBatch.RetReqID).subscribe(
+      (data)=>{
+       this.AllReturnItems=data as BPCRetItemBatch[],
+   
+      //  console.log("batch"+this.Batchlist)
+         this.BatchDataSource = new MatTableDataSource(this.AllReturnItems);
+      },
+      (err)=>{console.log(err);
+      }
+    )
+  }
   decimalOnly(event): boolean {
     // this.AmountSelected();
     const charCode = (event.which) ? event.which : event.keyCode;
@@ -58,14 +76,14 @@ this.GetBatchByRet();
       if (this.BatchFormGroup.valid) {
         var RItem = new BPCRetItemBatch();
         RItem.Batch = this.BatchFormGroup.get('Batch').value;
-        RItem.RetQty = this.BatchFormGroup.get('RetQty').value;
+        RItem.RetQty = parseInt(this.BatchFormGroup.get('RetQty').value);
        RItem.Client=this.ReturnItemBatch.Client;
        RItem.Company=this.ReturnItemBatch.Company;
        RItem.Item=this.ReturnItemBatch.Item;
        RItem.PatnerID=this.ReturnItemBatch.PatnerID;
        RItem.RetReqID=this.ReturnItemBatch.RetReqID;
        RItem.Type=this.ReturnItemBatch.Type;
-       RItem.ModifiedOn=RItem.ModifiedBy=RItem.CreatedOn=RItem.CreatedBy=null;
+      //  RItem.ModifiedOn=RItem.ModifiedBy=RItem.CreatedOn=RItem.CreatedBy=null;
       
        console.log(RItem);
        
@@ -88,15 +106,12 @@ this.GetBatchByRet();
     }
     this.BatchDataSource = new MatTableDataSource(this.AllReturnItems);
   }
-GetBatchByRet(){
-  this.customerservice.GetAllReturnbatch(this.ReturnItemBatch.RetReqID).subscribe(
-    (data)=>{console.log(data)},
-    (err)=>{console.log(err);
-    }
-  )
-}
+
 YesClicked(){
   if(this.AllReturnItems.length){
+    var rQty=0;
+    this.AllReturnItems.forEach(x=>rQty=x.RetQty +rQty );
+    if(rQty==this.ReturnItemBatch.RetQty)
     this.dialogRef.close(this.AllReturnItems);
     
   }

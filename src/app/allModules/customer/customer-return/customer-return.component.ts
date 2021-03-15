@@ -21,7 +21,7 @@ import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notific
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { AttachmentDetails } from 'app/models/task';
 import { AttachmentDialogComponent } from 'app/notifications/attachment-dialog/attachment-dialog.component';
-import { BPCPIHeader, BPCPIView, BPCPIItem, BPCProd, BPCRetHeader, BPCRetView_new, BPCRetItem, BPCInvoicePayment, BPCRetItemBatch } from 'app/models/customer';
+import { BPCPIHeader, BPCPIView, BPCPIItem, BPCProd, BPCRetHeader, BPCRetView_new, BPCRetItem, BPCInvoicePayment, BPCRetItemBatch, BPCRetItemSerial } from 'app/models/customer';
 import { BPCFact } from 'app/models/fact';
 import { BatchDialogComponent } from '../batch-dialog/batch-dialog.component';
 import { SerialDialogComponent } from '../serial-dialog/serial-dialog.component';
@@ -33,6 +33,7 @@ import { SerialDialogComponent } from '../serial-dialog/serial-dialog.component'
 })
 export class CustomerReturnComponent implements OnInit {
 
+  
   authenticationDetails: AuthenticationDetails;
   currentUserID: Guid;
   currentUserName: string;
@@ -89,7 +90,8 @@ InvoiceData:BPCInvoicePayment[]=[];
   status_show: string;
   BatchListNo: number;
   Batchlist: BPCRetItemBatch[];
-
+  SerialList:BPCRetItemSerial[];
+  SerialListNo: number;
   constructor(
     private _fuseConfigService: FuseConfigService,
     private _masterService: MasterService,
@@ -150,6 +152,7 @@ InvoiceData:BPCInvoicePayment[]=[];
     this.GetAllProducts();
     this.GetReturnBasedOnCondition();
     this.GetAllInvoices();
+   
   }
   CreateAppUsage(): void {
     const appUsage: AppUsage = new AppUsage();
@@ -180,15 +183,7 @@ InvoiceData:BPCInvoicePayment[]=[];
       Status: [''],
     });
   }
-  // SetInitialValueForReturnFormGroup(): void {
-  //     this.ReturnFormGroup.get('Date').patchValue('Road');
-  //     this.ReturnFormGroup.get('AWBDate').patchValue(new Date());
-  //     this.ReturnFormGroup.get('NetAmountReasonText').patchValue('KG');
-  //     this.ReturnFormGroup.get('GrossAmountReasonText').patchValue('KG');
-  //     this.ReturnFormGroup.get('DepartureDate').patchValue(new Date());
-  //     this.ReturnFormGroup.get('ArrivalDate').patchValue(this.minDate);
-  //     this.ReturnFormGroup.get('CountryOfOrigin').patchValue('IND');
-  // }
+  
   InitializeReturnItemFormGroup(): void {
     this.ReturnItemFormGroup = this._formBuilder.group({
       Item: ['', Validators.required],
@@ -264,7 +259,31 @@ InvoiceData:BPCInvoicePayment[]=[];
       this.SelectedReturnHeader.Status="saved"
     }
   }
-  
+  //for batch dialog
+  GetBatchByRet(){
+    this._CustomerService.GetAllReturnbatch(this.SelectedReturnHeader.RetReqID).subscribe(
+      (data)=>{
+       this.Batchlist=data as BPCRetItemBatch[],
+    this.BatchListNo= this.Batchlist.length
+      //  console.log("batch"+this.Batchlist)
+        // this.BatchDataSource = new MatTableDataSource(this.AllReturnItems);
+      },
+      (err)=>{console.log(err);
+      }
+    )
+  }
+  GetSerialByRet(){
+    this._CustomerService.GetAllReturnSerial(this.SelectedReturnHeader.RetReqID).subscribe(
+      (data)=>{
+       this.SerialList=data as BPCRetItemSerial[],
+       this.SerialListNo= this.SerialList.length
+      //  console.log("batch"+this.SerialList)
+     
+      },
+      (err)=>{console.log(err);
+      }
+    )
+  }
 GetAllInvoices(){
   this._POService.GetAllInvoices().subscribe(
     (data)=>{
@@ -281,25 +300,35 @@ GetAllInvoices(){
       // this.SelectedTask.Type = event.value;
     }
   }
-  BatchOpen(selecteditem){
+  BatchOpen(selecteditem:BPCRetItemBatch){
     const dialogRef = this.dialog.open(BatchDialogComponent,{
-      width: '700px',
-     data:selecteditem
+      width: '500px',
+      // height:'400px',
+     data:{selecteditem:selecteditem, batchlist:this.Batchlist}
     });
     dialogRef.afterClosed().subscribe(result => {
     
      this.Batchlist= result as BPCRetItemBatch[];
     this.BatchListNo= this.Batchlist.length;
-    console.log(this.BatchListNo);
+    if(!this.BatchListNo)
+    this.GetBatchByRet();
+    // console.log(this.BatchListNo);
     });
   }
  
-  SerialOpen(selecteditem){
+  SerialOpen(selecteditem:BPCRetItemSerial){
     const dialogRef = this.dialog.open(SerialDialogComponent,{
-      width: '700px',
-      data:selecteditem
+      width: '500px',
+      data:{selecteditem:selecteditem, SerialList:this.SerialList}
      
     });
+    dialogRef.afterClosed().subscribe(result => {
+    
+      this.SerialList= result as BPCRetItemSerial[];
+     this.SerialListNo= this.SerialList.length;
+     if(!this.SerialListNo)
+    this.GetSerialByRet();
+     });
   }
 
   decimalOnly(event): boolean {
@@ -491,6 +520,8 @@ GetAllInvoices(){
     this.SelectedReturnNumber = this.SelectedReturnHeader.RetReqID;
     this.SetReturnHeaderValues();
     this.GetReturnItemsByRet();
+    this.GetBatchByRet();
+    this.GetSerialByRet();
   }
 //moni
   GetReturnItemsByRet(): void {
@@ -499,7 +530,7 @@ GetAllInvoices(){
         const dt = data as BPCRetItem[];
         if (dt && dt.length && dt.length > 0) {
           this.AllReturnItems = data as BPCRetItem[];
-          console.log("it"+this.AllReturnItems);
+         
           
           this.ReturnItemDataSource = new MatTableDataSource(this.AllReturnItems);
         }
@@ -555,7 +586,11 @@ console.log(this.ReturnFormGroup);
     else {
       // this.SelectedReturnHeader.Client = this.SelectedReturnView.Client = this.SelectedReturnHeader.Client;
       // this.SelectedReturnHeader.Company = this.SelectedReturnView.Company = this.SelectedReturnHeader.Company;
-      this.SelectedReturnHeader.Status = this.SelectedReturnView.Status = action;
+    if(this.SelectedReturnHeader.Status=="saved")
+      this.SelectedReturnHeader.Status = this.SelectedReturnView.Status = "10";
+      else if(this.SelectedReturnHeader.Status=="submitted"){
+        this.SelectedReturnHeader.Status = this.SelectedReturnView.Status = "20";
+      }
     }
   }
 
@@ -569,11 +604,11 @@ console.log(this.ReturnFormGroup);
   GetReturnItemValues(): void {
     this.SelectedReturnView.Items = [];
     this.AllReturnItems.forEach(x => {
-      if (this.SelectedBPCFact) {
-        x.Client = this.SelectedBPCFact.Client;
-        x.Company = this.SelectedBPCFact.Company;
-        x.Type = this.SelectedBPCFact.Type;
-        x.PatnerID = this.SelectedBPCFact.PatnerID;
+      if (this.SelectedReturnHeader) {
+        x.Client = this.SelectedReturnHeader.Client;
+        x.Company = this.SelectedReturnHeader.Company;
+        x.Type = this.SelectedReturnHeader.Type;
+        x.PatnerID = this.SelectedReturnHeader.PatnerID;
         
       }
       this.SelectedReturnView.Items.push(x);
@@ -581,15 +616,30 @@ console.log(this.ReturnFormGroup);
   }
   GetReturnBatchItemValues(): void {
     this.SelectedReturnView.Batch= [];
+
     this.Batchlist.forEach(x => {
-      // if (this.Batchlist) {
-      //   x.Client = this.SelectedBPCFact.Client;
-      //   x.Company = this.SelectedBPCFact.Company;
-      //   x.Type = this.SelectedBPCFact.Type;
-      //   x.PatnerID = this.SelectedBPCFact.PatnerID;
+      if (this.Batchlist) {
+        x.Client = this.SelectedBPCFact.Client;
+        x.Company = this.SelectedBPCFact.Company;
+        x.Type = this.SelectedBPCFact.Type;
+        x.PatnerID = this.SelectedBPCFact.PatnerID;
+        // x.RetReqID=this.SelectedReturnHeader.RetReqID;
         
-      // }
+      }
       this.SelectedReturnView.Batch.push(x);
+    });
+  }
+  GetReturnSerialItemValues(): void {
+    this.SelectedReturnView.Serial= [];
+    this.SerialList.forEach(x => {
+      if (this.SelectedReturnHeader) {
+        x.Client = this.SelectedReturnHeader.Client;
+        x.Company = this.SelectedReturnHeader.Company;
+        x.Type = this.SelectedReturnHeader.Type;
+        x.PatnerID = this.SelectedReturnHeader.PatnerID;
+        // x.RetReqID=this.SelectedReturnHeader.RetReqID;
+      }
+      this.SelectedReturnView.Serial.push(x);
     });
   }
 
@@ -600,6 +650,8 @@ console.log(this.ReturnFormGroup);
         //     if (this.InvoiceDetailsFormGroup.valid) {
         this.GetReturnValues("saved");
         this.GetReturnItemValues();
+        this.GetReturnBatchItemValues();
+        this.GetReturnSerialItemValues();
         // this.GetInvoiceDetailValues();
         // this.GetDocumentCenterValues();
         // this.SelectedReturnView.IsSubmitted = false;
@@ -622,11 +674,11 @@ console.log(this.ReturnFormGroup);
     if (this.ReturnFormGroup.valid) {
       if (!this.isQtyError) {
         // if (this.ReturnItemFormGroup.valid) {
-        //     if (this.InvoiceDetailsFormGroup.valid) {
+      
         this.GetReturnValues("submitted");
         this.GetReturnItemValues();
-        // this.GetInvoiceDetailValues();
-        // this.GetDocumentCenterValues();
+        this.GetReturnBatchItemValues();
+        this.GetReturnSerialItemValues();
         // this.SelectedReturnView.IsSubmitted = true;
         this.SetActionToOpenConfirmation('Submit');
         //     } else {
@@ -934,18 +986,18 @@ console.log(this.ReturnFormGroup);
 
   getStatusColor(StatusFor: string): string {
     switch (StatusFor) {
-      case 'Shipped':
-        return this.SelectedReturnHeader.Status === 'Open' ? 'gray' :
-          this.SelectedReturnHeader.Status === 'SO' ? '#efb577' : '#34ad65';
-      case 'Invoiced':
-        return this.SelectedReturnHeader.Status === 'Open' ? 'gray' :
-          this.SelectedReturnHeader.Status === 'SO' ? 'gray' :
-            this.SelectedReturnHeader.Status === 'Shipped' ? '#efb577' : '#34ad65';
-      case 'Receipt':
-        return this.SelectedReturnHeader.Status === 'Open' ? 'gray' :
-          this.SelectedReturnHeader.Status === 'SO' ? 'gray' :
-            this.SelectedReturnHeader.Status === 'Shipped' ? 'gray' :
-              this.SelectedReturnHeader.Status === 'Invoiced' ? '#efb577' : '#34ad65';
+      case 'Draft':
+        return this.SelectedReturnHeader.Status === 'saved' ? '#34ad65' :
+          this.SelectedReturnHeader.Status === 'open' ? '#34ad65':
+          this.SelectedReturnHeader.Status === 'Accepted' ? '#34ad65' : '#34ad65';
+      case 'Submitted':
+        return this.SelectedReturnHeader.Status === 'saved' ? 'gray' :
+          this.SelectedReturnHeader.Status === 'open' ? '#34ad65':
+          this.SelectedReturnHeader.Status === 'Accepted' ? '#34ad65' : '#34ad65';
+      case 'Accepted':
+        return this.SelectedReturnHeader.Status === 'saved' ? 'gray' :
+          this.SelectedReturnHeader.Status === 'open' ? 'gray':
+          this.SelectedReturnHeader.Status === 'Accepted' ? '#34ad65' : '#34ad65';
       default:
         return '';
     }
@@ -953,36 +1005,36 @@ console.log(this.ReturnFormGroup);
 
   getTimeline(StatusFor: string): string {
     switch (StatusFor) {
-      case 'Shipped':
-        return this.SelectedReturnHeader.Status === 'Open' ? 'white-timeline' :
-          this.SelectedReturnHeader.Status === 'SO' ? 'orange-timeline' : 'green-timeline';
-      case 'Invoiced':
-        return this.SelectedReturnHeader.Status === 'Open' ? 'white-timeline' :
-          this.SelectedReturnHeader.Status === 'SO' ? 'white-timeline' :
-            this.SelectedReturnHeader.Status === 'Shipped' ? 'orange-timeline' : 'green-timeline';
-      case 'Receipt':
-        return this.SelectedReturnHeader.Status === 'Open' ? 'white-timeline' :
-          this.SelectedReturnHeader.Status === 'SO' ? 'white-timeline' :
-            this.SelectedReturnHeader.Status === 'Shipped' ? 'white-timeline' :
-              this.SelectedReturnHeader.Status === 'Invoiced' ? 'orange-timeline' : 'green-timeline';
+      case 'Draft':
+        return this.SelectedReturnHeader.Status === 'saved' ? 'green-timeline' :
+          this.SelectedReturnHeader.Status === 'open' ? 'green-timeline' :
+          this.SelectedReturnHeader.Status === 'Accepted' ? 'green-timeline' : 'green-timeline';
+      case 'Submitted':
+        return this.SelectedReturnHeader.Status === 'saved' ? 'white-timeline' :
+          this.SelectedReturnHeader.Status === 'open' ? 'green-timeline' :
+          this.SelectedReturnHeader.Status === 'Accepted' ? 'green-timeline' : 'green-timeline';
+      case 'Accepted':
+        return this.SelectedReturnHeader.Status === 'saved' ? 'white-timeline' :
+        this.SelectedReturnHeader.Status === 'open' ? 'white-timeline' :
+        this.SelectedReturnHeader.Status === 'Accepted' ? 'green-timeline' : 'green-timeline';
       default:
         return '';
     }
   }
   getRestTimeline(StatusFor: string): string {
     switch (StatusFor) {
-      case 'Shipped':
-        return this.SelectedReturnHeader.Status === 'Open' ? 'white-timeline' :
-          this.SelectedReturnHeader.Status === 'SO' ? 'white-timeline' : 'green-timeline';
-      case 'Invoiced':
-        return this.SelectedReturnHeader.Status === 'Open' ? 'white-timeline' :
-          this.SelectedReturnHeader.Status === 'SO' ? 'white-timeline' :
-            this.SelectedReturnHeader.Status === 'Shipped' ? 'white-timeline' : 'green-timeline';
-      case 'Receipt':
-        return this.SelectedReturnHeader.Status === 'Open' ? 'white-timeline' :
-          this.SelectedReturnHeader.Status === 'SO' ? 'white-timeline' :
-            this.SelectedReturnHeader.Status === 'Shipped' ? 'white-timeline' :
-              this.SelectedReturnHeader.Status === 'Invoiced' ? 'white-timeline' : 'green-timeline';
+      case 'Draft':
+        return this.SelectedReturnHeader.Status === 'saved' ? 'white-timeline' :
+        this.SelectedReturnHeader.Status === 'open' ? 'green-timeline' :
+        this.SelectedReturnHeader.Status === 'Accepted' ? 'green-timeline' : 'green-timeline';
+        case 'Submitted':
+          return this.SelectedReturnHeader.Status === 'saved' ? 'white-timeline' :
+            this.SelectedReturnHeader.Status === 'open' ? 'white-timeline' :
+            this.SelectedReturnHeader.Status === 'Accepted' ? 'green-timeline' : 'green-timeline';
+            // case 'Accepted':
+            //   return this.SelectedReturnHeader.Status === 'Draft' ? 'white-timeline' :
+            //   this.SelectedReturnHeader.Status === 'Submitted' ? 'white-timeline' :
+            //   this.SelectedReturnHeader.Status === 'Accepted' ? 'green-timeline' : 'green-timeline';
       default:
         return '';
     }

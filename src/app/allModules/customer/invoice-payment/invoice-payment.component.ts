@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatTableDataSource } from '@angular/material';
+import { MatDialog, MatSnackBar, MatTableDataSource } from '@angular/material';
 import {MatPaginator} from '@angular/material/paginator';
 import { BPCInvoicePayment, BPCPayRecord } from 'app/models/customer';
+import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
+import { SnackBarStatus } from 'app/notifications/snackbar-status-enum';
 import { POService } from 'app/services/po.service';
 import { ReportService } from 'app/services/report.service';
 import { PaymentDailogComponent } from '../payment-dailog/payment-dailog.component';
@@ -21,6 +23,8 @@ export class InvoicePaymentComponent implements OnInit {
   // AllReturnItems:any[]=[];
   // AllProducts:any[]=[];
   IsProgressBarVisibile:boolean=false;
+  notificationSnackBarComponent: NotificationSnackBarComponent;
+
   InvoiceFormdata:any[]=[];
   InvoicePaymentDataArray:BPCInvoicePayment[]=[]
   InvoiceDisplayedColumns: string[] = [
@@ -43,9 +47,12 @@ export class InvoicePaymentComponent implements OnInit {
   constructor(
     private _formBuilder: FormBuilder,
     private poservice:POService,
-    public dialog: MatDialog
+    public snackBar: MatSnackBar,
+   public dialog:MatDialog
   ) {
     this.ispayment=false;
+    this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
+
    }
 
   ngOnInit() {
@@ -91,7 +98,7 @@ console.log(Invoicedata);
         Invoicedata.PaidAmount=Invoicedata.PaidAmount+parseInt(amount);
         console.log(Invoicedata.PaidAmount,Invoicedata);
         this.CreateInvoice(Invoicedata,amount);
-        
+       
       }
      
     });
@@ -103,8 +110,15 @@ console.log(Invoicedata);
     this.poservice.UpdateInvoice(Invoicedata).subscribe(
     
       (data)=>{console.log(data)
-        this.CreatePayRecord(Invoicedata,amount);},
-      (err)=>console.log(err)
+        this.CreatePayRecord(Invoicedata,amount);
+        this.notificationSnackBarComponent.openSnackBar('Succesfully created',SnackBarStatus.success);
+      
+      },
+      (err)=>{
+        console.log(err),
+        this.notificationSnackBarComponent.openSnackBar('Failed to create',SnackBarStatus.danger);
+
+      }
       
     )
   }
@@ -116,7 +130,7 @@ PayRecord.DocumentNumber=Invoicedata.PoReference;
 PayRecord.InvoiceNumber=Invoicedata.InvoiceNo;
 PayRecord.Type=Invoicedata.Type;
 PayRecord.PartnerID=Invoicedata.PatnerID;
-PayRecord.PayRecordNo="002";
+// PayRecord.PayRecordNo="002";
 PayRecord.PaidAmount=amount;
 PayRecord.PaymentDate=new Date();
 this.poservice.CreatePaymentRecord(PayRecord).subscribe(
@@ -126,19 +140,20 @@ this.poservice.CreatePaymentRecord(PayRecord).subscribe(
   
 )
   }
-  openPaidAmount(data){
+  async openPaidAmount(data){
+
     var Invoicedata=new BPCInvoicePayment();
 // console.log(data);
 
 Invoicedata=data as BPCInvoicePayment;
 // var PayRecord = new BPCPayRecord();
-  
+await this.GetAllRecords();
 var paymemtdata= this.InvoicePaymentRecordArray.filter(x=>x.InvoiceNumber==Invoicedata.InvoiceNo);
 console.log(paymemtdata);
 
     const dialogRef = this.dialog.open(PaymentHistoryDialogComponent,{
       width: '700px',
-      height:'300px',
+      // height:'300px',
       data:paymemtdata
     });
   
