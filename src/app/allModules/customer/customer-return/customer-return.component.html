@@ -10,70 +10,70 @@
       </div>
     </div>
     <div fxLayout class="content-card1">
-    
+
       <mat-card fxFlex="100" class="side-bar p-0">
         <div class="sidenav-content" fxFlex fxLayout="column">
           <div fxFlex fxLayout class="p-0 pt-8">
             <div fxFlex class="px-12 mt-4">
-              <form autocomplete="off" class="normal" fxLayout="column" fxLayoutAlign="start"  name="form" novalidate
-              [formGroup]="ReturnFormGroup" >
-              <div fxFlex fxLayout="row wrap"  >
-                <div *ngIf="SelectedPIRNumber" fxFlex="33" class="px-12" >
-                  <mat-form-field style="width: 100%;">
-                    <input matInput placeholder="Ret Req ID"  formControlName="RequestID" >
-                    <mat-error
-                      *ngIf="ReturnFormGroup.get('RequestID').touched && ReturnFormGroup.get('RequestID').hasError('required')">
-                      RequestID is required
-                    </mat-error>
-                  </mat-form-field>
-                </div>
+              <form autocomplete="off" class="normal" fxLayout="column" fxLayoutAlign="start" name="form" novalidate
+                [formGroup]="ReturnFormGroup">
+                <div fxFlex fxLayout="row wrap">
+                  <div *ngIf="SelectedPIRNumber" fxFlex="33" class="px-12">
+                    <mat-form-field style="width: 100%;">
+                      <input matInput placeholder="Ret Req ID" formControlName="RequestID">
+                      <mat-error
+                        *ngIf="ReturnFormGroup.get('RequestID').touched && ReturnFormGroup.get('RequestID').hasError('required')">
+                        RequestID is required
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
 
-                <div fxFlex="33" class="px-12">
-                  <mat-form-field style="width: 100%;">
-                    <input matInput placeholder="Date" [matDatepicker]="picker0" formControlName="Date">
-                    <mat-datepicker-toggle matSuffix [for]="picker0">
-                      <mat-icon matDatepickerToggleIcon svgIcon="calendarIcon" class="mb-12"></mat-icon>
-                    </mat-datepicker-toggle>
-                    <mat-datepicker #picker0></mat-datepicker>
-                    <mat-error
-                      *ngIf="ReturnFormGroup.get('Date').touched && ReturnFormGroup.get('Date').hasError('required')">
-                      Date is required
-                    </mat-error>
-                  </mat-form-field>
-                </div>
-                <div fxFlex="33" class="px-12">
-                  <mat-form-field style="width: 100%;">
-                    <!-- <input matInput placeholder="InvoiceReference" formControlName="InvoiceReference"> -->
-                    <mat-select  placeholder="Invoice Reference"
-                      formControlName="InvoiceReference"  (selectionChange)="InvoiceSelected($event)">
-                      <mat-option *ngFor="let count of  InvoiceData" [value]="count.InvoiceNo">
-                        {{count.InvoiceNo}}
-                      </mat-option>
-                    </mat-select>
-                    <mat-error
-                      *ngIf="ReturnFormGroup.get('InvoiceReference').touched && ReturnFormGroup.get('InvoiceReference').hasError('required')">
-                      InvoiceReference is required
-                    </mat-error>
-                  </mat-form-field>
-                </div>
-                <div fxFlex="33" class="px-12">
-                  <mat-form-field style="width: 100%;">
-                    <input matInput placeholder="SO Number" formControlName="SONumber">
-                    <mat-error
-                      *ngIf="ReturnFormGroup.get('SONumber').touched && ReturnFormGroup.get('SONumber').hasError('required')">
-                      SONumber is required
-                    </mat-error>
-                  </mat-form-field>
-                </div>
-                <div fxFlex="33" class="px-12">
-                  <mat-form-field style="width: 100%;">
-                    <input matInput placeholder="Credit Note" formControlName="CreditNote">
-                    <mat-error
-                      *ngIf="ReturnFormGroup.get('CreditNote').touched && ReturnFormGroup.get('CreditNote').hasError('required')">
-                      CreditNote is required
-                    </mat-error>
-                  </mat-form-field>
-                </div>
+                  <div fxFlex="33" class="px-12">
+                    <mat-form-field style="width: 100%;">
+                      <input matInput placeholder="Date" [matDatepicker]="picker0" formControlName="Date">
+                      <mat-datepicker-toggle matSuffix [for]="picker0">
+                        <mat-icon matDatepickerToggleIcon svgIcon="calendarIcon" class="mb-12"></mat-icon>
+                      </mat-datepicker-toggle>
+                      <mat-datepicker #picker0></mat-datepicker>
+                      <mat-error
+                        *ngIf="ReturnFormGroup.get('Date').touched && ReturnFormGroup.get('Date').hasError('required')">
+                        Date is required
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div fxFlex="33" class="px-12">
+                    <mat-form-field style="width: 100%;">
+                      <!-- <input matInput placeholder="InvoiceReference" formControlName="InvoiceReference"> -->
+                      <mat-select placeholder="Invoice Reference" formControlName="InvoiceReference"
+                        (selectionChange)="InvoiceSelected($event)">
+                        <mat-option *ngFor="let count of  InvoiceData" [value]="count.InvoiceNo">
+                          {{count.InvoiceNo}}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error
+                        *ngIf="ReturnFormGroup.get('InvoiceReference').touched && ReturnFormGroup.get('InvoiceReference').hasError('required')">
+                        InvoiceReference is required
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div fxFlex="33" class="px-12">
+                    <mat-form-field style="width: 100%;">
+                      <input matInput placeholder="SO Number" formControlName="SONumber">
+                      <mat-error
+                        *ngIf="ReturnFormGroup.get('SONumber').touched && ReturnFormGroup.get('SONumber').hasError('required')">
+                        SONumber is required
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div fxFlex="33" class="px-12">
+                    <mat-form-field style="width: 100%;">
+                      <input matInput placeholder="Credit Note" formControlName="CreditNote">
+                      <mat-error
+                        *ngIf="ReturnFormGroup.get('CreditNote').touched && ReturnFormGroup.get('CreditNote').hasError('required')">
+                        CreditNote is required
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
                   <div fxFlex="33" class="px-12">
                     <mat-form-field style="width: 100%;">
                       <input matInput placeholder="AWBNumber" formControlName="AWBNumber">
@@ -85,14 +85,14 @@
                   </div>
                   <div fxFlex="33" class="px-12">
                     <mat-form-field style="width: 100%;">
-                      <input matInput placeholder="Transporter"  formControlName="Transporter">
+                      <input matInput placeholder="Transporter" formControlName="Transporter">
                       <mat-error
                         *ngIf="ReturnFormGroup.get('Transporter').touched && ReturnFormGroup.get('Transporter').hasError('required')">
                         Transporter is required
                       </mat-error>
                     </mat-form-field>
                   </div>
-                  <div fxFlex="33" class="px-12" >
+                  <div fxFlex="33" class="px-12">
                     <mat-form-field style="width: 100%;">
                       <input matInput placeholder="TruckNumber" formControlName="TruckNumber">
                       <mat-error
@@ -101,11 +101,11 @@
                       </mat-error>
                     </mat-form-field>
                   </div>
-              </div>
+                </div>
 
-            </form>
+              </form>
             </div>
-           
+
             <div fxFlex class="borderleft mb-40 pt-40" [class.pt-60]="SelectedReturnHeader?.RetReqID">
               <div fxLayout class="mx-40">
                 <div fxFlex="30">Draft</div>
@@ -117,8 +117,7 @@
                 <div fxFlex="30" fxLayout>
                   <div class="round" [style.border-color]="getStatusColor('Draft')">
                   </div>
-                  <div style="width: 10px;margin-left: -1px !important"
-                  [class]="getTimeline('Draft')"></div>
+                  <div style="width: 10px;margin-left: -1px !important" [class]="getTimeline('Draft')"></div>
                   <div [class]="getRestTimeline('Draft')" fxFlex>
                     <!-- [class]="SelectedReturnHeader.Status==='Open'?'white-timeline':'green-timeline'" -->
                   </div>
@@ -140,18 +139,18 @@
                   <div class="round" [style.border-color]="getStatusColor('Accepted')"></div>
                 </div>
               </div>
-              
+
             </div>
 
 
           </div>
-        
+
           <div class="px-12 mt-20">
             <div>
               <span class="Shipment-Proposal">Item</span>
             </div>
             <div>
-              <form autocomplete="off" class="normal" fxLayout="row" fxLayoutAlign="start"  name="form" novalidate
+              <form autocomplete="off" class="normal" fxLayout="row" fxLayoutAlign="start" name="form" novalidate
                 [formGroup]="ReturnItemFormGroup">
                 <div fxFlex="15">
                   <mat-form-field class="px-12" style="width: 100%;">
@@ -205,17 +204,16 @@
                       *ngIf="ReturnItemFormGroup.get('RetQty').touched && ReturnItemFormGroup.get('RetQty').hasError('required')">
                       RetQty is required
                     </mat-error>
-                    <mat-error
-                    *ngIf="ReturnItemFormGroup.get('RetQty').touched && !ReturnItemFormGroup.get('RetQty').hasError('required')
+                    <mat-error *ngIf="ReturnItemFormGroup.get('RetQty').touched && !ReturnItemFormGroup.get('RetQty').hasError('required')
                     && ReturnItemFormGroup.get('RetQty').hasError('pattern')">
-                    Enter valid Quantity
-                  </mat-error>
+                      Enter valid Quantity
+                    </mat-error>
                   </mat-form-field>
                   <div *ngIf="isQtyError" class="WeightError">
                     Return Qty should not greater than Order Qty
                   </div>
                 </div>
-               
+
                 <div fxFlex="15">
                   <mat-form-field class="px-12" style="width: 100%;">
                     <input matInput placeholder="Invoice" formControlName="Invoice">
@@ -247,7 +245,7 @@
               {{ReturnItemFormGroup.get('FileName')?.value}}
             </div>
           </div> -->
-          
+
           <div fxFlex fxLayout="column" class="table mx-20 my-12">
             <table *ngIf="AllReturnItems?.length" mat-table [dataSource]="ReturnItemDataSource" matSort>
               <ng-container matColumnDef="Item">
@@ -299,15 +297,16 @@
               <ng-container matColumnDef="Batch">
                 <th mat-header-cell *matHeaderCellDef style="width: 12%;"> Batch </th>
                 <td mat-cell style="width: 12%;" *matCellDef="let element">
-              <button mat-raised-button class="SubmitBtn mb-4"  (click)="BatchOpen(element)">
-                Batch {{BatchListNo?'('+BatchListNo +')':''}}</button>
-            </td>
+                  <button mat-raised-button class="SubmitBtn mb-4" (click)="BatchOpen(element)">
+                    Batch {{BatchListNo?'('+BatchListNo +')':''}}</button>
+                </td>
               </ng-container>
               <ng-container matColumnDef="Serial">
                 <th mat-header-cell *matHeaderCellDef style="width: 13%;"> Serial </th>
                 <td mat-cell style="width: 13%;" *matCellDef="let element">
-              <button mat-raised-button class="SubmitBtn mb-4" (click)="SerialOpen(element)">Serial {{SerialListNo?'('+SerialListNo +')':''}} </button>
-            </td>
+                  <button mat-raised-button class="SubmitBtn mb-4" (click)="SerialOpen(element)">Serial
+                    {{SerialListNo?'('+SerialListNo +')':''}} </button>
+                </td>
               </ng-container>
 
               <!-- <ng-container matColumnDef="FileName">
@@ -345,12 +344,14 @@
         <mat-card-actions class="m-0 pl-12 pr-16 cardActions">
           <div fxLayout fxLayoutAlign="space-between center">
             <div fxFlex>
-              <button *ngIf=" SelectedReturnHeader?.RetReqID  && SelectedReturnHeader?.Status=='saved'" mat-stroked-button class="DeleteBtn mr-4 mb-4"
-                (click)="DeleteClicked()">Delete</button>
-                <!-- SelectedReturnHeader?.RetReqID && -->
+              <button *ngIf=" SelectedReturnHeader?.RetReqID  && SelectedReturnHeader?.Status=='saved'"
+                mat-stroked-button class="DeleteBtn mr-4 mb-4" (click)="DeleteClicked()">Delete</button>
+              <!-- SelectedReturnHeader?.RetReqID && -->
             </div>
-            <div *ngIf="!SelectedReturnHeader?.PIRNumber" fxFlex align="end">
-              <button mat-stroked-button class="SaveBtn mb-4" (click)="SaveClicked()" *ngIf="SelectedReturnHeader?.Status!='open'">Save
+            <!-- <div *ngIf="!SelectedReturnHeader?.PIRNumber" fxFlex align="end"> -->
+            <div fxFlex align="end">
+              <button mat-stroked-button class="SaveBtn mb-4" (click)="SaveClicked()"
+                *ngIf="SelectedReturnHeader?.Status!='open'">Save
               </button>
               <button mat-raised-button class="SubmitBtn mb-4" (click)="SubmitClicked()">Submit</button>
             </div>
